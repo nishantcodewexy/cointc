@@ -1,5 +1,5 @@
 const Joi = require("joi");
-const { authenticate: handler } = require("../../controllers/auth/User");
+const { authenticate: handler } = require("../../controllers/auth/user.js");
 
 const schema = Joi.object({
   email: Joi.string().email({ minDomainSegments: 2 }).required(),

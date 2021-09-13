@@ -12,7 +12,7 @@ dotenv.config();
 const {
   PORT,
   HOSTNAME,
-  HTTP_PROTOCOL = 'http',
+  HTTP_PROTOCOL,
 
   EMAIL_USER,
   EMAIL_PASSWORD,
@@ -87,7 +87,7 @@ const jwt = {
 module.exports = {
   hostname: HOSTNAME,
   port: PORT,
-  host_url: `${HTTP_PROTOCOL}://${HOSTNAME}:${PORT}`,
+  host_url: `${HTTP_PROTOCOL || 'http'}://${HOSTNAME}:${PORT}`,
   mailer: {...mailer, transporter: mailTransporter},
   jwt,
 };

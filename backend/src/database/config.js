@@ -2,12 +2,12 @@ const fs = require('fs');
 
 module.exports = {
   development: {
-    username: 'database_dev',
-    password: 'database_dev',
-    database: 'database_dev',
-    host: '127.0.0.1',
+    username: 'cryptcon',
+    password: 'cryptcon_pass',
+    database: 'cryptcon',
+    host: 'localhost',
     port: 3306,
-    dialect: 'mysql',
+    dialect: process.env.DB_DIALECT || 'postgre',
     dialectOptions: {
       bigNumberStrings: true
     }
@@ -18,7 +18,7 @@ module.exports = {
     database: process.env.CI_DB_NAME,
     host: '127.0.0.1',
     port: 3306,
-    dialect: process.env.CI_DB_DIALECT || 'postgre',
+    dialect: process.env.DB_DIALECT || 'postgre',
     dialectOptions: {
       bigNumberStrings: true
     }
@@ -29,7 +29,7 @@ module.exports = {
     database: process.env.PRODUCTION_DB_NAME,
     host: process.env.PRODUCTION_DB_HOSTNAME,
     port: process.env.PRODUCTION_DB_PORT,
-    dialect: process.env.PRODUCTION_DB_DIALECT,
+    dialect: process.env.DB_DIALECT || 'postgre',
     // dialectOptions: {
     //   bigNumberStrings: true,
     //   ssl: {

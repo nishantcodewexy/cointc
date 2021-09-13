@@ -1,0 +1,11 @@
+{
+  "configurations": [
+    {
+      "type": "node-terminal",
+      "name": "Run Script: backend-start",
+      "request": "launch",
+      "command": "yarn backend-start",
+      "cwd": "${workspaceFolder}"
+    }
+  ]
+}

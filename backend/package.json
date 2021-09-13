@@ -4,8 +4,8 @@
   "main": "./src/index.js",
   "license": "MIT",
   "scripts": {
-    "test": "jest --detectOpenHandles",
-    "start": "nodemon"
+    "test": "jest --detectOpenHandles ",
+    "start": "nodemon --trace-warnings"
   },
   "dependencies": {
     "@hapi/boom": "^9.1.4",
