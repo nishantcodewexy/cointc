@@ -14,7 +14,11 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   OTP.init({
-    code: DataTypes.STRING
+    code: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
   }, {
     sequelize,
     modelName: 'OTP',

@@ -10,10 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // define association here
+      // TODO: Associate referrer (User) and referred (User)
     }
   };
   Referral.init({
+    // TODO: Remove after association
     referrer: DataTypes.UUID,
     referred: DataTypes.UUID
   }, {
