@@ -5,8 +5,9 @@
   "author": "lil-armstrong <oebong1@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "backend-dev": "yarn --cwd ./backend start",
+    "backend-start": "yarn --cwd ./backend start",
     "backend-test": "yarn --cwd ./backend test",
-    "frontend-dev": "yarn --cwd ./frontend dev"
+    "frontend-start": "yarn --cwd ./frontend start",
+    "frontend-test": "yarn --cwd ./frontend dev test"
   }
 }
