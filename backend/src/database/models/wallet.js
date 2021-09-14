@@ -8,17 +8,28 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // TODO: associate to User
+      const { User } = models;
+      // User
+      User.hasMany(Wallet);
     }
   }
   Wallet.init(
     {
       address: DataTypes.STRING,
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      token: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
     },
     {
       sequelize,
       modelName: "Wallet",
       underscored: true,
+      tableName: "tbl_wallets",
     }
   );
   return Wallet;
