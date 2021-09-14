@@ -7,7 +7,7 @@ const server = {};
 
 server.setup = async (config) => {
   try {
-    const { hostname, host_url, port, jwt } = config;
+    const { hostname, port, jwt } = config;
 
     // create an instance of hapi
     const HapiServer = Hapi.server({ host: hostname, port });
@@ -26,20 +26,22 @@ server.setup = async (config) => {
       },
     ]);
 
-    // register routes
-    await routes.load(HapiServer);
+   
 
     // initialize database
-    await database.sequelize.sync();
-    debugger;
-    
+    await database.sequelize.authenticate();
+    database.sequelize.sync();
+
     // Set global server options
     HapiServer.app.config = config;
     HapiServer.app.database = database;
 
-    HapiServer.auth.strategy("jwt_token", "jwt", jwt);
-    HapiServer.auth.default("jwt_token");
+    HapiServer.auth.strategy("jwt", "jwt", jwt);
+    // HapiServer.auth.default("jwt");
 
+     // register routes
+    await routes.load(HapiServer);
+    
     return HapiServer;
   } catch (err) {
     console.error(err);
