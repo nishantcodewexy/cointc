@@ -15,6 +15,7 @@ module.exports.register = (server) => {
     path: `/api/v1/auth/register`,
     handler,
     options: {
+      auth: false,
       validate: {
         payload: schema,
       },
