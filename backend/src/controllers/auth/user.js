@@ -1,10 +1,11 @@
 const Boom = require("@hapi/boom");
-const { generateReferralCode, sendMail } = require("../../helpers");
+const { sendMail, decrypt, createToken } = require("../../helpers");
 const Web3 = require("web3");
 const db = require("../../database/models");
 
 module.exports = {
-  create: async function (request, h) {
+  // Create new user
+  create: async function (req, res) {
     try {
       // Connect to the Ethereum network
       const web3 = new Web3(
@@ -12,14 +13,13 @@ module.exports = {
           new Web3.providers.HttpProvider("http://localhost:8545")
       );
 
-      const { email, password, referrer_code } = request.payload;
+      const { email, password, referrer_code } = req.payload;
 
       // Create new account in the blockchain
       const wallet_address = await web3.eth.personal.newAccount(password);
 
       let user = await db.User.create({
-        ...request.payload,
-        referral_code: generateReferralCode(email),
+        ...req.payload,
       });
 
       // Record the Referrer record
@@ -53,29 +53,30 @@ module.exports = {
       };
 
       sendMail(mailObject);
+
+      return { access_token: createToken(user) }
     } catch (err) {
       console.error(err);
+      return Boom.boomify(err);
     }
   },
 
-  authenticate: async function (request, h) {
+  // authenticate user
+  authenticate: async function (req, h) {
     try {
-      const { email, password } = request.payload;
+      const { email, password } = req.payload;
 
-      // fetch user record
-      const user = await db.User.findOne({ where: { password } });
+      // fetch user record from DB that matches the email
+      const user = await db.User.findOne({
+        where: { email },
+      });
 
-      if (user) {
-        h.authenticated({ email });
-        //TODO:  Send email OTP
-
-        // TODO: Update OTP record
-      } else {
-        h.unauthenticated("User not found!");
-      }
+      return user && (await decrypt(password, user.password))
+        ? { access_token: createToken(user) }
+        : Boom.notFound("User not found!")
     } catch (err) {
-      console.error(error);
-      return error;
+      console.error(err);
+      return (Boom.boomify(err));
     }
   },
 };
