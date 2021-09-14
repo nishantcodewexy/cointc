@@ -2,10 +2,17 @@
   "configurations": [
     {
       "type": "node-terminal",
-      "name": "Run Script: backend-start",
+      "name": "Run Server Test Script: backend-test",
       "request": "launch",
-      "command": "yarn backend-start",
-      "cwd": "${workspaceFolder}"
+      "command": "yarn test",
+      "cwd": "${workspaceFolder}/backend"
+    },
+    {
+      "type": "node-terminal",
+      "name": "Run Server Start Script: backend-start",
+      "request": "launch",
+      "command": "yarn start",
+      "cwd": "${workspaceFolder}/backend"
     }
   ]
 }
