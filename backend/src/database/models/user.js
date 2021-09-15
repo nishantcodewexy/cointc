@@ -1,6 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
-const { objectToHex, encrypt, generateReferralCode } = require("../../helpers");
+const { encrypt, generateReferralCode } = require("../../helpers");
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -92,7 +92,7 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "tbl_users",
       timestamps: false,
       hooks: {
-        beforeBulkCreate: (user, options) => {
+        beforeCreate: (user, options) => {
           user.referral_code = generateReferralCode(user.email);
         },
       },

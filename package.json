@@ -9,5 +9,8 @@
     "backend-test": "yarn --cwd ./backend test",
     "frontend-start": "yarn --cwd ./frontend start",
     "frontend-test": "yarn --cwd ./frontend dev test"
+  },
+  "dependencies": {
+    "@types/glob": "^7.1.4"
   }
 }

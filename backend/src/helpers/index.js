@@ -52,6 +52,10 @@ function createToken(user) {
   );
 }
 
+function sluggify(text) {
+  return text.toLowerCase()
+}
+
 function objectToHex(obj) {
   return Buffer.from(JSON.stringify(obj)).toString("hex");
 }
@@ -94,5 +98,6 @@ module.exports = {
   sendMail,
   objectToHex,
   hexToObject,
-  createToken
+  createToken,
+  sluggify
 };
