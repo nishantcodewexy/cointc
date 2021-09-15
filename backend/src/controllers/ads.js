@@ -3,17 +3,16 @@ const assert = require("assert");
 module.exports = (server) => {
   const {
     db,
-    boom,
-    helpers: { sendMail, decrypt, createToken },
   } = server.app;
 
   return {
-    async create(req, h) {
-      return db.create({ ...req.payload });
+    async create(req) {
+      const { user } = req.pre.user;
+      return db.create({ ...req.payload, owner: user.id});
     },
 
     // Delete advert
-    async delete(req, h) {
+    async destroy(req) {
       const { id } = req.payload;
     
       return await ad.destroy({
@@ -22,14 +21,14 @@ module.exports = (server) => {
     },
 
     // retrieve advert
-    async get(req, h) {
+    async get(req) {
       const { ad } = req.payload;
 
       return db.Ads.findByPk(ad);
     },
 
     // fetch all adverts
-    async getAll(req, h) {
+    async getAll(req) {
       return await db.Ads.findAll();
     },
   };

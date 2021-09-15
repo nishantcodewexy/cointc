@@ -5,6 +5,7 @@ module.exports = (server) => {
     controllers: {
       ads: { create },
     },
+    helpers: { getJWTDecodedUser },
     consts: { patterns },
   } = server.app;
 
@@ -17,17 +18,24 @@ module.exports = (server) => {
     terms_of_trade: Joi.string().optional(),
     kind: Joi.string().pattern(patterns.ads_kind).required(),
     ttl: Joi.number().optional(),
-    asset_pair: Joi.string().required()
+    asset_pair: Joi.string().required(),
   });
 
   return {
     method: "POST",
     path: "/ads/create",
     config: {
+      pre: [
+        {
+          method: getJWTDecodedUser,
+          assign: "user",
+        },
+      ],
       handler: create,
       validate: {
         payload: schema,
       },
+      auth: "jwt",
     },
   };
 };

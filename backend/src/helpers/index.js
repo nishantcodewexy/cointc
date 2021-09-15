@@ -95,6 +95,14 @@ module.exports = {
     return text.toLowerCase();
   },
 
+  getJWTToken: (req) => {
+    const {
+      auth: {
+        token
+      },
+    } = req;
+    return token;
+  },
   getJWTDecodedUser: (req) => {
     const {
       auth: {
