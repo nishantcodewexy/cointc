@@ -1,9 +1,10 @@
 "use strict";
 
 const Hapi = require("@hapi/hapi");
-const routes = require("./routes");
 const database = require("./database/models");
 const server = {};
+const glob = require("glob");
+const path = require("path");
 
 server.setup = async (config) => {
   try {
@@ -26,8 +27,6 @@ server.setup = async (config) => {
       },
     ]);
 
-   
-
     // initialize database
     await database.sequelize.authenticate();
     database.sequelize.sync();
@@ -39,10 +38,16 @@ server.setup = async (config) => {
     HapiServer.auth.strategy("jwt", "jwt", jwt);
     // HapiServer.auth.default("jwt");
 
-     // register routes
-    await routes.load(HapiServer);
-    
+    // dynamically register routes
+    let routes = glob.sync("*/api/**/routes/*.js", {
+      root: __dirname,
+    });
+    routes.forEach((file) => {
+      HapiServer.route(require(path.join(__dirname, '..', file)));
+    });
+
     return HapiServer;
+
   } catch (err) {
     console.error(err);
   }

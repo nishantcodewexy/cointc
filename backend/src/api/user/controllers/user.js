@@ -1,7 +1,7 @@
 const Boom = require("@hapi/boom");
-const { sendMail, decrypt, createToken } = require("../../helpers");
 const Web3 = require("web3");
-const db = require("../../database/models");
+const { sendMail, decrypt, createToken } = require("../../../helpers");
+const db = require("../../../database/models");
 
 module.exports = {
   // Create new user
