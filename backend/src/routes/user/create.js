@@ -12,7 +12,7 @@ module.exports = (server) => {
   const schema = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2 }).required(),
     password: Joi.string().pattern(patterns.password).required(),
-    referrer: Joi.string().min(21),
+    referrer: Joi.string().min(21).optional(),
   });
 
   return {
