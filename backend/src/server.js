@@ -6,6 +6,7 @@ const glob = require("glob");
 const path = require("path");
 const helpers = require("./helpers");
 const consts = require("./consts");
+const Boom = require('Boom');
 
 const server = {};
 server.setup = async (config) => {
@@ -39,7 +40,13 @@ server.setup = async (config) => {
     HapiServer.app.db = database;
     HapiServer.app.consts = consts;
     HapiServer.app.helpers = helpers;
+    HapiServer.app.boom = Boom;
     HapiServer.app.controllers = {};
+    
+    /**************************************
+     *  Set auth strategy
+     **************************************/
+    HapiServer.auth.strategy("jwt", "jwt", jwt);
 
     /**************************************
      * dynamically register controllers
@@ -64,11 +71,6 @@ server.setup = async (config) => {
       .forEach((file) => {
         HapiServer.route(require(path.join(__dirname, "..", file))(HapiServer));
       });
-
-     /**************************************
-      *  Set auth strategy
-      **************************************/
-    HapiServer.auth.strategy("jwt", "jwt", jwt);
 
     return HapiServer;
   } catch (err) {
