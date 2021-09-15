@@ -1,13 +1,16 @@
 module.exports = (server) => {
   return {
     method: ["POST", "GET", "PUT"],
-    path: "/user/{user?}",
+    path: "/user/",
     config: {
-      handler(req, h) {
-        console.log("In user index route");
-
-        return "In user index route";
-      },
+      pre: [
+        {
+          method: server.app.helpers.getJWTDecodedUser,
+          assign: "user",
+        },
+      ],
+      handler: server.app.controllers.user.profile,
+      auth: "jwt",
     },
   };
 };
