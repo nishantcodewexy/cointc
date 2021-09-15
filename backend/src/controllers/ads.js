@@ -8,12 +8,29 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    create(req, h){},
-    delete(req, h) { },
+    async create(req, h) {
+      return db.create({ ...req.payload });
+    },
+
+    // Delete advert
+    async delete(req, h) {
+      const { id } = req.payload;
     
-    // retirieve ads
-    retrieve(req, h) {
-      
-    }
-  }
-}
+      return await ad.destroy({
+        where: id
+      });
+    },
+
+    // retrieve advert
+    async get(req, h) {
+      const { ad } = req.payload;
+
+      return db.Ads.findByPk(ad);
+    },
+
+    // fetch all adverts
+    async getAll(req, h) {
+      return await db.Ads.findAll();
+    },
+  };
+};
