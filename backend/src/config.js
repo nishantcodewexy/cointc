@@ -63,7 +63,8 @@ try {
   // JWT Config
   const jwt = {
     keys: SECRET_KEY,
-    verify: {
+    verify: false,
+    /* {
       aud: "urn:audience:test",
       iss: "urn:cryptcon:test",
       sub: false,
@@ -71,10 +72,11 @@ try {
       exp: true,
       maxAgeSec: 14400, // 4 hours
       timeSkewSec: 15,
-    },
+    }, */
     validate: async (artifacts, request, h) => {
+     
       const { server } = request;
-      const db = server.plugins.postgresql.db;
+      const db = server.app.db;
       const {
         token,
         decoded: {
@@ -82,12 +84,11 @@ try {
         },
       } = artifacts;
 
-      //TODO: Check if user  exist
-      let foundToken = db.user.findOne("id", { where: user?.id });
-
+      let foundToken = Boolean(await db.User.findOne({ where: {id: user} }));
       return { isValid: foundToken, credentials: {} };
     },
   };
+
   module.exports = {
     hostname: HOSTNAME,
     port: PORT,
