@@ -12,8 +12,8 @@ module.exports = (server) => {
   });
 
   return {
-    method: "GET",
-    path: "/ads/{ad?}",
+    method: ["POST"],
+    path: "/ads/",
     config: {
       // pre-handler
       pre: [

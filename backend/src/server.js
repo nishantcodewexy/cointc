@@ -6,7 +6,7 @@ const glob = require("glob");
 const path = require("path");
 const helpers = require("./helpers");
 const consts = require("./consts");
-const Boom = require('Boom');
+const Boom = require('@hapi/boom');
 
 const server = {};
 server.setup = async (config) => {
@@ -33,7 +33,7 @@ server.setup = async (config) => {
      *  initialize database
      **************************************/
     await database.sequelize.authenticate();
-    database.sequelize.sync();
+    database.sequelize.sync({alter: false, force: !true});
 
     // Set Hapi server app options
     HapiServer.app.config = config;

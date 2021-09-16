@@ -16,14 +16,16 @@ module.exports = (sequelize, DataTypes) => {
   Wallet.init(
     {
       address: DataTypes.STRING,
-      userId: {
+      owner_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      token: {
-        type: DataTypes.STRING,
+      asset_type: {
+        type: DataTypes.UUID,
         allowNull: false,
       },
+      balance: DataTypes.DOUBLE,
+      password: DataTypes.STRING
     },
     {
       sequelize,

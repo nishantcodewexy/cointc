@@ -1,6 +1,5 @@
 "use strict";
 const {sendMail} = require("../helpers");
-const assert = require( "assert" );
 
 module.exports = {
   name: "mail",

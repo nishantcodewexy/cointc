@@ -1,6 +1,6 @@
 module.exports = (server) => {
   return {
-    method: ["POST", "GET", "PUT"],
+    method: ["POST"],
     path: "/user/",
     config: {
       pre: [
