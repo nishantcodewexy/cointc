@@ -10,12 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { User, Referral } = models;
-      User.belongsToMany(User, {
-        through: Referral,
-        as: "referrer",
-        onDelete: "CASCADE",
-      });
+      
     }
   }
   User.init(
@@ -42,17 +37,20 @@ module.exports = (sequelize, DataTypes) => {
           this.setDataValue("password", await encrypt(value));
         },
       },
-      fname: DataTypes.STRING,
-      lname: DataTypes.STRING,
-      phone_number: DataTypes.STRING,
-      phone_verified: DataTypes.BOOLEAN,
-      id_verified: DataTypes.BOOLEAN,
-      email_verified: {
-        type: DataTypes.BOOLEAN,
-        defaultValue: false,
-        allowNull: false,
+      mode: {
+        type: DataTypes.ENUM,
+        values: ["standard"],
       },
-      payment_methods: DataTypes.JSONB,
+      nickname: DataTypes.STRING,
+      kyc: {
+        defaultValue: {
+          email: null,
+          phone: null,
+          id: null,
+          payment_methods: null
+        },
+        type: DataTypes.JSON,
+      },
       role: {
         type: DataTypes.ENUM(["standard", "admin"]),
         defaultValue: "standard",
@@ -70,6 +68,7 @@ module.exports = (sequelize, DataTypes) => {
       last_login: DataTypes.DATE,
       verify_token: DataTypes.STRING,
       verify_token_ttl: { type: DataTypes.DATE },
+      archived_at: DataTypes.DATE,
       profile: {
         type: DataTypes.VIRTUAL,
         get() {
@@ -79,11 +78,11 @@ module.exports = (sequelize, DataTypes) => {
             phone: this.phone_number,
             ref_code: this.referral_code,
             last_login: this.last_login,
-            payment_methods: this.payment_methods,
+            kyc: JSON.parse(this.kyc),
             email: this.email,
           };
-        }
-      }
+        },
+      },
     },
     {
       sequelize,
@@ -96,7 +95,6 @@ module.exports = (sequelize, DataTypes) => {
           user.referral_code = generateReferralCode(user.email);
         },
       },
-      
     }
   );
 

@@ -11,15 +11,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       const { User, Referral } = models;
+      User.belongsToMany(User, {
+        through: Referral,
+        as: "referrer",
+        onDelete: "CASCADE",
+      });
     }
   };
   Referral.init({
-    // referrerId: {
-    //   type: DataTypes.INTEGER, 
-    // },
-    // referredId: {
-    //   type: DataTypes.INTEGER,
-    // }
+   
   }, {
     sequelize,
     modelName: 'Referral',
