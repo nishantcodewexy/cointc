@@ -13,6 +13,7 @@
     "@hapi/cookie": "^11.0.2",
     "@hapi/hapi": "^20.1.5",
     "@hapi/jwt": "^2.1.0",
+    "@openzeppelin/contracts": "^4.3.2",
     "@types/bcryptjs": "^2.4.2",
     "bcryptjs": "^2.4.3",
     "bignumber.js": "^9.0.1",
@@ -26,6 +27,7 @@
     "nodemailer": "^6.6.3",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
+    "ripple-lib": "^1.10.0",
     "sequelize": "^6.6.5",
     "web3": "^1.5.2"
   },
