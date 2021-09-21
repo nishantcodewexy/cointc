@@ -33,7 +33,7 @@ The backend uses the following web technologies at its core:
 - Truffle
 
 ### HOW TO START
-To run the frontend part of the project, run the following command in your terminal
+To run the backend  part of the project add a ```.env``` file using the ```.env.sample``` file. Then run the following command in your terminal
 
 ```
 yarn backend-start
