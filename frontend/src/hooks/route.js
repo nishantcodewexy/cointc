@@ -85,7 +85,7 @@ function RenderInLayout({ layout = {}, page }) {
         { ...props, page },
         <PageRenderer page={page} />
       );
-    }
+    } 
     return React.createElement(PageRenderer, {
       page
     });

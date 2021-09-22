@@ -1,6 +1,7 @@
 import { routeArray } from "./routes";
 import { useRoutes } from "./hooks/route";
-import "./stylesheets/index.scss";
+// import "@fontsource/roboto";
+// import "./stylesheets/index.scss";
 import { useSelector, useDispatch } from "react-redux";
 import { selectTheme } from "./store/theme";
 

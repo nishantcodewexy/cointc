@@ -9,7 +9,7 @@
   Author URL: hhttp://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 (function (window, document, $) {
-  "use strict";
+  ("use strict");
 
   $.app = $.app || {};
 
@@ -179,67 +179,70 @@
             this.hide();
             break;
         }
-      }
 
-      // On the small and extra small screen make them overlay menu
-      if (menuType === "vertical-menu" || menuType === "vertical-menu-modern") {
-        this.toOverlayMenu(currentBreakpoint.name, menuType);
-      }
+        // On the small and extra small screen make them overlay menu
+        if (
+          menuType === "vertical-menu" ||
+          menuType === "vertical-menu-modern"
+        ) {
+          this.toOverlayMenu(currentBreakpoint.name, menuType);
+        }
 
-      if (
-        $body.is(".horizontal-layout") &&
-        !$body.hasClass(".horizontal-menu-demo")
-      ) {
-        this.changeMenu(currentBreakpoint.name);
+        if (
+          $body.is(".horizontal-layout") &&
+          !$body.hasClass(".horizontal-menu-demo")
+        ) {
+          this.changeMenu(currentBreakpoint.name);
 
-        $(".menu-toggle").removeClass("is-active");
-      }
+          $(".menu-toggle").removeClass("is-active");
+        }
 
-      // Initialize drill down menu for vertical layouts, for horizontal layouts drilldown menu is intitialized in changemenu function
-      if (menuType != "horizontal-menu") {
-        // Drill down menu
-        // ------------------------------
-        this.drillDownMenu(currentBreakpoint.name);
-      }
+        // Initialize drill down menu for vertical layouts, for horizontal layouts drilldown menu is intitialized in changemenu function
+        if (menuType != "horizontal-menu") {
+          // Drill down menu
+          // ------------------------------
+          this.drillDownMenu(currentBreakpoint.name);
+        }
 
-      // Dropdown submenu on large screen on hover For Large screen only
-      // ---------------------------------------------------------------
-      if (currentBreakpoint.name == "xl") {
-        $('body[data-open="hover"] .dropdown')
-          .on("mouseenter", function () {
-            if (!$(this).hasClass("show")) {
-              $(this).addClass("show");
-            } else {
+        // Dropdown submenu on large screen on hover For Large screen only
+        // ---------------------------------------------------------------
+        if (currentBreakpoint.name == "xl") {
+          $('body[data-open="hover"] .dropdown')
+            .on("mouseenter", function () {
+              if (!$(this).hasClass("show")) {
+                $(this).addClass("show");
+              } else {
+                $(this).removeClass("show");
+              }
+            })
+            .on("mouseleave", function (event) {
               $(this).removeClass("show");
+            });
+
+          $('body[data-open="hover"] .dropdown a').on("click", function (e) {
+            if (menuType == "horizontal-menu") {
+              var $this = $(this);
+              if ($this.hasClass("dropdown-toggle")) {
+                return false;
+              }
             }
-          })
-          .on("mouseleave", function (event) {
-            $(this).removeClass("show");
           });
+        }
 
-        $('body[data-open="hover"] .dropdown a').on("click", function (e) {
-          if (menuType == "horizontal-menu") {
-            var $this = $(this);
-            if ($this.hasClass("dropdown-toggle")) {
-              return false;
-            }
-          }
-        });
-      }
-
-      // Added data attribute brand-center for navbar-brand-center
-      // TODO:AJ: Shift this feature in JADE.
-      if ($(".header-navbar").hasClass("navbar-brand-center")) {
-        $(".header-navbar").attr("data-nav", "brand-center");
-      }
-      if (currentBreakpoint.name == "sm" || currentBreakpoint.name == "xs") {
-        $(".header-navbar[data-nav=brand-center]").removeClass(
-          "navbar-brand-center"
-        );
-      } else {
-        $(".header-navbar[data-nav=brand-center]").addClass(
-          "navbar-brand-center"
-        );
+        // Added data attribute brand-center for navbar-brand-center
+        // TODO:AJ: Shift this feature in JADE.
+        if ($(".header-navbar").hasClass("navbar-brand-center")) {
+          $(".header-navbar").attr("data-nav", "brand-center");
+        }
+        if (currentBreakpoint.name == "sm" || currentBreakpoint.name == "xs") {
+          $(".header-navbar[data-nav=brand-center]").removeClass(
+            "navbar-brand-center"
+          );
+        } else {
+          $(".header-navbar[data-nav=brand-center]").addClass(
+            "navbar-brand-center"
+          );
+        }
       }
 
       // Dropdown submenu on small screen on click
