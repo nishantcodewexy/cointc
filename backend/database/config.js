@@ -2,16 +2,16 @@ const fs = require("fs");
 
 module.exports = {
   development: {
-    username: "cryptcon",
-    password: "cryptcon_password",
-    database: "cryptcon",
-    host: "localhost",
-    port: 5432,
-    dialect: process.env.DB_DIALECT || "postgres",
+    username: process.env.DEV_DB_USERNAME,
+    password: process.env.DEV_DB_PASSWORD,
+    database: process.env.DEV_DB_NAME,
+    host: process.env.DEV_DB_HOSTNAME,
+    port: process.env.DEV_DB_PORT,
+    dialect: process.env.DEV_DB_DIALECT || "postgres",
     dialectOptions: {
       bigNumberStrings: true,
     },
-    logging: false
+    logging: false,
   },
   test: {
     username: process.env.CI_DB_USERNAME,
@@ -23,8 +23,7 @@ module.exports = {
     dialectOptions: {
       bigNumberStrings: true,
     },
-    logging: false
-
+    logging: false,
   },
   production: {
     username: process.env.PRODUCTION_DB_USERNAME,
@@ -33,7 +32,7 @@ module.exports = {
     host: process.env.PRODUCTION_DB_HOSTNAME,
     port: process.env.PRODUCTION_DB_PORT,
     dialect: process.env.DB_DIALECT || "postgres",
-    use_env_variable: 'DB_DIALECT',
+    use_env_variable: "DB_DIALECT",
     // dialectOptions: {
     //   bigNumberStrings: true,
     //   ssl: {

@@ -1,23 +1,21 @@
-"use strict"
+"use strict";
 const assert = require("assert");
 
 module.exports = (server) => {
-  const {
-    db,
-  } = server.app;
+  const { db } = server.app;
 
   return {
     async create(req) {
       const { user } = req.pre.user;
-      return db.create({ ...req.payload, owner: user.id});
+      return db.Advert.create({ ...req.payload, owner: user.id });
     },
 
     // Delete advert
     async destroy(req) {
       const { id } = req.payload;
 
-      return await ad.destroy({
-        where: id
+      return await db.Advert.destroy({
+        where: id,
       });
     },
 
@@ -25,12 +23,12 @@ module.exports = (server) => {
     async get(req) {
       const { ad } = req.payload;
 
-      return db.Ads.findByPk(ad);
+      return db.Advert.findByPk(ad);
     },
 
     // fetch all adverts
     async getAll(req) {
-      return await db.Ads.findAll();
+      return await db.Advert.findAll();
     },
   };
 };
