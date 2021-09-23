@@ -7,13 +7,15 @@ const ejs = require("ejs");
 const bcrypt = require("bcryptjs");
 const nodemailer = require("nodemailer");
 const Jwt = require("@hapi/jwt");
-const envConfig = dotenv.parse(fs.readFileSync(".env.local"));
-const Web3 = require("web3");
 const assert = require("assert");
 const { nanoid } = require("nanoid");
 const glob = require("glob");
 const util = require("util");
+const wallets = require('../wallets');
 
+const env = process.env.NODE_ENVIRONMENT || "development";
+
+const envConfig = dotenv.parse(fs.readFileSync(".env"));
 for (const k in envConfig) {
   process.env[k] = envConfig[k];
 }
@@ -44,7 +46,6 @@ assert(PORT, "PORT env configuration is required.");
 assert(HOSTNAME, "HOSTNAME env configuration is required.");
 assert(CLIENT_URL, "CLIENT_URL env configuration is required.");
 
-const env = process.env.NODE_ENVIRONMENT || "development";
 
 
 /****************************************************
@@ -270,51 +271,12 @@ const MailerHelpers = () => {
   };
 };
 
-/****************************************************
- * Wallet helpers
- ****************************************************/
-const EthHelpers = () => {
-  /******************************************
-  * Connect to mainnet (homestead)
-  provider = new EtherscanProvider();
-  ****************************************/
-  const network = "http://localhost:8545";
-  // let provider = ( env == 'development')
-  // //Connect to testnet
-  // ? ethers.getDefaultProvider(network, {
-  //   etherscan: ETHERSCAN_API_KEY,
-  // })
-  // //Connect to mainnet
-  // : new EtherscanProvider(null, MAINNET_API_KEY);
-
-  let provider = new Web3(new Web3.providers.HttpProvider(network));
-
-  return {
-    provider,
-    createEthWallet() { },
-    createBTCWallet() { },
-    createEOSWallet(){},
-    createXRPWallet(){},
-    createTetherWallet(){},
-    createWalletWithAccount: async (num_of_accts = 5) => {
-      // Creates and returns new Ethereum wallet account
-      let randomHex = provider.utils.randomHex(32);
-      let wallet = await provider.eth.accounts.wallet.create(
-        num_of_accts,
-        randomHex
-      );
-
-      debugger;
-      return wallet;
-    },
-  };
-};
 
 module.exports = {
   config,
   jwt: JWTHelpers(),
   mailer: MailerHelpers(),
-
+  wallets: wallets,
   /****************************************************
    * Generates private/public key pair
    ****************************************************/

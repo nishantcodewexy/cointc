@@ -22,22 +22,22 @@ let provider = ethers.getDefaultProvider(network,
 
 provider._networkPromise.catch(err => error = new Error(err));
 
+// Wallet metadata
+const metadata = {
+  version: '1.0.0',
+  name: 'ether',
+  symbol: 'ETH',
+};
+
 module.exports = initialize();
 
 function initialize(){
   try{
     assert.strict.ifError(error);
 
-    function _check (cb) {
-      // Checks for provider before running any command
-      assert(provider, 'ETH:Wallet is not connected to provider. Connect wallet using the connect method');
-      return cb();
-    }
 
     return {
-      version: '1.0.0',
-      name: 'ether',
-      symbol: 'ETH',
+      ...metadata,
       utils: ethers.utils,
       wallet: null,
 
@@ -63,8 +63,8 @@ function initialize(){
         return _check(async ()=>await wallet.getGasPrice()).bind(this)
       },
 
-      async getBalance(wallet, blkTag ='latest') {
-        return _check(async ()=> await wallet.getBalance(blkTag).then(b=>b)).bind(this);
+      async getBalance(wallet, blockTag ='latest') {
+        return _check(async ()=> await wallet.getBalance(blockTag).then(b=>b)).bind(this);
       },
 
       async getTransactions (){
@@ -80,7 +80,13 @@ function initialize(){
       },
     }
   }catch(err){
-    console.trace('Ethereum wallet error', err)
+    console.trace('Ethereum (ETH) wallet error', err)
     return err;
   }
+}
+
+function _check (cb) {
+  // Checks for provider before running any command
+  assert(provider, `${metadata.symbol} Wallet is not connected to provider. Connect wallet using the connect method`);
+  return cb();
 }
