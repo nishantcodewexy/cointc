@@ -11,9 +11,6 @@
     "frontend-test": "yarn --cwd ./frontend dev test"
   },
   "dependencies": {
-    "@types/glob": "^7.1.4",
-    "@types/jest": "^27.0.1",
-    "bitcoin-core": "^3.0.0",
-    "eosjs": "^22.1.0"
+
   }
 }

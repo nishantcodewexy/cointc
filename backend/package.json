@@ -29,7 +29,11 @@
     "pg-hstore": "^2.3.4",
     "ripple-lib": "^1.10.0",
     "sequelize": "^6.6.5",
-    "web3": "^1.5.2"
+    "web3": "^1.5.2",
+    "@types/glob": "^7.1.4",
+    "@types/jest": "^27.0.1",
+    "bitcoin-core": "^3.0.0",
+    "eosjs": "^22.1.0"
   },
   "devDependencies": {
     "jest": "^27.1.1",
