@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   Wallet.init(
     {
       owner_id: DataTypes.UUID,
-      wallet_keystore: DataTypes.STRING,
+      wallet_keystore: DataTypes.JSON,
       passphrase: DataTypes.STRING
     },
     {
