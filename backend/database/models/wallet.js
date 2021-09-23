@@ -9,9 +9,9 @@ module.exports = (sequelize, DataTypes) => {
     * The `models/index` file will call this method automatically.
     */
     static associate(models) {
-      const { User } = models;
+      const { User, Wallet } = models;
       // User
-      User.hasMany(Wallet, {
+      Wallet.belongsTo(User, {
         foreignKey:{ name: "owner_id", allowNull: false },
       });
     }

@@ -10,7 +10,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      
+      const {User, Wallet} = models;
+
+      User.hasOne(Wallet, {
+        foreignKey:{ name: "owner_id", allowNull: false },
+      });
     }
   }
   User.init(
@@ -69,7 +73,7 @@ module.exports = (sequelize, DataTypes) => {
       verify_token: DataTypes.STRING,
       verify_token_ttl: { type: DataTypes.DATE },
       archived_at: DataTypes.DATE,
-      
+
       profile: {
         type: DataTypes.VIRTUAL,
         get() {
@@ -85,7 +89,7 @@ module.exports = (sequelize, DataTypes) => {
           };
         },
       },
-     
+
     },
     {
       sequelize,
