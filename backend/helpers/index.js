@@ -1,7 +1,6 @@
 "use strict";
 
 const fs = require("fs");
-const dotenv = require("dotenv");
 const path = require("path");
 const ejs = require("ejs");
 const bcrypt = require("bcryptjs");
@@ -12,13 +11,8 @@ const { nanoid } = require("nanoid");
 const glob = require("glob");
 const util = require("util");
 const wallets = require("../wallets");
-
 const env = process.env.NODE_ENVIRONMENT || "development";
 
-const envConfig = dotenv.parse(fs.readFileSync(".env"));
-for (const k in envConfig) {
-  process.env[k] = envConfig[k];
-}
 const {
   PORT,
   HOSTNAME,

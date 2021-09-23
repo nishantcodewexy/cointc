@@ -2,7 +2,7 @@ const assert = require("assert");
 
 module.exports = (server) => {
   const {
-    db,
+    db: {User},
     boom,
     config: { server_url, client_url },
     helpers: { decrypt, mailer, jwt },
@@ -18,28 +18,28 @@ module.exports = (server) => {
         assert(password, boom.badRequest("Expected password field"));
 
         // Check that the user email doesn't already exist
-        let _user = await db.User.findOne({
+        let _user = await User.findOne({
           where: {
             email,
           },
         });
 
         if (_user)
-          throw boom.notAcceptable(
-            `User with the email: ${email} already exist`
-          );
+        throw boom.notAcceptable(
+          `User with the email: ${email} already exist`
+        );
 
         // create JWT token to email
         const token = jwt.create(_user, 900);
         debugger;
         //TODO: Create blockchain wallets
-        
-        _user = await db.User.build({
+
+        _user = await User.build({
           ...req.payload,
         });
 
         // TODO:Create new wallet record
-        
+
 
         let confirmationLink = `${server_url}/confim_email?email=${email}&code=${token}`;
         // Send email verification
@@ -73,16 +73,16 @@ module.exports = (server) => {
       const { email, password } = req.payload;
 
       // fetch user record from DB that matches the email
-      return await db.User.findOne({
+      return await User.findOne({
         where: { email },
       })
-        .then(
-          async (_user) =>
-            (await decrypt(password, _user.password)) && {
-              access_token: jwt.create(_user),
-            }
-        )
-        .catch(boom.boomify);
+      .then(
+        async (_user) =>
+        (await decrypt(password, _user.password)) && {
+          access_token: jwt.create(_user),
+        }
+      )
+      .catch(boom.boomify);
     },
 
     confirmEmail: async (req) => {
@@ -92,11 +92,11 @@ module.exports = (server) => {
 
       const decoded = jwt.decodeAndVerify(token);
       return decoded.isValid
-        ? await db.User.update(
-            { kyc: { email: { confirmed: true } } },
-            { where: { id: decoded.payload.user } }
-          ).catch(boom.boomify)
-        : boom.unauthorized("Cannot confirm user account!");
+      ? await User.update(
+        { kyc: { email: { confirmed: true } } },
+        { where: { id: decoded.payload.user } }
+      ).catch(boom.boomify)
+      : boom.unauthorized("Cannot confirm user account!");
     },
 
     resetPassword: async function (req) {
@@ -112,7 +112,7 @@ module.exports = (server) => {
       const { email } = req.payload;
 
       try {
-        const user = db.User.findOne({ where: { email } });
+        const user = User.findOne({ where: { email } });
 
         // Expires in 900s -> 15mins
         const token = jwt.create(user, 900);
@@ -144,7 +144,7 @@ module.exports = (server) => {
     profile: async (req) => {
       // get user ID from preHandler
       let { user } = req.pre;
-      let profile = await db.User.findOne({ where: { id: user } }).then(
+      let profile = await User.findOne({ where: { id: user } }).then(
         (data) => data.profile
       );
       return profile;
@@ -153,7 +153,7 @@ module.exports = (server) => {
     profileByID: async (req) => {
       // get user ID from preHandler
       let { payload: {id} } = req;
-      return await db.User.findOne({ where: { id } }).then(
+      return await User.findOne({ where: { id } }).then(
         (user) => user.profile
       ).catch(boom.boomify)
     },
@@ -162,17 +162,14 @@ module.exports = (server) => {
     archive: async (req) => {
       // get user ID from preHandler
       let { user } = req.pre;
-      return await db.User.destroy({ where: { id: user } });
+      return await User.destroy({ where: { id: user } });
     },
 
     // Permanently destroy user record
     destroy: async (req) => {
       // get user ID from preHandler
       let { user } = req.pre;
-      return db.sequelize.query(`DELETE FROM tbl_users WHERE id = ${user}`, {
-        model: db.User,
-        mapToModel: true, // pass true here if you have any mapped fields
-      });
+      return db.sequelize.destroy({ where: { id: user }, force: true });
     },
 
     async update(req) {
@@ -182,7 +179,7 @@ module.exports = (server) => {
       } = req;
       return {
         updated: Boolean(
-          await db.User.update({ ...payload }, { where: { id: user } })
+          await User.update({ ...payload }, { where: { id: user } })
         ),
       };
     },

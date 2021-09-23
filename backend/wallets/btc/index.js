@@ -1,9 +1,20 @@
 "use strict"
 const env = process.env.NODE_ENVIRONMENT || "development";
-
-// Get BNB provider
+const Client = require('bitcoin-core');
 let provider = null;
-// TODO: assert(provider, 'BNB:PROVIDER invalid');
+let error = null;
+
+const {GETBLOCK_API_KEY} = process.env;
+let networkTypes = {
+  development: 'testnet',
+  production: 'mainnet'
+};
+
+const network = GETBLOCK_API_KEY ? ` https://btc.getblock.io/${networkTypes[env]}/?api_key=${GETBLOCK_API_KEY}` : 'http://localhost:8545';
+
+console.log(network, GETBLOCK_API_KEY)
+// Get BTC provider
+// provider = new Client({ network });
 
 // Wallet metadata
 const metadata = {
@@ -13,7 +24,6 @@ const metadata = {
 };
 
 module.exports = initialize();
-
 
 function initialize() {
   try{
