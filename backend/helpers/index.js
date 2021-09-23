@@ -11,7 +11,7 @@ const assert = require("assert");
 const { nanoid } = require("nanoid");
 const glob = require("glob");
 const util = require("util");
-const wallets = require('../wallets');
+const wallets = require("../wallets");
 
 const env = process.env.NODE_ENVIRONMENT || "development";
 
@@ -35,7 +35,6 @@ const {
   // ETHERSCAN_API_KEY,
   // MAINNET_API_KEY,
 } = process.env;
-
 /****************************************************
  * Validate the required configuration information
  ****************************************************/
@@ -45,8 +44,6 @@ assert(SECRET_KEY, "SECRET_KEY env configuration is required.");
 assert(PORT, "PORT env configuration is required.");
 assert(HOSTNAME, "HOSTNAME env configuration is required.");
 assert(CLIENT_URL, "CLIENT_URL env configuration is required.");
-
-
 
 /****************************************************
  * JWT helpers
@@ -135,7 +132,7 @@ const JWTHelpers = () => {
 /********************************************************
  * Server config
  *******************************************************/
- const config = {
+const config = {
   hostname: HOSTNAME,
   port: PORT,
   server_url: `${HTTP_PROTOCOL || "http"}://${HOSTNAME}:${PORT}`,
@@ -270,7 +267,6 @@ const MailerHelpers = () => {
     },
   };
 };
-
 
 module.exports = {
   config,
