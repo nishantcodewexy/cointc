@@ -41,4 +41,4 @@ const App = ({ width }) => {
   );
 };
 
-export default withResizeDetector(App);
+export default App;

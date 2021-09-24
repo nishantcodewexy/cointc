@@ -3,10 +3,10 @@ import { Link } from "react-router-dom";
 
 const Error404 = () => {
    return (
-      <div className="authincation h-100 p-meddle">
+      <div className="authentication  flex flex-column" style={{ height: window.screen.height - 60}}>
          <div className="container h-100">
             <div className="row justify-content-center h-100 align-items-center ">
-               <div className="col-md-5">
+               <div className="col">
                   <div className="form-input-content text-center error-page">
                      <h1 className="error-text font-weight-bold">404</h1>
                      <h4>

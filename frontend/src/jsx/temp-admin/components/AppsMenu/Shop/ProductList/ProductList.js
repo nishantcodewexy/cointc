@@ -5,7 +5,7 @@ import { Modal } from "react-bootstrap";
 import PageTitle from "../../../../layouts/PageTitle";
 
 // images
-import avatar1 from "../../../../..//images/avatar/1.jpg";
+import avatar1 from "../../../../../../images/avatar/1.jpg";
 import product2 from "../../../../../images/product/2.jpg";
 import product3 from "../../../../../images/product/3.jpg";
 import product4 from "../../../../../images/product/4.jpg";

@@ -3,8 +3,8 @@ import React, { Fragment } from "react";
 // images
 import qrcode from "../../../../../images/qr.png";
 import logo from "../../../../../images/logo.png";
-import logoText from "../../../../..//images/logo-text.png";
-import { Link } from "react-router-dom";
+// import logoText from "../../../../../../images/logo-text.png";
+// import { Link } from "react-router-dom";
 import PageTitle from "../../../../layouts/PageTitle";
 
 const Invoice = () => {

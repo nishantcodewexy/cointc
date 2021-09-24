@@ -1,7 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
 import { Dropdown } from "react-bootstrap";
-import {orderdataBlog} from './../../Dashboard/Home';
+import {orderdataBlog} from '../../Dashboard/Home';
 
 const TabDataTrade = () => {
 	return(
