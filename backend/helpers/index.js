@@ -10,7 +10,7 @@ const assert = require("assert");
 const { nanoid } = require("nanoid");
 const glob = require("glob");
 const util = require("util");
-const wallets = require("../wallets");
+// const wallets = require("../wallets");
 const env = process.env.NODE_ENVIRONMENT || "development";
 
 const {
@@ -266,7 +266,7 @@ module.exports = {
   config,
   jwt: JWTHelpers(),
   mailer: MailerHelpers(),
-  wallets: wallets,
+  // wallets: wallets,
   /****************************************************
    * Generates private/public key pair
    ****************************************************/
