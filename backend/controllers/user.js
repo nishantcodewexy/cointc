@@ -2,7 +2,7 @@ const assert = require("assert");
 
 module.exports = (server) => {
   const {
-    db: {User},
+    db: { User, Profile, sequelize },
     boom,
     config: { server_url, client_url },
     helpers: { decrypt, mailer, jwt },
@@ -25,21 +25,29 @@ module.exports = (server) => {
         });
 
         if (_user)
-        throw boom.notAcceptable(
-          `User with the email: ${email} already exist`
-        );
+          throw boom.notAcceptable(
+            `User with the email: ${email} already exist`
+          );
 
         // create JWT token to email
         const token = jwt.create(_user, 900);
         debugger;
         //TODO: Create blockchain wallets
 
-        _user = await User.build({
-          ...req.payload,
-        });
+        // TODO: using transactions to complete user accout creation
+        const t = await sequelize.transaction();
+        try {
+          _user = await User.build({
+            ...req.payload,
+          });
+
+          await t.commit();
+        } catch (error) {
+          await t.rollback();
+        }
+        // transaction ends
 
         // TODO:Create new wallet record
-
 
         let confirmationLink = `${server_url}/confim_email?email=${email}&code=${token}`;
         // Send email verification
@@ -76,13 +84,13 @@ module.exports = (server) => {
       return await User.findOne({
         where: { email },
       })
-      .then(
-        async (_user) =>
-        (await decrypt(password, _user.password)) && {
-          access_token: jwt.create(_user),
-        }
-      )
-      .catch(boom.boomify);
+        .then(
+          async (_user) =>
+            (await decrypt(password, _user.password)) && {
+              access_token: jwt.create(_user),
+            }
+        )
+        .catch(boom.boomify);
     },
 
     confirmEmail: async (req) => {
@@ -92,11 +100,11 @@ module.exports = (server) => {
 
       const decoded = jwt.decodeAndVerify(token);
       return decoded.isValid
-      ? await User.update(
-        { kyc: { email: { confirmed: true } } },
-        { where: { id: decoded.payload.user } }
-      ).catch(boom.boomify)
-      : boom.unauthorized("Cannot confirm user account!");
+        ? await User.update(
+            { kyc: { email: { confirmed: true } } },
+            { where: { id: decoded.payload.user } }
+          ).catch(boom.boomify)
+        : boom.unauthorized("Cannot confirm user account!");
     },
 
     resetPassword: async function (req) {
@@ -143,19 +151,41 @@ module.exports = (server) => {
 
     profile: async (req) => {
       // get user ID from preHandler
-      let { user } = req.pre;
-      let profile = await User.findOne({ where: { id: user } }).then(
+      let { user: id } = req.pre;
+      let user = await User.findOne({
+        where: { id },
+        include: [
+          {
+            model: Profile,
+            attributes: ["profile"],
+          },
+        ],
+        attributes: {
+          exclude: ["password"],
+        },
+      }); /* .then(
         (data) => data.profile
-      );
-      return profile;
+      ); */
+      // const profile = await user.getProfile().then((prof) => prof.profile);
+      return user;
     },
 
     profileByID: async (req) => {
       // get user ID from preHandler
-      let { payload: {id} } = req;
-      return await User.findOne({ where: { id } }).then(
-        (user) => user.profile
-      ).catch(boom.boomify)
+      let {
+        payload: { id },
+      } = req;
+      return await User.findOne({
+        where: { id },
+        include: [
+          {
+            model: Profile,
+            attributes: ["profile"],
+          },
+        ],
+      })
+        .then((user) => user.profile)
+        .catch(boom.boomify);
     },
 
     // Temporarily delete user record

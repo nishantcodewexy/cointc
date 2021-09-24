@@ -6,14 +6,22 @@ module.exports = {
       "tbl_users",
       [
         {
-          id: '9fb01de0-1d63-4d09-9415-90e0b4e93b9a',
+          id: "9fb01de0-1d63-4d09-9415-90e0b4e93b9a",
           email: "email@mail.com",
-          password: "$2a$10$TuGJijoSAfLgHTneVCPQm.3XRYqoGEIQhLxwbIuFyvc13MGe6/YwK",
-          referral_code: 'seet7pcH'
+          password:
+            "$2a$10$TuGJijoSAfLgHTneVCPQm.3XRYqoGEIQhLxwbIuFyvc13MGe6/YwK",
+          // referral_code: 'seet7pcH'
         },
       ],
       {}
     );
+    await queryInterface.bulkInsert("tbl_users_profile", [
+      {
+        id: "1d63-4d09-9fb01de0-9415-90e0b4e93b9a",
+        referral_code: "seet7pcH",
+        user_id: "9fb01de0-1d63-4d09-9415-90e0b4e93b9a",
+      },
+    ]);
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -24,5 +32,6 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     await queryInterface.bulkDelete("tbl_users", null, {});
+    await queryInterface.bulkDelete("tbl_users_profile", null, {});
   },
 };
