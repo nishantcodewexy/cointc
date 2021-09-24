@@ -250,7 +250,7 @@ const ThemeContextProvider = (props) => {
 
   useEffect(() => {
     body.setAttribute("data-typography", "poppins");
-    body.setAttribute("data-theme-version", "dark");
+    body.setAttribute("data-theme-version", "light");
     body.setAttribute("data-layout", "vertical");
     body.setAttribute("data-primary", "color_1");
     body.setAttribute("data-nav-headerbg", "color_1");
