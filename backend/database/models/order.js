@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
       appeal: DataTypes.STRING,
       remark: DataTypes.STRING,
       status: {
-        type:  DataTypes.ENUM(
+        type: DataTypes.ENUM(
           "unpaid",
           "paid",
           "released",
@@ -50,7 +50,7 @@ module.exports = (sequelize, DataTypes) => {
           "disputed",
           "canceled"
         ),
-        defaultValue: 'unpaid'
+        defaultValue: "unpaid",
       },
       rating: {
         type: DataTypes.INTEGER,
@@ -66,9 +66,7 @@ module.exports = (sequelize, DataTypes) => {
       profile: {
         type: DataTypes.VIRTUAL,
         get() {
-          return {
-           
-          };
+          return {};
         },
       },
     },
@@ -76,6 +74,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Order",
       underscored: true,
+      paranoid: true,
       tableName: "tbl_orders",
     }
   );
