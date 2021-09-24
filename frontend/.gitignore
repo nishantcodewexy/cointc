@@ -40,3 +40,5 @@ yarn-error.log*
 /out_publish/
 /out_functions/
 /logs/*
+
+/temp-admin
