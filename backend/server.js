@@ -8,7 +8,6 @@ const database = require("./database/models");
 const consts = require("./consts");
 const Boom = require("@hapi/boom");
 const cwd = path.join(__dirname);
-
 const { hostname, port, jwt, server_url } = helpers.config;
 
 // create an hapi server instance

@@ -10,7 +10,7 @@ const assert = require("assert");
 const { nanoid } = require("nanoid");
 const glob = require("glob");
 const util = require("util");
-const wallets = require("../wallets");
+// const wallets = require("../wallets");
 const env = process.env.NODE_ENVIRONMENT || "development";
 
 const {
@@ -103,6 +103,7 @@ const JWTHelpers = () => {
       } = req;
       return user;
     },
+
     create(user, expires = 14400, secret = SECRET_KEY) {
       let scopes = user.role;
 
@@ -266,7 +267,7 @@ module.exports = {
   config,
   jwt: JWTHelpers(),
   mailer: MailerHelpers(),
-  wallets: wallets,
+  // wallet: wallets,
   /****************************************************
    * Generates private/public key pair
    ****************************************************/

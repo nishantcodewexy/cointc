@@ -6,7 +6,6 @@ const {
   jwt,
   generateKeyPair
 } = require("../../helpers");
-const database = require("../../database/models");
 
 module.exports = async () => {
   const test_password = "p@55w0rd";
@@ -15,11 +14,7 @@ module.exports = async () => {
   const otp_code = generateOTP(otp_length);
 
   describe("Helper functions test", () => {
-    test.only(`Connects to Database`, async () => {
-      let connected = false;
-      await database.sequelize.authenticate().then(() => (connected = true));
-      expect(connected).toBeTruthy();
-    });
+
 
     test.only(`Checks that generated referral code length is 8`, () => {
       const referral_code = generateReferralCode(test_email);
