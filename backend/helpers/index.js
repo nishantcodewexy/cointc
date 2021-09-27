@@ -103,6 +103,7 @@ const JWTHelpers = () => {
       } = req;
       return user;
     },
+
     create(user, expires = 14400, secret = SECRET_KEY) {
       let scopes = user.role;
 

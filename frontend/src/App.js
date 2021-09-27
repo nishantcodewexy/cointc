@@ -1,16 +1,17 @@
-import { routeArray } from "./routes";
-import { useRoutes } from "./hooks/route";
-// import "@fontsource/roboto";
-// import "./stylesheets/index.scss";
-import { useSelector, useDispatch } from "react-redux";
-import { selectTheme } from "./store/theme";
 
-function App() {
-  const Routes = useRoutes(routeArray);
-  const theme = useSelector((state) => state.theme.value);
-  const dispatch = useDispatch();
+/// Components
+import Markup from "./jsx";
 
-  return <>{Routes}</>;
-}
+import { withResizeDetector } from "react-resize-detector";
 
-export default App;
+import ThemeContextProvider from "./context/ThemeContext";
+
+const App = () => {
+  return (
+    <ThemeContextProvider >
+      <Markup />
+    </ThemeContextProvider>
+  );
+};
+
+export default withResizeDetector(App);

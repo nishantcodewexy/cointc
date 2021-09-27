@@ -17,7 +17,7 @@ module.exports = (server) => {
       await server.stop();
     });
 
-    test("GET /user returns a single user", async () => {
+    test.only("GET /user returns a single user", async () => {
       await server
         .inject({
           method: "get",

@@ -35,7 +35,10 @@
     "ripple-lib": "^1.10.0",
     "sequelize": "^6.6.5",
     "underscore": "^1.13.1",
-    "web3": "^1.5.2"
+    "web3": "^1.5.2",
+    "@types/glob": "^7.1.4",
+    "@types/jest": "^27.0.1",
+    "eosjs": "^22.1.0"
   },
   "devDependencies": {
     "jest": "^27.1.1",
