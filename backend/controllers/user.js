@@ -83,6 +83,10 @@ module.exports = (server) => {
       // fetch user record from DB that matches the email
       return await User.findOne({
         where: { email },
+        include: {
+          model: Profile,
+          attributes: ["profile"],
+        },
       })
         .then(
           async (_user) =>
@@ -152,39 +156,47 @@ module.exports = (server) => {
     profile: async (req) => {
       // get user ID from preHandler
       let { user: id } = req.pre;
-      let user = await User.findOne({
-        where: { id },
-        include: [
-          {
-            model: Profile,
-            attributes: ["profile"],
-          },
-        ],
-        attributes: {
-          exclude: ["password"],
-        },
-      }); /* .then(
-        (data) => data.profile
-      ); */
-      // const profile = await user.getProfile().then((prof) => prof.profile);
-      return user;
+      try {
+        const user = await User.findOne({
+          where: { id },
+        });
+        const profile = await user.getProfile();
+
+        return { ...user.toPublic(), profile: profile.toPublic() };
+      } catch (error) {
+        return boom.boomify(error);
+      }
     },
 
     profileByID: async (req) => {
       // get user ID from preHandler
-      let {
-        payload: { id },
-      } = req;
-      return await User.findOne({
-        where: { id },
-        include: [
-          {
-            model: Profile,
-            attributes: ["profile"],
-          },
-        ],
+      let { id } = req.query;
+
+      // handle invalid query <id> 400
+      if (!id) return boom.badRequest();
+
+      try {
+        const user = await User.findOne({
+          where: { id },
+        });
+
+        // handle 404
+        if (!user) return boom.notFound();
+
+        const profile = await user.getProfile();
+
+        return { ...user.toPublic(), profile: profile.toPublic() };
+      } catch (error) {
+        return boom.boomify(error);
+      }
+    },
+
+    getAllUser: async () => {
+      return User.findAll({
+        include: { model: Profile },
+        attributes: { exclude: ["password"] },
       })
-        .then((user) => user.profile)
+        .then((users) => users.map((user) => user.toJSON()))
         .catch(boom.boomify);
     },
 
