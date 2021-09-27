@@ -8,6 +8,7 @@ const database = require("./database/models");
 const consts = require("./consts");
 const Boom = require("@hapi/boom");
 const cwd = path.join(__dirname);
+const Qs = require("qs");
 
 const { hostname, port, jwt, server_url } = helpers.config;
 
@@ -17,6 +18,9 @@ const HapiServer = Hapi.server({
   port,
   routes: {
     cors: true,
+  },
+  query: {
+    parser: (query) => Qs.parse(query),
   },
 });
 /**************************************
