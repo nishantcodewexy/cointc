@@ -5,7 +5,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest --detectOpenHandles --watch",
-    "start": "nodemon --trace-warnings",
+    "start": "node",
+    "dev": "nodemon --trace-warnings",
     "sqlize": "sequelize-cli",
     "seed-all": "sequelize-cli db:seed:all",
     "seed-undo": "sequelize-cli db:seed:undo"
@@ -30,8 +31,10 @@
     "nodemailer": "^6.6.3",
     "pg": "^8.7.1",
     "pg-hstore": "^2.3.4",
+    "qs": "^6.10.1",
     "ripple-lib": "^1.10.0",
     "sequelize": "^6.6.5",
+    "underscore": "^1.13.1",
     "web3": "^1.5.2"
   },
   "devDependencies": {
