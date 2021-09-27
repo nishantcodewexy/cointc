@@ -1,14 +1,18 @@
 import { Switch, Route } from "react-router-dom";
-import path from "path";
+import routes from "./routes";
+
 function GuestMarkup() {
   return (
-    <>
-      <Switch>
-        <Route exact path="/">
-          Home page
-        </Route>
-      </Switch>
-    </>
+    <Switch>
+      {routes.map((data, i) => (
+        <Route
+          key={i}
+          exact
+          path={`/${data.url}`}
+          component={data.component}
+        />
+      ))}
+    </Switch>
   );
 }
 

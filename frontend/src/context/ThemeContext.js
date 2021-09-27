@@ -1,37 +1,57 @@
 import React, { createContext, useEffect, useState } from "react";
-import {dezThemeSet} from './ThemeDemo';
+import { dezThemeSet } from "./ThemeDemo";
 
 export const ThemeContext = createContext();
 
 const ThemeContextProvider = (props) => {
-	const [sideBarStyle, setSideBarStyle] = useState({ value: "full", label: "Full",});
-	const [sidebarposition, setSidebarposition] = useState({ value: "fixed",	label: "Fixed",});
-    const [headerposition, setHeaderposition] = useState({ value: "fixed", label: "Fixed", });
-    const [sidebarLayout, setSidebarLayout] = useState({ value: "vertical", label: "Vertical",});
-	const [direction, setDirection] = useState({ value: "ltr", label: "LTR" });
-	const [primaryColor, setPrimaryColor] = useState("color_1");
-	const [navigationHader, setNavigationHader] = useState("color_1");
-	const [haderColor, setHaderColor] = useState("color_1");
-	const [sidebarColor, setSidebarColor] = useState("color_1");
-	const [iconHover, setIconHover] = useState(false);
-	const [menuToggle, setMenuToggle] = useState(false);
-	const [background, setBackground] = useState({ value: "dark",	label: "Dark",});
-	const [containerPosition_, setcontainerPosition_] = useState({value: "wide-boxed", label: "Wide Boxed",});
-    const body = document.querySelector("body");
-    const [windowWidth, setWindowWidth] = useState(0);
-    const [windowHeight, setWindowHeight] = useState(0);
-	let resizeWindow = () => {
-		setWindowWidth(window.innerWidth);
-		setWindowHeight(window.innerHeight);
-		window.innerWidth >= 768 && window.innerWidth < 1024
-		? body.setAttribute("data-sidebar-style", "mini")
-		: window.innerWidth <= 768
-		? body.setAttribute("data-sidebar-style", "overlay")
-		: body.setAttribute("data-sidebar-style", "full");
-	};
+  const [sideBarStyle, setSideBarStyle] = useState({
+    value: "full",
+    label: "Full",
+  });
+  const [sidebarposition, setSidebarposition] = useState({
+    value: "fixed",
+    label: "Fixed",
+  });
+  const [headerposition, setHeaderposition] = useState({
+    value: "fixed",
+    label: "Fixed",
+  });
+  const [sidebarLayout, setSidebarLayout] = useState({
+    value: "vertical",
+    label: "Vertical",
+  });
+  const [direction, setDirection] = useState({ value: "ltr", label: "LTR" });
+  // eslint-disable-next-line
+  const [primaryColor, setPrimaryColor] = useState("color_1");
+  const [navigationHader, setNavigationHader] = useState("color_1");
+  const [haderColor, setHaderColor] = useState("color_1");
+  const [sidebarColor, setSidebarColor] = useState("color_1");
+  const [iconHover, setIconHover] = useState(false);
+  const [menuToggle, setMenuToggle] = useState(false);
+  const [background, setBackground] = useState({
+    value: "dark",
+    label: "Dark",
+  });
+  const [containerPosition_, setcontainerPosition_] = useState({
+    value: "wide-boxed",
+    label: "Wide Boxed",
+  });
+  const body = document.querySelector("body");
+  // eslint-disable-next-line
+  const [windowWidth, setWindowWidth] = useState(0);
+  // eslint-disable-next-line
+  const [windowHeight, setWindowHeight] = useState(0);
+  let resizeWindow = () => {
+    setWindowWidth(window.innerWidth);
+    setWindowHeight(window.innerHeight);
+    window.innerWidth >= 768 && window.innerWidth < 1024
+      ? body.setAttribute("data-sidebar-style", "mini")
+      : window.innerWidth <= 768
+      ? body.setAttribute("data-sidebar-style", "overlay")
+      : body.setAttribute("data-sidebar-style", "full");
+  };
 
-	
-	//window.addEventListener('load', this.setDemoTheme(1,'ltr'));
+  //window.addEventListener('load', this.setDemoTheme(1,'ltr'));
 
   // layout
   const layoutOption = [
@@ -91,7 +111,7 @@ const ThemeContextProvider = (props) => {
     { value: "HelveticaNeue", label: "HelveticaNeue" },
   ];
   const changePrimaryColor = (name) => {
-	setPrimaryColor(name);
+    setPrimaryColor(name);
     body.setAttribute("data-primary", name);
   };
   const changeNavigationHader = (name) => {
@@ -171,24 +191,26 @@ const ThemeContextProvider = (props) => {
     name.value === "boxed" &&
       changeSideBarStyle({ value: "overlay", label: "Overlay" });
   };
-  
-   const getUrlParams = (dParam) => {
-		var dPageURL = window.location.search.substring(1),
-			dURLVariables = dPageURL.split('&'),
-			dParameterName,
-			i;
 
-		for (i = 0; i < dURLVariables.length; i++) {
-			dParameterName = dURLVariables[i].split('=');
+  const getUrlParams = (dParam) => {
+    var dPageURL = window.location.search.substring(1),
+      dURLVariables = dPageURL.split("&"),
+      dParameterName,
+      i;
 
-			if (dParameterName[0] === dParam) {
-				return dParameterName[1] === undefined ? true : decodeURIComponent(dParameterName[1]);
-			}
-		}
-	};
-  
-  const setDemoTheme = (theme,direction) => {
-	  //alert(dezThemeSet[2]);
+    for (i = 0; i < dURLVariables.length; i++) {
+      dParameterName = dURLVariables[i].split("=");
+
+      if (dParameterName[0] === dParam) {
+        return dParameterName[1] === undefined
+          ? true
+          : decodeURIComponent(dParameterName[1]);
+      }
+    }
+  };
+
+  const setDemoTheme = (theme, direction) => {
+    //alert(dezThemeSet[2]);
     /* var dezThemeSet1 = {
 		typography: "poppins",
 		version: "light",
@@ -203,50 +225,48 @@ const ThemeContextProvider = (props) => {
 		containerLayout: "full",
 		direction: direction
 	}; */
-	//alert(1);
+    //alert(1);
 
-	var setAttr = {};	
-	
-	
-	var themeSettings = dezThemeSet[theme];	
-		
-	body.setAttribute("data-typography", 	themeSettings.typography);
- 
-	setAttr.value = themeSettings.version;
-	changeBackground(setAttr);
-	
-	setAttr.value = themeSettings.layout;
-	changeSideBarLayout(setAttr);
-	
-	//setAttr.value = themeSettings.primary;
-	changePrimaryColor(themeSettings.primary);
-	
-//setAttr.value = themeSettings.navheaderBg;
-	changeNavigationHader(themeSettings.navheaderBg);
-	
-//setAttr.value = themeSettings.headerBg;
-	chnageHaderColor(themeSettings.headerBg);
-	
-	setAttr.value = themeSettings.sidebarStyle;
-	changeSideBarStyle(setAttr);
-	
-	//setAttr.value = themeSettings.sidebarBg;
-	chnageSidebarColor(themeSettings.sidebarBg);
-	
-	setAttr.value = themeSettings.sidebarPosition;
-	changeSideBarPostion(setAttr);
-	
-	setAttr.value = themeSettings.headerPosition;
-	changeHeaderPostion(setAttr);
-	
-	setAttr.value = themeSettings.containerLayout;
-	changeContainerPosition(setAttr);
-	
-	//setAttr.value = themeSettings.direction;
-	setAttr.value = direction;
-	changeDirectionLayout(setAttr); 
-	
-	};
+    var setAttr = {};
+
+    var themeSettings = dezThemeSet[theme];
+
+    body.setAttribute("data-typography", themeSettings.typography);
+
+    setAttr.value = themeSettings.version;
+    changeBackground(setAttr);
+
+    setAttr.value = themeSettings.layout;
+    changeSideBarLayout(setAttr);
+
+    //setAttr.value = themeSettings.primary;
+    changePrimaryColor(themeSettings.primary);
+
+    //setAttr.value = themeSettings.navheaderBg;
+    changeNavigationHader(themeSettings.navheaderBg);
+
+    //setAttr.value = themeSettings.headerBg;
+    chnageHaderColor(themeSettings.headerBg);
+
+    setAttr.value = themeSettings.sidebarStyle;
+    changeSideBarStyle(setAttr);
+
+    //setAttr.value = themeSettings.sidebarBg;
+    chnageSidebarColor(themeSettings.sidebarBg);
+
+    setAttr.value = themeSettings.sidebarPosition;
+    changeSideBarPostion(setAttr);
+
+    setAttr.value = themeSettings.headerPosition;
+    changeHeaderPostion(setAttr);
+
+    setAttr.value = themeSettings.containerLayout;
+    changeContainerPosition(setAttr);
+
+    //setAttr.value = themeSettings.direction;
+    setAttr.value = direction;
+    changeDirectionLayout(setAttr);
+  };
 
   useEffect(() => {
     body.setAttribute("data-typography", "poppins");
@@ -265,16 +285,20 @@ const ThemeContextProvider = (props) => {
 
     resizeWindow();
     window.addEventListener("resize", resizeWindow);
-	
-	window.addEventListener("load", function(){
-		var theme =  getUrlParams('theme');
-		if(theme != undefined){
-			setDemoTheme(theme,'ltr');
-		}
-	}, false);
-	
+
+    window.addEventListener(
+      "load",
+      function () {
+        var theme = getUrlParams("theme");
+        if (theme !== undefined) {
+          setDemoTheme(theme, "ltr");
+        }
+      },
+      false
+    );
+
     return () => window.removeEventListener("resize", resizeWindow);
-  }, []);
+  });
 
   return (
     <ThemeContext.Provider
@@ -313,8 +337,8 @@ const ThemeContextProvider = (props) => {
         changeBackground,
         background,
         containerPosition_,
-		setDemoTheme,
-	}}
+        setDemoTheme,
+      }}
     >
       {props.children}
     </ThemeContext.Provider>
@@ -322,5 +346,3 @@ const ThemeContextProvider = (props) => {
 };
 
 export default ThemeContextProvider;
-
-

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 const Error404 = () => {
    return (
-      <div className="authentication  flex flex-column" style={{ height: window.screen.height - 60}}>
+      <div className="" style={{ minHeight: "80vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center"}}>
          <div className="container h-100">
             <div className="row justify-content-center h-100 align-items-center ">
                <div className="col">

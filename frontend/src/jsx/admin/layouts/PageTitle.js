@@ -5,19 +5,16 @@ const PageTitle = ({
   motherMenu,
   activeMenu,
   pageContent,
-  noHeading = false,
+  children
 }) => {
   let path = window.location.pathname.split("/");
 
-  return (
+  return (<>
     <div className="row page-titles mx-0">
       <div className="col-sm-6 p-md-0">
-        {noHeading ? (
-          <div className="welcome-text">
-            <h4>Hi, welcome back!</h4>
-            <p className="mb-0">
+        {pageContent ? (
+          <div className="">
               {pageContent ? pageContent : "Your business dashboard template"}
-            </p>
           </div>
         ) : null}
       </div>
@@ -32,6 +29,7 @@ const PageTitle = ({
         </ol>
       </div>
     </div>
+    {children}</>
   );
 };
 

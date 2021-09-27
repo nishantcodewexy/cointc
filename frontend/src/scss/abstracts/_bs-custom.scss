@@ -3,8 +3,8 @@ $enable-deprecation-messages: false;
 $ignore-warning             : true;
 
 // Custom class not bootstrap
-$fn:'HelveticaNeue'; // fn = font normal 
-$fm:'HelveticaNeueMed'; // fm = font Medium 
+$fn:'HelveticaNeue'; // fn = font normal
+$fm:'HelveticaNeueMed'; // fm = font Medium
 $border-radius: 0.75rem;
 // Body
 $body-bg   : #fbfbfb;
@@ -98,9 +98,9 @@ $colors: map-merge((
   $colors);
 
 
-  
+
 $primary  : #0059FF !default;
-$secondary: #6418C3 !default;
+$secondary: #85c4f9 !default;
 $success  : #68CF29 !default;
 $info     : #51A6F5 !default;
 $warning  : #FFAB2D !default;

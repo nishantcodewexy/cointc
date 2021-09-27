@@ -1,17 +1,22 @@
 import React, { useContext } from "react";
-import { Switch, Route, Redirect } from "react-router-dom";
+import { Switch, Route, useHistory } from "react-router-dom";
 import routes from "./routes";
-import Error404 from "./pages/Error404";
 import Nav from "./layouts/nav";
-import Footer from "./layouts/Footer";
 import { ThemeContext } from "../../context/ThemeContext";
+/// Style
+import "../../vendor/bootstrap-select/dist/css/bootstrap-select.min.css";
+import "../../css/style.css";
+import UnderConstruction from './components/UnderConstruction';
 
 const AdminMarkup = () => {
   const { menuToggle } = useContext(ThemeContext);
+  const history = useHistory();
 
-  let path = window.location.pathname;
+  let path = history.location.pathname;
   path = path.split("/");
   path = path[path.length - 1];
+
+  // pages without the default layour will carry a pref: **-page** e,g login-page
   let pagePath = path.split("-").includes("page");
 
   return (
@@ -25,20 +30,17 @@ const AdminMarkup = () => {
         {!pagePath && <Nav />}
 
         <div className={`${!pagePath ? "content-body" : ""}`}>
-          <div
-            className={`${!pagePath ? "container-fluid" : ""}`}
-            style={{ minHeight: window.screen.height - 60 }}
-          >
+          <div className={`${!pagePath ? "container-fluid" : ""}`}>
             <Switch>
               {routes.map((data, i) => (
                 <Route
                   key={i}
                   exact
                   path={`/admin/${data.url}`}
-                  component={data.component}
+                  component={data.component ?? UnderConstruction}
                 />
               ))}
-              <Route path="*" component={Error404} />
+
             </Switch>
           </div>
         </div>

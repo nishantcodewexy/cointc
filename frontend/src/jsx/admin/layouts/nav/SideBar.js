@@ -3,19 +3,30 @@ import MetisMenu from "metismenujs";
 import { useHistory } from "react-router";
 import React, { useRef, useState, useContext, useEffect } from "react";
 /// Scroll
+import $path from "path";
 import PerfectScrollbar from "react-perfect-scrollbar";
 /// Link
 import { Link } from "react-router-dom";
 import useScrollPosition from "use-scroll-position";
 import { ThemeContext } from "../../../../context/ThemeContext";
 import profile from "../../../../images/Untitled-1.jpg";
-import links from "./sidebar_links";
+import sidebar_routes from "../../sidebar_routes";
+import styled from "styled-components";
+
+const MainProfile = styled.div`
+  .main-profile {
+    i {
+      color: var(--secondary);
+      margin-right: -20px;
+    }
+  }
+`;
 
 function MM({ children }) {
   const el = useRef();
   useEffect(() => {
     if (el.current) {
-      let mm = new MetisMenu(el.current, {});
+      new MetisMenu(el.current, {});
       // return mm.dispose('dispose');
     }
   }, [el]);
@@ -72,27 +83,41 @@ const SideBar = () => {
       }`}
     >
       <PerfectScrollbar className="deznav-scroll">
-        <div className="main-profile">
-          <img src={profile} alt="" />
-          <Link to={"setting"}>
-            <i className="fa fa-cog" aria-hidden="true"></i>
-          </Link>
-          <h5 className="mb-0 fs-20 text-black ">
-            <span className="font-w400">Hello,</span> Marquez
-          </h5>
-          <p className="mb-0 fs-14 font-w400">marquezzzz@mail.com</p>
-        </div>
+        <MainProfile>
+          <div className="main-profile">
+            <img src={profile} alt="" />
+            <Link to="/admin/setting">
+              <i className="fa fa-cog" aria-hidden="true"></i>
+            </Link>
+            <h5 className="mb-0 fs-20 text-black ">
+              <span className="font-w400">Hello,</span> Marquez
+            </h5>
+            <p className="mb-0 fs-14 font-w400">marquezzzz@mail.com</p>
+          </div>
+        </MainProfile>
 
         <MM className="metismenu" id="menu">
-          {links.map(({ name, embedded = [], path, icon }, index) => {
+          {sidebar_routes.map(({ name, embedded = [], path, icon }, index) => {
             return (
               <li
-                key={`sidebar_link_${name}_${index}`}
-                className={`${embedded.includes(pathname) ? "mm-active" : ""}`}
+                key={`sidebar_routes_${name}_${index}`}
+                className={`${
+                  embedded.length
+                    ? embedded.includes(pathname)
+                      ? "mm-active"
+                      : ""
+                    : pathname === path
+                    ? "mm-active"
+                    : ""
+                }`}
               >
                 <Link
                   className={`${embedded.length ? "has-arrow ai-icon" : ""} `}
-                  to={embedded.length > 0 ? "#" : path}
+                  to={
+                    embedded.length > 0
+                      ? "#"
+                      : $path.normalize(`/admin/${path}`)
+                  }
                 >
                   <i className={icon}></i>
                   <span className="nav-text text-capitalize">
@@ -109,7 +134,7 @@ const SideBar = () => {
                             className={`${
                               pathname === data.path ? "mm-active" : ""
                             } text-capitalize`}
-                            to={data.path}
+                            to={$path.normalize(`/admin/${data.path}`)}
                           >
                             {data.name.replace(/[-]/gi, " ")}
                           </Link>
@@ -128,8 +153,8 @@ const SideBar = () => {
             <strong>CoinTC </strong> © 2021 All Rights Reserved
           </p>
           {/* <p className="fs-12">
-            Made with <span className="heart"></span> by DexignZone
-          </p> */}
+                Made with <span className="heart"></span> by DexignZone
+              </p> */}
         </div>
       </PerfectScrollbar>
     </div>
