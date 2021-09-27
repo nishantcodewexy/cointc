@@ -10,7 +10,8 @@
     "frontend-start": "yarn --cwd ./frontend start",
     "frontend-test": "yarn --cwd ./frontend dev test"
   },
-  "dependencies": {
-
+  "dependencies": {},
+  "devDependencies": {
+    "serve": "^12.0.1"
   }
 }
