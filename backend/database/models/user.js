@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const _ = require("underscore");
 const { encrypt, generateReferralCode } = require("../../helpers");
 
 module.exports = (sequelize, DataTypes) => {
@@ -14,6 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       User.hasOne(Profile, {
         foreignKey: "user_id",
       });
+    }
+    toPublic() {
+      return _.omit(this.toJSON(), ["password"]);
     }
   }
   User.init(
