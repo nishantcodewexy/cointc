@@ -16,7 +16,7 @@ import styled from "styled-components";
 const MainProfile = styled.div`
   .main-profile {
     i {
-      color: var(--secondary);
+      color: var(--primary);
       margin-right: -20px;
     }
   }
