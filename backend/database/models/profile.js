@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const _ = require("underscore");
 const { encrypt, generateReferralCode } = require("../../helpers");
 
 module.exports = (sequelize, DataTypes) => {
@@ -12,6 +13,14 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       const { Profile, User } = models;
       Profile.belongsTo(User);
+    }
+    toPublic() {
+      return _.omit(this.toJSON(), [
+        "otp",
+        "otp_ttl",
+        "verify_token",
+        "verify_token_ttl",
+      ]);
     }
   }
   Profile.init(
@@ -50,19 +59,19 @@ module.exports = (sequelize, DataTypes) => {
       verify_token_ttl: { type: DataTypes.DATE },
       archived_at: DataTypes.DATE,
 
-      profile: {
+      /* profile: {
         type: DataTypes.VIRTUAL,
         get() {
           return {
-            id: this.id,
-            nickname: this.nickname,
-            phone: this.phone_number,
-            ref_code: this.referral_code,
-            last_login: this.last_login,
-            kyc: this.kyc,
+            // id: this.id,
+            // nickname: this.nickname,
+            // phone: this.phone_number,
+            // ref_code: this.referral_code,
+            // last_login: this.last_login,
+            // kyc: this.kyc,
           };
         },
-      },
+      }, */
     },
     {
       sequelize,
