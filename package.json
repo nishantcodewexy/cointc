@@ -1,0 +1,16 @@
+{
+  "name": "cryptcon",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "lil-armstrong <oebong1@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "backend-start": "yarn --cwd ./backend start",
+    "backend-test": "yarn --cwd ./backend test",
+    "frontend-start": "yarn --cwd ./frontend start",
+    "frontend-test": "yarn --cwd ./frontend dev test"
+  },
+  "dependencies": {
+
+  }
+}
