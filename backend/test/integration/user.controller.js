@@ -32,29 +32,35 @@ module.exports = (server) => {
               role: expect.any(String),
             })
           );
-        }).catch(err => {
-          expect(err).toThrow('User not found')
+        })
+        .catch((err) => {
+          expect(err).toThrow("User not found");
         });
     });
 
     test("POST /authenticate - Authenticates user and returns JWT token", async () => {
-      await server.inject({
-        method: "post",
-        url: `${url_prefix}/authenticate`,
-        payload: {
-          email: test_email,
-          password: test_pass,
-        },
-        headers: {
-          Authorization: test_token,
-        },
-      }).then(resp => {
-        expect(resp).toStrictEqual(expect.objectContaining({
-          access_token: expect.any(String)
-        }))
-      }).catch((err) => {
-        expect(err).toThrowError('unauthorized')
-      });
+      await server
+        .inject({
+          method: "post",
+          url: `${url_prefix}/authenticate`,
+          payload: {
+            email: test_email,
+            password: test_pass,
+          },
+          headers: {
+            Authorization: test_token,
+          },
+        })
+        .then((resp) => {
+          expect(resp).toStrictEqual(
+            expect.objectContaining({
+              access_token: expect.any(String),
+            })
+          );
+        })
+        .catch((err) => {
+          expect(err).toThrowError("unauthorized");
+        });
     });
   });
 };

@@ -8,6 +8,8 @@ const database = require("./database/models");
 const consts = require("./consts");
 const Boom = require("@hapi/boom");
 const cwd = path.join(__dirname);
+const Qs = require("qs");
+
 const { hostname, port, jwt, server_url } = helpers.config;
 
 // create an hapi server instance
@@ -17,10 +19,13 @@ const HapiServer = Hapi.server({
   routes: {
     cors: true,
   },
+  query: {
+    parser: (query) => Qs.parse(query),
+  },
 });
 /**************************************
-*  register plugins
-* *************************************/
+ *  register plugins
+ * *************************************/
 (async () => {
   await HapiServer.register([
     {
@@ -32,22 +37,22 @@ const HapiServer = Hapi.server({
   ]);
 })();
 /**************************************
-*  initialize database
-**************************************/
+ *  initialize database
+ **************************************/
 database.sequelize.authenticate();
 database.sequelize.sync({ alter: false, force: false });
 
 /**************************************
-* Server security
-**************************************/
+ * Server security
+ **************************************/
 // server.state('data', {
 //   ttl: null,
 //   isSecure: true,
 //   isHttpOnly: true
 // });
 /**************************************
-*  Hapi server app options
-**************************************/
+ *  Hapi server app options
+ **************************************/
 HapiServer.app["config"] = helpers.config;
 HapiServer.app["db"] = database;
 HapiServer.app["consts"] = consts;
@@ -56,25 +61,25 @@ HapiServer.app["boom"] = Boom;
 HapiServer.app["controllers"] = {};
 
 /**************************************
-*  Set auth strategy
-**************************************/
+ *  Set auth strategy
+ **************************************/
 HapiServer.auth.strategy("jwt", "jwt", jwt);
 
 /**************************************
-* dynamically register controllers
-**************************************/
+ * dynamically register controllers
+ **************************************/
 let controllers = glob.sync("/controllers/**/*.js", {
   root: cwd,
 });
 controllers.forEach((file) => {
   let routeBase = path.basename(file, ".js"),
-  filePath = require(file);
+    filePath = require(file);
   HapiServer.app["controllers"][routeBase] = filePath(HapiServer);
 });
 
 /**************************************
-* dynamically register routes
-**************************************/
+ * dynamically register routes
+ **************************************/
 let routes = glob.sync("/routes/**/*.js", {
   root: cwd,
 });

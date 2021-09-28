@@ -267,7 +267,7 @@ module.exports = {
   config,
   jwt: JWTHelpers(),
   mailer: MailerHelpers(),
-  // wallet: wallets,
+  // wallets: wallets,
   /****************************************************
    * Generates private/public key pair
    ****************************************************/

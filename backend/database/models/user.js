@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const _ = require("underscore");
 const { encrypt, generateReferralCode } = require("../../helpers");
 
 module.exports = (sequelize, DataTypes) => {
@@ -10,11 +11,13 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const {User, Wallet} = models;
-
-      User.hasOne(Wallet, {
-        foreignKey:{ name: "owner_id", allowNull: false },
+      const { Profile, User } = models;
+      User.hasOne(Profile, {
+        foreignKey: "user_id",
       });
+    }
+    toPublic() {
+      return _.omit(this.toJSON(), ["password"]);
     }
   }
   User.init(
@@ -41,55 +44,11 @@ module.exports = (sequelize, DataTypes) => {
           this.setDataValue("password", await encrypt(value));
         },
       },
-      mode: {
-        type: DataTypes.ENUM,
-        values: ["standard"],
-      },
-      nickname: DataTypes.STRING,
-      kyc: {
-        defaultValue: {
-          email: null,
-          phone: null,
-          id: null,
-          payment_methods: null
-        },
-        type: DataTypes.JSON,
-      },
       role: {
         type: DataTypes.ENUM(["standard", "admin"]),
         defaultValue: "standard",
       },
-      referral_code: {
-        type: DataTypes.STRING,
-      },
-      referrerId: {
-        type: DataTypes.INTEGER,
-      },
-      otp: {
-        type: DataTypes.STRING,
-      },
-      otp_ttl: DataTypes.DATE,
-      last_login: DataTypes.DATE,
-      verify_token: DataTypes.STRING,
-      verify_token_ttl: { type: DataTypes.DATE },
       archived_at: DataTypes.DATE,
-
-      profile: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return {
-            id: this.id,
-            nickname: this.nickname,
-            role: this.role,
-            phone: this.phone_number,
-            ref_code: this.referral_code,
-            last_login: this.last_login,
-            kyc: this.kyc,
-            email: this.email,
-          };
-        },
-      },
-
     },
     {
       sequelize,
@@ -98,12 +57,7 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "tbl_users",
       timestamps: false,
       paranoid: true,
-      deletedAt: 'archived_at',
-      hooks: {
-        beforeCreate: (user, options) => {
-          user.referral_code = generateReferralCode(user.email);
-        },
-      },
+      deletedAt: "archived_at",
     }
   );
 
