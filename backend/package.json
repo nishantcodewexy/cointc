@@ -1,11 +1,11 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "main": "./src/index.js",
+  "main": "index.js",
   "license": "MIT",
   "scripts": {
     "test": "jest --detectOpenHandles --watch",
-    "start": "node",
+    "start": "node index.js",
     "dev": "nodemon --trace-warnings",
     "sqlize": "sequelize-cli",
     "seed-all": "sequelize-cli db:seed:all",
@@ -18,11 +18,14 @@
     "@hapi/jwt": "^2.1.0",
     "@openzeppelin/contracts": "^4.3.2",
     "@types/bcryptjs": "^2.4.2",
+    "@types/glob": "^7.1.4",
+    "@types/jest": "^27.0.1",
     "bcryptjs": "^2.4.3",
     "bignumber.js": "^9.0.1",
     "bitcoin-core": "^3.0.0",
     "dotenv": "^10.0.0",
     "ejs": "^3.1.6",
+    "eosjs": "^22.1.0",
     "ethers": "^5.4.7",
     "glob": "^7.1.7",
     "joi": "^17.4.2",
@@ -34,11 +37,9 @@
     "qs": "^6.10.1",
     "ripple-lib": "^1.10.0",
     "sequelize": "^6.6.5",
+    "socket.io": "^4.2.0",
     "underscore": "^1.13.1",
-    "web3": "^1.5.2",
-    "@types/glob": "^7.1.4",
-    "@types/jest": "^27.0.1",
-    "eosjs": "^22.1.0"
+    "web3": "^1.5.2"
   },
   "devDependencies": {
     "jest": "^27.1.1",

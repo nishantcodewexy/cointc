@@ -6,7 +6,9 @@ import { ThemeContext } from "../../context/ThemeContext";
 /// Style
 import "../../vendor/bootstrap-select/dist/css/bootstrap-select.min.css";
 import "../../css/style.css";
-import UnderConstruction from './components/UnderConstruction';
+import UnderConstruction from "./components/UnderConstruction";
+import { Provider } from "react-redux";
+import store from "./store";
 
 const AdminMarkup = () => {
   const { menuToggle } = useContext(ThemeContext);
@@ -20,7 +22,7 @@ const AdminMarkup = () => {
   let pagePath = path.split("-").includes("page");
 
   return (
-    <div>
+    <Provider store={store}>
       <div
         id={`${!pagePath ? "main-wrapper" : ""}`}
         className={`${!pagePath ? "show" : "mh100vh"}  ${
@@ -40,12 +42,11 @@ const AdminMarkup = () => {
                   component={data.component ?? UnderConstruction}
                 />
               ))}
-
             </Switch>
           </div>
         </div>
       </div>
-    </div>
+    </Provider>
   );
 };
 export default AdminMarkup;

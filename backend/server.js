@@ -35,12 +35,18 @@ const HapiServer = Hapi.server({
       },
     },
   ]);
+
+  await HapiServer.register({
+    plugin: require("./plugins/chat"),
+    options: {},
+  });
 })();
+
 /**************************************
  *  initialize database
  **************************************/
 database.sequelize.authenticate();
-database.sequelize.sync({ alter: false, force: false });
+database.sequelize.sync({ alter: false, force: !false });
 
 /**************************************
  * Server security
