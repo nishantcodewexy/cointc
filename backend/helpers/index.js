@@ -10,6 +10,7 @@ const assert = require("assert");
 const { nanoid } = require("nanoid");
 const glob = require("glob");
 const util = require("util");
+const { Op } = require("sequelize");
 // const wallets = require("../wallets");
 const env = process.env.NODE_ENVIRONMENT || "development";
 
@@ -358,4 +359,198 @@ module.exports = {
   sluggify: (text) => {
     return text.toLowerCase();
   },
+  /***********************************************
+   * function helps to convert params to sequlize where clauses
+   ***********************************************/
+  /**
+   * 
+   * @param {Object} args 
+   * @param {Object} args.params
+   * @param {Object} args.config
+   * @returns {Object}
+   */
+  filter: ({params,allowed_params,search_fields,options})=>{
+    //   set defaults 
+    if(!allowed_params)allowed_params = []
+    if(!search_fields) search_fields = []
+    if(!params) throw new Error("params is required")
+    //   options for additional configurations
+      if(!options){
+        options = {}
+      }
+      const defaultOption = {
+        maxLimit:30
+      }
+    
+      const {maxLimit} = {...defaultOption,...options}
+    
+      
+    
+      const {q,_limit,_offset,_page,_order,...extra} = params
+    
+      let config = {
+          where:{},
+          offset:0,
+          limit:20,
+          order:["created_at","DESC"]
+        }
+    
+      if(_limit){
+        
+        config.limit = parseInt(_limit)
+        if(config.limit>maxLimit){
+          config.limit = maxLimit
+        }
+        
+      }
+    
+      if(_offset){
+        config.offset = parseInt(_offset)
+      }
+    
+      if(_page){
+        config.offset = _limit?parseInt(_page)*parseInt(_limit) : parseInt(_page)*20
+      }
+    
+      if(_order){
+        if(typeof _order=="string"){
+          config.order = [..._order.replaceAll("-","").split(","),_order.startsWith("-")?"DESC":"ASC"]  
+        }else if(_order.length){
+          config.order = [..._order.map(v=>v.replaceAll("-","")),_order[0].startsWith("-")?"DESC":"ASC"]  
+        }
+    
+      }
+    
+      if(q){
+        
+        config.where = {
+          [Op.or]:search_fields.map(name=>({
+            [name]:{
+              [Op.substring]:q
+            }
+          }))
+        }
+      }else{
+        // loop throug the remaining query params
+        for (const [key, value] of Object.entries(extra)) {
+          //   skip loop if key is not allowed
+          if (!allowed_params.includes(key))continue
+    
+    
+    
+          let attribute;
+          if(key.endsWith("__ne")){
+              attribute = key.replaceAll("__ne","")
+              let oldWhere = config.where[attribute]||{}
+              config.where[attribute] = {
+                ...oldWhere,
+                [Op.ne]:value
+              }
+          }else if(key.endsWith("__gt") && !isNaN(value)){
+            attribute = key.replaceAll("__gt","")
+            let oldWhere = config.where[attribute]||{}
+            config.where[attribute] = {
+              ...oldWhere,
+                [Op.gt]:parseInt(value)
+              }
+          }else if(key.endsWith("__gte") && !isNaN(value)){
+            console.log("am here")
+            attribute = key.replaceAll("__gte","")
+            let oldWhere = config.where[attribute]||{}
+            config.where[attribute] = {
+              ...oldWhere,
+                [Op.gte]:parseInt(value)
+              }
+          }else if(key.endsWith("__lt") && !isNaN(value)){
+            attribute = key.replaceAll("__lt","")
+            let oldWhere = config.where[attribute]||{}
+            config.where[attribute] = {
+              ...oldWhere,
+                [Op.lt]:parseInt(value)
+              }
+          }else if(key.endsWith("__lte") && !isNaN(value)){
+            attribute = key.replaceAll("__lte","")
+            let oldWhere = config.where[attribute]||{}
+            config.where[attribute] = {
+              ...oldWhere,
+                [Op.lte]:parseInt(value)
+              }
+          }else if(key.endsWith("__in")){
+            attribute = key.replaceAll("__in","")
+            let oldWhere = config.where[attribute]||{}
+            config.where[attribute] = {
+              ...oldWhere,
+                [Op.in]:Array.isArray(value)?value.map(v=>isNaN(v)?v:parseInt(v)):[isNaN(value)?value:value]
+              }
+          }else if(key.endsWith("__nin")){
+            attribute = key.replaceAll("__nin","")
+            let oldWhere = config.where[attribute]||{}
+            config.where[attribute] = {
+              ...oldWhere,
+                [Op.notIn]:Array.isArray(value)?value.map(v=>isNaN(v)?v:parseInt(v)):[isNaN(value)?value:value]
+              }
+          }else if(key.endsWith("__nlike")){
+            attribute = key.replaceAll("__nlike","")
+            let oldWhere = config.where[attribute]||{}
+            config.where[attribute] = {
+              ...oldWhere,
+                [Op.notLike]:value
+              }
+          }else if(key.endsWith("__like")){
+            attribute = key.replaceAll("__like","")
+            let oldWhere = config.where[attribute]||{}
+            config.where[attribute] = {
+              ...oldWhere,
+                [Op.like]:value
+              }
+          }else if(key.endsWith("__startswith")){
+            attribute = key.replaceAll("__startswith","")
+            let oldWhere = config.where[attribute]||{}
+            config.where[attribute] = {
+              ...oldWhere,
+                [Op.startsWith]:value
+              }
+          }else if(key.endsWith("__endswith")){
+            attribute = key.replaceAll("__endswith","")
+            let oldWhere = config.where[attribute]||{}
+            config.where[attribute] = {
+              ...oldWhere,
+                [Op.endsWith]:value
+              }
+          }else if(key.endsWith("__nilike")){
+            attribute = key.replaceAll("__nilike","")
+            let oldWhere = config.where[attribute]||{}
+            config.where[attribute] = {
+              ...oldWhere,
+                [Op.notILike]:value
+              }
+          }else if(key.endsWith("__ilike")){
+            attribute = key.replaceAll("__ilike","")
+            let oldWhere = config.where[attribute]||{}
+            config.where[attribute] = {
+              ...oldWhere,
+                [Op.iLike]:value
+              }
+          }else if(key.endsWith("__substring")){
+            attribute = key.replaceAll("__substring","")
+            let oldWhere = config.where[attribute]||{}
+            config.where[attribute] = {
+              ...oldWhere,
+                [Op.substring]:value
+              }
+          }else if(!key.includes("__")){
+            let oldWhere = config.where[key]||{}
+            config.where[key] = {
+              ...oldWhere,
+                [Op.eq]:value
+              }
+    
+          }
+    
+        }
+    
+    
+      }
+      return config
+    },
 };
