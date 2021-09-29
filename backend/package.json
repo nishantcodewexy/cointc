@@ -5,8 +5,8 @@
   "license": "MIT",
   "scripts": {
     "test": "jest --detectOpenHandles --watch",
-    "start": "node",
-    "dev": "nodemon --trace-warnings",
+    "start": "node .",
+    "dev": "nodemon . --trace-warnings",
     "sqlize": "sequelize-cli",
     "seed-all": "sequelize-cli db:seed:all",
     "seed-undo": "sequelize-cli db:seed:undo"
