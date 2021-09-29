@@ -11,10 +11,11 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { Profile, User } = models;
+      const { Profile, User, Message } = models;
       User.hasOne(Profile, {
         foreignKey: "user_id",
       });
+      User.hasMany(Message, {})
     }
     toPublic() {
       return _.omit(this.toJSON(), ["password"]);
