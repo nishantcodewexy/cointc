@@ -14,6 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       const { Profile, User, Message } = models;
       User.hasOne(Profile, {
         foreignKey: "user_id",
+        as: "profile",
       });
       // User.hasMany(Message, {})
     }
@@ -41,9 +42,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: { notEmpty: true },
-        set: async (value) => {
-          this.setDataValue("password", await encrypt(value));
-        },
       },
       role: {
         type: DataTypes.ENUM(["standard", "admin"]),
@@ -59,6 +57,11 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: false,
       paranoid: true,
       deletedAt: "archived_at",
+      hooks: {
+        async beforeCreate(model, options) {
+          model.password = await encrypt(model.password);
+        },
+      },
     }
   );
 
