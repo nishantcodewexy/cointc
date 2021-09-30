@@ -36,25 +36,22 @@ function chat(server, options, next) {
     });
   }
 
+  async function createChatMsg(id, receiverId, message) {
+    return await sequelize.transaction(async (t) => {
+      const inbox = await Chat.findOrCreate({
+        where: {
+          inboxHash: Chat.makeHash([id, receiverId]),
+        },
+      });
+
+      await inbox.createMessage({
+        sender_id: id,
+        text: message,
+      });
+    });
+  }
+
   init();
-}
-
-async function createChatMsg(id, receiverId, message) {
-  // TODO: this section may run transaction
-  const inbox = await Chat.findOrCreate({
-    where: {
-      inboxHash: Chat.makeHash([id, receiverId]),
-    },
-  });
-
-  await inbox.createMessage({
-    sender_id: id,
-    text: message,
-  });
-}
-
-function makeChatRoom(to, from) {
-  return [to, from].sort().join();
 }
 
 const chatPlugin = {
