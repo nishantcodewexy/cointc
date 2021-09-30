@@ -4,62 +4,45 @@ const _ = require("underscore");
 const { generateReferralCode } = require("../../helpers");
 
 module.exports = (sequelize, DataTypes) => {
-  class Profile extends Model {
+  class AdminProfile extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { Profile, User } = models;
-      User.hasOne(Profile);
-      Profile.belongsTo(User, {
+      const { AdminProfile, User } = models;
+      User.hasOne(AdminProfile);
+      AdminProfile.belongsTo(User, {
         foreignKey: "user_id",
+        allowNull: false,
+        as: 'user'
       });
     }
     toPublic() {
-      return _.omit(this.toJSON(), [
-        "otp",
-        "otp_ttl",
-        "verify_token",
-        "verify_token_ttl",
-      ]);
+      return _.omit(this.toJSON(), []);
     }
   }
-  Profile.init(
+  AdminProfile.init(
     {
       id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      mode: {
-        type: DataTypes.ENUM,
-        values: ["standard"],
+      kyc: {
+        type: DataTypes.JSON,
+        defaultValue: {
+          account_no: "",
+          bank_name: "",
+          IFSC_code: "",
+          country: "",
+          currency: "",
+          created_at: "",
+        },
       },
       nickname: DataTypes.STRING,
-      kyc: {
-        defaultValue: {
-          email: null,
-          phone: null,
-          id: null,
-          payment_methods: null,
-        },
-        type: DataTypes.JSON,
-      },
-      referral_code: {
-        type: DataTypes.STRING,
-      },
-      referrerId: {
-        type: DataTypes.INTEGER,
-      },
-      otp: {
-        type: DataTypes.STRING,
-      },
-      otp_ttl: DataTypes.DATE,
       last_login: DataTypes.DATE,
-      verify_token: DataTypes.STRING,
-      verify_token_ttl: { type: DataTypes.DATE },
       archived_at: DataTypes.DATE,
 
       /* profile: {
@@ -78,19 +61,13 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Profile",
+      modelName: "AdminProfile",
       underscored: true,
-      tableName: "tbl_users_profile",
-      timestamps: false,
+      tableName: "tbl_admin_users_profile",
       paranoid: true,
       deletedAt: "archived_at",
-      hooks: {
-        beforeCreate: (profile, options) => {
-          profile.referral_code = generateReferralCode(profile.email);
-        },
-      },
     }
   );
 
-  return Profile;
+  return AdminProfile;
 };
