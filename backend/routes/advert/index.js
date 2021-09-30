@@ -5,7 +5,9 @@ module.exports = (server) => {
     controllers: {
       advert: { get, getAll },
     },
-      helpers: { jwt: {decodeUser} }
+    helpers: {
+      jwt: { decodeUser },
+    },
   } = server.app;
 
   const schema = Joi.object({
@@ -14,7 +16,7 @@ module.exports = (server) => {
 
   return {
     method: ["POST"],
-    path: "/ads/",
+    path: "/ads",
     config: {
       // pre-handler
       pre: [
@@ -37,7 +39,7 @@ module.exports = (server) => {
       validate: {
         payload: schema,
       },
-      auth: 'jwt'
+      auth: "jwt",
     },
   };
 };
