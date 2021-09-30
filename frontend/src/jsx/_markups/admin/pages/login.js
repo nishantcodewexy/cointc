@@ -38,19 +38,8 @@ const LoginPage = () => {
       onSubmit={(values, { setSubmitting }) => {
         const { email, password } = values;
         try {
-          axios
-            .post("http://localhost:8080/admin/user/authenticate", {
-              email,
-              password,
-            })
-            .then(({ data }) => {
-              // sessionDispatcher(setToken(data.access_token));
-              // state.metadata = data.profile;
-              const { from } = location.state || { from: { pathname: "/admin" } };
-              dispatch(userAction.login({email, password, from}));
-
-              history.push("/admin");
-            });
+          const { from } = location.state || { from: { pathname: "/admin" } };
+          dispatch(userAction.login({ email, password, from }));
         } catch (error) {
           console.error(error);
         }
