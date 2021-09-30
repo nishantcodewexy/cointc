@@ -27,10 +27,9 @@ module.exports = (server) => {
           );
 
         return await sequelize.transaction(async (t) => {
-          const encrypted = await encrypt(password);
           _user = await User.create({
             email,
-            password: encrypted,
+            password,
             role,
           });
 
