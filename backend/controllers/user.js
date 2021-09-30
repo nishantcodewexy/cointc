@@ -30,22 +30,28 @@ module.exports = (server) => {
           );
 
         // create JWT token to email
-        const token = jwt.create(_user, 900);
-        debugger;
+        // const token = jwt.create({_user,}, 900);
+        // debugger;
         //TODO: Create blockchain wallets
 
         // TODO: using transactions to complete user accout creation
         const t = await sequelize.transaction();
         try {
-          _user = await User.build({
+          _user = await User.create({
             ...req.payload,
+            role: "standard",
           });
+
+          const _profile = await Profile.create({ email });
+          await _user.addProfile(_profile);
 
           await t.commit();
         } catch (error) {
           await t.rollback();
         }
         // transaction ends
+
+        return _user;
 
         // TODO:Create new wallet record
 
@@ -193,7 +199,7 @@ module.exports = (server) => {
 
     getAllUser: async () => {
       return User.findAll({
-        include: { model: Profile },
+        include: { association: "profile" },
         attributes: { exclude: ["password"] },
       })
         .then((users) => users.map((user) => user.toJSON()))
