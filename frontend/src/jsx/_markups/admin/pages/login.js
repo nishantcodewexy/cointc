@@ -46,7 +46,7 @@ const LoginPage = () => {
             .then(({ data }) => {
               // sessionDispatcher(setToken(data.access_token));
               // state.metadata = data.profile;
-              const { from } = location.state || { from: { pathname: "/" } };
+              const { from } = location.state || { from: { pathname: "/admin" } };
               dispatch(userAction.login({email, password, from}));
 
               history.push("/admin");
