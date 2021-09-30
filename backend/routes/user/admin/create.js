@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: { createUser },
+      user: { createAdmin },
     },
     consts: { patterns },
   } = server.app;
@@ -13,14 +13,12 @@ module.exports = (server) => {
     email: Joi.string().email({ minDomainSegments: 2 }).required(),
     password: Joi.string().pattern(patterns.password).required(),
     repeat_password: Joi.ref("password"),
-    referrer: Joi.string().min(21).optional(),
-    role: Joi.string().min(21).required(),
   }).with("password", "repeat_password");
 
   return {
     method: "POST",
-    path: `/user/create`,
-    handler: createUser,
+    path: `/admin/user/create`,
+    handler: createAdmin,
     options: {
       validate: {
         payload: schema,

@@ -46,7 +46,7 @@ const HapiServer = Hapi.server({
  *  initialize database
  **************************************/
 database.sequelize.authenticate();
-database.sequelize.sync({ alter: false, force: !false });
+database.sequelize.sync({ alter: false, force: false });
 
 /**************************************
  * Server security

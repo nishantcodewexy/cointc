@@ -1,28 +1,29 @@
-import Admin from "./admin";
-import Guest from "./guest";
-import {
-  BrowserRouter as Router,
-  Switch,
-  Route,
-} from "react-router-dom";
-import Error404 from "./pages/error404";
+import Admin from "./_markups/admin";
+// import Guest from "./_markups/guest";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { Provider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
+import _helpers from "./_helpers";
 
-export default function Markup() {
+const {
+  store: { store, persistor }, history
+} = _helpers;
+
+// import { withResizeDetector } from "react-resize-detector";
+
+function Markup() {
   return (
-    <Router>
-      <Switch>
-        <Route path="/admin">
+    <Router history={history}>
+      <Provider store={store}>
+        <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
+          {/* Admin user page */}
           <Admin />
-        </Route>
-
-        <Route path="/">
-          <Guest />
-        </Route>
-
-        <Route path="*">
-          <Error404 />
-        </Route>
-      </Switch>
+          {/* Guest user pages */}
+          {/* <Guest /> */}
+        </PersistGate>
+      </Provider>
     </Router>
   );
 }
+
+export default Markup;

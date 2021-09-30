@@ -1,17 +1,14 @@
-
 /// Components
 import Markup from "./jsx";
-
-import { withResizeDetector } from "react-resize-detector";
-
 import ThemeContextProvider from "./context/ThemeContext";
+require('dotenv').config();
 
 const App = () => {
   return (
-    <ThemeContextProvider >
+    <ThemeContextProvider>
       <Markup />
     </ThemeContextProvider>
   );
 };
 
-export default withResizeDetector(App);
+export default App;
