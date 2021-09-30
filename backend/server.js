@@ -91,6 +91,7 @@ let routes = glob.sync("/routes/**/*.js", {
 });
 
 routes.forEach((file) => {
+  
   let filePath = require(file);
   HapiServer.route(filePath(HapiServer));
 });
