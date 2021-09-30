@@ -1,6 +1,5 @@
 "use strict";
 const { Model } = require("sequelize");
-const { uniqueId } = require("underscore");
 const crypto = require("crypto");
 
 module.exports = (sequelize, DataTypes) => {
