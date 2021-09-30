@@ -22,6 +22,9 @@ const HapiServer = Hapi.server({
   query: {
     parser: (query) => Qs.parse(query),
   },
+  router: {
+    stripTrailingSlash: true,
+  },
 });
 /**************************************
  *  register plugins
@@ -46,7 +49,7 @@ const HapiServer = Hapi.server({
  *  initialize database
  **************************************/
 database.sequelize.authenticate();
-database.sequelize.sync({ alter: false, force: !false });
+database.sequelize.sync({ alter: false, force: false });
 
 /**************************************
  * Server security
