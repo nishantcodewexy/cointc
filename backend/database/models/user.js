@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
-const { encrypt, generateReferralCode } = require("../../helpers");
+const { encrypt } = require("../../helpers");
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -54,7 +54,6 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "User",
       underscored: true,
       tableName: "tbl_users",
-      timestamps: false,
       paranoid: true,
       deletedAt: "archived_at",
       hooks: {

@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
-const { encrypt, generateReferralCode } = require("../../helpers");
+const { generateReferralCode } = require("../../helpers");
 
 module.exports = (sequelize, DataTypes) => {
   class Profile extends Model {

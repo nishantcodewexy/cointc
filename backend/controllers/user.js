@@ -2,21 +2,18 @@ const assert = require("assert");
 
 module.exports = (server) => {
   const {
-    db: { User, Profile, sequelize },
+    db: { User, AdminProfile, Profile, sequelize },
     boom,
     config: { server_url, client_url },
-    helpers: { decrypt, mailer, jwt },
+    helpers: { encrypt, decrypt, mailer, jwt },
   } = server.app;
 
   return {
-    // Creates new user
-    create: async function (req) {
+    async createAdmin(req) {
+      const { email, password, role = "admin", ...restOfPayload } = req.payload;
+      assert(email, boom.badRequest("Expected email"));
+      assert(password, boom.badRequest("Expected password field"));
       try {
-        const { email, password } = req.payload;
-
-        assert(email, boom.badRequest("Expected email"));
-        assert(password, boom.badRequest("Expected password field"));
-
         // Check that the user email doesn't already exist
         let _user = await User.findOne({
           where: {
@@ -29,78 +26,113 @@ module.exports = (server) => {
             `User with the email: ${email} already exist`
           );
 
-        // create JWT token to email
-        // const token = jwt.create({_user,}, 900);
-        // debugger;
-        //TODO: Create blockchain wallets
-
-        // TODO: using transactions to complete user accout creation
-        const t = await sequelize.transaction();
-        try {
+        return await sequelize.transaction(async (t) => {
+          const encrypted = await encrypt(password);
           _user = await User.create({
-            ...req.payload,
-            role: "standard",
+            email,
+            password: encrypted,
+            role,
           });
 
-          const _profile = await Profile.create({ email });
-          await _user.addProfile(_profile);
-
-          await t.commit();
-        } catch (error) {
-          await t.rollback();
-        }
-        // transaction ends
-
-        return _user;
-
-        // TODO:Create new wallet record
-
-        let confirmationLink = `${server_url}/confim_email?email=${email}&code=${token}`;
-        // Send email verification
-        const mailObject = {
-          to: email,
-          htmlTemplate: {
-            name: "account_confirmation",
-            transform: {
-              confirmationLink,
-              recipientEmail: email,
+          let _profile = await _user.createAdminProfile(
+            {
+              ...restOfPayload,
             },
-          },
-          subject: "Cryptcon - Account confirmation",
-        };
-        // Save
-        await _user.save({
-          fields: ["email", "password", "referrerId"],
+            {}
+          );
+          return _profile;
         });
-        // Send mail
-        await mailer.sendMail(mailObject);
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
 
-        return { access_token: jwt.create(user) };
-      } catch (err) {
-        console.error(err);
-        return boom.boomify(err);
+    async authenticateAdmin(req) {
+      const { email, password } = req.payload;
+      const { Op } = sequelize;
+      // fetch user record from DB that matches the email
+      return await User.findOne({
+        where: { email, role: "admin" },
+        include: {
+          model: AdminProfile,
+          attributes: [
+            "id",
+            "kyc",
+            "created_at",
+            "updated_at",
+            "last_login",
+            "nickname",
+            "archived_at",
+          ],
+          include: {
+            model: User,
+            as: "user",
+            attributes: ["email", "role", "created_at"],
+          },
+        },
+      })
+        .then(async (_user) => {
+          if (_user) {
+            return (
+              (await decrypt(password, _user.password)) && {
+                access_token: jwt.create(_user),
+                profile: _user.AdminProfile,
+              }
+            );
+          }
+          throw new Error("User not found");
+        })
+        .catch(boom.notFound);
+    },
+
+    async createUser(req) {
+      const { email, password } = req.payload;
+      const _user = await createUser({ email, password, role: "standard" });
+      if (_user) {
+        // TODO: create standard user profile
+        // TODO: Send mail
+        // const token = jwt.create(_user, 900);
+        /* 
+      let confirmationLink = `${server_url}/confim_email?email=${email}&code=${token}`;
+      // Send email verification
+      const mailObject = {
+        to: email,
+        htmlTemplate: {
+          name: "account_confirmation",
+          transform: {
+            confirmationLink,
+            recipientEmail: email,
+          },
+        },
+        subject: "Cryptcon - Account confirmation",
+      };
+      
+      await mailer.sendMail(mailObject); */
       }
     },
 
     // authenticate user
     authenticate: async function (req) {
       const { email, password } = req.payload;
-
       // fetch user record from DB that matches the email
       return await User.findOne({
-        where: { email },
+        where: { email, role: "standard" },
         include: {
           model: Profile,
-          attributes: ["profile"],
+          // attributes: ["profile"],
         },
       })
-        .then(
-          async (_user) =>
-            (await decrypt(password, _user.password)) && {
-              access_token: jwt.create(_user),
-            }
-        )
-        .catch(boom.boomify);
+        .then(async (_user) => {
+          if (_user)
+            return (
+              (await decrypt(password, _user.password)) && {
+                access_token: jwt.create(_user),
+              }
+            );
+          return boom.notFound("User not found");
+        })
+        .catch(boom.notFound);
     },
 
     confirmEmail: async (req) => {
