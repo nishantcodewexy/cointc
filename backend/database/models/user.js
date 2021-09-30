@@ -15,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasOne(Profile, {
         foreignKey: "user_id",
       });
-      User.hasMany(Message, {})
+      // User.hasMany(Message, {})
     }
     toPublic() {
       return _.omit(this.toJSON(), ["password"]);

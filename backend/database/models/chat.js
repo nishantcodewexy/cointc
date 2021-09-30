@@ -1,6 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
 const { uniqueId } = require("underscore");
+const crypto = require("crypto");
+
 module.exports = (sequelize, DataTypes) => {
   class Chat extends Model {
     /**
@@ -13,6 +15,12 @@ module.exports = (sequelize, DataTypes) => {
       const { Chat, Message } = models;
       Chat.hasMany(Message, {});
     }
+    static makeHash(to, from) {
+      return crypto
+        .createHash("md5")
+        .update([to, from].sort().join(""))
+        .digest("hex");
+    }
   }
   Chat.init(
     {
@@ -20,17 +28,22 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         unique: true,
         primaryKey: true,
-        set() {
-          const to = this.getDataValue("to");
-          const from = this.getDataValue("from");
-          return this.setDataValue("id", `${from}-${to}`);
-        },
       },
       to: {
         type: DataTypes.VIRTUAL,
       },
       from: {
         type: DataTypes.VIRTUAL,
+      },
+      inboxHash: {
+        type: DataTypes.STRING,
+        unique: true,
+        set() {
+          const to = this.getDataValue("to");
+          const from = this.getDataValue("from");
+          let hash = Chat.makeHash(to, from);
+          return this.setDataValue("id", hash);
+        },
       },
     },
     {
