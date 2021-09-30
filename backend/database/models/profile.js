@@ -12,7 +12,9 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       const { Profile, User } = models;
-      Profile.belongsTo(User);
+      Profile.belongsTo(User, {
+        foreignKey: "user_id",
+      });
     }
     toPublic() {
       return _.omit(this.toJSON(), [
