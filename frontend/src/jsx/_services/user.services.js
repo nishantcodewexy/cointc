@@ -1,5 +1,5 @@
 import helpers from "../_helpers";
-
+import axios from "axios";
 const { authHeader } = helpers;
 
 const userService = {
@@ -12,6 +12,7 @@ const userService = {
   delete: _delete,
 };
 const apiUrl = process.env.API_URL;
+debugger;
 export default userService;
 
 async function login(username, password) {
@@ -21,7 +22,10 @@ async function login(username, password) {
     body: JSON.stringify({ username, password }),
   };
 
-  const response = await fetch(`${apiUrl}/admin/user/authenticate`, requestOptions);
+  const response = await axios(
+    `${apiUrl}/admin/user/authenticate`,
+    requestOptions
+  );
   const user = await handleResponse(response);
   // store user details and jwt token in local storage to keep user logged in between page refreshes
   localStorage.setItem("user", JSON.stringify(user));

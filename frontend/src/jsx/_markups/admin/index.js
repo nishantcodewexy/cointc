@@ -14,7 +14,6 @@ import _helpers from "../../_helpers";
 import _actions from "../../_actions";
 import _components from "./components";
 
-debugger;
 const { history } = _helpers;
 const { alertAction } = _actions;
 const { PrivateRoute, error404 } = _components;
