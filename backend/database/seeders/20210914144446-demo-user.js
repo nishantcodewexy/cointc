@@ -33,6 +33,7 @@ async function seedUser(len = 10) {
           id: id,
           email,
           password: faker.internet.password(),
+          role: faker.datatype.boolean() ? "admin" : "standard",
           // referral_code: 'seet7pcH'
         },
       ],
