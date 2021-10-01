@@ -1,7 +1,9 @@
 import PrivateRoute from "./PrivateRoute";
-import error404 from "./error404";
+import Error404 from "./Error404";
+import IdenticonAvatar from "./IdenticonAvatar";
 
 export default {
   PrivateRoute,
-  error404,
+  Error404,
+  IdenticonAvatar,
 };

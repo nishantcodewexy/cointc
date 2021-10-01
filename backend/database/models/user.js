@@ -11,11 +11,16 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { Profile, User, Message } = models;
+      const { Profile, User, AdminProfile, /* Message */ } = models;
       User.hasOne(Profile, {
         foreignKey: "user_id",
+        as: "profile",
       });
-      User.hasMany(Message, {});
+      User.hasOne(AdminProfile, {
+        foreignKey: "user_id",
+        as: "admin_profile",
+      });
+      // User.hasMany(Message, {})
     }
     toPublic() {
       return _.omit(this.toJSON(), ["password"]);
@@ -41,12 +46,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
         validate: { notEmpty: true },
-        // set: async (value) => {
-        //   await encrypt(value).then((encrypted) =>
-        //     this.setDataValue("password", encrypted)
-        //   );
-        //   debugger;
-        // },
       },
       role: {
         type: DataTypes.ENUM(["standard", "admin"]),
@@ -61,6 +60,11 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "tbl_users",
       paranoid: true,
       deletedAt: "archived_at",
+      hooks: {
+        async beforeCreate(model, options) {
+          model.password = await encrypt(model.password);
+        },
+      },
     }
   );
 
