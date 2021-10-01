@@ -23,11 +23,6 @@ module.exports = (sequelize, DataTypes) => {
   }
   Chat.init(
     {
-      id: {
-        type: DataTypes.STRING,
-        unique: true,
-        primaryKey: true,
-      },
       to: {
         type: DataTypes.VIRTUAL,
       },
