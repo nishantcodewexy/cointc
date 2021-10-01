@@ -38,14 +38,16 @@ function AdminMarkup() {
       <Switch>
         <Route path="/admin/login" component={LoginPage} />
 
-        {routes.map((data, i) => (
+        {routes.map(({ url, component: Component }, i) => (
           <PrivateRoute
             key={i}
             exact
-            path={data.url}
-            component={
-              <AdminLayout>{data.component ?? UnderConstruction}</AdminLayout>
-            }
+            path={`/admin/${url}`}
+            component={() => (
+              <AdminLayout>
+                {<Component /> ?? <UnderConstruction />}
+              </AdminLayout>
+            )}
           />
         ))}
         {/* <Route path="*" component={error404} /> */}
@@ -66,16 +68,20 @@ function AdminLayout({ children }) {
   // pages without the default layour will carry a pref: **-page** e,g login-page
   let pagePath = path.split("-").includes("page");
 
-  <div
-    id={`${!pagePath ? "main-wrapper" : ""}`}
-    className={`${!pagePath ? "show" : "mh100vh"}  ${
-      menuToggle ? "menu-toggle" : ""
-    }`}
-  >
-    {!pagePath && <Nav />}
+  return (
+    <div
+      id={`${!pagePath ? "main-wrapper" : ""}`}
+      className={`${!pagePath ? "show" : "mh100vh"}  ${
+        menuToggle ? "menu-toggle" : ""
+      }`}
+    >
+      {!pagePath && <Nav />}
 
-    <div className={`${!pagePath ? "content-body" : ""}`}>
-      <div className={`${!pagePath ? "container-fluid" : ""}`}>{children}</div>
+      <div className={`${!pagePath ? "content-body" : ""}`}>
+        <div className={`${!pagePath ? "container-fluid" : ""}`}>
+          {children}
+        </div>
+      </div>
     </div>
-  </div>;
+  );
 }
