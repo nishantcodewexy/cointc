@@ -1,12 +1,23 @@
 "use strict";
 
 module.exports = (server) => {
-  const { getAllUser } = server.app.controllers.user;
+  const {
+    controllers: {
+      user: { getAllUser },
+    },
+    consts: { roles: _roles },
+  } = server.app;
 
   return {
     method: ["GET"],
-    path: "/user",
+    path: "/admin/user/all",
     config: {
+      pre: [
+        {
+          method: () => _roles.admin,
+          assign: "role",
+        },
+      ],
       handler: getAllUser,
     },
   };
