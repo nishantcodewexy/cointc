@@ -5,7 +5,10 @@ module.exports = (server) => {
     controllers: {
       user: { profile },
     },
-    helpers: { jwt: {decodeUser} },
+    helpers: {
+      jwt: { decodeUser },
+    },
+    consts: { roles: _roles },
   } = server.app;
 
   return {
@@ -18,9 +21,9 @@ module.exports = (server) => {
           assign: "user",
         },
         {
-          method: ()=>"standard",
-          assign: 'role'
-        }
+          method: () => _roles.standard,
+          assign: "role",
+        },
       ],
       handler: profile,
       auth: "jwt",

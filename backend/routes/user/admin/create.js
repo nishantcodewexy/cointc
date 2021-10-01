@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: { createAdmin },
+      user: { create },
     },
     consts: { patterns, roles: _roles },
   } = server.app;
@@ -25,7 +25,7 @@ module.exports = (server) => {
           assign: "role",
         },
       ],
-      handler: createAdmin,
+      handler: create,
       validate: {
         payload: schema,
       },
