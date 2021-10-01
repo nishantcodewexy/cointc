@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Formik } from "formik";
 import logo from "../../../../images/svg/logo.svg";
 import { useSelector, useDispatch } from "react-redux";
@@ -13,17 +13,15 @@ const LoginPage = () => {
   const location = useLocation();
   const history = useHistory();
   // let user = localStorage.getItem("user");
-  const [isLoading, setIsLoading] = useState(true);
   // reset login status
   useEffect(() => {
     // if (user) {
     //   history.push("/admin");
     // }
     // dispatch(userAction.fetchProfile())
-    setIsLoading(false);
   });
 
-  return !isLoading ? (
+  return (
     <Formik
       initialValues={{ email: "", password: "" }}
       validate={(values) => {
@@ -67,8 +65,8 @@ const LoginPage = () => {
       }) => (
         <>
           {/* {alert.message && (
-            <div className={`alert ${alert.type}`}>{alert.message}</div>
-          )} */}
+        <div className={`alert ${alert.type}`}>{alert.message}</div>
+      )} */}
           <div className="authentication flex flex-column align-items-center justify-content-center vh-100">
             <div className="container h-100">
               <div className="row justify-content-center h-100 align-items-center">
@@ -143,8 +141,6 @@ const LoginPage = () => {
         </>
       )}
     </Formik>
-  ) : (
-    "Loading..."
   );
 };
 

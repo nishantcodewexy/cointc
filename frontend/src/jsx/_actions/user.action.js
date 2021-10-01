@@ -22,10 +22,12 @@ function login({ email, password, from }) {
     userServices.login(email, password).then(
       (user) => {
         dispatch(success(user));
-        historyHelpers.push(from);
+        // console.log({ from, historyHelpers });
+        window.location.href=from.pathname
+        // historyHelpers.push(from);
       },
       (error) => {
-        console.log('In error')
+        console.log("In error");
         dispatch(failure(error.toString()));
         dispatch(alertAction.error(error.toString()));
       }

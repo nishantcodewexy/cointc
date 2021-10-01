@@ -84,7 +84,7 @@ module.exports = (server) => {
           return (
             (await decrypt(password, _user.password)) && {
               token: jwt.create(_user),
-              user: _user.toPublic(),
+              ..._user.toPublic(),
             }
           );
         }
