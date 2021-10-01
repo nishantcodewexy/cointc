@@ -1,26 +1,32 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import logo from "../../../../images/svg/logo.svg";
 import { useSelector, useDispatch } from "react-redux";
-import { useLocation } from "react-router-dom";
 import { Formik } from "formik";
-import { useHistory } from "react-router-dom";
-import axios from "axios";
+import { useHistory, useLocation } from "react-router-dom";
 import _actions from "../../../_actions";
 
 const { userAction } = _actions;
 
 const LoginPage = () => {
   const history = useHistory();
+  const session = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const location = useLocation();
-
+  let user = localStorage.getItem("user");
+  const [isLoading, setIsLoading] = useState(true);
   // reset login status
   useEffect(() => {
-    dispatch(userAction.logout());
-  }, []);
+    if (user) {
+      history.push("/admin");
+    }
+    setIsLoading(false);
+  }, [session]);
+  // useEffect(() => {
+  //   dispatch(userAction.logout());
+  // }, []);
 
-  return (
+  return !isLoading ? (
     <Formik
       initialValues={{ email: "", password: "" }}
       validate={(values) => {
@@ -124,6 +130,8 @@ const LoginPage = () => {
         </div>
       )}
     </Formik>
+  ) : (
+    "Loading..."
   );
 };
 

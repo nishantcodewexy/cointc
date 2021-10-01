@@ -3,9 +3,9 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: { createAdmin },
+      user: { create },
     },
-    consts: { patterns },
+    consts: { patterns, roles: _roles },
   } = server.app;
 
   // define Joi schema
@@ -17,9 +17,15 @@ module.exports = (server) => {
 
   return {
     method: "POST",
-    path: `/admin/user/create`,
-    handler: createAdmin,
-    options: {
+    path: `/user/admin/create`,
+    config: {
+      pre: [
+        {
+          method: () => _roles.admin,
+          assign: "role",
+        },
+      ],
+      handler: create,
       validate: {
         payload: schema,
       },

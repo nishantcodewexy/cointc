@@ -13,17 +13,19 @@ module.exports = (server) => {
 
   return {
     method: ["GET"],
-    path: "/user/profile",
+    path: "/user/admin/profile",
     config: {
       pre: [
-        {
-          method: decodeUser,
-          assign: "user",
-        },
-        {
-          method: () => _roles.standard,
-          assign: "role",
-        },
+        [
+          {
+            method: decodeUser,
+            assign: "user",
+          },
+          {
+            method: () => _roles.admin,
+            assign: "role",
+          },
+        ],
       ],
       handler: profile,
       auth: "jwt",

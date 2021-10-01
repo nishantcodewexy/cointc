@@ -3,30 +3,22 @@
 module.exports = (server) => {
   const {
     controllers: {
-      user: { profile },
-    },
-    helpers: {
-      jwt: { decodeUser },
+      user: { getAllUser },
     },
     consts: { roles: _roles },
   } = server.app;
 
   return {
     method: ["GET"],
-    path: "/user/profile",
+    path: "/user/admin/all",
     config: {
       pre: [
         {
-          method: decodeUser,
-          assign: "user",
-        },
-        {
-          method: () => _roles.standard,
+          method: () => _roles.admin,
           assign: "role",
         },
       ],
-      handler: profile,
-      auth: "jwt",
+      handler: getAllUser,
     },
   };
 };

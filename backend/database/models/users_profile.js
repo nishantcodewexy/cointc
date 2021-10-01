@@ -69,27 +69,13 @@ module.exports = (sequelize, DataTypes) => {
       verify_token: DataTypes.STRING,
       verify_token_ttl: { type: DataTypes.DATE },
       archived_at: DataTypes.DATE,
-
-      /* profile: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return {
-            // id: this.id,
-            // nickname: this.nickname,
-            // phone: this.phone_number,
-            // ref_code: this.referral_code,
-            // last_login: this.last_login,
-            // kyc: this.kyc,
-          };
-        },
-      }, */
     },
     {
       sequelize,
       modelName: "Profile",
       underscored: true,
       tableName: "tbl_users_profile",
-      timestamps: false,
+      timestamps: true,
       paranoid: true,
       deletedAt: "archived_at",
       hooks: {
