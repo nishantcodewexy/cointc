@@ -9,28 +9,16 @@ module.exports = (server) => {
     consts: { roles: _roles },
   } = server.app;
 
-  return {
-    async createAdmin(req) {
+  const UserController = {
+    async create(req) {
       let { role } = req.pre;
       const { email, password, ...restOfPayload } = req.payload;
       assert(email, boom.badRequest("Expected email"));
       assert(password, boom.badRequest("Expected password field"));
-      let profile;
-      switch (role) {
-        case _roles.admin:
-          profile = "createAdminProfile";
-          break;
-        case role.standard:
-          profile = "createProfile";
-          break;
-        default:
-          console.error(`Bad user role specified`, role);
-          return boom.boomify(
-            new Error("User operation not allowed: Bad role")
-          );
-      }
 
       try {
+        const { profile, model } = assertRole(role);
+        console.log(model);
         // Check that the user email doesn't already exist
         let _user = await User.findOne({
           where: {
@@ -44,19 +32,27 @@ module.exports = (server) => {
           );
 
         return await sequelize.transaction(async (t) => {
-          _user = await User.create({
-            email,
-            password,
-            role,
-          });
-
-          let _profile = await _user[profile](
+          _user = await User.create(
             {
-              ...restOfPayload,
+              email,
+              password,
+              role,
+              [profile]: { ...restOfPayload },
             },
-            {}
+            {
+              transaction: t,
+              include: [
+                {
+                  association: profile,
+                },
+              ],
+            }
           );
-          return _profile;
+
+          return {
+            access_token: jwt.create(_user),
+            user: _user.toPublic(),
+          };
         });
       } catch (error) {
         console.error(error);
@@ -71,49 +67,16 @@ module.exports = (server) => {
           pre: { role },
         } = req;
 
-        let profile, profile_attributes;
-        switch (role) {
-          case _roles.admin:
-            profile = "admin_profile";
-            profile_attributes = [
-              "id",
-              "kyc",
-              "created_at",
-              "updated_at",
-              "last_login",
-              "nickname",
-              "archived_at",
-            ];
-            break;
-          case _roles.standard:
-            profile = "profile";
-            profile_attributes = [
-              "id",
-              "email",
-              "mode",
-              "nickname",
-              "kyc",
-              "referral_code",
-              "referrerId",
-              "last_login",
-              "archived_at",
-            ];
-            break;
-          default:
-            console.error(`Bad user role specified`, role);
-            return boom.boomify(
-              new Error("User operation not allowed: Bad role")
-            );
-        }
+        const { profile, profile_attributes } = assertRole(role);
 
         // fetch user record from DB that matches the email
         let _user = await User.findOne({
           where: { email, role },
           include: {
-            association: profile,
+            model: profile,
             attributes: profile_attributes,
             required: true,
-            right: true,            
+            right: true,
           },
         });
 
@@ -219,57 +182,48 @@ module.exports = (server) => {
       try {
         let { user: id, role } = req.pre;
 
-        let profile;
-        switch (role) {
-          case _roles.admin:
-            profile = "admin_profile";
-            break;
-          case _roles.standard:
-          default:
-            profile = "profile";
-        }
+        const { profile } = assertRole(role);
 
-        const user = await User.findOne({
+        return await User.findOne({
           where: { id, role },
           include: {
             association: profile,
           },
-        });
-
-        return { ...user.toPublic() /* profile: user.toPublic() */ };
+        }).then((_user) => _user.toPublic());
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
       }
     },
 
-    profileByID: async (req) => {
-      // get user ID from preHandler
-      let { id, role } = req.query;
-
-      // handle invalid query <id> 400
-      if (!id) return boom.badRequest();
-
+    findID: async (req) => {
       try {
-        const user = await User.findOne({
-          where: { id, role },
-        });
+        // get user ID from preHandler
+        let {
+          query: { id },
+          pre: { user },
+        } = req;
+        
+        // handle invalid query <id> 400
+        if (!id) return boom.badRequest();
 
-        // handle 404
-        if (!user) return boom.notFound();
+        const role = await User.findOne({
+          where: { id: user },
+        })
+          .then((_user) => _user.role)
+          .catch((error) => {
+            throw new Error(`User Controller:findID - ${error.message}`);
+          });
 
-        let profile;
-        switch (role) {
-          case _roles.admin:
-            profile = await user.getAdminProfile();
-            break;
-          case _roles.standard:
-          default:
-            profile = await user.getProfile();
-        }
+        // Do not allow standard users to find admins
+        let where = role == _roles.standard ? { id, role } : { id };
 
-        return { ...user.toPublic(), profile: profile.toPublic() };
+        // Find target user
+        return await User.findOne({
+          where,
+        }).then((_user) => _user?.toPublic() ?? boom.notFound('User not found!'));
       } catch (error) {
+        console.error(error);
         return boom.boomify(error);
       }
     },
@@ -311,4 +265,48 @@ module.exports = (server) => {
       };
     },
   };
+
+  // **************************************************
+  function assertRole(role) {
+    let profile, profile_attributes;
+    switch (role) {
+      case _roles.admin:
+        profile = "admin_profile";
+        profile_attributes = [
+          "id",
+          "kyc",
+          "created_at",
+          "updated_at",
+          "last_login",
+          "nickname",
+          "archived_at",
+        ];
+        break;
+      case _roles.standard:
+        profile = "profile";
+        profile_attributes = [
+          "id",
+          "email",
+          "mode",
+          "nickname",
+          "kyc",
+          "referral_code",
+          "referrerId",
+          "last_login",
+          "archived_at",
+        ];
+        break;
+      default:
+        console.error(`Bad user role specified`, role);
+        throw new Error("User operation not allowed: Bad role");
+    }
+
+    let model = profile
+      .split("_")
+      .map((_p) => _p.charAt(0).toUpperCase() + _p.slice(1, +_p.length))
+      .join("");
+    return { profile, profile_attributes, model };
+  }
+
+  return UserController;
 };

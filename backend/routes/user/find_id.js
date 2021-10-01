@@ -1,17 +1,35 @@
 "use strict";
+const Joi = require("joi");
 
 module.exports = (server) => {
   const {
     controllers: {
-      user: { profileByID },
+      user: { findID },
+    },
+    helpers: {
+      jwt: { decodeUser },
     },
   } = server.app;
 
+  const schema = Joi.object({
+    id: Joi.string().required(),
+  });
+
   return {
     method: ["GET"],
-    path: "/user/find_id",
+    path: "/user/findID",
     config: {
-      handler: profileByID,
+      pre: [
+        {
+          method: decodeUser,
+          assign: "user",
+        },
+      ],
+      handler: findID,
+      validate: {
+        query: schema,
+      },
+      auth: "jwt",
     },
   };
 };
