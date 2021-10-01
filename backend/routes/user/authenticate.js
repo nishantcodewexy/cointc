@@ -5,19 +5,20 @@ module.exports = (server) => {
     controllers: {
       user: { authenticate },
     },
-    consts: { patterns },
+    consts: { patterns, roles: _roles },
   } = server.app;
 
   // define Joi schema
   const schema = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2 }).required(),
     password: Joi.string().pattern(patterns.password).required(),
-  }).with('email', 'password');
+  }).with("email", "password");
 
   return {
     method: "POST",
     path: "/user/authenticate",
     config: {
+      pre: [{ method: () => _roles.standard, assign: "role" }],
       handler: authenticate,
       validate: {
         payload: schema,
