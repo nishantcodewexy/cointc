@@ -1,6 +1,7 @@
 import { Switch, Route } from "react-router-dom";
 import routes from "./routes";
-import Error404 from "../pages/error404";
+// import Error404 from "../pages/error404";
+import Error404 from "../Error404";
 
 function GuestMarkup() {
   return (

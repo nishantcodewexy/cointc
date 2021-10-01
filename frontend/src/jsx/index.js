@@ -1,9 +1,10 @@
 import Admin from "./_markups/admin";
-// import Guest from "./_markups/guest";
+import Guest from "./_markups/guest";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import _helpers from "./_helpers";
+import { CircularProgress } from "@material-ui/core";
 
 const {
   store: { store, persistor }, history
@@ -15,11 +16,11 @@ function Markup() {
   return (
     <Router history={history}>
       <Provider store={store}>
-        <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
+        <PersistGate loading={<CircularProgress color="primary"  />} persistor={persistor}>
           {/* Admin user page */}
-          <Admin />
+          {/* <Admin /> */}
           {/* Guest user pages */}
-          {/* <Guest /> */}
+          <Guest />
         </PersistGate>
       </Provider>
     </Router>

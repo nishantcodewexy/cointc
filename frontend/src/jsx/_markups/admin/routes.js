@@ -20,17 +20,23 @@ import ChatHistory from './pages/chat_history';
 import ChatMessenger from './pages/chat_messenger';
 import AuthSecurityMgmt from './pages/auth_security';
 import AuthKYCCertification from './pages/auth_kyc_certification';
+import { toQueryString } from "../../_helpers/navigations.helper";
+import { camelCase } from "../../_helpers/utils.helper";
+
+
+
+
 
 const routes =  [
-  { url: "", component: Home },
-  { url: "setting", component: Setting },
-  { url: "admin-bank-details", component: AdminBankDetailsTable },
+  { url: "", create:(obj)=>''+toQueryString(obj), component: Home },
+  { url: "setting",create:(obj)=>'setting'+toQueryString(obj), component: Setting },
+  { url: "admin-bank-details",create:(obj)=>'/admin-bank-details/'+toQueryString(obj), component: AdminBankDetailsTable },
 
   // User management
-  { url: "user-balance", component: UserBalance },
-  { url: "user-management", component: UserMgmt },
-  { url: "user-information", component: UserInfo },
-  { url: "user-secession", component: UserSecession },
+  { url: "user-balance",create:(obj)=>'/user-balance/'+toQueryString(obj), component: UserBalance },
+  { url: "user-management",create:(obj)=>'/user-management/'+toQueryString(obj), component: UserMgmt },
+  { url: "user-information",create:(obj)=>'/user-information/'+toQueryString(obj), component: UserInfo },
+  { url: "user-secession",create:(obj)=>'/admin-bank-details/'+toQueryString(obj), component: UserSecession },
   { url: "user-session-history", component: UserSessionHistory },
   { url: "user-kyc-management", component: UserKYCMgmt },
   { url: "user-referral-management", component: UserReferralMgmt },
@@ -66,4 +72,25 @@ const routes =  [
 
 
 ];
+
+export const genAdminRoute = () =>{
+  const linkCreator = {}
+  const exclude = ["*"]
+  routes.forEach(route=>{
+    if(exclude.includes(route.url)) return
+    let key = camelCase(route.url.replace("-"," "))
+    if (route.create){
+      linkCreator[key] = route?.create
+    }else{
+      linkCreator[key] = (obj) => route.url+toQueryString(obj)
+
+    }
+  })
+
+  return linkCreator
+    
+
+}
+
+
 export default routes;
