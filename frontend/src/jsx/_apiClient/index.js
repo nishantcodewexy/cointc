@@ -21,7 +21,7 @@ class Client{
         if(token){
           headers = {
             "Content-Type": "application/json",
-            "Authorization":`JWT ${token}`
+            "Authorization":`Bearer ${token}`
           }
         }else{
           headers = {
