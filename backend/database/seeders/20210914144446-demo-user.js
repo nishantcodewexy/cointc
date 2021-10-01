@@ -9,7 +9,7 @@ module.exports = {
     this.Sequelize = Sequelize;
 
     await seedUser.call(this);
-    await seedAdminUser.call(this);
+    await seedAdminUser.call(this, 3);
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -60,13 +60,12 @@ async function seedAdminUser(len = 10) {
 async function seedUser(len = 10) {
   for (let i = 0; i < len; i++) {
     const id = faker.datatype.uuid();
-    const email = faker.internet.email();
     await this.queryInterface.bulkInsert(
       "tbl_users",
       [
         {
           id: id,
-          email,
+          email: faker.internet.email(),
           password: faker.internet.password(),
           role: /* faker.datatype.boolean() ? "admin" :  */ "standard",
           // referral_code: 'seet7pcH'
@@ -82,7 +81,6 @@ async function seedUser(len = 10) {
         id: faker.datatype.uuid(),
         referral_code: nanoid(10),
         nickname: faker.name.firstName(),
-        email,
         user_id: id,
         created_at: faker.date.recent(),
         updated_at: faker.date.recent(),
