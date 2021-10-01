@@ -83,7 +83,7 @@ const SideBar = () => {
       }`}
     >
       <PerfectScrollbar className="deznav-scroll">
-        <MainProfile>
+        {/* <MainProfile>
           <div className="main-profile">
             <img src={profile} alt="" />
             <Link to="/admin/setting">
@@ -94,7 +94,7 @@ const SideBar = () => {
             </h5>
             <p className="mb-0 fs-14 font-w400">marquezzzz@mail.com</p>
           </div>
-        </MainProfile>
+        </MainProfile> */}
 
         <MM className="metismenu" id="menu">
           {sidebar_routes.map(({ name, embedded = [], path, icon }, index) => {

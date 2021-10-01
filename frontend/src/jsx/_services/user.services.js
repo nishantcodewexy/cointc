@@ -1,35 +1,36 @@
-import helpers from "../_helpers";
+import _helpers from "../_helpers";
+import _constants from "../_constants";
 import axios from "axios";
-const { authHeader } = helpers;
+
+const { authHeader } = _helpers;
+const { userConstants } = _constants;
 
 const userService = {
   login,
   logout,
   register,
-  getAll,
-  getById,
+  fetchProfile,
+  fetchID,
   update,
   delete: _delete,
 };
-const apiUrl = process.env.API_URL;
-debugger;
+const apiUrl = `http://localhost:8080/${userConstants.URL_PREFIX}`;
 export default userService;
 
-async function login(username, password) {
+async function login(email, password) {
   const requestOptions = {
     method: "POST",
+    url: `${apiUrl}/admin/authenticate`,
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
+    data: { email, password },
   };
 
-  const response = await axios(
-    `${apiUrl}/admin/user/authenticate`,
-    requestOptions
-  );
-  const user = await handleResponse(response);
+  const response = await axios(requestOptions);
+  const data = handleResponse(response);
+
   // store user details and jwt token in local storage to keep user logged in between page refreshes
-  localStorage.setItem("user", JSON.stringify(user));
-  return user;
+  localStorage.setItem("user", JSON.stringify(data));
+  return data;
 }
 
 function logout() {
@@ -37,17 +38,18 @@ function logout() {
   localStorage.removeItem("user");
 }
 
-async function getAll() {
+async function fetchProfile() {
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
+    url: `${apiUrl}/admin/`,
   };
 
-  const response = await fetch(`${apiUrl}/users`, requestOptions);
+  const response = await axios(requestOptions);
   return handleResponse(response);
 }
 
-async function getById(id) {
+async function fetchID(id) {
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
@@ -91,19 +93,11 @@ async function _delete(id) {
 }
 
 function handleResponse(response) {
-  return response.text().then((text) => {
-    const data = text && JSON.parse(text);
-    if (!response.ok) {
-      if (response.status === 401) {
-        // auto logout if 401 response returned from api
-        logout();
-        // location.reload(true);
-      }
-
-      const error = (data && data.message) || response.statusText;
-      return Promise.reject(error);
-    }
-
-    return data;
-  });
+  if (response.status === 401) {
+    // auto logout if 401 response returned from api
+    logout();
+    // location.reload(true);
+  }
+  return response.data;
+  
 }

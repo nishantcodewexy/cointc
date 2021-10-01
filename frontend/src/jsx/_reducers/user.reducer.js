@@ -2,16 +2,25 @@ import _constants from "../_constants";
 
 const { userConstants } = _constants;
 
-const initialState = { user: null, token: null };
-
-// load user data from local store
-let user = JSON.parse(localStorage.getItem("user"));
+const initialState = null;
 
 export default function userReducer(state = initialState, action) {
   switch (action.type) {
-    case userConstants.LOGIN_REQUEST:
+    case userConstants.PROFILE_REQUEST:
       return {
-        loggingIn: true,
+        fetching: true,
+      };
+    case userConstants.PROFILE_SUCCESS:
+      return {
+        fetched: true,
+        user: action.user,
+      };
+    case userConstants.PROFILE_FAILURE:
+      return {};
+    // Login
+    case userConstants.LOGIN_SUCCESS:
+      return {
+        loggedIn: true,
         user: action.user,
       };
     case userConstants.LOGIN_SUCCESS:
@@ -20,9 +29,9 @@ export default function userReducer(state = initialState, action) {
         user: action.user,
       };
     case userConstants.LOGIN_FAILURE:
-      return {};
+      return null;
     case userConstants.LOGOUT:
-      return {};
+      return null;
     default:
       return state;
   }

@@ -22,6 +22,9 @@ const HapiServer = Hapi.server({
   query: {
     parser: (query) => Qs.parse(query),
   },
+  router: {
+    stripTrailingSlash: true,
+  },
 });
 /**************************************
  *  register plugins

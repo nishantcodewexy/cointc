@@ -6,14 +6,19 @@ module.exports = (server) => {
     boom,
     config: { server_url, client_url },
     helpers: { encrypt, decrypt, mailer, jwt },
+    consts: { roles: _roles },
   } = server.app;
 
-  return {
-    async createAdmin(req) {
-      const { email, password, role = "admin", ...restOfPayload } = req.payload;
+  const UserController = {
+    async create(req) {
+      let { role } = req.pre;
+      const { email, password, ...restOfPayload } = req.payload;
       assert(email, boom.badRequest("Expected email"));
       assert(password, boom.badRequest("Expected password field"));
+
       try {
+        const { profile, model } = assertRole(role);
+        console.log(model);
         // Check that the user email doesn't already exist
         let _user = await User.findOne({
           where: {
@@ -27,20 +32,27 @@ module.exports = (server) => {
           );
 
         return await sequelize.transaction(async (t) => {
-          const encrypted = await encrypt(password);
-          _user = await User.create({
-            email,
-            password: encrypted,
-            role,
-          });
-
-          let _profile = await _user.createAdminProfile(
+          _user = await User.create(
             {
-              ...restOfPayload,
+              email,
+              password,
+              role,
+              [profile]: { ...restOfPayload },
             },
-            {}
+            {
+              transaction: t,
+              include: [
+                {
+                  association: profile,
+                },
+              ],
+            }
           );
-          return _profile;
+
+          return {
+            token: jwt.create(_user),
+            user: _user.toPublic(),
+          };
         });
       } catch (error) {
         console.error(error);
@@ -48,42 +60,39 @@ module.exports = (server) => {
       }
     },
 
-    async authenticateAdmin(req) {
-      const { email, password } = req.payload;
-      const { Op } = sequelize;
-      // fetch user record from DB that matches the email
-      return await User.findOne({
-        where: { email, role: "admin" },
-        include: {
-          model: AdminProfile,
-          attributes: [
-            "id",
-            "kyc",
-            "created_at",
-            "updated_at",
-            "last_login",
-            "nickname",
-            "archived_at",
-          ],
+    async authenticate(req) {
+      try {
+        const {
+          payload: { email, password },
+          pre: { role },
+        } = req;
+
+        const { profile, profile_attributes } = assertRole(role);
+
+        // fetch user record from DB that matches the email
+        let _user = await User.findOne({
+          where: { email, role },
           include: {
-            model: User,
-            as: "user",
-            attributes: ["email", "role", "created_at"],
+            association: profile,
+            attributes: profile_attributes,
+            required: true,
+            right: true,
           },
-        },
-      })
-        .then(async (_user) => {
-          if (_user) {
-            return (
-              (await decrypt(password, _user.password)) && {
-                access_token: jwt.create(_user),
-                profile: _user.AdminProfile,
-              }
-            );
-          }
-          throw new Error("User not found");
-        })
-        .catch(boom.notFound);
+        });
+
+        if (_user) {
+          return (
+            (await decrypt(password, _user.password)) && {
+              token: jwt.create(_user),
+              user: _user.toPublic(),
+            }
+          );
+        }
+        return boom.notFound("User not found");
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
     },
 
     async createUser(req) {
@@ -110,29 +119,6 @@ module.exports = (server) => {
       
       await mailer.sendMail(mailObject); */
       }
-    },
-
-    // authenticate user
-    authenticate: async function (req) {
-      const { email, password } = req.payload;
-      // fetch user record from DB that matches the email
-      return await User.findOne({
-        where: { email, role: "standard" },
-        include: {
-          model: Profile,
-          // attributes: ["profile"],
-        },
-      })
-        .then(async (_user) => {
-          if (_user)
-            return (
-              (await decrypt(password, _user.password)) && {
-                access_token: jwt.create(_user),
-              }
-            );
-          return boom.notFound("User not found");
-        })
-        .catch(boom.notFound);
     },
 
     confirmEmail: async (req) => {
@@ -193,46 +179,63 @@ module.exports = (server) => {
 
     profile: async (req) => {
       // get user ID from preHandler
-      let { user: id } = req.pre;
       try {
-        const user = await User.findOne({
-          where: { id },
-        });
-        const profile = await user.getProfile();
+        let { user: id, role } = req.pre;
 
-        return { ...user.toPublic(), profile: profile.toPublic() };
+        const { profile } = assertRole(role);
+
+        return await User.findOne({
+          where: { id, role },
+          include: {
+            association: profile,
+          },
+        }).then((_user) => _user.toPublic());
       } catch (error) {
+        console.error(error);
         return boom.boomify(error);
       }
     },
 
-    profileByID: async (req) => {
-      // get user ID from preHandler
-      let { id } = req.query;
-
-      // handle invalid query <id> 400
-      if (!id) return boom.badRequest();
-
+    findID: async (req) => {
       try {
-        const user = await User.findOne({
-          where: { id },
-        });
+        // get user ID from preHandler
+        let {
+          query: { id },
+          pre: { user },
+        } = req;
 
-        // handle 404
-        if (!user) return boom.notFound();
+        // handle invalid query <id> 400
+        if (!id) return boom.badRequest();
 
-        const profile = await user.getProfile();
+        const role = await User.findOne({
+          where: { id: user },
+        })
+          .then((_user) => _user.role)
+          .catch((error) => {
+            throw new Error(`User Controller:findID - ${error.message}`);
+          });
 
-        return { ...user.toPublic(), profile: profile.toPublic() };
+        // Do not allow standard users to find admins
+        let where = role == _roles.standard ? { id, role } : { id };
+
+        // Find target user
+        return await User.findOne({
+          where,
+        }).then(
+          (_user) => _user?.toPublic() ?? boom.notFound("User not found!")
+        );
       } catch (error) {
+        console.error(error);
         return boom.boomify(error);
       }
     },
 
     getAllUser: async () => {
-      return User.findAll({
-        include: { model: Profile },
+      let limit = 20;
+      return User.findAndCountAll({
+        include: { association: "profile" },
         attributes: { exclude: ["password"] },
+        limit,
       })
         .then((users) => users.map((user) => user.toJSON()))
         .catch(boom.boomify);
@@ -264,4 +267,48 @@ module.exports = (server) => {
       };
     },
   };
+
+  // **************************************************
+  function assertRole(role) {
+    let profile, profile_attributes;
+    switch (role) {
+      case _roles.admin:
+        profile = "admin_profile";
+        profile_attributes = [
+          "id",
+          "kyc",
+          "created_at",
+          "updated_at",
+          "last_login",
+          "nickname",
+          "archived_at",
+        ];
+        break;
+      case _roles.standard:
+        profile = "profile";
+        profile_attributes = [
+          "id",
+          "email",
+          "mode",
+          "nickname",
+          "kyc",
+          "referral_code",
+          "referrerId",
+          "last_login",
+          "archived_at",
+        ];
+        break;
+      default:
+        console.error(`Bad user role specified`, role);
+        throw new Error("User operation not allowed: Bad role");
+    }
+
+    let model = profile
+      .split("_")
+      .map((_p) => _p.charAt(0).toUpperCase() + _p.slice(1, +_p.length))
+      .join("");
+    return { profile, profile_attributes, model };
+  }
+
+  return UserController;
 };

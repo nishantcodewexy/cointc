@@ -3,9 +3,10 @@ import _services from "../_services";
 import _helpers from "../_helpers";
 import alertAction from "./alert.action";
 
-const { userService } = _services;
+const { userServices } = _services;
 const { userConstants } = _constants;
-const { history } = _helpers;
+const { historyHelpers } = _helpers;
+
 const userActions = {
   login,
   logout,
@@ -14,16 +15,17 @@ const userActions = {
 };
 export default userActions;
 
-function login({username, password, from}) {
+function login({ email, password, from }) {
   return (dispatch) => {
-    dispatch(request({ username }));
+    dispatch(request({ email }));
 
-    userService.login(username, password).then(
+    userServices.login(email, password).then(
       (user) => {
         dispatch(success(user));
-        history.push(from);
+        historyHelpers.push(from);
       },
       (error) => {
+        console.log('In error')
         dispatch(failure(error.toString()));
         dispatch(alertAction.error(error.toString()));
       }
@@ -41,8 +43,32 @@ function login({username, password, from}) {
   }
 }
 
+function profile() {
+  return (dispatch) => {
+    dispatch(request());
+    userServices.fetchProfile().then(
+      (user) => {
+        success(user);
+      },
+      (error) => {
+        dispatch(failure(error.toString()));
+        dispatch(alertAction.error(error.toString()));
+      }
+    );
+  };
+
+  function request() {
+    return { type: userConstants.PROFILE_REQUEST };
+  }
+  function success(user) {
+    return { type: userConstants.PROFILE_SUCCESS, user };
+  }
+  function failure() {
+    return { type: userConstants.PROFILE_FAILURE };
+  }
+}
 function logout() {
-  userService.logout();
+  userServices.logout();
   return { type: userConstants.LOGOUT };
 }
 
@@ -50,10 +76,10 @@ function register(user) {
   return (dispatch) => {
     dispatch(request(user));
 
-    userService.register(user).then(
+    userServices.register(user).then(
       (user) => {
         dispatch(success());
-        history.push("/login");
+        historyHelpers.push("/login");
         dispatch(alertAction.success("Registration successful"));
       },
       (error) => {
@@ -78,7 +104,7 @@ function _delete(id) {
   return (dispatch) => {
     dispatch(request(id));
 
-    userService.delete(id).then(
+    userServices.delete(id).then(
       (user) => dispatch(success(id)),
       (error) => dispatch(failure(id, error.toString()))
     );

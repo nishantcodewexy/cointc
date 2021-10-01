@@ -1,7 +1,6 @@
 "use strict";
-const { allow } = require("joi");
 const { Model } = require("sequelize");
-const { uniqueId } = require("underscore");
+
 module.exports = (sequelize, DataTypes) => {
   class Message extends Model {
     /**
@@ -12,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       const { Chat, Message, User } = models;
-      Message.belongsTo(User, {});
+      // Message.belongsTo(User, {});
       Message.belongsTo(Chat, {});
     }
   }
@@ -23,11 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         unique: true,
         primaryKey: true,
       },
-      to: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      from: {
+      sender_id: {
         type: DataTypes.STRING,
         allowNull: false,
       },
@@ -35,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.TEXT,
         allowNull: false,
       },
+      read: { type: DataTypes.BOOLEAN, defaultValue: false },
     },
     {
       sequelize,
