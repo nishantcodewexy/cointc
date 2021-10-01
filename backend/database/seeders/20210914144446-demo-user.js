@@ -40,7 +40,7 @@ async function seedAdminUser(len = 10) {
           // referral_code: 'seet7pcH'
           created_at: faker.date.recent(),
           updated_at: faker.date.recent(),
-          role: 'admin'
+          role: "admin",
         },
       ],
       {}
@@ -68,7 +68,7 @@ async function seedUser(len = 10) {
           id: id,
           email,
           password: faker.internet.password(),
-          role: faker.datatype.boolean() ? "admin" : "standard",
+          role: /* faker.datatype.boolean() ? "admin" :  */ "standard",
           // referral_code: 'seet7pcH'
           created_at: faker.date.recent(),
           updated_at: faker.date.recent(),
