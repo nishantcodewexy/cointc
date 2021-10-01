@@ -1,22 +1,5 @@
 
 
-/**
- * @typedef CroimoSuccessResponse
- * @property {"success"} status
- * @property {Sting} message
- * @property {Object} data
- * 
- */
-
-/**
- * @typedef CroimoErrorResponse
- * @property {"failed"} status
- * @property {Sting} message
- * @property {Object} data
- * 
- */
-
-
  class Wallet{
     constructor(axios){
         this.axios = axios
