@@ -17,6 +17,10 @@ module.exports = (server) => {
           method: decodeUser,
           assign: "user",
         },
+        {
+          method: ()=>"standard",
+          assign: 'role'
+        }
       ],
       handler: profile,
       auth: "jwt",

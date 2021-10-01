@@ -5,7 +5,7 @@ module.exports = (server) => {
     controllers: {
       user: { createAdmin },
     },
-    consts: { patterns },
+    consts: { patterns, roles: _roles },
   } = server.app;
 
   // define Joi schema
@@ -18,8 +18,14 @@ module.exports = (server) => {
   return {
     method: "POST",
     path: `/admin/user/create`,
-    handler: createAdmin,
-    options: {
+    config: {
+      pre: [
+        {
+          method: () => _roles.admin,
+          assign: "role",
+        },
+      ],
+      handler: createAdmin,
       validate: {
         payload: schema,
       },

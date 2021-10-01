@@ -20,8 +20,14 @@ module.exports = (server) => {
   return {
     method: "POST",
     path: `/user/create`,
-    handler: createUser,
-    options: {
+    config: {
+      pre: [
+        {
+          method: () => "standard",
+          assign: "role",
+        },
+      ],
+      handler: createUser,
       validate: {
         payload: schema,
       },

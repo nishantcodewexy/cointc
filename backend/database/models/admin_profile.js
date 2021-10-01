@@ -1,8 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
-const { generateReferralCode } = require("../../helpers");
-
 module.exports = (sequelize, DataTypes) => {
   class AdminProfile extends Model {
     /**
@@ -12,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       const { AdminProfile, User } = models;
-      User.hasOne(AdminProfile);
+      
       AdminProfile.belongsTo(User, {
         foreignKey: "user_id",
         allowNull: false,

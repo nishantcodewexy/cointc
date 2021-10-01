@@ -6,13 +6,30 @@ module.exports = (server) => {
     boom,
     config: { server_url, client_url },
     helpers: { encrypt, decrypt, mailer, jwt },
+    consts: { roles: _roles },
   } = server.app;
 
   return {
     async createAdmin(req) {
-      const { email, password, role = "admin", ...restOfPayload } = req.payload;
+      let { role } = req.pre;
+      const { email, password, ...restOfPayload } = req.payload;
       assert(email, boom.badRequest("Expected email"));
       assert(password, boom.badRequest("Expected password field"));
+      let profile;
+      switch (role) {
+        case _roles.admin:
+          profile = "createAdminProfile";
+          break;
+        case role.standard:
+          profile = "createProfile";
+          break;
+        default:
+          console.error(`Bad user role specified`, role);
+          return boom.boomify(
+            new Error("User operation not allowed: Bad role")
+          );
+      }
+
       try {
         // Check that the user email doesn't already exist
         let _user = await User.findOne({
@@ -33,7 +50,7 @@ module.exports = (server) => {
             role,
           });
 
-          let _profile = await _user.createAdminProfile(
+          let _profile = await _user[profile](
             {
               ...restOfPayload,
             },
@@ -47,42 +64,72 @@ module.exports = (server) => {
       }
     },
 
-    async authenticateAdmin(req) {
-      const { email, password } = req.payload;
-      const { Op } = sequelize;
-      // fetch user record from DB that matches the email
-      return await User.findOne({
-        where: { email, role: "admin" },
-        include: {
-          model: AdminProfile,
-          attributes: [
-            "id",
-            "kyc",
-            "created_at",
-            "updated_at",
-            "last_login",
-            "nickname",
-            "archived_at",
-          ],
-          include: {
-            model: User,
-            as: "user",
-            attributes: ["email", "role", "created_at"],
-          },
-        },
-      })
-        .then(async (_user) => {
-          if (_user) {
-            return (
-              (await decrypt(password, _user.password)) && {
-                access_token: jwt.create(_user),
-                profile: _user.AdminProfile,
-              }
+    async authenticate(req) {
+      try {
+        const {
+          payload: { email, password },
+          pre: { role },
+        } = req;
+
+        let profile, profile_attributes;
+        switch (role) {
+          case _roles.admin:
+            profile = "admin_profile";
+            profile_attributes = [
+              "id",
+              "kyc",
+              "created_at",
+              "updated_at",
+              "last_login",
+              "nickname",
+              "archived_at",
+            ];
+            break;
+          case _roles.standard:
+            profile = "profile";
+            profile_attributes = [
+              "id",
+              "email",
+              "mode",
+              "nickname",
+              "kyc",
+              "referral_code",
+              "referrerId",
+              "last_login",
+              "archived_at",
+            ];
+            break;
+          default:
+            console.error(`Bad user role specified`, role);
+            return boom.boomify(
+              new Error("User operation not allowed: Bad role")
             );
-          }
-          throw new Error("User not found");
-        })
-        .catch(boom.notFound);
+        }
+
+        // fetch user record from DB that matches the email
+        let _user = await User.findOne({
+          where: { email, role },
+          include: {
+            association: profile,
+            attributes: profile_attributes,
+            required: true,
+            right: true,            
+          },
+        });
+
+        if (_user) {
+          return (
+            (await decrypt(password, _user.password)) && {
+              access_token: jwt.create(_user),
+              user: _user.toPublic(),
+            }
+          );
+        }
+        return boom.boomify(new Error("User not found"));
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
     },
 
     async createUser(req) {
@@ -109,29 +156,6 @@ module.exports = (server) => {
       
       await mailer.sendMail(mailObject); */
       }
-    },
-
-    // authenticate user
-    authenticate: async function (req) {
-      const { email, password } = req.payload;
-      // fetch user record from DB that matches the email
-      return await User.findOne({
-        where: { email, role: "standard" },
-        include: {
-          model: Profile,
-          // attributes: ["profile"],
-        },
-      })
-        .then(async (_user) => {
-          if (_user)
-            return (
-              (await decrypt(password, _user.password)) && {
-                access_token: jwt.create(_user),
-              }
-            );
-          return boom.notFound("User not found");
-        })
-        .catch(boom.notFound);
     },
 
     confirmEmail: async (req) => {
@@ -192,35 +216,57 @@ module.exports = (server) => {
 
     profile: async (req) => {
       // get user ID from preHandler
-      let { user: id } = req.pre;
       try {
-        const user = await User.findOne({
-          where: { id },
-        });
-        const profile = await user.getProfile();
+        let { user: id, role } = req.pre;
 
-        return { ...user.toPublic(), profile: profile.toPublic() };
+        let profile;
+        switch (role) {
+          case _roles.admin:
+            profile = "admin_profile";
+            break;
+          case _roles.standard:
+          default:
+            profile = "profile";
+        }
+
+        const user = await User.findOne({
+          where: { id, role },
+          include: {
+            association: profile,
+          },
+        });
+
+        return { ...user.toPublic() /* profile: user.toPublic() */ };
       } catch (error) {
+        console.error(error);
         return boom.boomify(error);
       }
     },
 
     profileByID: async (req) => {
       // get user ID from preHandler
-      let { id } = req.query;
+      let { id, role } = req.query;
 
       // handle invalid query <id> 400
       if (!id) return boom.badRequest();
 
       try {
         const user = await User.findOne({
-          where: { id },
+          where: { id, role },
         });
 
         // handle 404
         if (!user) return boom.notFound();
 
-        const profile = await user.getProfile();
+        let profile;
+        switch (role) {
+          case _roles.admin:
+            profile = await user.getAdminProfile();
+            break;
+          case _roles.standard:
+          default:
+            profile = await user.getProfile();
+        }
 
         return { ...user.toPublic(), profile: profile.toPublic() };
       } catch (error) {
@@ -229,9 +275,11 @@ module.exports = (server) => {
     },
 
     getAllUser: async () => {
-      return User.findAll({
+      let limit = 20;
+      return User.findAndCountAll({
         include: { association: "profile" },
         attributes: { exclude: ["password"] },
+        limit,
       })
         .then((users) => users.map((user) => user.toJSON()))
         .catch(boom.boomify);
