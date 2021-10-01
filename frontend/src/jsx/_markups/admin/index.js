@@ -14,8 +14,8 @@ import _helpers from "../../_helpers";
 import _actions from "../../_actions";
 import _components from "./components";
 
-const { history } = _helpers;
-const { alertAction } = _actions;
+const { historyHelpers } = _helpers;
+const { alertActions } = _actions;
 const { PrivateRoute, error404 } = _components;
 
 export default AdminMarkup;
@@ -24,17 +24,19 @@ function AdminMarkup() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    history.listen((location, action) => {
+    historyHelpers.listen((location, action) => {
       // clear alert on location change
-      dispatch(alertAction.clear());
+      dispatch(alertActions.clear());
     });
   }, []);
 
   return (
     <>
-      {alertAction.message && (
-        <div className={`alert ${alertAction.type}`}>{alertAction.message}</div>
-      )}
+      {/* {alertActions.message && (
+        <div className={`alert ${alertActions.type}`}>
+          {alertActions.message}
+        </div>
+      )} */}
       <Switch>
         <Route path="/admin/login" component={LoginPage} />
 
@@ -61,7 +63,7 @@ function AdminMarkup() {
 function AdminLayout({ children }) {
   const { menuToggle } = useContext(ThemeContext);
 
-  let path = history.location.pathname;
+  let path = historyHelpers.location.pathname;
   path = path.split("/");
   path = path[path.length - 1];
 

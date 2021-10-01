@@ -1,10 +1,10 @@
-import auth from "./auth.helper";
-import history from "./history.helper";
-import store from "./store.helper";
+import authHelpers from "./auth.helper";
+import historyHelpers from "./history.helper";
+import storeHelpers from "./store.helper";
 
-const helper = {
-  auth,
-  history,
-  store,
+export default {
+  authHelpers,
+  historyHelpers,
+  storeHelpers,
 };
 export default helper
