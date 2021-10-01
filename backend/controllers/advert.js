@@ -2,7 +2,7 @@
 const assert = require("assert");
 
 module.exports = (server) => {
-  const { db } = server.app;
+  const { Advert, User } = server.app.db;
 
   return {
     async create(req) {
@@ -23,7 +23,7 @@ module.exports = (server) => {
     async get(req) {
       const { ad } = req.payload;
 
-      return db.Advert.findByPk(ad);
+      return db.Advert.findByPk(ad, { include: User });
     },
 
     // fetch all adverts
