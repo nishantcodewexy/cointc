@@ -87,7 +87,25 @@ module.exports = (server) => {
 
     async createUser(req) {
       const { email, password } = req.payload;
-      const _user = await createUser({ email, password, role: "standard" });
+      let _user; // = await createUser({ email, password, role: "standard" });
+      try {
+        return await sequelize.transaction(async (t) => {
+          _user = await User.create({
+            email,
+            password,
+            role,
+          });
+
+          let _profile = await _user.createProfile(
+            {
+              ...restOfPayload,
+            },
+            {}
+          );
+          return _profile;
+        });
+      } catch (err) {}
+      return _user;
       if (_user) {
         // TODO: create standard user profile
         // TODO: Send mail
@@ -224,6 +242,7 @@ module.exports = (server) => {
 
         return { ...user.toPublic(), profile: profile.toPublic() };
       } catch (error) {
+        // console.error(error);
         return boom.boomify(error);
       }
     },
