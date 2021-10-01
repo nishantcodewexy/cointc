@@ -27,7 +27,7 @@ module.exports = (server) => {
       ],
       handler: findID,
       validate: {
-        query: schema,
+        params: schema,
       },
       auth: "jwt",
     },
