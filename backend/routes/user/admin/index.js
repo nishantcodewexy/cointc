@@ -13,7 +13,7 @@ module.exports = (server) => {
 
   return {
     method: ["GET"],
-    path: "/user/admin/profile",
+    path: "/admin/user/profile",
     config: {
       pre: [
         [
