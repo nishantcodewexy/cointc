@@ -32,8 +32,8 @@ function AdminMarkup() {
 
   return (
     <>
-      {alert.message && (
-        <div className={`alert ${alert.type}`}>{alert.message}</div>
+      {alertAction.message && (
+        <div className={`alert ${alertAction.type}`}>{alertAction.message}</div>
       )}
       <Switch>
         <Route path="/admin/login" component={LoginPage} />
