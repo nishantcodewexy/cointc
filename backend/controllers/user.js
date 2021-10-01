@@ -219,7 +219,7 @@ module.exports = (server) => {
       try {
         // get user ID from preHandler
         let {
-          query: { id },
+          params: { id },
           pre: { user },
         } = req;
 
