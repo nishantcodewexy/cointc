@@ -50,7 +50,7 @@ module.exports = (server) => {
           );
 
           return {
-            access_token: jwt.create(_user),
+            token: jwt.create(_user),
             user: _user.toPublic(),
           };
         });
@@ -80,16 +80,15 @@ module.exports = (server) => {
           },
         });
 
-        console.log(_user);
         if (_user) {
           return (
             (await decrypt(password, _user.password)) && {
-              access_token: jwt.create(_user),
+              token: jwt.create(_user),
               user: _user.toPublic(),
             }
           );
         }
-        return boom.boomify(new Error("User not found"));
+        return boom.notFound("User not found");
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
