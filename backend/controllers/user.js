@@ -73,13 +73,14 @@ module.exports = (server) => {
         let _user = await User.findOne({
           where: { email, role },
           include: {
-            model: profile,
+            association: profile,
             attributes: profile_attributes,
             required: true,
             right: true,
           },
         });
 
+        console.log(_user)
         if (_user) {
           return (
             (await decrypt(password, _user.password)) && {
