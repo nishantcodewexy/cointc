@@ -7,4 +7,3 @@ export default {
   historyHelpers,
   storeHelpers,
 };
-export default helper
