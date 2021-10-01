@@ -12,13 +12,13 @@ function UserManagement() {
               className="form-control"
               placeholder="Find user here..."
             />
-            <div className="input-group-append">
+            {/* <div className="input-group-append">
               <span className="input-group-text">
                 <Link to={"#"}>
                   <i className="simple-magnifier"></i>
                 </Link>
               </span>
-            </div>
+            </div> */}
           </div>
         </Col>
         <Col sm="auto">

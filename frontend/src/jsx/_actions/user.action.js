@@ -23,7 +23,7 @@ function login({ email, password, from }) {
       (user) => {
         dispatch(success(user));
         // console.log({ from, historyHelpers });
-        window.location.href=from.pathname
+        // window.location.href=from.pathname
         // historyHelpers.push(from);
       },
       (error) => {

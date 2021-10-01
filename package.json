@@ -6,8 +6,10 @@
   "license": "MIT",
   "scripts": {
     "backend-dev": "yarn --cwd ./backend dev",
+    "backend-build": "yarn --cwd ./backend build",
     "backend-test": "yarn --cwd ./backend test",
-    "frontend-dev": "yarn --cwd ./frontend start",
+    "frontend-dev": "yarn --cwd ./frontend dev",
+    "frontend-build": "yarn --cwd ./frontend build && serve -s ./frontend/build",
     "frontend-test": "yarn --cwd ./frontend dev test"
   },
   "dependencies": {

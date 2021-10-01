@@ -22,6 +22,7 @@ export default AdminMarkup;
 
 function AdminMarkup() {
   const session = useSelector((state) => state?.user);
+  const alert = useSelector(state => state.alert);
   const location = useLocation();
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
@@ -39,30 +40,32 @@ function AdminMarkup() {
 
   return (
     <>
-      {/* {alertActions.message && (
-        <div className={`alert ${alertActions.type}`}>
-          {alertActions.message}
+      {alert.message && (
+        <div className={`alert ${alert.type}`}>
+          {alert.message}
         </div>
-      )} */}
+      )}
       <Route exact path="/admin/login">
         {!session ? <LoginPage /> : <Redirect to={{ pathname: "/admin" }} />}
       </Route>
-      {session ? (
-        routes.map(({ url, component: Component }, i) => (
-          <Route
-            key={i}
-            exact
-            path={`/admin/${url}`}
-            render={(props) => (
-              <AdminLayout>
-                <Component {...props} /> ?? <UnderConstruction />
-              </AdminLayout>
-            )}
-          />
-        ))
-      ) : (
-        <Redirect to={{ pathname: "/admin/login" }} />
-      )}
+      <Route>
+        {session ? (
+          <AdminLayout>
+            {routes.map(({ url, component: Component }, i) => (
+              <Route
+                key={i}
+                exact
+                path={`/admin/${url}`}
+                render={(props) =>
+                  Component ? <Component {...props} /> : <UnderConstruction />
+                }
+              />
+            ))}
+          </AdminLayout>
+        ) : (
+          <Redirect to={{ pathname: "/admin/login" }} />
+        )}
+      </Route>
 
       <Route path="*" component={error404} />
 
