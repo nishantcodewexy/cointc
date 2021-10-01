@@ -32,12 +32,6 @@ module.exports = (sequelize, DataTypes) => {
       inboxHash: {
         type: DataTypes.STRING,
         unique: true,
-        set() {
-          const to = this.getDataValue("to");
-          const from = this.getDataValue("from");
-          let hash = Chat.makeHash(to, from);
-          return this.setDataValue("id", hash);
-        },
       },
     },
     {
@@ -45,6 +39,13 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Chat",
       underscored: true,
       tableName: "tbl_chats",
+      hooks: {
+        beforeCreate(model, options) {
+          const { to, from } = model;
+          let hash = Chat.makeHash(to, from);
+          model.inboxHash = hash;
+        },
+      },
     }
   );
   return Chat;
