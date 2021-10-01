@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       const { Profile, User } = models;
-      User.hasOne(Profile);
       Profile.belongsTo(User, {
         foreignKey: "user_id",
       });
@@ -32,6 +31,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
+      },
+      email: {
+        type: DataTypes.STRING,
+        allowNull: false,
+        unique: true,
+        validate: {
+          notEmpty: true,
+          isEmail: true,
+        },
       },
       mode: {
         type: DataTypes.ENUM,

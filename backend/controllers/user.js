@@ -27,10 +27,9 @@ module.exports = (server) => {
           );
 
         return await sequelize.transaction(async (t) => {
-          const encrypted = await encrypt(password);
           _user = await User.create({
             email,
-            password: encrypted,
+            password,
             role,
           });
 
@@ -231,7 +230,7 @@ module.exports = (server) => {
 
     getAllUser: async () => {
       return User.findAll({
-        include: { model: Profile },
+        include: { association: "profile" },
         attributes: { exclude: ["password"] },
       })
         .then((users) => users.map((user) => user.toJSON()))
