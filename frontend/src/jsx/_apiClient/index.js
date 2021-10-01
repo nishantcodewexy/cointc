@@ -1,5 +1,9 @@
 import axios from 'axios';
-import User from './users.all';
+import Advert from './advert.regular';
+import SocketClient from './socket.regular';
+import AdminUser from './user.admin';
+import User from './users.regular';
+import Wallet from './wallet.regular';
 
 
 
@@ -9,7 +13,7 @@ import User from './users.all';
 class Client{
     constructor(token){
         this.source = axios.CancelToken.source();
-    
+        this.token = token
         let headers;
     
         
@@ -32,8 +36,17 @@ class Client{
         cancelToken: this.source.token
       });
     
+      this.Admin = {
+        User:new AdminUser(this.axios)
+      }
+     
+      this.User = new User(this.axios)
+      this.Wallet = new Wallet(this.axios)
+      this.Advert = new Advert(this.axios)
+      this.SocketClient = new SocketClient(this.token)
+
     
-      this.Auth = new User(this.axios)
+      
       
  
       }

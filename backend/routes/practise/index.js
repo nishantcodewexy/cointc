@@ -14,7 +14,7 @@ module.exports = (server) => {
 
   return {
     method: ["POST"],
-    path: "/practise/",
+    path: "/practise",
     config: {
       // pre-handler
     //   pre: [
