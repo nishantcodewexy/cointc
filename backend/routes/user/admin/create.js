@@ -17,7 +17,7 @@ module.exports = (server) => {
 
   return {
     method: "POST",
-    path: `/admin/user/create`,
+    path: `/user/admin/create`,
     config: {
       pre: [
         {
