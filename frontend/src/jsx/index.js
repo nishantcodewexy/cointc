@@ -6,14 +6,14 @@ import { PersistGate } from "redux-persist/integration/react";
 import _helpers from "./_helpers";
 
 const {
-  store: { store, persistor }, history
+  storeHelpers: { store, persistor }, historyHelpers
 } = _helpers;
 
 // import { withResizeDetector } from "react-resize-detector";
 
 function Markup() {
   return (
-    <Router history={history}>
+    <Router history={historyHelpers}>
       <Provider store={store}>
         <PersistGate loading={<div>Loading...</div>} persistor={persistor}>
           {/* Admin user page */}

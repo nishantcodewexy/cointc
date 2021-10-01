@@ -9,8 +9,8 @@ const userService = {
   login,
   logout,
   register,
-  getAll,
-  getById,
+  fetchProfile,
+  fetchID,
   update,
   delete: _delete,
 };
@@ -26,11 +26,11 @@ async function login(email, password) {
   };
 
   const response = await axios(requestOptions);
-  const user = await handleResponse(response);
+  const data = handleResponse(response);
 
   // store user details and jwt token in local storage to keep user logged in between page refreshes
-  localStorage.setItem("user", JSON.stringify(user));
-  return user;
+  localStorage.setItem("user", JSON.stringify(data));
+  return data;
 }
 
 function logout() {
@@ -38,17 +38,18 @@ function logout() {
   localStorage.removeItem("user");
 }
 
-async function getAll() {
+async function fetchProfile() {
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
+    url: `${apiUrl}/admin/`,
   };
 
-  const response = await fetch(`${apiUrl}/users`, requestOptions);
+  const response = await axios(requestOptions);
   return handleResponse(response);
 }
 
-async function getById(id) {
+async function fetchID(id) {
   const requestOptions = {
     method: "GET",
     headers: authHeader(),
@@ -98,14 +99,5 @@ function handleResponse(response) {
     // location.reload(true);
   }
   return response.data;
-  // return response.then((_resp) => {
-  //   if (_resp.status === 401) {
-  //     // auto logout if 401 response returned from api
-  //     logout();
-  //     // location.reload(true);
-  //   }
-  //   const { data } = _resp;
-  //   const error = (data && data.message) || response.statusText;
-  //   return Promise.reject(error);
-  // });
+  
 }
