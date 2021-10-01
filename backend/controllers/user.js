@@ -37,7 +37,7 @@ module.exports = (server) => {
               email,
               password,
               role,
-              [profile]: { ...restOfPayload },
+              [profile]: { ...restOfPayload, email },
             },
             {
               transaction: t,
@@ -96,49 +96,53 @@ module.exports = (server) => {
       }
     },
 
-    async createUser(req) {
-      const { email, password } = req.payload;
-      let _user; // = await createUser({ email, password, role: "standard" });
-      try {
-        return await sequelize.transaction(async (t) => {
-          _user = await User.create({
-            email,
-            password,
-            role,
-          });
+    // async createUser(req) {
+    //   const { email, password } = req.payload;
+    //   let { role } = req.pre;
+    //   assert(email, boom.badRequest("Expected email"));
+    //   assert(password, boom.badRequest("Expected password field"));
 
-          let _profile = await _user.createProfile(
-            {
-              ...restOfPayload,
-            },
-            {}
-          );
-          return _profile;
-        });
-      } catch (err) {}
-      return _user;
-      if (_user) {
-        // TODO: create standard user profile
-        // TODO: Send mail
-        // const token = jwt.create(_user, 900);
-        /* 
-      let confirmationLink = `${server_url}/confim_email?email=${email}&code=${token}`;
-      // Send email verification
-      const mailObject = {
-        to: email,
-        htmlTemplate: {
-          name: "account_confirmation",
-          transform: {
-            confirmationLink,
-            recipientEmail: email,
-          },
-        },
-        subject: "Cryptcon - Account confirmation",
-      };
-      
-      await mailer.sendMail(mailObject); */
-      }
-    },
+    //   let _user; // = await createUser({ email, password, role: "standard" });
+    //   try {
+    //     return await sequelize.transaction(async (t) => {
+    //       _user = await User.create({
+    //         email,
+    //         password,
+    //         role,
+    //       });
+
+    //       let _profile = await _user.createProfile(
+    //         {
+    //           ...restOfPayload,
+    //         },
+    //         {}
+    //       );
+    //       return _profile;
+    //     });
+    //   } catch (err) {}
+    //   return _user;
+    //   if (_user) {
+    //     // TODO: create standard user profile
+    //     // TODO: Send mail
+    //     // const token = jwt.create(_user, 900);
+    //     /*
+    //   let confirmationLink = `${server_url}/confim_email?email=${email}&code=${token}`;
+    //   // Send email verification
+    //   const mailObject = {
+    //     to: email,
+    //     htmlTemplate: {
+    //       name: "account_confirmation",
+    //       transform: {
+    //         confirmationLink,
+    //         recipientEmail: email,
+    //       },
+    //     },
+    //     subject: "Cryptcon - Account confirmation",
+    //   };
+
+    //   await mailer.sendMail(mailObject); */
+    //   }
+    // },
 
     confirmEmail: async (req) => {
       let { email, token } = req.query;
