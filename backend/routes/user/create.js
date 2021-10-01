@@ -5,7 +5,7 @@ module.exports = (server) => {
     controllers: {
       user: { createUser },
     },
-    consts: { patterns },
+    consts: { patterns, roles: _roles },
   } = server.app;
 
   // define Joi schema
@@ -23,7 +23,7 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: () => "standard",
+          method: () => _role.standard,
           assign: "role",
         },
       ],
