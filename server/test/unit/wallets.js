@@ -1,4 +1,4 @@
-const { eth, btc, bnb} = require("../../wallets/");
+const { eth, btc, bnb} = require("../../wallets");
 
 module.exports = async ()=>{
   describe ('Wallet helpers', () => {
