@@ -4,25 +4,14 @@ import routes from "./routes";
 import Error404 from "../Error404";
 
 function GuestMarkup() {
-  return (
-    <Switch>
-      <Route path="/">
-        <Switch>
-          {routes.map((data, i) => (
-            <Route
-              key={i}
-              exact
-              path={`/${data.url}`}
-              component={data.component}
-            />
-          ))}
-        </Switch>
-      </Route>
+  return (<>
+      {routes.map((data, i) => (
+        <Route key={i} exact path={`/${data.url}`} component={data.component} />
+      ))}
       <Route path="*">
-        <div>Root: </div>
         <Error404 />
       </Route>
-    </Switch>
+    </>
   );
 }
 

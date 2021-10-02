@@ -9,30 +9,18 @@ import _components from "../../components";
 import { Dropdown } from "react-bootstrap";
 
 const { IdenticonAvatar } = _components;
-const { userAction } = _actions;
+const { userActions } = _actions;
 
 const Header = ({}) => {
-  const history = useHistory();
   const dispatch = useDispatch();
-  const location = useLocation();
-  let user = localStorage.getItem("user");
-
+  const session = useSelector((state) => state?.user);
+  console.log(session);
   return (
     <div className="header">
       <div className="header-content">
         <nav className="navbar navbar-expand">
           <div className="collapse navbar-collapse justify-content-between">
             <div className="header-left">
-              {/* <div
-					className="dashboard_bar"
-					style={{ textTransform: "capitalize" }}
-				  >
-					{finalName.join(" ").length === 0
-					  ? "Dashboard"
-					  : finalName.join(" ") === "dashboard dark"
-					  ? "Dashboard"
-					  : finalName.join(" ")}
-					</div> */}
               <div className="input-group search-area right d-lg-inline-flex d-none">
                 <input
                   type="text"
@@ -61,8 +49,8 @@ const Header = ({}) => {
                 >
                   <IdenticonAvatar width={20} alt="" id="" />
                   <div className="header-info">
-                    <span>Johndoe</span>
-                    <small>Admin</small>
+                    <span>{session?.user?.email}</span>
+                    <small className="text-capitalize">{session?.user?.role}</small>
                   </div>
                 </Dropdown.Toggle>
 
@@ -89,7 +77,7 @@ const Header = ({}) => {
 
                   <Link
                     to="#"
-                    onClick={() => dispatch(userAction.logout())}
+                    onClick={() => dispatch(userActions.logout())}
                     className="dropdown-item ai-icon"
                   >
                     <svg

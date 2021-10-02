@@ -6,7 +6,5 @@ const helper = {
   authHelpers,
   historyHelpers,
   storeHelpers,
-}
-
+};
 export default helper
-
