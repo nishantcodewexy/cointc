@@ -14,7 +14,7 @@ const userService = {
   update,
   delete: _delete,
 };
-const apiUrl = `http://localhost:8080/${userConstants.URL_PREFIX}`;
+const apiUrl = `/${userConstants.URL_PREFIX}`;
 export default userService;
 
 async function login(email, password) {

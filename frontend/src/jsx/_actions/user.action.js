@@ -22,6 +22,7 @@ function login({ email, password, from }) {
     userServices.login(email, password).then(
       (user) => {
         dispatch(success(user));
+        window.location
         historyHelpers.push(from);
       },
       (error) => {

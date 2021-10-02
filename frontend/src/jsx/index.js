@@ -18,9 +18,9 @@ function Markup() {
       <Provider store={store}>
         <PersistGate loading={<CircularProgress color="primary"  />} persistor={persistor}>
           {/* Admin user page */}
-          {/* <Admin /> */}
+          <Admin />
           {/* Guest user pages */}
-          <Guest />
+          {/* <Guest /> */}
         </PersistGate>
       </Provider>
     </Router>
