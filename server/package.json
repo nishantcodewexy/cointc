@@ -17,6 +17,7 @@
     "@hapi/hapi": "^20.1.5",
     "@hapi/jwt": "^2.1.0",
     "@openzeppelin/contracts": "^4.3.2",
+    "@tatumio/tatum": "^1.26.8",
     "@types/bcryptjs": "^2.4.2",
     "@types/faker": "^5.5.8",
     "@types/glob": "^7.1.4",
