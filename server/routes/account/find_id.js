@@ -17,7 +17,7 @@ module.exports = (server) => {
 
   return {
     method: ["GET"],
-    path: "/user/{id}",
+    path: "/user/findID",
     config: {
       pre: [
         {
@@ -27,7 +27,7 @@ module.exports = (server) => {
       ],
       handler: findID,
       validate: {
-        params: schema,
+        query: schema,
       },
       auth: "jwt",
     },

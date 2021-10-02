@@ -8,28 +8,34 @@ export default function userReducer(state = initialState, action) {
   switch (action.type) {
     case userConstants.PROFILE_REQUEST:
       return {
-        fetching: true,
+        status: 'requesting',
       };
     case userConstants.PROFILE_SUCCESS:
       return {
-        fetched: true,
-        user: action.user,
+        status: 'completed',
+        data: action.user,
       };
     case userConstants.PROFILE_FAILURE:
-      return {};
+      return {
+        status: 'completed',
+        data: action.error
+      };
+
     // Login
+    case userConstants.LOGIN_REQUEST:
+      return {
+        status: 'requesting',
+      };
+    
     case userConstants.LOGIN_SUCCESS:
       return {
-        loggedIn: true,
-        user: action.user,
+        status: 'completed',
+        data: action.user,
       };
-    case userConstants.LOGIN_SUCCESS:
-      return {
-        loggedIn: true,
-        user: action.user,
-      };
+
     case userConstants.LOGIN_FAILURE:
       return null;
+
     case userConstants.LOGOUT:
       return null;
     default:

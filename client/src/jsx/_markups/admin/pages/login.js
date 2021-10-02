@@ -8,7 +8,6 @@ import _actions from "../../../_actions";
 const { userActions, alertActions } = _actions;
 
 const LoginPage = () => {
-  const session = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const location = useLocation();
   const history = useHistory();

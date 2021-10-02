@@ -6,7 +6,7 @@ module.exports = (server) => {
     db: { Order },
   } = server.app;
 
-  return {
+  const orderController = {
     async create(req) {
       const { user } = req.pre.user;
       return Order.create({ ...req.payload, from_user_id: user.id });
@@ -43,4 +43,8 @@ module.exports = (server) => {
       return await Order.findAll();
     },
   };
+  
+  const orderGroupController = (req, h) => { };
+  
+  return { ...orderController, group: orderGroupController };
 };

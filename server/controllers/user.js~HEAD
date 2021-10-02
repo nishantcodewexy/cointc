@@ -2,26 +2,23 @@ const assert = require("assert");
 
 module.exports = (server) => {
   const {
-    db,
-    db: { User, sequelize },
+    db: { User, AdminProfile, Profile, sequelize },
     boom,
-    config: {  client_url },
-    helpers: {  decrypt, mailer, jwt },
+    config: { server_url, client_url },
+    helpers: { encrypt, decrypt, mailer, jwt },
     consts: { roles: _roles },
   } = server.app;
 
   const UserController = {
     async create(req) {
-      const {
-        pre: { role },
-        payload: { email, password, __profile = true, ...restOfPayload },
-      } = req;
+      let { role } = req.pre;
+      const { email, password, ...restOfPayload } = req.payload;
       assert(email, boom.badRequest("Expected email"));
       assert(password, boom.badRequest("Expected password field"));
 
       try {
-        const { profile } = assertRole(role);
-
+        const { profile, model } = assertRole(role);
+        console.log(model);
         // Check that the user email doesn't already exist
         let _user = await User.findOne({
           where: {
@@ -35,31 +32,22 @@ module.exports = (server) => {
           );
 
         return await sequelize.transaction(async (t) => {
-          let newUser = {
-            cols: { email, password, role },
-            options: { transaction: t },
-          };
-
-          // Create user profile only if the __profile payload is true
-          if (__profile) {
-            newUser.cols["profile"] = { email, password, ...restOfPayload };
-            newUser.options["include"] = [
-              {
-                association: profile,
-              },
-            ];
-          }
-
-          _user = await User.create(newUser.cols, newUser.options);
-
-          /******** Send mail to user ***************/
-          let genPassword = "";
-          // if user profile was not created, generate temporal password for user
-          if (__profile) {
-            // TODO: generate temporal password
-          }
-          // Send mail here...
-          /************ End send mail ***************/
+          _user = await User.create(
+            {
+              email,
+              password,
+              role,
+              [profile]: { ...restOfPayload, email },
+            },
+            {
+              transaction: t,
+              include: [
+                {
+                  association: profile,
+                },
+              ],
+            }
+          );
 
           return {
             token: jwt.create(_user),
@@ -75,7 +63,8 @@ module.exports = (server) => {
     async authenticate(req) {
       try {
         const {
-          payload: { email, role, password },
+          payload: { email, password },
+          pre: { role },
         } = req;
 
         const { profile, profile_attributes } = assertRole(role);
@@ -91,43 +80,68 @@ module.exports = (server) => {
           },
         });
 
-        return _user
-          ? (await decrypt(password, _user.password)) && {
+        if (_user) {
+          return (
+            (await decrypt(password, _user.password)) && {
               token: jwt.create(_user),
               ..._user.toPublic(),
             }
-          : boom.notFound("User not found");
+          );
+        }
+        return boom.notFound("User not found");
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
       }
     },
 
-    async createUser(req) {
-      const { email, password } = req.payload;
-      const _user = await createUser({ email, password, role: "standard" });
-      if (_user) {
-        // TODO: create standard user profile
-        // TODO: Send mail
-        // const token = jwt.create(_user, 900);
-        /* 
-      let confirmationLink = `${server_url}/confim_email?email=${email}&code=${token}`;
-      // Send email verification
-      const mailObject = {
-        to: email,
-        htmlTemplate: {
-          name: "account_confirmation",
-          transform: {
-            confirmationLink,
-            recipientEmail: email,
-          },
-        },
-        subject: "Cryptcon - Account confirmation",
-      };
-      
-      await mailer.sendMail(mailObject); */
-      }
-    },
+    // async createUser(req) {
+    //   const { email, password } = req.payload;
+    //   let { role } = req.pre;
+    //   assert(email, boom.badRequest("Expected email"));
+    //   assert(password, boom.badRequest("Expected password field"));
+
+    //   let _user; // = await createUser({ email, password, role: "standard" });
+    //   try {
+    //     return await sequelize.transaction(async (t) => {
+    //       _user = await User.create({
+    //         email,
+    //         password,
+    //         role,
+    //       });
+
+    //       let _profile = await _user.createProfile(
+    //         {
+    //           ...restOfPayload,
+    //         },
+    //         {}
+    //       );
+    //       return _profile;
+    //     });
+    //   } catch (err) {}
+    //   return _user;
+    //   if (_user) {
+    //     // TODO: create standard user profile
+    //     // TODO: Send mail
+    //     // const token = jwt.create(_user, 900);
+    //     /*
+    //   let confirmationLink = `${server_url}/confim_email?email=${email}&code=${token}`;
+    //   // Send email verification
+    //   const mailObject = {
+    //     to: email,
+    //     htmlTemplate: {
+    //       name: "account_confirmation",
+    //       transform: {
+    //         confirmationLink,
+    //         recipientEmail: email,
+    //       },
+    //     },
+    //     subject: "Cryptcon - Account confirmation",
+    //   };
+
+    //   await mailer.sendMail(mailObject); */
+    //   }
+    // },
 
     confirmEmail: async (req) => {
       let { email, token } = req.query;
@@ -188,8 +202,7 @@ module.exports = (server) => {
     profile: async (req) => {
       // get user ID from preHandler
       try {
-        let { user: id } = req.pre;
-        let { role } = req.query;
+        let { user: id, role } = req.pre;
 
         const { profile } = assertRole(role);
 
@@ -201,25 +214,15 @@ module.exports = (server) => {
         }).then((_user) => _user.toPublic());
       } catch (error) {
         console.error(error);
-        return boom.badRequest(error);
+        return boom.boomify(error);
       }
     },
 
-    async kyc(req) {
-      return await this.profile(req)
-        .then((data) => {
-          let kyc = data.kyc;
-          const { type } = req.params;
-          return type ? { [type]: kyc[type] } : kyc;
-        })
-        .catch(boom.boomify);
-    },
-
-    async findID(req) {
+    findID: async (req) => {
       try {
         // get user ID from preHandler
         let {
-          query: { id },
+          params: { id },
           pre: { user },
         } = req;
 
@@ -275,69 +278,16 @@ module.exports = (server) => {
     },
 
     async update(req) {
-      try {
-        const {
-          payload: { __update, __password = null },
-          pre: { user },
-        } = req;
-
-        /**
-         * @function performUpdate - Function signature that actually performs the update
-         * @param {Object} payload
-         * @returns Object
-         */
-        const performUpdate = async (payload, updateOptions) => {
-          // Critical updates that require user password authentication to update
-          const allowedUpdates = ["mode", "nickname", "last_name"];
-         
-          // Checks if there's a critical update to make
-          const hasCriticalUpdate = (updateObject) =>
-            Boolean(allowedUpdates.find((item) => !(item in updateObject)));
-          let critical = hasCriticalUpdate(payload);
-          
-          // Find user
-          const __user = await User.findOne({ where: { id: user } });
-          // get user role to determine which profile to update
-          const { profile, model } = assertRole(__user?.role);
-
-          console.log({ model, profile, critical });
-          // Update operation response
-          const updateResponse = async () => ({
-            updated: await db[model]
-              .update(
-                { ...payload },
-                { where: { user_id: user } },
-                { ...updateOptions, returning: true }
-              )
-              .then((result) => result),
-          });
-
-          return critical
-            ? __password
-              ? (await decrypt(__password, __user.password)) && updateResponse()
-              : boom.notAcceptable("Critical update")
-            : updateResponse();
-        };
-
-        // bulk update
-        if (Array.isArray(__update)) {
-          //TODO: Run a transaction
-          return await sequelize.transaction(async (t) => {
-            __update.forEach((_obj) => {
-              performUpdate(_obj, { transaction: t });
-            });
-          });
-        }
-        return performUpdate(__update);
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
-      }
+      const {
+        payload,
+        pre: { user },
+      } = req;
+      return {
+        updated: Boolean(
+          await User.update({ ...payload }, { where: { id: user } })
+        ),
+      };
     },
-  };
-
-  const UserGroupController = (req, h) => {
-    console.log("User group controller called!");
   };
 
   // **************************************************
@@ -356,7 +306,7 @@ module.exports = (server) => {
           "archived_at",
         ];
         break;
-      case _roles.basic:
+      case _roles.standard:
         profile = "profile";
         profile_attributes = [
           "id",
@@ -382,5 +332,5 @@ module.exports = (server) => {
     return { profile, profile_attributes, model };
   }
 
-  return { ...UserController, group: UserGroupController };
+  return UserController;
 };

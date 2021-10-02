@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: { create },
+      user: { authenticate },
     },
     consts: { patterns, roles: _roles },
   } = server.app;
@@ -12,23 +12,14 @@ module.exports = (server) => {
   const schema = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2 }).required(),
     password: Joi.string().pattern(patterns.password).required(),
-    repeat_password: Joi.ref("password"),
-    referrer: Joi.string().min(21).optional(),
-    // user should not be able to set his role only admin should be able to set anothers users role
-    // role: Joi.string().min(21).required(),
-  }).with("password", "repeat_password");
+    role: Joi.any().allow(Object.keys(_roles).join(",")).required(),
+  }).with("email", "password");
 
   return {
     method: "POST",
-    path: `/user`,
+    path: "/account/authenticate",
     config: {
-      pre: [
-        {
-          method: () => _roles.standard,
-          assign: "role",
-        },
-      ],
-      handler: create,
+      handler: authenticate,
       validate: {
         payload: schema,
       },

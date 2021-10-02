@@ -48,8 +48,8 @@ module.exports = (sequelize, DataTypes) => {
         validate: { notEmpty: true },
       },
       role: {
-        type: DataTypes.ENUM(["standard", "admin"]),
-        defaultValue: "standard",
+        type: DataTypes.ENUM(["basic", "admin"]),
+        defaultValue: "basic",
       },
       archived_at: DataTypes.DATE,
     },

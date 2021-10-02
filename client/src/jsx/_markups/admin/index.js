@@ -21,11 +21,9 @@ const { error404 } = _components;
 export default AdminMarkup;
 
 function AdminMarkup() {
-  const session = useSelector((state) => state?.user);
+  const user = useSelector((state) => state?.user);
   const alert = useSelector(state => state.alert);
-  const location = useLocation();
   const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     historyHelpers.listen((location, action) => {
@@ -34,9 +32,6 @@ function AdminMarkup() {
     });
   }, []);
 
-  useEffect(() => {
-    setIsLoading(false);
-  }, [session]);
 
   return (
     <>
@@ -46,10 +41,10 @@ function AdminMarkup() {
         </div>
       )}
       <Route exact path="/admin/login">
-        {!session ? <LoginPage /> : <Redirect to={{ pathname: "/admin" }} />}
+        {!user ? <LoginPage /> : <Redirect to={{ pathname: "/admin" }} />}
       </Route>
       <Route>
-        {session ? (
+        {user ? (
           <AdminLayout>
             {routes.map(({ url, component: Component }, i) => (
               <Route

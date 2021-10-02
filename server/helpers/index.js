@@ -12,7 +12,7 @@ const glob = require("glob");
 const util = require("util");
 const { Op } = require("sequelize");
 // const wallets = require("../wallets");
-const env = process.env.NODE_ENVIRONMENT || "development";
+const env = process.env.NODE_ENV || "development";
 
 const {
   PORT,

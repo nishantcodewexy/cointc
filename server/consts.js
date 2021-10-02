@@ -7,6 +7,6 @@ module.exports = {
   },
   roles: {
     admin: 'admin',
-    standard: 'standard'
-  }
+    basic: 'basic'
+  },
 };

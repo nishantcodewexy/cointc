@@ -16,7 +16,7 @@ module.exports = (server) => {
 
   return {
     method: "POST",
-    path: "/user/admin/authenticate",
+    path: "/admin/authenticate",
     config: {
       pre: [{
         method: () => _roles.admin,

@@ -7,8 +7,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: ["POST", "DELETE", "PUT"],
-    path: `/user/archive`,
+    method: ["GET"],
+    path: `/account/statistics`,
     config: {
       pre: [
         {
@@ -16,7 +16,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: archive,
+      handler: ()=>{ },
       auth: "jwt",
     },
   };

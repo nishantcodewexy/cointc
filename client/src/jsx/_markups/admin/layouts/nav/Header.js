@@ -13,8 +13,9 @@ const { userActions } = _actions;
 
 const Header = ({}) => {
   const dispatch = useDispatch();
-  const session = useSelector((state) => state?.user);
-  console.log(session);
+  const user = useSelector((state) => state?.user);
+  console.log(user);
+  
   return (
     <div className="header">
       <div className="header-content">
@@ -49,8 +50,8 @@ const Header = ({}) => {
                 >
                   <IdenticonAvatar width={20} alt="" id="" />
                   <div className="header-info">
-                    <span>{session?.user?.email}</span>
-                    <small className="text-capitalize">{session?.user?.role}</small>
+                    <span>{user?.data?.email}</span>
+                    <small className="text-capitalize">{user?.data?.role}</small>
                   </div>
                 </Dropdown.Toggle>
 

@@ -8,8 +8,10 @@ module.exports = {
     this.queryInterface = queryInterface;
     this.Sequelize = Sequelize;
 
-    await seedUser.call(this);
-    await seedAdminUser.call(this);
+    for (let i = 0; i < len; i++) {
+      await seedUser.call(this);
+      await seedAdminUser.call(this);
+    }
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -26,66 +28,62 @@ module.exports = {
 };
 
 async function seedAdminUser(len = 10) {
-  for (let i = 0; i < len; i++) {
-    const id = faker.datatype.uuid();
-    const email = faker.internet.email();
+  const id = faker.datatype.uuid();
+  const email = faker.internet.email();
 
-    await this.queryInterface.bulkInsert(
-      "tbl_users",
-      [
-        {
-          id: id,
-          email,
-          password: faker.internet.password(),
-          // referral_code: 'seet7pcH'
-          created_at: faker.date.recent(),
-          updated_at: faker.date.recent(),
-          role: 'admin'
-        },
-      ],
-      {}
-    );
-
-    await this.queryInterface.bulkInsert("tbl_admin_users_profile", [
+  await this.queryInterface.bulkInsert(
+    "tbl_users",
+    [
       {
-        id: faker.datatype.uuid(),
-        nickname: faker.name.firstName(),
-        user_id: id,
+        id: id,
+        email,
+        password: faker.internet.password(),
+        // referral_code: 'seet7pcH'
         created_at: faker.date.recent(),
         updated_at: faker.date.recent(),
+        role: "admin",
       },
-    ]);
-  }
+    ],
+    {}
+  );
+
+  await this.queryInterface.bulkInsert("tbl_admin_users_profile", [
+    {
+      id: faker.datatype.uuid(),
+      nickname: faker.name.firstName(),
+      user_id: id,
+      created_at: faker.date.recent(),
+      updated_at: faker.date.recent(),
+    },
+  ]);
 }
 async function seedUser(len = 10) {
-  for (let i = 0; i < len; i++) {
-    const id = faker.datatype.uuid();
-    const email = faker.internet.email();
-    await this.queryInterface.bulkInsert(
-      "tbl_users",
-      [
-        {
-          id: id,
-          email,
-          password: faker.internet.password(),
-          // referral_code: 'seet7pcH'
-          created_at: faker.date.recent(),
-          updated_at: faker.date.recent(),
-        },
-      ],
-      {}
-    );
-
-    await this.queryInterface.bulkInsert("tbl_users_profile", [
+  const id = faker.datatype.uuid();
+  const email = faker.internet.email();
+  await this.queryInterface.bulkInsert(
+    "tbl_users",
+    [
       {
-        id: faker.datatype.uuid(),
-        referral_code: nanoid(10),
-        nickname: faker.name.firstName(),
+        id: id,
         email,
-        user_id: id,
+        password: faker.internet.password(),
+        // referral_code: 'seet7pcH'
         created_at: faker.date.recent(),
         updated_at: faker.date.recent(),
       },
-    ]);
-  }
+    ],
+    {}
+  );
+
+  await this.queryInterface.bulkInsert("tbl_users_profile", [
+    {
+      id: faker.datatype.uuid(),
+      referral_code: nanoid(10),
+      nickname: faker.name.firstName(),
+      email,
+      user_id: id,
+      created_at: faker.date.recent(),
+      updated_at: faker.date.recent(),
+    },
+  ]);
 }
