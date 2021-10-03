@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const Tatum = require("@tatumio/tatum");
+const _ = require("underscore");
 
 module.exports = (sequelize, DataTypes) => {
   class Wallet extends Model {
@@ -15,6 +16,10 @@ module.exports = (sequelize, DataTypes) => {
       Wallet.belongsTo(User, {
         foreignKey: "owner_id",
       });
+    }
+
+    toPublic() {
+      return _.pick(this, "extended_pub", "asset", "address");
     }
   }
 
