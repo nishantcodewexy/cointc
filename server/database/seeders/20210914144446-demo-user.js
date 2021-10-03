@@ -2,16 +2,16 @@
 
 const faker = require("faker");
 const { nanoid } = require("nanoid");
+const len = 10;
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     this.queryInterface = queryInterface;
     this.Sequelize = Sequelize;
 
-    for (let i = 0; i < len; i++) {
-      await seedUser.call(this);
-      await seedAdminUser.call(this);
-    }
+    await seedUser.call(this);
+    await seedAdminUser.call(this);
+   
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -27,63 +27,85 @@ module.exports = {
   },
 };
 
-async function seedAdminUser(len = 10) {
-  const id = faker.datatype.uuid();
-  const email = faker.internet.email();
+async function seedAdminUser() {
+  const userTableRecords = [];
+  const profileTableRecords = [];
 
-  await this.queryInterface.bulkInsert(
-    "tbl_users",
-    [
-      {
-        id: id,
-        email,
-        password: faker.internet.password(),
-        // referral_code: 'seet7pcH'
+  for (let i = 0; i < len; ++i) {
+    let id = faker.datatype.uuid();
+    let email = faker.internet.email();
+
+    if (i === 0) {
+      const superadmin = {
+        id,
+        email: "superadmin@mail.com",
+        //password - p@55w0rd
+        password:
+          "$2a$10$IvL78DSLxzFjDjtwba5hcuZog4kc5XsooEBtmt0gZaWTmvwc7gO4u",
         created_at: faker.date.recent(),
         updated_at: faker.date.recent(),
         role: "admin",
-      },
-    ],
-    {}
-  );
+      };
+      userTableRecords.push(superadmin);
+    }
 
-  await this.queryInterface.bulkInsert("tbl_admin_users_profile", [
-    {
+    profileTableRecords.push({
       id: faker.datatype.uuid(),
       nickname: faker.name.firstName(),
       user_id: id,
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
-    },
-  ]);
-}
-async function seedUser(len = 10) {
-  const id = faker.datatype.uuid();
-  const email = faker.internet.email();
+    });
+
+    if (i == 0) continue;
+
+    userTableRecords.push({
+      id,
+      email,
+      password: faker.internet.password(),
+      // referral_code: 'seet7pcH'
+      created_at: faker.date.recent(),
+      updated_at: faker.date.recent(),
+      role: "admin",
+    });
+  }
+  await this.queryInterface.bulkInsert("tbl_users", userTableRecords);
+
   await this.queryInterface.bulkInsert(
-    "tbl_users",
-    [
+    "tbl_admin_users_profile",
+    profileTableRecords
+  );
+}
+
+async function seedUser() {
+  for (let i = 0; i < len; ++i) {
+    const id = faker.datatype.uuid();
+    const email = faker.internet.email();
+    await this.queryInterface.bulkInsert(
+      "tbl_users",
+      [
+        {
+          id: id,
+          email,
+          password: faker.internet.password(),
+          // referral_code: 'seet7pcH'
+          created_at: faker.date.recent(),
+          updated_at: faker.date.recent(),
+        },
+      ],
+      {}
+    );
+
+    await this.queryInterface.bulkInsert("tbl_users_profile", [
       {
-        id: id,
+        id: faker.datatype.uuid(),
+        referral_code: nanoid(10),
+        nickname: faker.name.firstName(),
         email,
-        password: faker.internet.password(),
-        // referral_code: 'seet7pcH'
+        user_id: id,
         created_at: faker.date.recent(),
         updated_at: faker.date.recent(),
       },
-    ],
-    {}
-  );
-
-  await this.queryInterface.bulkInsert("tbl_users_profile", [
-    {
-      id: faker.datatype.uuid(),
-      referral_code: nanoid(10),
-      nickname: faker.name.firstName(),
-      email,
-      user_id: id,
-      created_at: faker.date.recent(),
-      updated_at: faker.date.recent(),
-    },
-  ]);
+    ]);
+  }
 }
