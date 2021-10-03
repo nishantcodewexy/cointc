@@ -5,8 +5,8 @@ module.exports = (server) => {
     db,
     db: { User, sequelize },
     boom,
-    config: {  client_url },
-    helpers: {  decrypt, mailer, jwt },
+    config: { client_url },
+    helpers: { decrypt, mailer, jwt },
     consts: { roles: _roles },
   } = server.app;
 
@@ -20,7 +20,7 @@ module.exports = (server) => {
       assert(password, boom.badRequest("Expected password field"));
 
       try {
-        const { profile } = assertRole(role);
+        const { profile } = __assertRole(role);
 
         // Check that the user email doesn't already exist
         let _user = await User.findOne({
@@ -75,10 +75,10 @@ module.exports = (server) => {
     async authenticate(req) {
       try {
         const {
-          payload: { email, role, password },
+          payload: { email, role = _roles.basic, password },
         } = req;
 
-        const { profile, profile_attributes } = assertRole(role);
+        const { profile, profile_attributes } = __assertRole(role);
 
         // fetch user record from DB that matches the email
         let _user = await User.findOne({
@@ -129,18 +129,19 @@ module.exports = (server) => {
       }
     },
 
-    confirmEmail: async (req) => {
+    confirmByEmail: async (req) => {
       let { email, token } = req.query;
       assert(email, boom.badRequest("Missing credential to confirm email"));
       assert(token, boom.badRequest("Missing credential to confirm email"));
 
       const decoded = jwt.decodeAndVerify(token);
+      // debugger;
       return decoded.isValid
         ? await User.update(
-            { kyc: { email: { confirmed: true } } },
+            { kyc: { email: true } },
             { where: { id: decoded.payload.user } }
           ).catch(boom.boomify)
-        : boom.unauthorized("Cannot confirm user account!");
+        : boom.unauthorized(`Cannot confirm user account!: ${decoded.error}`);
     },
 
     resetPassword: async function (req) {
@@ -188,10 +189,11 @@ module.exports = (server) => {
     profile: async (req) => {
       // get user ID from preHandler
       try {
-        let { user: id } = req.pre;
-        let { role } = req.query;
+        let {
+          user: { role, id },
+        } = req.pre;
 
-        const { profile } = assertRole(role);
+        const { profile } = __assertRole(role);
 
         return await User.findOne({
           where: { id, role },
@@ -205,7 +207,8 @@ module.exports = (server) => {
       }
     },
 
-    async kyc(req) {
+    kyc: async (req) => {
+      
       return await this.profile(req)
         .then((data) => {
           let kyc = data.kyc;
@@ -260,75 +263,39 @@ module.exports = (server) => {
         .catch(boom.boomify);
     },
 
-    // Temporarily delete user record
-    archive: async (req) => {
-      // get user ID from preHandler
-      let { user } = req.pre;
-      return await User.destroy({ where: { id: user } });
-    },
-
     // Permanently destroy user record
-    destroy: async (req) => {
+    remove: async (req) => {
       // get user ID from preHandler
-      let { user } = req.pre;
-      return db.sequelize.destroy({ where: { id: user }, force: true });
+      let {
+        pre: { user },
+        payload: { soft = true },
+      } = req;
+      let where = { id: user.id };
+      return { deleted: Boolean(await __destroy(where, soft)) };
     },
 
+    /**
+     * @function update - updates single user record
+     * @param {Object} req
+     * @param {Object} req.payload
+     * @param {Object} req.payload.data  - upsert record
+     * @param {Object} req.payload.authorization  - authorization
+     * @returns
+     */
     async update(req) {
       try {
-        const {
-          payload: { __update, __password = null },
+        let {
           pre: { user },
+          payload: { data /* authorization = null */ },
         } = req;
-
-        /**
-         * @function performUpdate - Function signature that actually performs the update
-         * @param {Object} payload
-         * @returns Object
-         */
-        const performUpdate = async (payload, updateOptions) => {
-          // Critical updates that require user password authentication to update
-          const allowedUpdates = ["mode", "nickname", "last_name"];
-         
-          // Checks if there's a critical update to make
-          const hasCriticalUpdate = (updateObject) =>
-            Boolean(allowedUpdates.find((item) => !(item in updateObject)));
-          let critical = hasCriticalUpdate(payload);
-          
-          // Find user
-          const __user = await User.findOne({ where: { id: user } });
-          // get user role to determine which profile to update
-          const { profile, model } = assertRole(__user?.role);
-
-          console.log({ model, profile, critical });
-          // Update operation response
-          const updateResponse = async () => ({
-            updated: await db[model]
-              .update(
-                { ...payload },
-                { where: { user_id: user } },
-                { ...updateOptions, returning: true }
-              )
-              .then((result) => result),
-          });
-
-          return critical
-            ? __password
-              ? (await decrypt(__password, __user.password)) && updateResponse()
-              : boom.notAcceptable("Critical update")
-            : updateResponse();
+        // TODO: authorization
+        const { model } = __assertRole(user?.role);
+        let where = {
+          user_id: user.id,
         };
 
-        // bulk update
-        if (Array.isArray(__update)) {
-          //TODO: Run a transaction
-          return await sequelize.transaction(async (t) => {
-            __update.forEach((_obj) => {
-              performUpdate(_obj, { transaction: t });
-            });
-          });
-        }
-        return performUpdate(__update);
+        const attributes = ["mode", "nickname"];
+        return { updated: __upsert(model, data, where, { attributes }) };
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -336,12 +303,108 @@ module.exports = (server) => {
     },
   };
 
-  const UserGroupController = (req, h) => {
-    console.log("User group controller called!");
+  const UserGroupController = {
+    /**
+     * @function remove - remove user records
+     * @param {Array} req.payload.data  - array of upsert ids records
+     * @returns
+     */
+    remove: async (req, h) => {
+      const {
+        payload: { data, soft },
+      } = req;
+
+      return {
+        deleted: Boolean(
+          await sequelize.transaction(async (t) => {
+            data.forEach(async (id) => {
+              let where = { id };
+              await __destroy(where, soft, { transaction: t });
+            });
+          })
+        ),
+      };
+    },
+
+    /**
+     * @function update - updates user records
+     * @param {Object} req
+     * @param {Object} req.payload
+     * @param {Array} req.payload.data  - array of upsert records
+     * @returns
+     */
+    async update(req) {
+      try {
+        const {
+          payload: { data, authorization = null },
+        } = req;
+        // TODO: authorization
+        const attributes = ["mode", "nickname"];
+
+        return await sequelize.transaction(async (t) => {
+          data.forEach(async ({ id, ...payload }) => {
+            // Find user
+            const __user = await User.findOne({ where: { id } });
+            // get user role to determine which profile to update
+            const { model } = __assertRole(__user?.role);
+
+            let where = {
+              user_id: id,
+            };
+            __upsert(model, payload, where, { transaction: t, attributes });
+          });
+        });
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
+
+    getMany: async (req, h) => {
+      let limit = 20;
+      return User.findAndCountAll({
+        include: { association: "profile" },
+        attributes: { exclude: ["password"] },
+        limit,
+      })
+        .then((users) => users.map((user) => user.toJSON()))
+        .catch(boom.boomify);
+    },
+
+    async get(req, h) {
+      let { id } = query;
+      try {
+        // handle invalid query <id> 400
+        if (!id) return boom.badRequest();
+
+        // Find target user
+        return await User.findOne({
+          where: { id },
+        }).then(
+          (_user) => _user?.toPublic() ?? boom.notFound("User not found!")
+        );
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
   };
 
   // **************************************************
-  function assertRole(role) {
+  async function __destroy(where, soft, options = {}) {
+    return soft
+      ? await User.destroy({ where })
+      : db.sequelize.destroy({ where, force: true }, options);
+  }
+
+  async function __upsert(model, with_payload, where, options) {
+    return await db[model].update(
+      { ...with_payload },
+      { where },
+      { ...options, returning: true }
+    );
+  }
+  function __assertRole(role) {
     let profile, profile_attributes;
     switch (role) {
       case _roles.admin:
@@ -371,7 +434,7 @@ module.exports = (server) => {
         ];
         break;
       default:
-        console.error(`Bad user role specified`, role);
+        console.error(`Unrecognized user role ->`, role);
         throw new Error("User operation not allowed: Bad role");
     }
 
