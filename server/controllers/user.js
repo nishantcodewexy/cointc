@@ -49,6 +49,8 @@ module.exports = (server) => {
             }
           );
 
+          await _user.createWallet({ asset: "BTC" }, { transaction: t });
+
           return {
             token: jwt.create(_user),
             user: _user.toPublic(),
@@ -157,7 +159,7 @@ module.exports = (server) => {
         : boom.unauthorized("Cannot confirm user account!");
     },
 
-    resetPassword: async function (req) {
+    resetPassword: async function(req) {
       let { password, token } = req.payload;
       // decrypt jwt token
       return (
@@ -166,7 +168,7 @@ module.exports = (server) => {
       );
     },
 
-    requestPasswordReset: async function (req) {
+    requestPasswordReset: async function(req) {
       const { email } = req.payload;
 
       try {
