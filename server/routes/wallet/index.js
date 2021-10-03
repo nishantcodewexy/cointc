@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-      wallet: { profile },
+      wallet: { getAll },
     },
     helpers: {
       jwt: { decodeUser },
@@ -12,7 +12,7 @@ module.exports = (server) => {
 
   return {
     method: ["GET"],
-    path: "/wallet",
+    path: "/wallets",
     config: {
       pre: [
         {
@@ -20,7 +20,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: profile,
+      handler: getAll,
       auth: "jwt",
     },
   };
