@@ -1,6 +1,6 @@
 const assert = require("assert");
 
-function WalletController(server) {
+module.exports = (server) => {
   const {
     db,
     boom,
@@ -12,7 +12,7 @@ function WalletController(server) {
     return await db.Wallet.findOne({ where: { owner_id: user, address: {} } });
   };
 
-  return {
+  const walletController = {
     // Fetch all user wallets
     profile: async (req) => {
       let {
@@ -44,18 +44,19 @@ function WalletController(server) {
     // Fetch total user wallet balance
     totalBalance: async (req) => {
       let {
-        pre: { user },      
+        pre: { user },
       } = req;
-    //TODO: Aggregate wallet amount
-      
+      //TODO: Aggregate wallet amount
     },
-     // Fetch specific user wallet balance
-     balanceOf: async (req) => {
+    // Fetch specific user wallet balance
+    balanceOf: async (req) => {
       let {
         pre: { user },
         payload: { address },
       } = req;
-    }
+    },
   };
-}
-module.exports = WalletController;
+
+  const walletGroupController = (req, h) => {};
+  return { ...walletController, group: walletGroupController };
+};

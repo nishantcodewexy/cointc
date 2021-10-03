@@ -1,8 +1,14 @@
 // .sequelizerc
 
-require("dotenv").config();
 const path = require("path");
-require("dotenv").config();
+const config = require("dotenv").config({
+  path: "../.env",
+});
+console.log({ parsedEnv: config.parsed });
+
+if (config.error) {
+  throw config.error;
+}
 
 module.exports = {
   config: path.resolve("database", "config.js"),

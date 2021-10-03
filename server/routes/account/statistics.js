@@ -1,31 +1,22 @@
-"use strict";
-
 module.exports = (server) => {
   const {
     controllers: {
-      user: { profile },
+      user: { archive },
     },
-    helpers: {
-      jwt: { decodeUser },
-    },
-    consts: { roles: _roles },
+    helpers: { jwt: {decodeUser} },
   } = server.app;
 
   return {
     method: ["GET"],
-    path: "/user/profile",
+    path: `/account/statistics`,
     config: {
       pre: [
         {
           method: decodeUser,
           assign: "user",
         },
-        {
-          method: () => _roles.standard,
-          assign: "role",
-        },
       ],
-      handler: profile,
+      handler: ()=>{ },
       auth: "jwt",
     },
   };

@@ -33,12 +33,16 @@
     "chartist": "^0.11.4",
     "chartist-plugin-tooltips-updated": "^0.1.3",
     "chartjs-plugin-streaming": "^1.8.0",
+    "config": "^3.3.6",
     "create-react-class": "^15.7.0",
     "date-fns": "^2.16.1",
     "dotenv": "^10.0.0",
     "draft-js": "^0.11.7",
     "formik": "^2.2.6",
+    "history": "^5.0.1",
     "html-to-draftjs": "^1.5.0",
+    "http-proxy-middleware": "^2.0.1",
+    "identicon": "^3.0.1",
     "material-ui-color-picker": "^3.5.1",
     "metismenujs": "^1.2.1",
     "nouislider-react": "^3.3.9",
@@ -79,23 +83,21 @@
     "react-toastify": "^6.1.0",
     "reactstrap": "^8.9.0",
     "recharts": "^1.8.5",
+    "redux": "^4.1.1",
     "redux-logger": "^3.0.6",
     "redux-persist": "^6.0.0",
+    "redux-thunk": "^2.3.0",
+    "reduxjs-toolkit-persist": "^7.0.7",
     "simple-react-lightbox": "^3.5.1",
     "slick-carousel": "^1.8.1",
+    "socket.io-client": "^4.2.0",
     "styled-components": "^5.3.1",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^10.10.4",
     "swiper": "^6.5.9",
     "use-scroll-position": "0.0.4",
     "web-vitals": "^0.2.4",
-    "yup": "^0.32.8",
-    "config": "^3.3.6",
-    "history": "^5.0.1",
-    "redux": "^4.1.1",
-    "redux-thunk": "^2.3.0",
-    "reduxjs-toolkit-persist": "^7.0.7",
-    "socket.io-client": "^4.2.0"
+    "yup": "^0.32.8"
   },
   "scripts": {
     "dev": "react-scripts start",
@@ -123,8 +125,9 @@
     ]
   },
   "devDependencies": {
+    "@types/react-redux": "^7.1.18",
     "sass": "^1.42.1",
-    "serve": "^12.0.1",
-    "@types/react-redux": "^7.1.18"
-  }
+    "serve": "^12.0.1"
+  },
+  "proxy": "http://localhost:8000"
 }

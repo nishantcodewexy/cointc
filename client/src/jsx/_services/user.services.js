@@ -20,7 +20,7 @@ export default userService;
 async function login(email, password) {
   const requestOptions = {
     method: "POST",
-    url: `${apiUrl}/admin/authenticate`,
+    url: `/account/authenticate`,
     headers: { "Content-Type": "application/json" },
     data: { email, password },
   };

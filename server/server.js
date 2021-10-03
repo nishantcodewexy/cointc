@@ -1,5 +1,4 @@
 "use strict";
-require("dotenv").config();
 const Hapi = require("@hapi/hapi");
 const glob = require("glob");
 const path = require("path");
@@ -83,6 +82,7 @@ controllers.forEach((file) => {
 /**************************************
  * dynamically register routes
  **************************************/
+
 let routes = glob.sync("/routes/**/*.js", {
   root: cwd,
 });
@@ -92,6 +92,7 @@ routes.forEach((file) => {
   HapiServer.route(filePath(HapiServer));
 });
 
+/************************************************ */
 exports.init = async () => {
   await HapiServer.initialize().then(() => {
     console.log(`Server has been initialized`);

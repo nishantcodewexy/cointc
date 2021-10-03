@@ -2,23 +2,26 @@ const assert = require("assert");
 
 module.exports = (server) => {
   const {
-    db: { User, AdminProfile, Profile, sequelize },
+    db,
+    db: { User, sequelize },
     boom,
-    config: { server_url, client_url },
-    helpers: { encrypt, decrypt, mailer, jwt },
+    config: { client_url },
+    helpers: { decrypt, mailer, jwt },
     consts: { roles: _roles },
   } = server.app;
 
   const UserController = {
     async create(req) {
-      let { role } = req.pre;
-      const { email, password, ...restOfPayload } = req.payload;
+      const {
+        pre: { role },
+        payload: { email, password, __profile = true, ...restOfPayload },
+      } = req;
       assert(email, boom.badRequest("Expected email"));
       assert(password, boom.badRequest("Expected password field"));
 
       try {
-        const { profile, model } = assertRole(role);
-        console.log(model);
+        const { profile } = __assertRole(role);
+
         // Check that the user email doesn't already exist
         let _user = await User.findOne({
           where: {
@@ -32,22 +35,31 @@ module.exports = (server) => {
           );
 
         return await sequelize.transaction(async (t) => {
-          _user = await User.create(
-            {
-              email,
-              password,
-              role,
-              [profile]: { ...restOfPayload, email },
-            },
-            {
-              transaction: t,
-              include: [
-                {
-                  association: profile,
-                },
-              ],
-            }
-          );
+          let newUser = {
+            cols: { email, password, role },
+            options: { transaction: t },
+          };
+
+          // Create user profile only if the __profile payload is true
+          if (__profile) {
+            newUser.cols["profile"] = { email, password, ...restOfPayload };
+            newUser.options["include"] = [
+              {
+                association: profile,
+              },
+            ];
+          }
+
+          _user = await User.create(newUser.cols, newUser.options);
+
+          /******** Send mail to user ***************/
+          let genPassword = "";
+          // if user profile was not created, generate temporal password for user
+          if (__profile) {
+            // TODO: generate temporal password
+          }
+          // Send mail here...
+          /************ End send mail ***************/
 
           await _user.createWallet({ asset: "BTC" }, { transaction: t });
 
@@ -65,11 +77,10 @@ module.exports = (server) => {
     async authenticate(req) {
       try {
         const {
-          payload: { email, password },
-          pre: { role },
+          payload: { email, role = _roles.basic, password },
         } = req;
 
-        const { profile, profile_attributes } = assertRole(role);
+        const { profile, profile_attributes } = __assertRole(role);
 
         // fetch user record from DB that matches the email
         let _user = await User.findOne({
@@ -82,81 +93,57 @@ module.exports = (server) => {
           },
         });
 
-        if (_user) {
-          return (
-            (await decrypt(password, _user.password)) && {
+        return _user
+          ? (await decrypt(password, _user.password)) && {
               token: jwt.create(_user),
               ..._user.toPublic(),
             }
-          );
-        }
-        return boom.notFound("User not found");
+          : boom.notFound("User not found");
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
       }
     },
 
-    // async createUser(req) {
-    //   const { email, password } = req.payload;
-    //   let { role } = req.pre;
-    //   assert(email, boom.badRequest("Expected email"));
-    //   assert(password, boom.badRequest("Expected password field"));
+    async createUser(req) {
+      const { email, password } = req.payload;
+      const _user = await createUser({ email, password, role: "standard" });
+      if (_user) {
+        // TODO: create standard user profile
+        // TODO: Send mail
+        // const token = jwt.create(_user, 900);
+        /* 
+      let confirmationLink = `${server_url}/confim_email?email=${email}&code=${token}`;
+      // Send email verification
+      const mailObject = {
+        to: email,
+        htmlTemplate: {
+          name: "account_confirmation",
+          transform: {
+            confirmationLink,
+            recipientEmail: email,
+          },
+        },
+        subject: "Cryptcon - Account confirmation",
+      };
+      
+      await mailer.sendMail(mailObject); */
+      }
+    },
 
-    //   let _user; // = await createUser({ email, password, role: "standard" });
-    //   try {
-    //     return await sequelize.transaction(async (t) => {
-    //       _user = await User.create({
-    //         email,
-    //         password,
-    //         role,
-    //       });
-
-    //       let _profile = await _user.createProfile(
-    //         {
-    //           ...restOfPayload,
-    //         },
-    //         {}
-    //       );
-    //       return _profile;
-    //     });
-    //   } catch (err) {}
-    //   return _user;
-    //   if (_user) {
-    //     // TODO: create standard user profile
-    //     // TODO: Send mail
-    //     // const token = jwt.create(_user, 900);
-    //     /*
-    //   let confirmationLink = `${server_url}/confim_email?email=${email}&code=${token}`;
-    //   // Send email verification
-    //   const mailObject = {
-    //     to: email,
-    //     htmlTemplate: {
-    //       name: "account_confirmation",
-    //       transform: {
-    //         confirmationLink,
-    //         recipientEmail: email,
-    //       },
-    //     },
-    //     subject: "Cryptcon - Account confirmation",
-    //   };
-
-    //   await mailer.sendMail(mailObject); */
-    //   }
-    // },
-
-    confirmEmail: async (req) => {
+    confirmByEmail: async (req) => {
       let { email, token } = req.query;
       assert(email, boom.badRequest("Missing credential to confirm email"));
       assert(token, boom.badRequest("Missing credential to confirm email"));
 
       const decoded = jwt.decodeAndVerify(token);
+      // debugger;
       return decoded.isValid
         ? await User.update(
-            { kyc: { email: { confirmed: true } } },
+            { kyc: { email: true } },
             { where: { id: decoded.payload.user } }
           ).catch(boom.boomify)
-        : boom.unauthorized("Cannot confirm user account!");
+        : boom.unauthorized(`Cannot confirm user account!: ${decoded.error}`);
     },
 
     resetPassword: async function(req) {
@@ -204,9 +191,11 @@ module.exports = (server) => {
     profile: async (req) => {
       // get user ID from preHandler
       try {
-        let { user: id, role } = req.pre;
+        let {
+          user: { role, id },
+        } = req.pre;
 
-        const { profile } = assertRole(role);
+        const { profile } = __assertRole(role);
 
         return await User.findOne({
           where: { id, role },
@@ -216,15 +205,26 @@ module.exports = (server) => {
         }).then((_user) => _user.toPublic());
       } catch (error) {
         console.error(error);
-        return boom.boomify(error);
+        return boom.badRequest(error);
       }
     },
 
-    findID: async (req) => {
+    kyc: async (req) => {
+      
+      return await this.profile(req)
+        .then((data) => {
+          let kyc = data.kyc;
+          const { type } = req.params;
+          return type ? { [type]: kyc[type] } : kyc;
+        })
+        .catch(boom.boomify);
+    },
+
+    async findID(req) {
       try {
         // get user ID from preHandler
         let {
-          params: { id },
+          query: { id },
           pre: { user },
         } = req;
 
@@ -265,35 +265,148 @@ module.exports = (server) => {
         .catch(boom.boomify);
     },
 
-    // Temporarily delete user record
-    archive: async (req) => {
-      // get user ID from preHandler
-      let { user } = req.pre;
-      return await User.destroy({ where: { id: user } });
-    },
-
     // Permanently destroy user record
-    destroy: async (req) => {
+    remove: async (req) => {
       // get user ID from preHandler
-      let { user } = req.pre;
-      return db.sequelize.destroy({ where: { id: user }, force: true });
+      let {
+        pre: { user },
+        payload: { soft = true },
+      } = req;
+      let where = { id: user.id };
+      return { deleted: Boolean(await __destroy(where, soft)) };
     },
 
+    /**
+     * @function update - updates single user record
+     * @param {Object} req
+     * @param {Object} req.payload
+     * @param {Object} req.payload.data  - upsert record
+     * @param {Object} req.payload.authorization  - authorization
+     * @returns
+     */
     async update(req) {
+      try {
+        let {
+          pre: { user },
+          payload: { data /* authorization = null */ },
+        } = req;
+        // TODO: authorization
+        const { model } = __assertRole(user?.role);
+        let where = {
+          user_id: user.id,
+        };
+
+        const attributes = ["mode", "nickname"];
+        return { updated: __upsert(model, data, where, { attributes }) };
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
+  };
+
+  const UserGroupController = {
+    /**
+     * @function remove - remove user records
+     * @param {Array} req.payload.data  - array of upsert ids records
+     * @returns
+     */
+    remove: async (req, h) => {
       const {
-        payload,
-        pre: { user },
+        payload: { data, soft },
       } = req;
+
       return {
-        updated: Boolean(
-          await User.update({ ...payload }, { where: { id: user } })
+        deleted: Boolean(
+          await sequelize.transaction(async (t) => {
+            data.forEach(async (id) => {
+              let where = { id };
+              await __destroy(where, soft, { transaction: t });
+            });
+          })
         ),
       };
+    },
+
+    /**
+     * @function update - updates user records
+     * @param {Object} req
+     * @param {Object} req.payload
+     * @param {Array} req.payload.data  - array of upsert records
+     * @returns
+     */
+    async update(req) {
+      try {
+        const {
+          payload: { data, authorization = null },
+        } = req;
+        // TODO: authorization
+        const attributes = ["mode", "nickname"];
+
+        return await sequelize.transaction(async (t) => {
+          data.forEach(async ({ id, ...payload }) => {
+            // Find user
+            const __user = await User.findOne({ where: { id } });
+            // get user role to determine which profile to update
+            const { model } = __assertRole(__user?.role);
+
+            let where = {
+              user_id: id,
+            };
+            __upsert(model, payload, where, { transaction: t, attributes });
+          });
+        });
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
+
+    getMany: async (req, h) => {
+      let limit = 20;
+      return User.findAndCountAll({
+        include: { association: "profile" },
+        attributes: { exclude: ["password"] },
+        limit,
+      })
+        .then((users) => users.map((user) => user.toJSON()))
+        .catch(boom.boomify);
+    },
+
+    async get(req, h) {
+      let { id } = query;
+      try {
+        // handle invalid query <id> 400
+        if (!id) return boom.badRequest();
+
+        // Find target user
+        return await User.findOne({
+          where: { id },
+        }).then(
+          (_user) => _user?.toPublic() ?? boom.notFound("User not found!")
+        );
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
     },
   };
 
   // **************************************************
-  function assertRole(role) {
+  async function __destroy(where, soft, options = {}) {
+    return soft
+      ? await User.destroy({ where })
+      : db.sequelize.destroy({ where, force: true }, options);
+  }
+
+  async function __upsert(model, with_payload, where, options) {
+    return await db[model].update(
+      { ...with_payload },
+      { where },
+      { ...options, returning: true }
+    );
+  }
+  function __assertRole(role) {
     let profile, profile_attributes;
     switch (role) {
       case _roles.admin:
@@ -308,7 +421,7 @@ module.exports = (server) => {
           "archived_at",
         ];
         break;
-      case _roles.standard:
+      case _roles.basic:
         profile = "profile";
         profile_attributes = [
           "id",
@@ -323,7 +436,7 @@ module.exports = (server) => {
         ];
         break;
       default:
-        console.error(`Bad user role specified`, role);
+        console.error(`Unrecognized user role ->`, role);
         throw new Error("User operation not allowed: Bad role");
     }
 
@@ -334,5 +447,5 @@ module.exports = (server) => {
     return { profile, profile_attributes, model };
   }
 
-  return UserController;
+  return { ...UserController, group: UserGroupController };
 };

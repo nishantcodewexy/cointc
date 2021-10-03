@@ -2,9 +2,9 @@
 const assert = require("assert");
 
 module.exports = (server) => {
-  const { Advert, User } = server.app.db;
+  const { db } = server.app;
 
-  return {
+  const AdvertController = {
     async create(req) {
       const { user } = req.pre.user;
       return db.Advert.create({ ...req.payload, owner: user.id });
@@ -23,7 +23,7 @@ module.exports = (server) => {
     async get(req) {
       const { ad } = req.payload;
 
-      return db.Advert.findByPk(ad, { include: User });
+      return db.Advert.findByPk(ad);
     },
 
     // fetch all adverts
@@ -31,4 +31,9 @@ module.exports = (server) => {
       return await db.Advert.findAll();
     },
   };
+  const AdvertGroupController = (req, h) => {
+    console.log("User group controller called!");
+  };
+  
+  return { ...AdvertController, group: AdvertGroupController };
 };

@@ -12,16 +12,13 @@ module.exports = (server) => {
   const schema = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2 }).required(),
     password: Joi.string().pattern(patterns.password).required(),
-  }).with('email', 'password');
+    role: Joi.string().optional(),
+  }).with("email", "password");
 
   return {
     method: "POST",
-    path: "/admin/authenticate",
+    path: "/account/authenticate",
     config: {
-      pre: [{
-        method: () => _roles.admin,
-        assign: 'role'
-      }],
       handler: authenticate,
       validate: {
         payload: schema,
