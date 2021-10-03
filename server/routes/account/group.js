@@ -1,5 +1,5 @@
-"use strict"
-const Joi = require('joi');
+"use strict";
+const Joi = require("joi");
 
 module.exports = (server) => {
   const {
@@ -16,29 +16,35 @@ module.exports = (server) => {
       user,
       chat,
     },
+    db: { User },
     helpers: {
       jwt: { decodeUser },
     },
+    boom,
     consts: { roles: _roles },
   } = server.app;
 
   return {
     method: ["POST", "GET", "PUT", "DELETE"],
-    path: "/account/group",
+    path: "/account/group/{kind}",
     config: {
       pre: [
-        [
-          { method: decodeUser, assign: "user" },
-          { method: () => _roles.admin, assign: "role" },
-        ],
         {
           method: (req) => {
-            return null;
+            return User.findOne({
+              where: {
+                id: decodeUser(req),
+              },
+            });
           },
-          assign: "group",
+          assign: "user",
+        },
+        {
+          method: groupRouteHandler,
+          assign: "action",
         },
       ],
-      handler: groupRouteHandler,
+      handler: (req, h) => req.pre.action(req, h),
       auth: "jwt",
     },
   };
@@ -47,84 +53,141 @@ module.exports = (server) => {
     // get the method of request
     let method = req.method.toLowerCase();
     // {POST, GET, PUT or DELETE}
-    switch (method) {
-      case "get": {
-        let { kind } = req.query;
-        switch (kind) {
-          case "user":
-          case "users":
-            return user.group(req, h);
-          case "statistics":
-          case "stats":
-            return statistics.group(req, h);
-          case "permission":
-          case "permissions":
-            return permission.group(req, h);
-          case "wallet":
-          case "wallets":
-            return wallet.group(req, h);
-          case "ticket":
-          case "tickets":
-            return ticket.group(req, h);
-          case "secession":
-          case "secessions":
-            return secession.group(req, h);
-          case "kyc":
-          case "kycs": {
-            const schema = Joi.object({
-              type: Joi.string()
-                .allow("email", "id", "phone", "payment_methods")
-                .optional(),
-            });
-            return kyc.group(req, h);
+    let {
+      query,
+      pre,
+      params: { kind },
+      payload,
+    } = req;
+    debugger;
+
+    // Only admins can use this route
+    if (pre.user.role == _roles.admin) {
+      switch (kind) {
+        case "user":
+        case "users": {
+          switch (method) {
+            case "post": {
+              return user.create(payload);
+            }
+            case "delete": {
+              return;
+            }
+
+            case "put": {
+              return;
+            }
+            case "get":
+            default: {
+              if (query?.id) return user.group.getOne;
+              return user.group.getMany;
+            }
           }
-          case "trade":
-          case "trades":
-            return trade.group(req, h);
-          case "chat":
-          case "chats":
-            return chat.group(req, h);
-          case "security":
-          case "securities":
-            return security.group(req, h);
-          case "ad":
-          case "ads":
-          case "advert":
-          case "adverts":
-            return advert.group(req, h);
-          default:
-            return boom.badRequest(
-              "Bad group request. Invalid kind of request"
-            );
         }
-      }
-      default: {
-        let { __kind, __group } = req.payload;
-        if (!__group && __kind)
-          return boom.badRequest("bad group request. Cannot find group option");
 
-        switch (method) {
-          case "delete": {
-            return;
+        case "statistics":
+        case "stats": {
+          switch (method) {
+            case "get":
+            default: {
+              // return statistics.group.getMany(query);
+            }
           }
+        }
 
-          case "put": {
-            return;
+        case "permission":
+        case "permissions": {
+          switch (method) {
+            case "get":
+            default: {
+              // return permission.group;
+            }
           }
+        }
 
-          case "post": {
-            switch (__kind) {
-              case "user":
-              case "users":
-                return user.create;
-              default:
-                return boom.boomify("Invalid group request");
+        case "wallet":
+        case "wallets": {
+          switch (method) {
+            case "get":
+            default: {
+              // return wallet.group;
+            }
+          }
+        }
+
+        case "ticket":
+        case "tickets": {
+          switch (method) {
+            case "get":
+            default: {
+              // return ticket.group;
+            }
+          }
+        }
+
+        case "secession":
+        case "secessions": {
+          switch (method) {
+            case "get":
+            default: {
+              // return secession.group;
+            }
+          }
+        }
+
+        case "kyc":
+        case "kycs": {
+          switch (method) {
+            case "get":
+            default: {
+              // return kyc.group;
+            }
+          }
+        }
+
+        case "trade":
+        case "trades": {
+          switch (method) {
+            case "get":
+            default: {
+              // return trade.group;
+            }
+          }
+        }
+
+        case "chat":
+        case "chats": {
+          switch (method) {
+            case "get":
+            default: {
+              // return chat.group;
+            }
+          }
+        }
+
+        case "security":
+        case "securities": {
+          switch (method) {
+            case "get":
+            default: {
+              // return security.group;
+            }
+          }
+        }
+
+        case "ad":
+        case "ads":
+        case "advert":
+        case "adverts": {
+          switch (method) {
+            case "get":
+            default: {
+              // return secession.group;
             }
           }
         }
       }
     }
-
-    return () => boom.boomify();
+    return () => boom.unauthorized();
   }
 };
