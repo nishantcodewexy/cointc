@@ -12,7 +12,7 @@ module.exports = (server) => {
   const schema = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2 }).required(),
     password: Joi.string().pattern(patterns.password).required(),
-    role: Joi.any().allow(Object.keys(_roles).join(",")).required(),
+    role: Joi.string().optional(),
   }).with("email", "password");
 
   return {
