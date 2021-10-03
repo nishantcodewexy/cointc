@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: { confirmEmail },
+      user: { confirmByEmail },
     },
   } = server.app;
 
@@ -15,9 +15,9 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: `/user/confirm_email`,
+    path: `/account/confirm`,
     config: {
-      handler: confirmEmail,
+      handler: confirmByEmail,
       validate: {
         query: schema,
       },
