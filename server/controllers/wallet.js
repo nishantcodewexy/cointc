@@ -2,43 +2,52 @@ const assert = require("assert");
 
 module.exports = (server) => {
   const {
-    db,
+    db: { Wallet, User },
     boom,
     helpers: {},
   } = server.app;
 
   const walletExist = async (user, address) => {
     // Search wallet by address
-    return await db.Wallet.findOne({ where: { owner_id: user, address: {} } });
+    return await Wallet.findOne({ where: { owner_id: user, address: {} } });
   };
 
   const walletController = {
+    create: async (req) => {
+      const { user } = req.pre;
+      const { currency } = req.params;
+      return await User.findByPk(user)
+        .createWallet({ asset: currency })
+        .toPublic();
+    },
+
     // Fetch all user wallets
-    profile: async (req) => {
+    getAll: async (req) => {
       let {
         pre: { user },
       } = req;
       assert(type, "must specify wallet type");
 
-      return db.Wallet.findAll({
+      return await Wallet.findAll({
         where: {
           owner_id: user,
         },
       }).catch(boom.boomify);
     },
+
     // Fetch specific user wallet
-    profileByAddress: async () => {
+    getByAddress: async () => {
       let {
         pre: { user },
-        payload: { address },
+        params: { address },
       } = req;
       //`Requesting for wallet id:${id}`
-      return db.Wallet.findOne({
+      return await Wallet.findOne({
         where: {
           owner_id: user,
           address,
         },
-      });
+      }).toPublic();
     },
 
     // Fetch total user wallet balance
