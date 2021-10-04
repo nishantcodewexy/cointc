@@ -210,7 +210,6 @@ module.exports = (server) => {
     },
 
     kyc: async (req) => {
-      
       return await this.profile(req)
         .then((data) => {
           let kyc = data.kyc;
@@ -224,11 +223,11 @@ module.exports = (server) => {
       try {
         // get user ID from preHandler
         let {
-          query: { id },
+          params: { id },
           pre: { user },
         } = req;
 
-        // handle invalid query <id> 400
+        // handle invalid params <id> 400
         if (!id) return boom.badRequest();
 
         const role = await User.findOne({

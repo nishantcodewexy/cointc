@@ -6,7 +6,7 @@ const config = require("dotenv").config({
 
 const env = process.env.NODE_ENV || "development";
 
-if (env === "development") console.log({ parsedEnv: config.parsed });
+// if (env === "development") console.log({ parsedEnv: config.parsed });
 if (config.error) {
   throw config.error;
 }

@@ -1,18 +1,23 @@
 "use strict";
+const Joi = require("joi");
 
 module.exports = (server) => {
   const {
     controllers: {
-      wallet: { getAll },
+      wallet: { getByAddress },
     },
     helpers: {
       jwt: { decodeUser },
     },
   } = server.app;
 
+  const schema = Joi.object({
+    address: Joi.string().required(),
+  });
+
   return {
     method: ["GET"],
-    path: "/wallets",
+    path: "/wallet/{address}",
     config: {
       pre: [
         {
@@ -20,7 +25,10 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: getAll,
+      handler: getByAddress,
+      validate: {
+        params: schema,
+      },
       auth: "jwt",
     },
   };
