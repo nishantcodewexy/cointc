@@ -1,7 +1,7 @@
-import userConstants from "./user.constants";
-import alertConstants from "./alerts.constants";
+import userConstant from "./user.constants";
+import alertConstant from "./alerts.constants";
 
 export default {
-  userConstants,
-  alertConstants,
+  userConstant,
+  alertConstant,
 };

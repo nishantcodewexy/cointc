@@ -5,7 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useLocation, Link } from "react-router-dom";
 import _actions from "../../../_actions";
 
-const { userActions, alertActions } = _actions;
+const {  userAction } = _actions;
 
 const LoginPage = () => {
   const dispatch = useDispatch();
@@ -44,7 +44,7 @@ const LoginPage = () => {
         setSubmitting(true);
         try {
           const { from } = location.state || { from: { pathname: "/admin" } };
-          dispatch(userActions.login({ email, password, from }));
+          dispatch(userAction.login({ email, password, role: 'admin', from }));
         } catch (error) {
           console.error(error);
         } finally {

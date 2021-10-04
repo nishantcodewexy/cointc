@@ -1,4 +1,3 @@
-import userServices from "./user.services";
-require('dotenv').config();
+import userService from "./user.services";
 
-export default { userServices };
+export default { userService };

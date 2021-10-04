@@ -10,8 +10,8 @@ module.exports = (server) => {
 
   // define Joi schema
   const schema = Joi.object({
-    email: Joi.string().email({ minDomainSegments: 2 }).required(),
-    password: Joi.string().pattern(patterns.password).required(),
+    email: Joi.string().email({ minDomainSegments: 2 }).required().error(new Error('Invalid email address')),
+    password: Joi.string().pattern(patterns.password).required().error(new Error('Invalid password pattern')  ),
     role: Joi.string().optional(),
   }).with("email", "password");
 

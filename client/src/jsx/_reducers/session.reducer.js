@@ -1,8 +1,13 @@
 import _constants from "../_constants";
 
-const { userConstants } = _constants;
+const { userConstant } = _constants;
+let user = JSON.parse(localStorage.getItem("user")) || null;
 
-const initialState = null;
+const initialState = {
+  request: null,
+  error: null,
+  user,
+};
 
 export default function userReducer(state = initialState, action) {
   switch (action.type) {
@@ -22,22 +27,25 @@ export default function userReducer(state = initialState, action) {
     //   };
 
     // // Login
-    // case userConstants.LOGIN_REQUEST:
-    //   return {
-    //     status: 'requesting',
-    //   };
-    
-    case userConstants.LOGIN_SUCCESS:
+    case userConstant.LOGIN_REQUEST:
       return {
-        // status: 'completed',
-        data: action.user,
+        request: { ...action.data },
       };
 
-    case userConstants.LOGIN_FAILURE:
-      return null;
+    case userConstant.LOGIN_SUCCESS:
+      return {
+        user: { ...action.data },
+      };
 
-    case userConstants.LOGOUT:
-      return null;
+    case userConstant.LOGIN_FAILURE:
+      return {
+        error: { ...action.data },
+      };
+
+    case userConstant.LOGOUT:
+      return {       
+        user: null,
+      };
     default:
       return state;
   }

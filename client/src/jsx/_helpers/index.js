@@ -1,9 +1,9 @@
-import authHelpers from "./auth.helper";
-import historyHelpers from "./history.helper";
-import storeHelpers from "./store.helper";
+import headerHelper from "./header.helper";
+import historyHelper from "./history.helper";
+import storeHelper from "./store.helper";
 
 export default {
-  authHelpers,
-  historyHelpers,
-  storeHelpers,
+  headerHelper,
+  historyHelper,
+  storeHelper,
 };

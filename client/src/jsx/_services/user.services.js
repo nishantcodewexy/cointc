@@ -1,9 +1,12 @@
 import _helpers from "../_helpers";
 import _constants from "../_constants";
 import axios from "axios";
+import qs from "qs";
+const { headerHelper } = _helpers;
+const { userConstant } = _constants;
 
-const { authHeader } = _helpers;
-const { userConstants } = _constants;
+const apiUrl = `http://localhost:8080/${userConstant.URL_PREFIX}`;
+const headers = headerHelper();
 
 const userService = {
   login,
@@ -14,34 +17,40 @@ const userService = {
   update,
   delete: _delete,
 };
-const apiUrl = `http://localhost:8080/${userConstants.URL_PREFIX}`;
+
 export default userService;
 
-async function login(email, password) {
-  const requestOptions = {
-    method: "POST",
-    url: `/account/authenticate`,
-    headers: { "Content-Type": "application/json" },
-    data: { email, password },
+/*----------------------------Services -----------------------------*/
+
+async function login({email, password, role = "basic"}) {
+  const url = `/account/authenticate`;
+  headers.append("Content-Type", "application/x-www-form-urlencoded");
+
+  var data = {
+    email,
+    password,
+    role,
   };
 
-  const response = await axios(requestOptions);
-  const data = handleResponse(response);
-
-  // store user details and jwt token in local storage to keep user logged in between page refreshes
-  localStorage.setItem("user", JSON.stringify(data));
-  return data;
+  const requestOptions = {
+    method: "POST",
+    url,
+    headers,
+    data,
+  };
+  let response = null;
+  return await axios(requestOptions)  
 }
 
 function logout() {
   // remove user from local storage to log user out
-  localStorage.removeItem("user");
+  
 }
 
 async function fetchProfile() {
   const requestOptions = {
     method: "GET",
-    headers: authHeader(),
+    headers: headers,
     url: `${apiUrl}/admin/`,
   };
 
@@ -52,7 +61,7 @@ async function fetchProfile() {
 async function fetchID(id) {
   const requestOptions = {
     method: "GET",
-    headers: authHeader(),
+    headers: headers,
   };
 
   const response = await fetch(`${apiUrl}/users/${id}`, requestOptions);
@@ -73,7 +82,7 @@ async function register(user) {
 async function update(user) {
   const requestOptions = {
     method: "PUT",
-    headers: { ...authHeader(), "Content-Type": "application/json" },
+    headers: { ...headers, "Content-Type": "application/json" },
     body: JSON.stringify(user),
   };
 
@@ -85,7 +94,7 @@ async function update(user) {
 async function _delete(id) {
   const requestOptions = {
     method: "DELETE",
-    headers: authHeader(),
+    headers: headers,
   };
 
   const response = await fetch(`${apiUrl}/users/${id}`, requestOptions);
@@ -98,6 +107,8 @@ function handleResponse(response) {
     logout();
     // location.reload(true);
   }
+  // response.catch(error => {
+
+  // })
   return response.data;
-  
 }

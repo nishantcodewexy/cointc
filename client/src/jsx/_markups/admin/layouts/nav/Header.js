@@ -9,12 +9,11 @@ import _components from "../../components";
 import { Dropdown } from "react-bootstrap";
 
 const { IdenticonAvatar } = _components;
-const { userActions } = _actions;
+const {  userAction } = _actions;
 
 const Header = ({}) => {
   const dispatch = useDispatch();
-  const user = useSelector((state) => state?.user);
-  console.log(user);
+  const session = useSelector((state) => state?.session);
   
   return (
     <div className="header">
@@ -50,8 +49,8 @@ const Header = ({}) => {
                 >
                   <IdenticonAvatar width={20} alt="" id="" />
                   <div className="header-info">
-                    <span>{user?.data?.email}</span>
-                    <small className="text-capitalize">{user?.data?.role}</small>
+                    <span>{session?.user?.email}</span>
+                    <small className="text-capitalize">{session?.user?.role}</small>
                   </div>
                 </Dropdown.Toggle>
 
@@ -78,7 +77,7 @@ const Header = ({}) => {
 
                   <Link
                     to="#"
-                    onClick={() => dispatch(userActions.logout())}
+                    onClick={() => dispatch(userAction.logout())}
                     className="dropdown-item ai-icon"
                   >
                     <svg

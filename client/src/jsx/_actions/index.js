@@ -1,7 +1,7 @@
-import alertActions from "./alert.action";
-import userActions from "./user.action";
+import alertAction from "./alert.action";
+import userAction from "./account.user.action";
 
 export default {
-  alertActions,
-  userActions
+  alertAction,
+  userAction
 };
