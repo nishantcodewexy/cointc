@@ -30,7 +30,7 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: () => _roles.standard,
+          method: () => _roles.basic,
           assign: "role",
         },
       ],
