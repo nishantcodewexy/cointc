@@ -45,12 +45,6 @@ const HapiServer = Hapi.server({
 })();
 
 /**************************************
- *  initialize database
- **************************************/
-database.sequelize.authenticate();
-database.sequelize.sync({ alter: false, force: false });
-
-/**************************************
  * Server security
  **************************************/
 // server.state('data', {
@@ -106,7 +100,7 @@ exports.init = async () => {
   return HapiServer;
 };
 
-exports.start = async function () {
+exports.start = async function() {
   await HapiServer.start().then(() => {
     console.log(`Server is running on ${server_url}`);
   });
