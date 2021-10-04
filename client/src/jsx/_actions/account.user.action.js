@@ -14,8 +14,16 @@ const accountUserActions = {
 export default accountUserActions;
 
 /********************************** FUNCTIONS ********************************************/
-
-function login({ email, password, role = "basic", from }) {
+/**
+ * @function login - User login action
+ * @param {Object} param 
+ * @param {String} param.email 
+ * @param {String} param.password 
+ * @param {String | "basic"} [param.role] 
+ * @param {String | "/"} [param.from] 
+ * @returns 
+ */
+function login({ email, password, role = "basic", from = "/" }) {
   return (dispatch) => {
     dispatch(log({ type: NOTICE.CLEAR}))
     dispatch(log({ type: REQUEST.SESSION_LOGIN, data: email }));
@@ -37,6 +45,10 @@ function login({ email, password, role = "basic", from }) {
   };
 }
 
+/**
+ * @function logout - logs user out
+ * @returns 
+ */
 function logout() {
   return (dispatch) => {
     dispatch(log({ type: REQUEST.SESSION_LOGOUT }));
@@ -47,6 +59,11 @@ function logout() {
   };
 }
 
+/**
+ * @function register - Create or register a new user
+ * @param {Object} credentials 
+ * @returns 
+ */
 function register(credentials) {
   return (dispatch) => {
     dispatch(log({ type: NOTICE.CLEAR}))
@@ -65,6 +82,10 @@ function register(credentials) {
   };
 }
 
+/**
+ * @function profile - Fetch user's profile information 
+ * @returns 
+ */
 function profile() {
   return (dispatch) => {
     dispatch(log({ type: NOTICE.CLEAR}))
@@ -72,13 +93,25 @@ function profile() {
   };
 }
 
-function drop(id) {
+/**
+ * 
+ * @function drop - Soft deletes user
+ * @returns 
+ */
+function drop() {
   return (dispatch) => {
     dispatch(log({ type: NOTICE.CLEAR}))
-    dispatch(log({ type: REQUEST.USER_DROP, data: id }));
+    dispatch(log({ type: REQUEST.USER_DROP}));
   };
 }
 
+/**
+ * @function log - action logger
+ * @param {Object} param - action object
+ * @param {String} [param.type] - Type of action
+ * @param {*} [param.data] - Action payload
+ * @returns 
+ */
 function log({ type = NOTICE.INFO, data = null }) {
   return { type, data };
 }
