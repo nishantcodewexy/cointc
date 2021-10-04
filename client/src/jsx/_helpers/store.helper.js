@@ -29,7 +29,7 @@ const loggerMiddleware = createLogger();
 const persistConfig = {
   key: "root",
   storage,
-  whitelist: ['user',"settings"]
+  whitelist: ['session',"settings"]
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

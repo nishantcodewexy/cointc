@@ -15,6 +15,7 @@ module.exports = (server) => {
       security,
       user,
       chat,
+      referral
     },
     db: { User },
     helpers: {
@@ -59,7 +60,6 @@ module.exports = (server) => {
       params: { kind },
       payload,
     } = req;
-    debugger;
 
     // Only admins can use this route
     if (pre.user.role == _roles.admin) {
@@ -188,6 +188,6 @@ module.exports = (server) => {
         }
       }
     }
-    return () => boom.unauthorized();
+    return boom.unauthorized();
   }
 };
