@@ -1,5 +1,5 @@
-import React, { useContext, useState, useEffect } from "react";
-import { Route, Switch, Redirect, useLocation } from "react-router-dom";
+import React, { useContext, /* useState, */ useEffect } from "react";
+import { Route, Switch, Redirect, /* useLocation */ } from "react-router-dom";
 import routes from "./routes";
 import Nav from "./layouts/nav";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -8,43 +8,38 @@ import "../../../vendor/bootstrap-select/dist/css/bootstrap-select.min.css";
 import "../../../css/style.css";
 
 import UnderConstruction from "./components/UnderConstruction";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import LoginPage from "./pages/login";
 import _helpers from "../../_helpers";
 import _actions from "../../_actions";
 import _components from "./components";
 
-const { historyHelpers } = _helpers;
-const { alertActions } = _actions;
+const { history } = _helpers;
 const { error404 } = _components;
 
 export default AdminMarkup;
 
 function AdminMarkup() {
-  const user = useSelector((state) => state?.user);
-  const alert = useSelector(state => state.alert);
-  const dispatch = useDispatch();
+  const session = useSelector((state) => state?.session);
+  const notice = useSelector((state) => state?.notice);
 
   useEffect(() => {
-    historyHelpers.listen((location, action) => {
+    history.listen((location, action) => {
       // clear alert on location change
-      dispatch(alertActions.clear());
+      // dispatch(notice.clear());
     });
   }, []);
 
-
   return (
     <>
-      {alert.message && (
-        <div className={`alert ${alert.type}`}>
-          {alert.message}
-        </div>
+      {notice.message && (
+        <div className={`alert alert-${notice.type}`}>{notice.message}</div>
       )}
       <Route exact path="/admin/login">
-        {!user ? <LoginPage /> : <Redirect to={{ pathname: "/admin" }} />}
+        {!(session?.user) ? <LoginPage /> : <Redirect to={{ pathname: "/admin" }} />}
       </Route>
       <Route>
-        {user ? (
+        {(session?.user) ? (
           <AdminLayout>
             {routes.map(({ url, component: Component }, i) => (
               <Route
@@ -72,7 +67,7 @@ function AdminMarkup() {
 function AdminLayout({ children }) {
   const { menuToggle } = useContext(ThemeContext);
 
-  let path = historyHelpers.location.pathname;
+  let path = history.location.pathname;
   path = path.split("/");
   path = path[path.length - 1];
 
@@ -84,7 +79,10 @@ function AdminLayout({ children }) {
       id={`${!pagePath ? "main-wrapper" : ""}`}
       className={`${!pagePath ? "show" : "mh100vh"}  ${
         menuToggle ? "menu-toggle" : ""
-      }`}
+        }`}
+      style={{
+        minHeight: '100vh'
+      }}
     >
       {!pagePath && <Nav />}
 

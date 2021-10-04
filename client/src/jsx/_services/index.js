@@ -1,4 +1,4 @@
-import userServices from "./user.services";
-require('dotenv').config();
+import user from "./user.services";
+import group from "./group.service";
 
-export default { userServices };
+export default { user, group };

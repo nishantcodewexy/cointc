@@ -7,15 +7,15 @@ import _helpers from "./_helpers";
 import { CircularProgress } from "@material-ui/core";
 
 const {
-  storeHelpers: { store, persistor },
-  historyHelpers,
+  store: { store, persistor },
+  history,
 } = _helpers;
 
 // import { withResizeDetector } from "react-resize-detector";
 
 function Markup() {
   return (
-    <Router history={historyHelpers}>
+    <Router history={history}>
       <Provider store={store}>
         <PersistGate
           loading={<CircularProgress color="primary" />}

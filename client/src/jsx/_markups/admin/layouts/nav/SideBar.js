@@ -9,18 +9,17 @@ import PerfectScrollbar from "react-perfect-scrollbar";
 import { Link } from "react-router-dom";
 import useScrollPosition from "use-scroll-position";
 import { ThemeContext } from "../../../../../context/ThemeContext";
-import profile from "../../../../../images/Untitled-1.jpg";
 import sidebar_routes from "../../sidebar_routes";
-import styled from "styled-components";
+// import styled from "styled-components";
 
-const MainProfile = styled.div`
+/* const MainProfile = styled.div`
   .main-profile {
     i {
       color: var(--primary);
       margin-right: -20px;
     }
   }
-`;
+`; */
 
 function MM({ children }) {
   const el = useRef();

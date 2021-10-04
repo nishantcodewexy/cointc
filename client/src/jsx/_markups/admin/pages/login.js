@@ -1,24 +1,15 @@
-import React, { useEffect } from "react";
+// import React, { useEffect } from "react";
 import { Formik } from "formik";
 import logo from "../../../../images/svg/logo.svg";
-import { useSelector, useDispatch } from "react-redux";
-import { useHistory, useLocation, Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useLocation, Link } from "react-router-dom";
 import _actions from "../../../_actions";
 
-const { userActions, alertActions } = _actions;
+const { user } = _actions;
 
 const LoginPage = () => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const history = useHistory();
-  // let user = localStorage.getItem("user");
-  // reset login status
-  useEffect(() => {
-    // if (user) {
-    //   history.push("/admin");
-    // }
-    // dispatch(userAction.fetchProfile())
-  });
 
   return (
     <Formik
@@ -44,7 +35,7 @@ const LoginPage = () => {
         setSubmitting(true);
         try {
           const { from } = location.state || { from: { pathname: "/admin" } };
-          dispatch(userActions.login({ email, password, from }));
+          dispatch(user.login({ email, password, role: "admin", from }));
         } catch (error) {
           console.error(error);
         } finally {
