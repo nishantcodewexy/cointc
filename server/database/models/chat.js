@@ -15,10 +15,8 @@ module.exports = (sequelize, DataTypes) => {
       Chat.hasMany(Message, {});
     }
     static makeHash(to, from) {
-      return crypto
-        .createHash("md5")
-        .update([to, from].sort().join(""))
-        .digest("hex");
+      console.log({ to, from });
+      return [to.replace(/-/g, ""), from.replace(/-/g, "")].sort().join("-");
     }
   }
   Chat.init(
