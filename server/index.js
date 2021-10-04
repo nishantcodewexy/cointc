@@ -1,8 +1,9 @@
 "use strict";
 
 const config = require("dotenv").config({
-  path: "./.env",
+  path: "../.env",
 });
+
 const env = process.env.NODE_ENV || "development";
 
 if (env === "development") console.log({ parsedEnv: config.parsed });
