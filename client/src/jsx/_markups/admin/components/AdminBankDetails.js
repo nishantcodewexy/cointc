@@ -3,6 +3,7 @@ import { Row, Col, Card, Button,  Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
 import pt from 'prop-types'
+import ActionButton from '../../_shared_component/ActionButton';
 
 
 function AdminBankDetails({params}) {
@@ -41,7 +42,7 @@ function AdminBankDetails({params}) {
       }
     }
   };
-  
+
   const check = (i) => (
     <div className={`custom-control custom-checkbox ml-2`}>
       <input
@@ -136,7 +137,24 @@ function AdminBankDetails({params}) {
                   </td>
                   <td className="py-2 pl-5 wspace-no">China</td>
                   <td className="py-2">30/03/2018</td>
-                  <td className="py-2 text-right">{action}</td>
+                  <td className="py-2 text-right">
+                    {/* actions */}
+                    <div className="d-flex" style={{gap: 20}}>
+                      
+                      <ActionButton 
+                        title="testing"
+                        actionTitle="delete"
+                        type="delete"
+                      />
+                      <ActionButton 
+                        type="edit"
+                        title="testing"
+                        actionTitle="update"
+                      />
+                      
+                    </div>
+                    
+                  </td>
                 </tr>
               </tbody>
             </Table>
