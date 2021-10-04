@@ -23,7 +23,7 @@ function login({ email, password, role = "basic", from }) {
     user
       .login({ email, password, role })
       .then(({ data }) => {
-        localStorage.setItem("user", JSON.stringify(data));
+        // localStorage.setItem("user", JSON.stringify(data));
         dispatch(log({ type: SESSION.LOGIN, data }));
       })
       .catch((error) => {
@@ -40,7 +40,7 @@ function login({ email, password, role = "basic", from }) {
 function logout() {
   return (dispatch) => {
     dispatch(log({ type: REQUEST.SESSION_LOGOUT }));
-    localStorage.removeItem("user");
+    // localStorage.removeItem("user");
     dispatch(log({ type: REQUEST.CLEAR}))
     dispatch(log({ type: NOTICE.CLEAR}))
     dispatch(log({ type: SESSION.LOGOUT }));
