@@ -1,15 +1,15 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory, useLocation } from "react-router-dom";
+// import { useHistory, useLocation } from "react-router-dom";
 import _actions from "../../../../_actions";
 import { Link } from "react-router-dom";
 /// Image
-import profile from "../../../../../images/profile/pic1.jpg";
+// import profile from "../../../../../images/profile/pic1.jpg";
 import _components from "../../components";
 import { Dropdown } from "react-bootstrap";
 
 const { IdenticonAvatar } = _components;
-const {  userAction } = _actions;
+const {  user } = _actions;
 
 const Header = ({}) => {
   const dispatch = useDispatch();
@@ -55,7 +55,7 @@ const Header = ({}) => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu align="right" className="mt-2">
-                  <Link to="/profile" className="dropdown-item ai-icon">
+                  {/* <Link to="/profile" className="dropdown-item ai-icon">
                     <svg
                       id="icon-user1"
                       xmlns="http://www.w3.org/2000/svg"
@@ -73,11 +73,11 @@ const Header = ({}) => {
                       <circle cx={12} cy={7} r={4} />
                     </svg>
                     <span className="ml-2">Profile </span>
-                  </Link>
+                  </Link> */}
 
                   <Link
                     to="#"
-                    onClick={() => dispatch(userAction.logout())}
+                    onClick={() => dispatch(user.logout())}
                     className="dropdown-item ai-icon"
                   >
                     <svg

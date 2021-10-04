@@ -1,4 +1,4 @@
-import alertConstants from '../_constants/alerts.constants';
+import alertConstants from '../_constants/alerts.constant';
 
 const alertActions = {
   success,

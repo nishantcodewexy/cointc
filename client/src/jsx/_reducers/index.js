@@ -1,12 +1,15 @@
 import { combineReducers } from "redux";
 
-import alertReducer from "./alert.reducer";
-import sessionReducer from "./session.reducer";
+// import alert from "./alert.reducer";
+import session from "./session.reducer";
+import request from "./request.reducer";
+import notice from "./notice.reducer";
 // Use the initialState as a default value
 
 const rootReducer = combineReducers({
-  session: sessionReducer,
-  alert: alertReducer,
+  session,
+  request,
+  notice,
 });
 
 export default rootReducer;

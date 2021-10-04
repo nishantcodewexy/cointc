@@ -1,3 +1,4 @@
-import userService from "./user.services";
+import user from "./user.services";
+import group from "./group.service";
 
-export default { userService };
+export default { user, group };

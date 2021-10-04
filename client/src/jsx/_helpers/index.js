@@ -1,9 +1,9 @@
-import headerHelper from "./header.helper";
-import historyHelper from "./history.helper";
-import storeHelper from "./store.helper";
+import header from "./header.helper";
+import history from "./history.helper";
+import store from "./store.helper";
 
 export default {
-  headerHelper,
-  historyHelper,
-  storeHelper,
+  header,
+  history,
+  store,
 };

@@ -8,34 +8,32 @@ import "../../../vendor/bootstrap-select/dist/css/bootstrap-select.min.css";
 import "../../../css/style.css";
 
 import UnderConstruction from "./components/UnderConstruction";
-import { useDispatch, useSelector } from "react-redux";
+import {  useSelector } from "react-redux";
 import LoginPage from "./pages/login";
 import _helpers from "../../_helpers";
 import _actions from "../../_actions";
 import _components from "./components";
 
-const { historyHelper } = _helpers;
-const { alertAction } = _actions;
+const { history } = _helpers;
 const { error404 } = _components;
 
 export default AdminMarkup;
 
 function AdminMarkup() {
   const session = useSelector((state) => state?.session);
-  const alert = useSelector((state) => state.alert);
-  const dispatch = useDispatch();
+  const notice = useSelector((state) => state?.notice);
 
   useEffect(() => {
-    historyHelper.listen((location, action) => {
+    history.listen((location, action) => {
       // clear alert on location change
-      dispatch(alertAction.clear());
+      // dispatch(notice.clear());
     });
   }, []);
 
   return (
     <>
-      {alert.message && (
-        <div className={`alert ${alert.type}`}>{alert.message}</div>
+      {notice.message && (
+        <div className={`alert alert-${notice.type}`}>{notice.message}</div>
       )}
       <Route exact path="/admin/login">
         {!(session?.user) ? <LoginPage /> : <Redirect to={{ pathname: "/admin" }} />}
@@ -69,7 +67,7 @@ function AdminMarkup() {
 function AdminLayout({ children }) {
   const { menuToggle } = useContext(ThemeContext);
 
-  let path = historyHelper.location.pathname;
+  let path = history.location.pathname;
   path = path.split("/");
   path = path[path.length - 1];
 

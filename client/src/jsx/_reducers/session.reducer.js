@@ -1,51 +1,35 @@
 import _constants from "../_constants";
 
-const { userConstant } = _constants;
+const { SESSION } = _constants;
 let user = JSON.parse(localStorage.getItem("user")) || null;
 
 const initialState = {
-  request: null,
-  error: null,
   user,
 };
 
 export default function userReducer(state = initialState, action) {
   switch (action.type) {
-    // case userConstants.PROFILE_REQUEST:
-    //   return {
-    //     status: 'requesting',
-    //   };
-    // case userConstants.PROFILE_SUCCESS:
-    //   return {
-    //     status: 'completed',
-    //     data: action.user,
-    //   };
-    // case userConstants.PROFILE_FAILURE:
-    //   return {
-    //     status: 'completed',
-    //     data: action.error
-    //   };
-
-    // // Login
-    case userConstant.LOGIN_REQUEST:
+    case SESSION.REGISTER:
       return {
-        request: { ...action.data },
+        ...state,
+        user: action.data,
       };
 
-    case userConstant.LOGIN_SUCCESS:
+    case SESSION.LOGIN:
       return {
-        user: { ...action.data },
+        ...state,
+        user: action.data,
       };
 
-    case userConstant.LOGIN_FAILURE:
+    case SESSION.LOGOUT:
       return {
-        error: { ...action.data },
-      };
-
-    case userConstant.LOGOUT:
-      return {       
+        ...state,
         user: null,
       };
+
+    case SESSION.RESET:
+      return initialState;
+
     default:
       return state;
   }
