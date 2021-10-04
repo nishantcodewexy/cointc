@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useSelector } from "react-redux";
 import Advert from "./advert.regular";
 import SocketClient from "./socket.regular";
 import AdminUser from "./user.admin";
@@ -44,6 +45,10 @@ class Client {
   }
 }
 
-const useSdk = () => new Client();
+const useAPI = () =>{
+  const {token} = useSelector(state => state?.user?.user||{})
+  
+  return new Client(token)
+};
 
-export default useSdk;
+export default useAPI;

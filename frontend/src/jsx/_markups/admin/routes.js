@@ -91,12 +91,18 @@ const routes = [
   { url: "support-disputes", component: null },
 ];
 
+
+
+
 export const genAdminRoute = () => {
   const linkCreator = {};
   const exclude = ["*"];
   routes.forEach((route) => {
     if (exclude.includes(route.url)) return;
-    let key = camelCase(route.url.replace("-", " "));
+    let key = camelCase(route?.url?.replaceAll("-", " "));
+    if(!key){
+      key = "home"
+    }
     if (route.create) {
       linkCreator[key] = route?.create;
     } else {

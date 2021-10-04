@@ -553,4 +553,36 @@ module.exports = {
       }
       return config
     },
+    /***********************************************
+     * function helps to convert params to sequlize where clauses
+     ***********************************************/
+    /**
+     * 
+     * @param {Object} args 
+     * @param {Object} args.params
+     * @param {Object} args.config
+     * @returns {Object}
+     */
+    paginator:(queryset,limit,page)=>{
+      let _next,_prev,results,count
+      count = queryset.count()
+      _prev = page?{
+        limit,
+        page:page -1
+      }:null
+      _next = count>limit? {
+        limit,
+        page:page + 1
+      } : null
+
+      results = queryset.findAll({
+        limit,
+        offset:page*limit
+      })
+      return {
+        next:_next,
+        prev:_prev,
+        results
+      }
+    }
 };

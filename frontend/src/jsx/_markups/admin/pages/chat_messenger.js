@@ -1,3 +1,4 @@
+import {useRef,useEffect} from 'react'
 import { Row, Col, Card, ListGroup } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
@@ -10,6 +11,10 @@ import avatar2 from "../../../../images/avatar/2.jpg";
 import avatar3 from "../../../../images/avatar/3.jpg";
 import avatar4 from "../../../../images/avatar/4.jpg";
 import avatar5 from "../../../../images/avatar/5.jpg";
+import useAPI from '../../../_apiClient'
+
+
+
 
 function ChatMessenger() {
   return (
@@ -244,9 +249,71 @@ const ChatBubble = styled.div`
 `;
 
 function Messenger() {
+  const api = useAPI()
+
+  
+  const ref = useRef()
   let scrollPosition = useScrollPosition();
   const [toggleChatBox, setToggleChatBox] = useState(true);
   const [openMsg, setOpenMsg] = useState(false);
+  const [messages, setMessages] = useState(null)
+  const [messageText, setMessageText] = useState('')
+  const [selectedUser, setSelectedUser] = useState(null)
+  
+  const handleStartChart = id => e =>{
+    let socket
+    if(!openMsg){
+      setOpenMsg(true)
+    }
+
+    if(ref.current){
+      socket = ref.current
+      if(selectedUser){
+        socket.emit("chat::end",selectedUser)
+      }
+      socket.emit("chat::start",id,(messages)=>{
+        console.log("messages",messages)
+        setMessages(messages)
+      })
+      setSelectedUser(id)
+    }
+  }
+
+  const handleMsgChange = e =>{
+    console.log("message",e.target.value)
+    e.target.value&&setMessageText(e.target.value)
+  }
+
+  const handleSocketConnection = ()=>{
+    const socket = api.SocketClient.getAuthSocket()
+    socket.on("connect",()=>{
+      ref.current = socket
+    })
+    return socket
+  }
+
+
+  const handleKeyDown = e =>{
+    if(e.key==="Enter"){
+      if(ref.current&&selectedUser){
+        ref.current.emit("chat::message",{
+          message:messageText,
+          receiverId:selectedUser
+        })
+      }
+      setMessageText('')
+
+    }
+  }
+  useEffect(() => {
+    const socket = handleSocketConnection()
+    return () => {
+      api.abort()
+      socket.disconnect()
+
+    }
+  }, [])
+
   return (
     <div className="">
       <div className="chat-type-header">Type</div>
@@ -256,7 +323,7 @@ function Messenger() {
           <PerfectScrollbar>
             <ul className="contacts">
               <li className="contact-first-letter">A</li>
-              <li className="contact_single" onClick={() => setOpenMsg(true)}>
+              <li className="contact_single" onClick={handleStartChart("hhsgsjaua78s7iiaahs")}>
                 <div className="contact_single_info bd-highlight">
                   <div className="img_cont">
                     <img
@@ -341,11 +408,14 @@ function Messenger() {
           </div>
           <div className="chat-message-input">
             <input
+              onChange={handleMsgChange}
+              value={messageText}
               type="text"
               name="message_box"
               id="message_box"
               className="message_box"
               placeholder="Enter message here..."
+              onKeyDown={handleKeyDown}
             />
           </div>
           <div>

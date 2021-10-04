@@ -8,9 +8,9 @@ function GuestMarkup() {
       {routes.map((data, i) => (
         <Route key={i} exact path={`/${data.url}`} component={data.component} />
       ))}
-      <Route path="*">
+      {/* <Route path="*">
         <Error404 />
-      </Route>
+      </Route> */}
     </>
   );
 }

@@ -13,9 +13,10 @@ import {io,Socket} from 'socket.io-client'
      * @param {Object} args.params
      * @returns {Socket}
      */
-    async getAuthSocket(args){
-        const {url,params} = args
-        const socket = io(url||"ws://localhost:8000",{
+    getAuthSocket(args={}){
+        const {params} = args
+        
+        const socket = io({
             auth: {
                 token: this.token
               },
