@@ -75,6 +75,7 @@ function chat(server, options, next) {
   init();
 }
 
+
 async function createChatMsg(Chat,id, receiverId, message) {
   // TODO: this section may run transaction
   
