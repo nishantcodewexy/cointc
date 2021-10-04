@@ -1,10 +1,10 @@
 import _constants from "../_constants";
 
 const { SESSION } = _constants;
-let user = JSON.parse(localStorage.getItem("user")) || null;
+// let user = JSON.parse(localStorage.getItem("user")) || null;
 
 const initialState = {
-  user,
+  user: null
 };
 
 export default function userReducer(state = initialState, action) {
@@ -22,13 +22,7 @@ export default function userReducer(state = initialState, action) {
       };
 
     case SESSION.LOGOUT:
-      return {
-        ...state,
-        user: null,
-      };
-
-    case SESSION.RESET:
-      return initialState;
+      return initialState
 
     default:
       return state;
