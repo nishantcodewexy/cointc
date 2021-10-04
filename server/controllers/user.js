@@ -8,7 +8,7 @@ const assert = require("assert");
 module.exports = (server) => {
   const {
     db,
-    db: { User, sequelize },
+    db: { User, sequelize, Sequelize },
     boom,
     config: { client_url },
     helpers: { decrypt, mailer, jwt, generateSecret },
@@ -98,25 +98,30 @@ module.exports = (server) => {
           payload: { email, role = _roles.basic, password },
         } = req;
 
-        const { profile, profile_attributes } = __assertRole(role);
+        const { profile, getter, profile_attributes } = __assertRole(role);
 
         // fetch user record from DB that matches the email
-        let _user = await User.findOne({
+        let account = await User.findOne({
           where: { email, role },
-          include: {
-            association: profile,
-            attributes: profile_attributes,
-            required: true,
-            right: true,
-          },
         });
+        // lazy load profile attached to account
+        let account_profile = await account[getter]();
 
-        return _user
-          ? (await decrypt(password, _user.password)) && {
-              token: jwt.create(_user),
-              ..._user.toPublic(),
-            }
-          : boom.notFound("User not found");
+        if (account)
+          if (await decrypt(password, account.password)) {
+            // Check that password matches
+            // Update the last_login attribute of the account profile
+            await account_profile.update({
+              last_login: new Date(Date.now()),
+            });
+
+            return {
+              token: jwt.create(account),
+              ...account.toPublic(),
+              ...account_profile.dataValues,
+            };
+          } else return boom.notFound("Incorrect password!");
+        return boom.notFound("User account not found");
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -225,9 +230,8 @@ module.exports = (server) => {
         let account = await User.findOne({
           where: { id, role },
         });
-        let { id: profile_id, ...accountProfile } = await account[getter]();
+        let accountProfile = await account[getter]();
         return {
-          profile_id,
           ...account.toPublic(),
           ...accountProfile.dataValues,
         };
