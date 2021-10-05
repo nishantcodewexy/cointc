@@ -1,7 +1,6 @@
 import _helpers from "../_helpers";
 import { useState } from "react";
 import axios from "axios";
-import { useSelector } from "react-redux";
 
 // debugger;
 const useService = function (url, method = "get", data = null) {
