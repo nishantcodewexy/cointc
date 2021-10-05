@@ -3,14 +3,18 @@ import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
 import { useEffect, useState } from "react";
 import _services from "../../../_services";
-import axios from "axios";
+import useService from "../../../_hooks/service.hook";
 
 const { group } = _services;
 
 function CurrencyMgmt() {
+  const { data, error, isFetching, dispatchReload } = useService(
+    group.getCurrency
+  );
 
   return (
     <>
+      {console.log({ data })}
       <PageTitle activeMenu="" motherMenu="Currencies" />
       <header className="mb-4">
         <h3>Currency List</h3>
