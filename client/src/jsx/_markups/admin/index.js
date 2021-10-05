@@ -23,13 +23,6 @@ function AdminMarkup() {
   const session = useSelector((state) => state?.session);
   const notice = useSelector((state) => state?.notice);
 
-  useEffect(() => {
-    history.listen((location, action) => {
-      // clear alert on location change
-      // dispatch(notice.clear());
-    });
-  }, []);
-
   return (
     <>
       {notice.message && (
