@@ -6,8 +6,8 @@ const App = () => {
   return (
     <>
       <ThemeContextProvider>
-      {console.log("APP::READY")}
-      <Markup />
+        {console.log("APP::READY")}
+        <Markup />
       </ThemeContextProvider>
     </>
   );
