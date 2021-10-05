@@ -15,9 +15,9 @@ const { hostname, port, jwt, server_url } = helpers.config;
 const HapiServer = Hapi.server({
   host: hostname,
   port,
-  routes: {
-    cors: true,
-  },
+  // routes: {
+  //   cors: true,
+  // },
   query: {
     parser: (query) => Qs.parse(query),
   },
