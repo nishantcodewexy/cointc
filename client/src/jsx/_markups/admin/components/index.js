@@ -1,8 +1,8 @@
-
 import Error404 from "./Error404";
 import IdenticonAvatar from "./IdenticonAvatar";
 
-export default {
+const components = {
   Error404,
   IdenticonAvatar,
 };
+export default components;

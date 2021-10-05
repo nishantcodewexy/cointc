@@ -1,7 +1,9 @@
 // import alertAction from "./alert.action";
 import user from "./account.user.action";
 
-export default {
+const actions = {
   // alertAction,
-  user
+  user,
 };
+
+export default actions;

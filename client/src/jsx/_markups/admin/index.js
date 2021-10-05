@@ -1,5 +1,5 @@
 import React, { useContext, /* useState, */ useEffect } from "react";
-import { Route, Switch, Redirect, /* useLocation */ } from "react-router-dom";
+import { Route, Switch, Redirect /* useLocation */ } from "react-router-dom";
 import routes from "./routes";
 import Nav from "./layouts/nav";
 import { ThemeContext } from "../../../context/ThemeContext";
@@ -8,38 +8,59 @@ import "../../../vendor/bootstrap-select/dist/css/bootstrap-select.min.css";
 import "../../../css/style.css";
 
 import UnderConstruction from "./components/UnderConstruction";
-import {  useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import LoginPage from "./pages/login";
 import _helpers from "../../_helpers";
 import _actions from "../../_actions";
 import _components from "./components";
+import { nanoid } from "@reduxjs/toolkit";
+import useService from "../../_hooks/service.hook";
 
 const { history } = _helpers;
 const { error404 } = _components;
 
 export default AdminMarkup;
 
+class ComponentLoggger {
+  static counter = nanoid(3);
+  constructor(component) {
+    this.component = component;
+    this.displayName =
+      component.displayName || `Unknown component #${ComponentLoggger.counter}`;
+    this.log(console.log);
+    return this.render();
+  }
+
+  static increment = () => ComponentLoggger.counter++;
+  static decrement = () => ComponentLoggger.counter--;
+
+  log = (cb) => {
+    return cb(`Rendered Component: ${this.displayName}`, this);
+  };
+
+  render = () => this.component;
+}
 function AdminMarkup() {
   const session = useSelector((state) => state?.session);
   const notice = useSelector((state) => state?.notice);
-
-  useEffect(() => {
-    history.listen((location, action) => {
-      // clear alert on location change
-      // dispatch(notice.clear());
-    });
-  }, []);
+  console.log("IN ADMIN MARKUP::RENDERING");
+  const { data, error } = useService(() => null);
 
   return (
     <>
       {notice.message && (
         <div className={`alert alert-${notice.type}`}>{notice.message}</div>
       )}
+
       <Route exact path="/admin/login">
-        {!(session?.user) ? <LoginPage /> : <Redirect to={{ pathname: "/admin" }} />}
+        {!session?.user ? (
+          new ComponentLoggger(<LoginPage />)
+        ) : (
+          <Redirect to={{ pathname: "/admin" }} />
+        )}
       </Route>
       <Route>
-        {(session?.user) ? (
+        {session?.user ? (
           <AdminLayout>
             {routes.map(({ url, component: Component }, i) => (
               <Route
@@ -47,7 +68,11 @@ function AdminMarkup() {
                 exact
                 path={`/admin/${url}`}
                 render={(props) =>
-                  Component ? <Component {...props} /> : <UnderConstruction />
+                  Component ? (
+                    new ComponentLoggger(<Component {...props} />)
+                  ) : (
+                    <UnderConstruction />
+                  )
                 }
               />
             ))}
@@ -65,6 +90,7 @@ function AdminMarkup() {
 }
 
 function AdminLayout({ children }) {
+  console.log("IN ADMIN LAYOUT::RENDERED");
   const { menuToggle } = useContext(ThemeContext);
 
   let path = history.location.pathname;
@@ -79,9 +105,9 @@ function AdminLayout({ children }) {
       id={`${!pagePath ? "main-wrapper" : ""}`}
       className={`${!pagePath ? "show" : "mh100vh"}  ${
         menuToggle ? "menu-toggle" : ""
-        }`}
+      }`}
       style={{
-        minHeight: '100vh'
+        minHeight: "100vh",
       }}
     >
       {!pagePath && <Nav />}
@@ -93,8 +119,4 @@ function AdminLayout({ children }) {
       </div>
     </div>
   );
-}
-
-function AuthMiddleware({ component }) {
-  return <></>;
 }

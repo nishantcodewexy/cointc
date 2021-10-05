@@ -9,12 +9,12 @@ import _components from "../../components";
 import { Dropdown } from "react-bootstrap";
 
 const { IdenticonAvatar } = _components;
-const {  user } = _actions;
+const { user } = _actions;
 
 const Header = ({}) => {
   const dispatch = useDispatch();
   const session = useSelector((state) => state?.session);
-  
+
   return (
     <div className="header">
       <div className="header-content">
@@ -47,10 +47,12 @@ const Header = ({}) => {
                   role="button"
                   data-toggle="dropdown"
                 >
-                  <IdenticonAvatar width={20} alt="" id="" />
+                  <IdenticonAvatar width={20} alt="" id={session?.user?.id} />
                   <div className="header-info">
                     <span>{session?.user?.email}</span>
-                    <small className="text-capitalize">{session?.user?.role}</small>
+                    <small className="text-capitalize">
+                      {session?.user?.role}
+                    </small>
                   </div>
                 </Dropdown.Toggle>
 

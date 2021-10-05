@@ -3,9 +3,11 @@ import session from "./session.constant";
 // import alert from "./alerts.constant";
 import notice from "./notice.constant";
 
-export default {
+const constants = {
   REQUEST: request,
   SESSION: session,
   // alert,
   NOTICE: notice,
 };
+
+export default constants;
