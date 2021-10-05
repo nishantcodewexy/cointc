@@ -24,7 +24,7 @@ const groupServices = {
   getAdvert,
   getTrades,
   getPolicy,
-  getReferrals
+  getReferrals,
 };
 
 export default groupServices;
@@ -223,7 +223,7 @@ async function updateSupportTicket(data) {
  * @returns
  */
 async function getCurrency(params) {
-  return await axios(`${url_prefix}/currency`, {
+  return await axios(`/account/currency`, {
     headers,
     method: "GET",
     params,
@@ -326,7 +326,6 @@ async function getPolicy(params) {
   });
 }
 
-
 /************************************* REFERRALS **********************************/
 /**
  * @function getReferrals - Gets bulk referrals (**Admin only**)
@@ -335,7 +334,7 @@ async function getPolicy(params) {
  * @param {String} [params.id] - Specify referral ID
  * @returns
  */
- async function getReferrals(params) {
+async function getReferrals(params) {
   return await axios(`${url_prefix}/referrals`, {
     headers,
     method: "GET",

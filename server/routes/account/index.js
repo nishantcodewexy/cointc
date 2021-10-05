@@ -5,6 +5,7 @@ module.exports = (server) => {
   const {
     controllers: {
       user: { profile, remove, update },
+      currency,
       kyc,
     },
     helpers: {
@@ -117,6 +118,13 @@ module.exports = (server) => {
             }
           }
         }
+          
+        case 'currency': {
+          switch (method) {
+            case 'get':
+              return currency.get
+          }
+          }
       }
     } catch (err) {
       return boom.badRequest(err.message);

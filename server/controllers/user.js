@@ -11,7 +11,7 @@ module.exports = (server) => {
     db: { User, sequelize },
     boom,
     config: { client_url },
-    helpers: { decrypt, mailer, jwt, generateSecret },
+    helpers: { decrypt, mailer, jwt, generator },
     consts: { roles: _roles },
   } = server.app;
 
@@ -24,21 +24,23 @@ module.exports = (server) => {
      * @returns
      */
     async create(req) {
-      const {
-        pre: { role },
+      const { role } = req.pre;
+      let {
         payload: { email, password, ...restOfPayload },
       } = req;
+
       assert(email, boom.badRequest("Expected email"));
 
       try {
         const { profile } = __assertRole(role);
 
         // Determines whether to mail password to user
-        let mail_secret = !!password;
+        let mail_secret = !password;
 
         // Generate password if one is not supplied
         if (mail_secret) {
-          password = generateSecret();
+          debugger;
+          password = generator.secret();
         }
         // Check that the user email doesn't already exist
         let _user = await User.findOne({

@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
-const { generateReferralCode } = require("../../helpers");
+const { generator } = require("../../helpers");
 
 module.exports = (sequelize, DataTypes) => {
   class Profile extends Model {
@@ -80,7 +80,7 @@ module.exports = (sequelize, DataTypes) => {
       deletedAt: "archived_at",
       hooks: {
         beforeCreate: (profile, options) => {
-          profile.referral_code = generateReferralCode(profile.email);
+          profile.referral_code = generator.referralCode(profile.email);
         },
       },
     }

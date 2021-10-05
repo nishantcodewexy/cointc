@@ -1,8 +1,41 @@
 import { Card, Row, Col, Button, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
+import { useEffect, useState } from "react";
+import _services from "../../../_services";
+import axios from "axios";
+
+const { group } = _services;
 
 function CurrencyMgmt() {
+  const [currencies, setCurrencies] = useState([]);
+
+  function callMe() {
+    console.log("I am called");
+  }
+  callMe();
+  // fetchAllCurrencies();
+  async function fetchAllCurrencies() {
+    try {
+      let currencies = await axios(`/account/currency`, {
+        headers: {
+          Authorization:
+            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoiNjlhMmUyMjEtMzU5Yy00ODBhLWE4ZDktMzZlYzFiNjQ1YTU5IiwiYXVkIjoidXJuOmF1ZGllbmNlOmFkbWluIiwiaXNzIjoidXJuOmlzc3VlcjphZG1pbiIsImdyb3VwIjoiYWRtaW4iLCJpYXQiOjE2MzM0NDIxNzMsImV4cCI6MTYzMzQ1NjU3M30.zx0JA4KpzFa3YgyE0zRRKYv84YPPPnEBrmL94crhQFU",
+        },
+        method: "GET",
+      });
+      setCurrencies(currencies);
+    } catch (error) {
+      console.error(error);
+    }
+  }
+  // fetchAllCurrencies();
+
+  // useEffect(() => {
+  //   // setCurrencies(fetchAllCurrencies());
+  //   // console.log(currencies);
+  // });
+
   return (
     <>
       <PageTitle activeMenu="" motherMenu="Currencies" />
@@ -11,7 +44,7 @@ function CurrencyMgmt() {
       </header>
       <Row style={{ marginBottom: 20, width: "100%" }}>
         <Col>
-        <div className="input-group search-area right d-lg-inline-flex d-none">
+          <div className="input-group search-area right d-lg-inline-flex d-none">
             <input
               type="text"
               className="form-control"

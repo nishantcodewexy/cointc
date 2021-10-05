@@ -202,7 +202,7 @@ module.exports = (server) => {
             }
             case "get":
             default: {
-              return currency.group.get;
+              return currency.get;
             }
           }
         }

@@ -8,6 +8,29 @@ module.exports = (server) => {
   } = server.app;
   /* const queryInterface = sequelize.getQueryInterface();
       const table = Currency.getTableName(); */
+  const CurrencyController = {
+    /**
+     * @function get - Gets currency collection
+     * @param {Object} req
+     * @returns
+     */
+    async get(req) {
+      try {
+        let {
+          query: { id },
+          pre: { user },
+        } = req;
+        let where = id ? { id } : null;
+        //TODO: Only admins are allowed to see who created the currency
+
+        let result = await Currency.findAndCountAll({ where });
+        return result;
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
+  };
   const CurrencyGroupController = {
     /**
      * @function create - Creates currency (**Admin only**)
@@ -39,17 +62,6 @@ module.exports = (server) => {
               returning: ["id", "type", "iso_code", "name"],
             })
         );
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
-      }
-    },
-
-    async get(req) {
-      try {
-        let { id } = req.query;
-        let where = id ? { id } : null;
-        return await Currency.findAndCountAll({ where });
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -100,7 +112,7 @@ module.exports = (server) => {
                   }
                 ).then(([count, affectedRows]) => affectedRows[0])
             )
-          )
+          );
         });
       } catch (error) {
         console.error(error);
@@ -109,6 +121,7 @@ module.exports = (server) => {
     },
   };
   return {
+    ...CurrencyController,
     group: CurrencyGroupController,
   };
 };

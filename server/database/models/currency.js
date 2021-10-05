@@ -1,5 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
+const _ = require("underscore");
+
 module.exports = (sequelize, DataTypes) => {
   class Currency extends Model {
     /**
@@ -13,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       Currency.belongsTo(User, {
         foreignKey: "created_by"
       })
+    }
+
+    toPublic() {
+      return _.omit(this.toJSON(), ["created_by"]);
     }
   }
   Currency.init(
@@ -39,6 +45,15 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "crypto",
       },
       archived_at: DataTypes.DATE,
+      currency: {
+        type: DataTypes.VIRTUAL,
+        get() {
+          return `${this.name} (${this.iso_code.toString().toUpperCase()})`;
+        },
+        set(value) {
+          throw new Error('Do not try to set the `profile` value!');
+        }
+      }
     },
     {
       sequelize,
