@@ -38,7 +38,7 @@ function login({ email, password, role = "basic", from = "/" }) {
         dispatch(
           log({
             type: NOTICE.ERROR,
-            data: error.response.data.message.toString(),
+            data: error?.response?.data?.message || error.toString(),
           })
         );
       });

@@ -8,7 +8,7 @@ const assert = require("assert");
 module.exports = (server) => {
   const {
     db,
-    db: { User, sequelize, Sequelize },
+    db: { User, sequelize },
     boom,
     config: { client_url },
     helpers: { decrypt, mailer, jwt, generateSecret },
@@ -92,6 +92,15 @@ module.exports = (server) => {
       }
     },
 
+    /**
+     * @function - Authenticates user
+     * @param {Object} req - Request object
+     * @param {Object} req.payload
+     * @param {String} req.payload.email
+     * @param {String | "basic"} req.payload.role
+     * @param {String} req.payload.password
+     * @returns
+     */
     async authenticate(req) {
       try {
         const {
@@ -107,10 +116,10 @@ module.exports = (server) => {
         // lazy load profile attached to account
         let account_profile = await account[getter]();
 
-        if (account)
+        if (account) {
+          // Check if password matches
           if (await decrypt(password, account.password)) {
-            // Check that password matches
-            // Update the last_login attribute of the account profile
+            // Update the last_login attribute of the account's profile
             await account_profile.update({
               last_login: new Date(Date.now()),
             });
@@ -121,36 +130,11 @@ module.exports = (server) => {
               ...account_profile.dataValues,
             };
           } else return boom.notFound("Incorrect password!");
+        }
         return boom.notFound("User account not found");
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
-      }
-    },
-
-    async createUser(req) {
-      const { email, password } = req.payload;
-      const _user = await createUser({ email, password, role: "standard" });
-      if (_user) {
-        // TODO: create standard user profile
-        // TODO: Send mail
-        // const token = jwt.create(_user, 900);
-        /* 
-      let confirmationLink = `${server_url}/confim_email?email=${email}&code=${token}`;
-      // Send email verification
-      const mailObject = {
-        to: email,
-        htmlTemplate: {
-          name: "account_confirmation",
-          transform: {
-            confirmationLink,
-            recipientEmail: email,
-          },
-        },
-        subject: "Cryptcon - Account confirmation",
-      };
-      
-      await mailer.sendMail(mailObject); */
       }
     },
 
@@ -224,7 +208,7 @@ module.exports = (server) => {
           user: { role, id },
         } = req.pre;
         // Determine user role
-        const { profile, getter } = __assertRole(role);
+        const { getter } = __assertRole(role);
 
         // Fetch the user's profile that matches the id and role
         let account = await User.findOne({

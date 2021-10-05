@@ -15,7 +15,8 @@ module.exports = (server) => {
       security,
       user,
       chat,
-      referral
+      referral,
+      currency,
     },
     db: { User },
     helpers: {
@@ -183,6 +184,25 @@ module.exports = (server) => {
             case "get":
             default: {
               // return secession.group;
+            }
+          }
+        }
+
+        case "currency":
+        case "currencies": {
+          switch (method) {
+            case 'put': {
+              return currency.group.update
+            }
+            case 'post': {
+              return currency.group.create
+            }
+            case 'delete': {
+              return currency.group.destroy
+            }
+            case "get":
+            default: {
+              return currency.group.get;
             }
           }
         }

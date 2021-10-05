@@ -9,6 +9,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      const { User, Currency } = models;
+      Currency.belongsTo(User, {
+        foreignKey: "created_by"
+      })
     }
   }
   Currency.init(
@@ -18,20 +22,38 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      name: DataTypes.STRING,
-      long_name: DataTypes.STRING,
-      short_name: DataTypes.STRING,
+      created_by: {
+        allowNull: false,
+        type: DataTypes.UUID,
+      },
+      name: {
+        type: DataTypes.STRING,
+        unique: "currency_idx"
+      },
+      iso_code: {
+        type: DataTypes.STRING,
+        unique: "currency_idx",
+      },
       type: {
         type: DataTypes.ENUM("fiat", "crypto"),
-        defaultValue: "crypto"
-      },      
-      archived_at: DataTypes.DATE,      
+        defaultValue: "crypto",
+      },
+      archived_at: DataTypes.DATE,
     },
     {
       sequelize,
-      modelName: "Currecny",
+      modelName: "Currency",
       underscored: true,
       tableName: "tbl_currencies",
+      paranoid: true,
+      deletedAt: "archived_at",
+      indexes: [
+        {
+          name: "currency_idx",
+          unique: true,
+          fields: ["iso_code"],
+        },
+      ],
     }
   );
   return Currency;
