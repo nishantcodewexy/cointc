@@ -4,13 +4,14 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: { profile, kyc, remove, update },
+      user: { profile, remove, update },
+      kyc,
     },
     helpers: {
       jwt: { decodeUser },
     },
     boom,
-    db: {User},
+    db: { User },
     consts: { roles: _roles },
   } = server.app;
 
@@ -27,7 +28,7 @@ module.exports = (server) => {
               },
             });
           },
-          assign: "user"
+          assign: "user",
         },
         {
           method: accountHandler,
@@ -55,7 +56,7 @@ module.exports = (server) => {
             case "get":
             default: {
               const schema = Joi.object({
-                _type: Joi.string()
+                type: Joi.string()
                   .allow(
                     "email",
                     "id",
@@ -71,7 +72,7 @@ module.exports = (server) => {
               let { error } = schema.validate(req.query);
               if (error) throw new Error("Bad Request Input");
 
-              return kyc;
+              return kyc.fetch;
             }
           }
         }

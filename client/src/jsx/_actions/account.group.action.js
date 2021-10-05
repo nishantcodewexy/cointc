@@ -1,7 +1,6 @@
 import _constants from "../_constants";
 import _services from "../_services";
 import _helpers from "../_helpers";
-import alertAction from "./alert.action";
 
 const { group } = _services;
 const { NOTICE } = _constants;
@@ -13,7 +12,9 @@ const accountGroupActions = {
 export default accountGroupActions;
 
 function getStatistics() {
-  
+  try { } catch (error) {
+    console.error(error)
+  }
 }
 
 function users(){}

@@ -60,7 +60,7 @@ const LoginPage = () => {
           <div className="authentication flex flex-column align-items-center justify-content-center vh-100">
             <div className="container h-100">
               <div className="row justify-content-center h-100 align-items-center">
-                <div className="col-md-6">
+                <div className="col-lg-6 col-sm-11">
                   <div className="authincation-content">
                     <div className="row no-gutters">
                       <div className="col-xl-12">

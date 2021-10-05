@@ -52,6 +52,12 @@ const HapiServer = Hapi.server({
 //   isSecure: true,
 //   isHttpOnly: true
 // });
+
+/**************************************
+ *  Set auth strategy
+ **************************************/
+ HapiServer.auth.strategy("jwt", "jwt", jwt);
+
 /**************************************
  *  Hapi server app options
  **************************************/
@@ -62,15 +68,11 @@ HapiServer.app["helpers"] = helpers;
 HapiServer.app["boom"] = Boom;
 HapiServer.app["controllers"] = {};
 
-/**************************************
- *  Set auth strategy
- **************************************/
-HapiServer.auth.strategy("jwt", "jwt", jwt);
 
 /**************************************
  * dynamically register controllers
  **************************************/
-let controllers = glob.sync("/controllers/**/*.js", {
+let controllers = glob.sync("/controllers/*.js", {
   root: cwd,
 });
 controllers.forEach((file) => {
