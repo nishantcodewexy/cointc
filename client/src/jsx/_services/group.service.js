@@ -2,9 +2,9 @@ import _helpers from "../_helpers";
 import _constants from "../_constants";
 import axios from "axios";
 
-const { header } = _helpers;
+const { headers } = _helpers;
 
-const headers = header();
+headers();
 
 const groupServices = {
   getStats,
@@ -253,7 +253,7 @@ async function createCurrency(data) {
  */
 async function getWallet(params) {
   return await axios(`${url_prefix}/wallet`, {
-    headers,
+    headers: headers,
     method: "GET",
     params,
   });

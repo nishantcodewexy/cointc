@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       const { User, Currency } = models;
       Currency.belongsTo(User, {
-        foreignKey: "created_by"
-      })
+        foreignKey: "created_by",
+      });
     }
 
     toPublic() {
@@ -34,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       name: {
         type: DataTypes.STRING,
-        unique: "currency_idx"
+        unique: "currency_idx",
       },
       iso_code: {
         type: DataTypes.STRING,
@@ -45,15 +45,6 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "crypto",
       },
       archived_at: DataTypes.DATE,
-      currency: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return `${this.name} (${this.iso_code.toString().toUpperCase()})`;
-        },
-        set(value) {
-          throw new Error('Do not try to set the `profile` value!');
-        }
-      }
     },
     {
       sequelize,
