@@ -454,7 +454,7 @@ module.exports = {
                 [Op.gt]:parseInt(value)
               }
           }else if(key.endsWith("__gte") && !isNaN(value)){
-            console.log("am here")
+            
             attribute = key.replaceAll("__gte","")
             let oldWhere = config.where[attribute]||{}
             config.where[attribute] = {

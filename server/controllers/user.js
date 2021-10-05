@@ -254,14 +254,18 @@ module.exports = (server) => {
     },
 
     getAllUser: async () => {
+      
       let limit = 20;
       return User.findAndCountAll({
         include: { association: "profile" },
         attributes: { exclude: ["password"] },
         limit,
       })
-        .then((users) => users.map((user) => user.toJSON()))
-        .catch(boom.boomify);
+      .then(data=>({
+        count:data.count,
+        results:data.rows
+      }))
+      .catch(boom.boomify);
     },
 
     // Permanently destroy user record
@@ -307,6 +311,8 @@ module.exports = (server) => {
   const UserGroupController = {
     /**
      * @function remove - remove user records
+     * @param {Object} req  - request object
+     * @param {Object} req.payload  - request body
      * @param {Array} req.payload.data  - array of upsert ids records
      * @returns
      */
@@ -314,7 +320,7 @@ module.exports = (server) => {
       const {
         payload: { data, soft },
       } = req;
-
+      
       return {
         deleted: Boolean(
           await sequelize.transaction(async (t) => {

@@ -66,9 +66,29 @@ class AdminUser{
     async list(args){
         const {params} = args
         const res = await  this.axios({
-        url:`/user/admin/all`,
+        url:`/admin/users`,
         method:'get',
         params
+        })
+
+        return res.data
+    }
+
+
+    /**
+     * 
+     * @param {Object} args
+     * @param {Object} args.data
+     * @param {String[]} args.data.data
+     * @param {Boolean} args.data.soft
+     * @returns {Promise}
+     */
+    async delete(args){
+        const {data} = args
+        const res = await  this.axios({
+        url:`/admin/users/`,
+        method:'delete',
+        data
         })
 
         return res.data

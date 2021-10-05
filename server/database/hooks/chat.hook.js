@@ -15,9 +15,11 @@ module.exports = {
 
 
     // prioryty 4
-    // beforeCreate:async (instance,options)=>{
-        
-    // },
+    beforeCreate:async (instance,options)=>{
+        const { to, from } = instance;
+          let hash = Chat.makeHash(to, from);
+          instance.inboxHash = hash;
+    },
     // beforeDestroy:async (instance,options)=>{
         
     // },

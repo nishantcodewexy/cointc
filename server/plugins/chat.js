@@ -11,6 +11,7 @@ function chat(server, options, next) {
   function init() {
     io.sockets.on("connection", async function(socket) {
       const { authorization } = socket.handshake.headers;
+      
       const { payload } = jwt.decodeAndVerify(authorization);
       let userId;
 
@@ -37,8 +38,19 @@ function chat(server, options, next) {
         });
 
         // initiate new chat or continue existing chat with a particular user
-        socket.on("chat::start", async function(receiverId) {
-          joinOrCreateRoom(userId, receiverId, { socket, ChatModel: Chat });
+        socket.on("chat::start", async function(receiverId,cb) {
+          await joinOrCreateRoom(userId, receiverId, { socket, ChatModel: Chat });
+          await loadMessages(userId,receiverId,{ChatModel:Chat,Message},cb)
+          // await loadInbox(
+          //   userId,
+          //   {
+          //     socket,
+          //     io,
+          //     ChatModel: Chat,
+          //   },
+          //   cb
+          // );
+          
         });
 
         // send message to a specific user
@@ -97,6 +109,7 @@ async function createChatMsg(id, receiverId, message, inbox) {
   return await inbox.createMessage({
     sender_id: id,
     text: message,
+    read:false
   });
 }
 
@@ -107,6 +120,11 @@ async function loadInbox(userId, { socket, io, ChatModel }, cb) {
         [Op.like]: `%${userId.replace(/-/g, "")}%`,
       },
     },
+    // includes:{
+    //   model:Message,
+    //   limit:20,
+    //   offset:0
+    // },
     raw: true,
   });
   // console.log({ inboxes });
@@ -117,6 +135,30 @@ async function loadInbox(userId, { socket, io, ChatModel }, cb) {
   if (cb) return cb(inboxes);
   return inboxes;
 }
+
+
+async function loadMessages(userId,receiverId, { ChatModel,Message }, cb) {
+  const room = ChatModel.makeHash(userId, receiverId);
+  const messages = await Message.findAll({
+    include:[{
+      model:ChatModel,
+      where:{
+        inboxHash: {
+          [Op.eq]: room,
+        },
+      }
+    }],
+    limit:20,
+    offset:0,
+    raw: true,
+  });
+  
+  
+  if (cb&&messages) return cb(messages||[]);
+  return messages;
+}
+
+
 
 const chatPlugin = {
   name: "chat",

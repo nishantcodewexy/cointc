@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const crypto = require("crypto");
+const hooks = require("../hooks/chat.hook")
 
 module.exports = (sequelize, DataTypes) => {
   class Chat extends Model {
@@ -37,13 +38,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Chat",
       underscored: true,
       tableName: "tbl_chats",
-      hooks: {
-        beforeCreate(model, options) {
-          const { to, from } = model;
-          let hash = Chat.makeHash(to, from);
-          model.inboxHash = hash;
-        },
-      },
+      hooks,
     }
   );
   return Chat;

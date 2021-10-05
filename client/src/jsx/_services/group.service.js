@@ -218,8 +218,8 @@ async function updateSupportTicket(data) {
  * @function getCurrency - Gets adverts (**Admin only**)
  * @param {Object} params
  * @param {Number} [params.limit] - Response limit
- * @param {String} [params.name]- Specify the currency name
- * @param {String} [params.type]- Specify the currency name
+ * @param {String} [params.name] - Specify the currency name
+ * @param {String} [params.type] - Specify the currency name
  * @returns
  */
 async function getCurrency(params) {

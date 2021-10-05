@@ -41,12 +41,15 @@ class Client {
   }
 
   abort(message = "request has been cancel") {
-    this.source.cancel(message);
+    try{
+
+      this.source.cancel(message);
+    }catch(e){}
   }
 }
 
 const useAPI = () =>{
-  const {token} = useSelector(state => state?.user?.user||{})
+  const {token} = useSelector(state => state?.session?.user||{})
   
   return new Client(token)
 };

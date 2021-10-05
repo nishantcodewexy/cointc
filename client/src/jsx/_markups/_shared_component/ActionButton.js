@@ -5,16 +5,17 @@ import { Button,Modal } from 'react-bootstrap';
 
 
 
-export const ActionButton = ({action,actionTitle,title,children,type,...props}) => {
+export const ActionButton = ({action,actionTitle,title,children,type,url,...props}) => {
     const [show, setShow] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
-
+    
     const callAction = () =>{
         setIsLoading(true)
         if(action){
-            action.finally(()=>{
+            
+            action().catch(console.error).finally(()=>{
                 setIsLoading(false)
                 setShow(false)
             })
@@ -31,11 +32,11 @@ export const ActionButton = ({action,actionTitle,title,children,type,...props}) 
         <>
             {
                 type==="delete"?(
-                    <a href="#" onClick={handleShow} {...props}>
+                    <a href={url||"#"} onClick={url?()=>null:handleShow} {...props}>
                     <span className="themify-glyph-165"></span>{" "}Delete
                     </a>
                 ):(
-                    <a href="#" onClick={handleShow} {...props}>
+                    <a href={url||"#"} onClick={url?()=>null:handleShow} {...props}>
                         <span className="themify-glyph-29"></span>{" "}Edit
                     </a>
                 )
@@ -71,6 +72,7 @@ ActionButton.propTypes = {
     actionTitle:pt.string.isRequired,
     title:pt.string.isRequired,
     type:pt.oneOf(["delete","edit"]),
+    url:pt.string
     
 }
 

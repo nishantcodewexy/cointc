@@ -17,8 +17,8 @@ import {io,Socket} from 'socket.io-client'
         const {params} = args
         
         const socket = io({
-            auth: {
-                token: this.token
+            extraHeaders: {
+                authorization: this.token
               },
             params
         })
