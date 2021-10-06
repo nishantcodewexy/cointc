@@ -65,7 +65,8 @@ module.exports = (server) => {
                     "payment_methods",
                     "OTP",
                     "otp",
-                    "ID"
+                    "ID",
+                    "bank_details"
                   )
                   .optional(),
               });

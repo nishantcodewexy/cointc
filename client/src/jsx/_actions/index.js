@@ -2,7 +2,6 @@
 import user from "./account.user.action";
 
 const actions = {
-  // alertAction,
   user,
 };
 

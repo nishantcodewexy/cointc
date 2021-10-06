@@ -3,11 +3,19 @@ import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
 import { useState } from "react";
 import useToggler from "../../../_hooks/toggler.hook";
-import EmptyRecord from "../components/empty.record.component";
+import EmptyRecord from "../components/EmptyRecord.Component";
 
-function CurrencyMgmt({services, useService}) {
+function CurrencyMgmt({ services, useService }) {
   const { group } = services;
-  let get = useService(group.getCurrency);
+  let { data, error, isFetching, isReloading, dispatchRequest } = useService({
+    get: group.getCurrency,
+  });
+  console.log({
+    data,
+    error,
+    isFetching,
+    isReloading,
+  });
   const {
     isOpen: isModalOpen,
     onOpen: onOpenModal,
@@ -39,11 +47,11 @@ function CurrencyMgmt({services, useService}) {
         </Col>
 
         <Col sm="auto" style={{ padding: 0 }}>
-          <CurrencyForm isOpen={isModalOpen} onClose={onModalClose}>
+          <ModifierForm isOpen={isModalOpen} onClose={onModalClose}>
             <Button onClick={onOpenModal}>
               <i className="fa fa-plus"></i> Add Currency
             </Button>
-          </CurrencyForm>
+          </ModifierForm>
         </Col>
       </Row>
 
@@ -54,10 +62,10 @@ function CurrencyMgmt({services, useService}) {
               padding: 10,
             }}
           >
-            {get.isFetching ? (
+            {isFetching ? (
               <div>Loading...</div>
             ) : (
-              <CurrencyTable data={get.data?.rows} />
+              <CurrencyTable data={data?.rows} />
             )}
           </Card>
         </Col>
@@ -106,12 +114,12 @@ function CurrencyTable({ data = [] }) {
 
   const action = (_item) => (
     <div className="d-flex" style={{ gap: 20 }}>
-      <CurrencyForm isOpen={isModalOpen} data={_item} onClose={onCloseModal}>
+      <ModifierForm isOpen={isModalOpen} data={_item} onClose={onCloseModal}>
         {/* {Object.values(_item).join(", ")} */}
         <a onClick={onOpenModal}>
           <span className="themify-glyph-29"></span> Edit
         </a>
-      </CurrencyForm>
+      </ModifierForm>
       <a href="">
         <span className="themify-glyph-165"></span> Delete
       </a>
@@ -153,18 +161,16 @@ function CurrencyTable({ data = [] }) {
             </tr>
           </thead>
           <tbody id="curencies">
-            {
-              data?.map((item, key) => (
-                <tr key={key} className="btn-reveal-trigger">
-                  <td>{singleSelect(item.id)}</td>
-                  <td className="py-2">{item.id}</td>
-                  <td className="py-3 pl-5 width200">{item.iso_code}</td>
-                  <td className="py-3 pl-5 width200">{item.name}</td>
-                  <td className="py-3 pl-5 width200">{item.type}</td>
-                  <td>{action(item)}</td>
-                </tr>
-              ))
-            }
+            {data?.map((item, key) => (
+              <tr key={key} className="btn-reveal-trigger">
+                <td>{singleSelect(item.id)}</td>
+                <td className="py-2">{item.id}</td>
+                <td className="py-3 pl-5 width200">{item.iso_code}</td>
+                <td className="py-3 pl-5 width200">{item.name}</td>
+                <td className="py-3 pl-5 width200">{item.type}</td>
+                <td>{action(item)}</td>
+              </tr>
+            ))}
           </tbody>
         </Table>
       ) : (
@@ -174,7 +180,7 @@ function CurrencyTable({ data = [] }) {
   );
 }
 
-function CurrencyForm({ children, data: _data = {}, isOpen, onClose }) {
+function ModifierForm({ children, data: _data = {}, isOpen, onClose }) {
   return (
     <>
       {children}
@@ -213,10 +219,11 @@ function CurrencyForm({ children, data: _data = {}, isOpen, onClose }) {
                   <Form.Label>Type</Form.Label>
                   <Form.Control
                     as="select"
+                    value={_data?.type?.toLowerCase()}
                     defaultValue={_data?.type?.toLowerCase()}
                     aria-label="Select currency type"
                   >
-                    <option>Select currency {_data?.type}</option>
+                    <option>Select currency type</option>
                     <option value="fiat">Fiat</option>
                     <option value="crypto">Crypto</option>
                   </Form.Control>

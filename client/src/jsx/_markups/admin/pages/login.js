@@ -5,11 +5,20 @@ import { useDispatch } from "react-redux";
 import { useLocation, Link } from "react-router-dom";
 import _actions from "../../../_actions";
 
-const { user } = _actions;
+const { user: userAction } = _actions;
 
-const LoginPage = () => {
+const LoginPage = ({ services, useService }) => {
   const dispatch = useDispatch();
   const location = useLocation();
+  const { user: userService } = services;
+
+  const { isFetching, dispatchRequest } = useService(
+    {
+      post: userService?.login,
+    },
+    {},
+    { getImmediate: false }
+  );
 
   return (
     <Formik
@@ -35,7 +44,16 @@ const LoginPage = () => {
         setSubmitting(true);
         try {
           const { from } = location.state || { from: { pathname: "/admin" } };
-          dispatch(user.login({ email, password, role: "admin", from }));
+          let request = async () =>
+            await dispatchRequest({
+              type: "post",
+              payload: {
+                email,
+                password,
+                role: "admin",
+              },
+            });
+          dispatch(userAction.login(request));
         } catch (error) {
           console.error(error);
         } finally {

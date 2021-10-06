@@ -5,7 +5,7 @@ import { Row, Col, Card } from "react-bootstrap";
 import { useSelector, useDispatch} from 'react-redux'
 import pMinDelay from "p-min-delay";
 
-const ApexLine = loadable(() => pMinDelay(import("../components/DepositsAnalysis"), 1000));
+const ApexLine = loadable(() => pMinDelay(import("../components/DepositsAnalysis.Component"), 1000));
 const stats = [
   {
     name: "users stats",
