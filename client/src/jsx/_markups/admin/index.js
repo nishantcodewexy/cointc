@@ -19,7 +19,7 @@ import _helpers from "../../_helpers";
 import _actions from "../../_actions";
 import _components from "./components";
 import useService from "../../_hooks/service.hook";
-import _services from "../../_services";
+import services from "../../_services";
 
 const { history } = _helpers;
 const { Error404 } = _components;
@@ -29,20 +29,7 @@ export default AdminMarkup;
 function AdminMarkup() {
   const session = useSelector((state) => state?.session);
   const notice = useSelector((state) => state?.notice);
-  const [services, setServices] = useState(_services);
-
-  useEffect(() => {
-    setServices(() =>
-      _services.init({
-        headers: {
-          Authorization: session?.user
-            ? `Bearer ${session.user?.token}`
-            : "",
-          "Content-Type": "application/json",
-        },
-      })
-    );
-  }, [session]);
+  // const [services, setServices] = useState(_services);
 
   return (
     <Switch>

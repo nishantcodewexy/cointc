@@ -6,7 +6,8 @@ import useToggler from "../../../_hooks/toggler.hook";
 import EmptyRecord from "../components/EmptyRecord.Component";
 
 function CurrencyMgmt({ services, useService }) {
-  const { group } = services;
+  const { useGroupService } = services;
+  const group = useGroupService();
   let { data, error, isFetching, isReloading, dispatchRequest } = useService({
     get: group.getCurrency,
   });

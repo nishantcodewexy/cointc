@@ -5,7 +5,8 @@ import useToggler from "../../../_hooks/toggler.hook";
 import PageTitle from "../layouts/PageTitle";
 
 function AdminBankDetails({ services, useService }) {
-  const { group } = services;
+  const { useGroupService } = services;
+  const group = useGroupService();
   let { data, error, isFetching, dispatchRequest } = useService(
     { get: group.getKYC }
   );
