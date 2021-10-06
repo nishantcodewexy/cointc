@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-      user: { getAllUser },
+      order: { get },
     },
     consts: { roles: _roles },
     helpers:{
@@ -14,8 +14,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: ["GET"],
-    path: "/account/group/user",
+    method: "GET",
+    path: "/account/group/trade/{id}",
     config: {
       pre: [
         {
@@ -30,7 +30,7 @@ module.exports = (server) => {
           assign: "isAdmin",
         },
       ],
-      handler: getAllUser,
+      handler: get,
       auth: "jwt",
     },
     

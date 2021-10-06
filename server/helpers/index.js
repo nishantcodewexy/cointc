@@ -404,7 +404,7 @@ module.exports = {
    * @param {String[]} args.searchFields
    * @returns {Object}
    */
-  filters: async ({ query, searchFields }) => {
+  filters: async ({ query, searchFields,extra={} }) => {
     if(!query) query={}
     if(!searchFields) searchFields=[]
     const q = query.q||''
@@ -433,7 +433,8 @@ module.exports = {
     return {
       where:{
         ...whereQuery,
-        ...extraWhere
+        ...extraWhere,
+        ...extra
       },
       order:orderQuery,
       limit:limitQuery,
