@@ -1,5 +1,10 @@
 import { useState, useEffect } from "react";
 
+/**
+ * @function useService - Component service hook
+ * @param {Function} service 
+ * @returns 
+ */
 function useService(service) {
   const [reload, dispatchReload] = useState(false);
   const [data, setData] = useState(false);

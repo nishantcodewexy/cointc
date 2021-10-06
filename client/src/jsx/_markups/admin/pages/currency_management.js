@@ -1,20 +1,23 @@
-import { Card, Row, Col, Button, Table } from "react-bootstrap";
+import { Card, Row, Col, Button, Table, Modal, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
-import { useEffect, useState } from "react";
 import _services from "../../../_services";
 import useService from "../../../_hooks/service.hook";
-
+import { useState } from "react";
+import useToggler from "../../../_hooks/toggler.hook";
 const { group } = _services;
 
 function CurrencyMgmt() {
-  const { data, error, isFetching, dispatchReload } = useService(
-    group.getCurrency
-  );
+  let get = useService(group.getCurrency);
+  const {
+    isOpen: isModalOpen,
+    onOpen: onOpenModal,
+    onClose: onModalClose,
+  } = useToggler();
 
   return (
     <>
-      {console.log({ data })}
+      {console.log({ data: get.data, isLoading: get.isFetching })}
       <PageTitle activeMenu="" motherMenu="Currencies" />
       <header className="mb-4">
         <h3>Currency List</h3>
@@ -36,10 +39,13 @@ function CurrencyMgmt() {
             </div>
           </div>
         </Col>
+
         <Col sm="auto" style={{ padding: 0 }}>
-          <Button size="md">
-            <i className="fa fa-plus"></i> Add Currency
-          </Button>
+          <CurrencyForm isOpen={isModalOpen} onClose={onModalClose}>
+            <Button onClick={onOpenModal}>
+              <i className="fa fa-plus"></i> Add Currency
+            </Button>
+          </CurrencyForm>
         </Col>
       </Row>
 
@@ -50,65 +56,77 @@ function CurrencyMgmt() {
               padding: 10,
             }}
           >
-            <CurrencyTable />
+            {get.isFetching ? (
+              <div>Loading...</div>
+            ) : (
+              <CurrencyTable data={get.data?.rows} />
+            )}
           </Card>
         </Col>
       </Row>
     </>
   );
 }
-function CurrencyTable() {
-  const chackbox = document.querySelectorAll(".user_permission_single input");
-  const motherChackBox = document.querySelector(".user_permission input");
-  // console.log(document.querySelectorAll(".publish_review input")[0].checked);
-  const checkboxFun = (type) => {
-    for (let i = 0; i < chackbox.length; i++) {
-      const element = chackbox[i];
-      if (type === "all") {
-        if (motherChackBox.checked) {
-          element.checked = true;
-        } else {
-          element.checked = false;
-        }
-      } else {
-        if (!element.checked) {
-          motherChackBox.checked = false;
-          break;
-        } else {
-          motherChackBox.checked = true;
-        }
-      }
-    }
-  };
+function CurrencyTable({ data = [] }) {
+  const [selected, setSelected] = useState([]);
+  const {
+    isOpen: isModalOpen,
+    onOpen: onOpenModal,
+    onClose: onCloseModal,
+  } = useToggler();
 
-  const check = (i) => (
+  function toggleSelectRecord(id) {
+    if (id) {
+      let index = selected.findIndex((_s) => _s == id);
+      console.log(index);
+      index == -1
+        ? setSelected([...selected, id])
+        : setSelected(selected.filter((_s) => _s != id));
+    } else {
+      // get all ids
+      let ids = data.map((_i) => _i.id);
+      selected.length == data.length ? setSelected([]) : setSelected(ids);
+    }
+  }
+
+  const singleSelect = (id) => (
     <div className={`custom-control custom-checkbox ml-2`}>
       <input
         type="checkbox"
         className="custom-control-input "
-        id={`checkAll_user_permission_${i}`}
+        id={`check_currency_record_${id}`}
         required=""
-        onClick={() => checkboxFun()}
+        checked={selected.includes(id)}
+        onChange={() => toggleSelectRecord(id)}
       />
       <label
         className="custom-control-label"
-        htmlFor={`checkAll_user_permission_${i}`}
+        htmlFor={`check_currency_record_${id}`}
       ></label>
     </div>
   );
 
-  const action = (
+  const action = (_item) => (
     <div className="d-flex" style={{ gap: 20 }}>
-      <a href="">
-        <span className="themify-glyph-29"></span> Edit
-      </a>
+      <CurrencyForm isOpen={isModalOpen} data={_item} onClose={onCloseModal}>
+        {Object.values(_item).join(", ")}
+        <a href="#" onClick={onOpenModal}>
+          <span className="themify-glyph-29"></span> Edit
+        </a>
+      </CurrencyForm>
       <a href="">
         <span className="themify-glyph-165"></span> Delete
       </a>
     </div>
   );
+
   return (
     <>
+      {/*  <ul>
+        {selected.map((_s, key) => (
+          <li key={key}>{_s}</li>
+        ))}
+      </ul> */}
       <Table responsive hover size="sm">
         <thead>
           <tr>
@@ -117,12 +135,13 @@ function CurrencyTable() {
                 <input
                   type="checkbox"
                   className="custom-control-input"
-                  id="checkAll_user_permission_all"
-                  onClick={() => checkboxFun("all")}
+                  id="check_all_currency_record"
+                  checked={selected.length == data.length}
+                  onChange={() => toggleSelectRecord()}
                 />
                 <label
                   className="custom-control-label"
-                  htmlFor="checkAll_user_permission_all"
+                  htmlFor="check_all_currency_record"
                 ></label>
               </div>
             </th>
@@ -134,17 +153,84 @@ function CurrencyTable() {
           </tr>
         </thead>
         <tbody id="customers">
-          <tr className="btn-reveal-trigger">
-            <td className="user_permission_single">{check(1)}</td>
-            <td className="py-2">611cd709add0d239c</td>
-            <td className="py-3 pl-5 width200">BTC</td>
-            <td className="py-3 pl-5 width200"> Bitcoin</td>
-            <td className="py-3 pl-5 width200">Crypto</td>
-
-            <td>{action}</td>
-          </tr>
+          {data?.map((item, key) => (
+            <tr key={key} className="btn-reveal-trigger">
+              <td className="user_permission_single">
+                {singleSelect(item.id)}
+              </td>
+              <td className="py-2">{item.id}</td>
+              <td className="py-3 pl-5 width200">{item.iso_code}</td>
+              <td className="py-3 pl-5 width200">{item.name}</td>
+              <td className="py-3 pl-5 width200">{item.type}</td>
+              <td>{action(item)}</td>
+            </tr>
+          ))}
         </tbody>
       </Table>
+    </>
+  );
+}
+
+function CurrencyForm({ children, data: _data = {}, isOpen, onClose }) {
+  return (
+    <>
+      {children}
+
+      <Modal show={isOpen} onHide={onClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Currency</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col>
+              <Form>
+                <Form.Group className="mb-3" controlId="formCurrencyCode">
+                  <Form.Label>Code</Form.Label>
+                  <Form.Control
+                    type="text"
+                    defaultValue={_data?.iso_code}
+                    placeholder="Currency code"
+                  />
+
+                  <Form.Text className="">
+                    ISO Code / Short name / Symbol
+                  </Form.Text>
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="formCurrencyName">
+                  <Form.Label>Full name</Form.Label>
+                  <Form.Control
+                    type="text"
+                    defaultValue={_data?.name}
+                    placeholder="Currency name"
+                  />
+                </Form.Group>
+
+                <Form.Group className="mb-3" controlId="formCurrencyType">
+                  <Form.Label>Type</Form.Label>
+                  <Form.Control
+                    as="select"
+                    defaultValue={_data?.type?.toLowerCase()}
+                    aria-label="Select currency type"
+                  >
+                    <option>Select currency {_data?.type}</option>
+                    <option value="fiat">Fiat</option>
+                    <option value="crypto">Crypto</option>
+                  </Form.Control>
+                </Form.Group>
+              </Form>
+            </Col>
+          </Row>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={onClose}>
+            Close
+          </Button>
+          <Button variant="primary" onClick={onClose}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 }
