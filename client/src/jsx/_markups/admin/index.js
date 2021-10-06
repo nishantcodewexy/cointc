@@ -14,7 +14,7 @@ import { normalize } from "path";
 import "../../../vendor/bootstrap-select/dist/css/bootstrap-select.min.css";
 import "../../../css/style.css";
 
-import UnderConstruction from "./components/UnderConstruction";
+import UnderConstruction from "./components/UnderConstruction.Component";
 import { useSelector } from "react-redux";
 import LoginPage from "./pages/login";
 import _helpers from "../../_helpers";
