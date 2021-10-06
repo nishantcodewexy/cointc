@@ -23,15 +23,15 @@ export default accountUserActions;
  * @param {String | "/"} [param.from]
  * @returns
  */
-function login({ email, password, role = "basic", from = "/" }) {
+function login(request) {
   return (dispatch) => {
     dispatch(log({ type: NOTICE.CLEAR }));
-    dispatch(log({ type: REQUEST.SESSION_LOGIN, data: email }));
+    dispatch(log({ type: REQUEST.SESSION_LOGIN}));
 
-    user
-      .login({ email, password, role })
-      .then(({ data }) => {
-        // localStorage.setItem("user", JSON.stringify(data));
+    request()
+      .then((resp) => {
+        if (resp instanceof Error) throw resp;
+        const { data } = resp;
         dispatch(log({ type: SESSION.LOGIN, data }));
       })
       .catch((error) => {

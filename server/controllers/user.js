@@ -111,16 +111,16 @@ module.exports = (server) => {
           payload: { email, role = _roles.basic, password },
         } = req;
 
-        const { profile, getter, profile_attributes } = __assertRole(role);
+        const { getter } = __assertRole(role);
 
         // fetch user record from DB that matches the email
         let account = await User.findOne({
           where: { email, role },
         });
-        // lazy load profile attached to account
-        let account_profile = await account[getter]();
 
         if (account) {
+          // lazy load profile attached to account
+          let account_profile = await account[getter]();
           // Check if password matches
           if (await decrypt(password, account.password)) {
             // Update the last_login attribute of the account's profile
