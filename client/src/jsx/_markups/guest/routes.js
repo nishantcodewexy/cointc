@@ -9,7 +9,7 @@ import Playground from "./pages/Plaground";
 const routes =[
   { url: "", component: Home },
   { url: "playground", component: Playground },
-  // { url: "*", component: Error404,  },
+  { url: "*", component: Error404,  },
 ];
 
 
