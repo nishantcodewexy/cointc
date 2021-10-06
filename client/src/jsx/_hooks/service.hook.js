@@ -1,35 +1,38 @@
-import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import constants from "../_constants";
+import { useState, useEffect } from "react";
 
-const { NOTICE } = constants;
-// debugger;
-const useService = function (service) {
-  const [data, setData] = useState(null);
-  const [error /* setError */] = useState(null);
-  const dispatch = useDispatch();
+/**
+ * @function useService - Component service hook
+ * @param {Function} service 
+ * @returns 
+ */
+function useService(service) {
+  const [reload, dispatchReload] = useState(false);
+  const [data, setData] = useState(false);
+  const [error, setError] = useState(false);
+  const [isFetching, setIsFetching] = useState(false);
 
-  function prefetch() {}
-  function postfetch() {}
-  async function fetch() {
-    console.log("SERVICE HOOK::FETCH");
-    // let { success, error } = await service();
-    setData(1);
-    setData(2);
-    setData(3);
-    // success ? setData(success) : setError(error);
-  }
-  function refetch() {}
-  // fetch();
-  // dispatch({ type: NOTICE.INFO, data: "JUST CHECKING" });
+  const fetcher = async () => {
+    // Only reload once
+    if (reload) {
+      dispatchReload(false);
+      return;
+    }
+    setIsFetching(true);
+    let { success, failure } = await service();
+    success ? setData(success) : setError(failure);
+    setIsFetching(false);
+  };
+
+  // Fetch on mount and watch for subsequent reloads requests
+  useEffect(() => {
+    fetcher();
+  }, [reload]);
+
   return {
     data,
     error,
-    prefetch,
-    postfetch,
-    fetch,
-    refetch,
+    isFetching,
+    dispatchReload,
   };
-};
-
+}
 export default useService;

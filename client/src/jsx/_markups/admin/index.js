@@ -43,8 +43,6 @@ class ComponentLoggger {
 function AdminMarkup() {
   const session = useSelector((state) => state?.session);
   const notice = useSelector((state) => state?.notice);
-  console.log("IN ADMIN MARKUP::RENDERING");
-  const { data, error } = useService(() => null);
 
   return (
     <>
