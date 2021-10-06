@@ -1,10 +1,8 @@
-import React, { useContext, /* useState, */ useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   Route,
   Switch,
   Redirect,
-  useParams,
-  useRouteMatch /* useLocation */,
 } from "react-router-dom";
 import routes from "./routes";
 import Nav from "./layouts/nav";
@@ -21,8 +19,7 @@ import _helpers from "../../_helpers";
 import _actions from "../../_actions";
 import _components from "./components";
 import useService from "../../_hooks/service.hook";
-import services from "../../_services";
-
+import _services from "../../_services";
 
 const { history } = _helpers;
 const { Error404 } = _components;
@@ -32,15 +29,28 @@ export default AdminMarkup;
 function AdminMarkup() {
   const session = useSelector((state) => state?.session);
   const notice = useSelector((state) => state?.notice);
-  let match = useRouteMatch();
-  let params = useParams();
+  const [services, setServices] = useState(_services);
+
+  useEffect(() => {
+    setServices(() =>
+      _services.init({
+        headers: {
+          Authorization: session?.user
+            ? `Bearer ${session.user?.token}`
+            : "",
+          "Content-Type": "application/json",
+        },
+      })
+    );
+  }, [session]);
+
   return (
     <Switch>
       <Route exact path="/admin/login">
         {!session?.user ? (
-          <LoginPage />
+          <LoginPage  {...{ services, useService }} />
         ) : (
-          <Redirect to={{ pathname: `${match.path}` }} />
+          <Redirect to={{ pathname: `/admin` }} />
         )}
       </Route>
       <Route path="/admin">
@@ -53,7 +63,11 @@ function AdminMarkup() {
                   exact
                   path={normalize(`/admin/${url}`)}
                   render={(props) =>
-                    Component ? <Component {...{...props, services, useService}} /> : <UnderConstruction />
+                    Component ? (
+                      <Component {...{ ...props, services, useService }} />
+                    ) : (
+                      <UnderConstruction />
+                    )
                   }
                 />
               ))
