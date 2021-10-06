@@ -14,10 +14,10 @@ function AdminBankDetails({params}) {
 
   const action = (
     <div className="d-flex" style={{gap: 20}}>
-      <a href="#">
+      <a href="/">
         <span className="themify-glyph-29"></span>{" "}Edit
       </a>
-      <a href="#">
+      <a href="/">
         <span className="themify-glyph-165"></span>{" "}Delete
       </a>
     </div>

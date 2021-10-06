@@ -4,9 +4,11 @@ import ThemeContextProvider from "./context/ThemeContext";
 
 const App = () => {
   return (
-    <ThemeContextProvider>
-      <Markup />
-    </ThemeContextProvider>
+    <>
+      <ThemeContextProvider>
+        <Markup />
+      </ThemeContextProvider>
+    </>
   );
 };
 

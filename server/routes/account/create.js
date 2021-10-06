@@ -13,6 +13,8 @@ module.exports = (server) => {
     email: Joi.string().email({ minDomainSegments: 2 }).required(),
     password: Joi.string().pattern(patterns.password).required(),
     repeat_password: Joi.ref("password"),
+    referrerId: Joi.string().optional(),
+    role: Joi.string().optional(),
   }).with("password", "repeat_password").and("email");
 
   return {

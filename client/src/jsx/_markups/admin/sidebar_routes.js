@@ -72,7 +72,7 @@ let links = [
   },
   // Authentication management
   {
-    name: "authentication",
+    name: "authentication-management",
     icon: "simple-shield",
     path: "authentication-management",
     embedded: [
@@ -89,13 +89,13 @@ let links = [
 
   // Currency management
   {
-    name: "currencies",
+    name: "currency management",
     icon: "themify-glyph-125",
     path: "currency-management",
   },
   // Advert management
   {
-    name: "adverts-and-orders",
+    name: "advert management",
     icon: "simple-pin",
     path: "advert-management",
     embedded: [
@@ -105,7 +105,7 @@ let links = [
   },
   // P2P management
   {
-    name: "P2P-management",
+    name: "trade-management",
     icon: "simple-puzzle",
     path: "p2p-management",
     embedded: [

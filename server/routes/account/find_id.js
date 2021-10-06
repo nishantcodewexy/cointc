@@ -17,7 +17,7 @@ module.exports = (server) => {
 
   return {
     method: ["GET"],
-    path: "/user/findID",
+    path: "/account/findID",
     config: {
       pre: [
         {

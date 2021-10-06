@@ -1,4 +1,4 @@
-export default {
+const ENUMS = {
   CLEAR: "CLEAR_REQUEST",
   // Session
   SESSION_LOGIN: "USER_LOGIN_REQUEST",
@@ -10,3 +10,4 @@ export default {
   USER_DROP: "USER_DELETE_REQUEST"
 };
 
+export default ENUMS;

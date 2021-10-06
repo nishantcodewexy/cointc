@@ -1,9 +1,24 @@
-export default function header() {
+export default function headers() {
   // return authorization header with jwt token
-  var headers = new Headers();
-  let user = JSON.parse(localStorage.getItem("user")) || null;
+  try {
+    var headers = {};
+    let localStore = localStorage.getItem("persist:root");
+    let presistedData = JSON.parse(localStore || null);
+    let session = JSON.parse(presistedData.session || null);
+    let user = session?.user || null;
+    let token = user?.token || null;
 
-  if (user && user?.token)
-    headers.append("Authorization", `Bearer ${user?.token}`);
-  return headers;
+    if (token) {
+      headers = {
+        ...headers,
+        ...{ Authorization: `Bearer ${session.user?.token}` },
+      };
+    }
+    headers = { ...headers, ...{ "Content-Type": "application/json" } };
+    // console.log({ headers, session });
+
+    return headers;
+  } catch (error) {
+    console.error("Request Header Error::", error);
+  }
 }

@@ -1,4 +1,6 @@
 import user from "./user.services";
 import group from "./group.service";
 
-export default { user, group };
+const services = { user, group };
+
+export default services;

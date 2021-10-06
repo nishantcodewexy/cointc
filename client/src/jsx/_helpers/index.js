@@ -1,9 +1,11 @@
-import header from "./header.helper";
+import headers from "./header.helper";
 import history from "./history.helper";
 import store from "./store.helper";
 
-export default {
-  header,
+const helpers = {
+  headers,
   history,
   store,
 };
+
+export default helpers;

@@ -1,4 +1,4 @@
-
+const { generator } = require("../../helpers");
 
 
 module.exports = {
@@ -16,7 +16,7 @@ module.exports = {
 
     // prioryty 4
     beforeCreate:async (instance,options)=>{
-        instance.referral_code = generateReferralCode(instance.email);
+        instance.referral_code = generator.referralCode(instance.email);
     },
     // beforeDestroy:async (instance,options)=>{
         

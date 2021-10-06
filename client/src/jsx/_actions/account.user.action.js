@@ -14,10 +14,18 @@ const accountUserActions = {
 export default accountUserActions;
 
 /********************************** FUNCTIONS ********************************************/
-
-function login({ email, password, role = "basic", from }) {
+/**
+ * @function login - User login action
+ * @param {Object} param
+ * @param {String} param.email
+ * @param {String} param.password
+ * @param {String | "basic"} [param.role]
+ * @param {String | "/"} [param.from]
+ * @returns
+ */
+function login({ email, password, role = "basic", from = "/" }) {
   return (dispatch) => {
-    dispatch(log({ type: NOTICE.CLEAR}))
+    dispatch(log({ type: NOTICE.CLEAR }));
     dispatch(log({ type: REQUEST.SESSION_LOGIN, data: email }));
 
     user
@@ -27,29 +35,39 @@ function login({ email, password, role = "basic", from }) {
         dispatch(log({ type: SESSION.LOGIN, data }));
       })
       .catch((error) => {
+        console.error(error);
         dispatch(
           log({
             type: NOTICE.ERROR,
-            data: error.response.data.message.toString(),
+            data: error?.response?.data?.message || error.toString(),
           })
         );
       });
   };
 }
 
+/**
+ * @function logout - logs user out
+ * @returns
+ */
 function logout() {
   return (dispatch) => {
     dispatch(log({ type: REQUEST.SESSION_LOGOUT }));
     // localStorage.removeItem("user");
-    dispatch(log({ type: REQUEST.CLEAR}))
-    dispatch(log({ type: NOTICE.CLEAR}))
+    dispatch(log({ type: REQUEST.CLEAR }));
+    dispatch(log({ type: NOTICE.CLEAR }));
     dispatch(log({ type: SESSION.LOGOUT }));
   };
 }
 
+/**
+ * @function register - Create or register a new user
+ * @param {Object} credentials
+ * @returns
+ */
 function register(credentials) {
   return (dispatch) => {
-    dispatch(log({ type: NOTICE.CLEAR}))
+    dispatch(log({ type: NOTICE.CLEAR }));
     dispatch(log({ type: REQUEST.USER_REGISTER }));
 
     user
@@ -65,20 +83,36 @@ function register(credentials) {
   };
 }
 
+/**
+ * @function profile - Fetch user's profile information
+ * @returns
+ */
 function profile() {
   return (dispatch) => {
-    dispatch(log({ type: NOTICE.CLEAR}))
+    dispatch(log({ type: NOTICE.CLEAR }));
     dispatch(log({ type: REQUEST.USER_PROFILE }));
   };
 }
 
-function drop(id) {
+/**
+ *
+ * @function drop - Soft deletes user
+ * @returns
+ */
+function drop() {
   return (dispatch) => {
-    dispatch(log({ type: NOTICE.CLEAR}))
-    dispatch(log({ type: REQUEST.USER_DROP, data: id }));
+    dispatch(log({ type: NOTICE.CLEAR }));
+    dispatch(log({ type: REQUEST.USER_DROP }));
   };
 }
 
+/**
+ * @function log - action logger
+ * @param {Object} param - action object
+ * @param {String} [param.type] - Type of action
+ * @param {*} [param.data] - Action payload
+ * @returns
+ */
 function log({ type = NOTICE.INFO, data = null }) {
   return { type, data };
 }

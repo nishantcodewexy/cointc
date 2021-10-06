@@ -2,171 +2,235 @@ import _helpers from "../_helpers";
 import _constants from "../_constants";
 import axios from "axios";
 
-const { header } = _helpers;
+let { headers } = _helpers;
 
-const headers = header();
+/**
+ * Class of all Group services
+ * @class 
+ */
+class GroupServices {
+  constructor({ headers, timeout = 30000, baseURL }) {
+    this.source = axios.CancelToken.source();
+    this.axios = axios.create({
+      baseURL,
+      timeout,
+      headers,
+      cancelToken: this.source.token,
+    });
+    return this;
+  }
+/**
+ * @method 
+ * @param {String | "request has been canceled"} message 
+ * @returns {String}
+ */
+  abort = (message = "request has been canceled") => {
+    this.source.cancel(message.toString());
+  };
+  /**
+   * @method - Request handler decorator
+   * @param {Function} request - Request Callback
+   * @returns
+   */
+  decorate = async (request) => {
+    let result = { success: null, error: null };
+    try {
+      let { data } = await request();
+      return { ...result, success: data };
+    } catch (error) {
+      console.error("GROUP SERVICE ERROR::", error);
+      this.abort();
+      return { ...result, error: error?.message };
+    }
+  };
 
-const groupServices = {
-  getStats,
-  getKYC,
-  updateKYC,
-  getUsers,
-  updateUsers,
-  createUsers,
-  dropUsers,
-  getSecessions,
-  getSupportTicket,
-  updateSupportTicket,
-  getCurrency,
-  createCurrency,
-  getWallet,
-  getWalletBalance,
-  getAdvert,
-  getTrades,
-  getPolicy,
-  getReferrals
-};
+  
 
-export default groupServices;
+  /************************* CURRENCY ******************************/
+  /**
+   * Currency payload type definition
+   * @typedef {Object} currencyPayload
+   * @property {String} id - Currency id
+   * @property {String} name - Currency name
+   * @property {String} type - Currency type
+   */
+  /**
+   * @method getCurrency - Gets adverts (**Admin only**)
+   * @param {Object} params
+   * @param {Number} [params.limit] - Response limit
+   * @param {String} [params.name]- Specify the currency name
+   * @param {String} [params.type]- Specify the currency name
+   * @returns
+   */
+
+  getCurrency = async (params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`currency`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  /**
+   * @function createCurrency - Creates a currency (**Admin only**)
+   * @param {currencyPayload} data
+   * @returns
+   */
+  createCurrency = async (data) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`currency`, {
+          method: "POST",
+          data,
+        })
+    );
+  };
+
+  /************************** STATISTICS *************************/
+
+  /**
+   * Statistics payload types definition
+   * @typedef {Object} statsPayload
+   * @property {"user_stats" | "withdrawal_stats" | "ticket_stats" | "admin_stats" | "security_stats" | "kyc_stats" | "deposit_stats"} type
+   */
+
+  /**
+   *@function getStats - Gets account statistics (***Admins only**)
+   * @param {statsPayload} params
+   * @returns
+   */
+  getStats = async (params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`stats`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  /************************** KYC *************************/
+  /**
+   * KYC payload types definition
+   * @typedef {Object} kycUpdatePayload
+   * @property {String} uid - User ID
+   * @property {Object} email - Email KYC object
+   * @property {Object} id - ID KYC object
+   * @property {Object} otp - OTP KYC object
+   * @property {Object} payment_methods - Payment methods KYC object
+   * @property {Object} bank_details - Bank details KYC object
+   * @property {Object} sms - SMS KYC object
+   */
+  /**
+   * KYC payload types definition
+   * @typedef {Object} kycPayload
+   * @property {"email" | "id" | "payment_methods" | "bank_details" | "sms" | "otp"} type
+   */
+  /**
+   * @function getKYC - Fetch KYC (**Admins only**)
+   * @param {kycPayload} params
+   * @returns
+   */
+  getKYC = async (params) => {
+    return this.decorate(
+      async () =>
+        await this.axios(`kyc`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  /**
+   * @function updateKYC - Bulk KYC update (**Admins only**)
+   * @param {kycUpdatePayload []} data
+   * @returns
+   */
+  updateKYC = async (data) => {
+    return this.decorate(
+      async () =>
+        await this.axios(`kyc`, {
+          method: "PUT",
+          data,
+        })
+    );
+  };
+
+  /************************* USER ******************************/
+  /**
+   * @function getUsers - Gets one or many users (**Admins only**)
+   * @param {Object} params
+   * @param {String} [params.id] - User ID
+   * @returns
+   */
+  getUsers = async (params) => {
+    return this.decorate(
+      async () =>
+        await this.axios(`user`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  /**
+   * @function createUsers - Bulk create user - (**Admins only**)
+   * @param {Object} data
+   * @param {"basic" | "admin"} data.role
+   * @param {String} data.email
+   * @returns
+   */
+  createUsers = async (data) => {
+    return await this.decorate(async () =>
+      this.axios(`user`, {
+        method: "POST",
+        data,
+      })
+    );
+  };
+
+  /**
+   * @function updateUsers - Bulk update users (**Admins only**)
+   * @param {Object} data
+   * @param {String} data.phone
+   * @param {String} data.country
+   * @param {String} data.permission
+   * @param {String} data.role
+   * @returns
+   */
+  updateUsers = async (data) => {
+    return this.decorate(
+      async () =>
+        await this.axios(`user`, {
+          method: "PUT",
+          data,
+        })
+    );
+  };
+
+  /**
+   * @function dropUsers - Bulk delete users (**Admins only**)
+   * @param {String []} data - Array of user ID to delete from
+   * @returns
+   */
+  dropUsers = async (data) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`user`, {
+          method: "DELETE",
+          data,
+        })
+    );
+  };
+}
+
+export default new GroupServices({
+  headers: headers(),
+  baseURL: "/account/group",
+});
 const url_prefix = "/account/group";
-
-/************************** STATISTICS *************************/
-
-/**
- * Statistics payload types definition
- * @typedef {Object} statsPayload
- * @property {"user_stats" | "withdrawal_stats" | "ticket_stats" | "admin_stats" | "security_stats" | "kyc_stats" | "deposit_stats"} type
- */
-
-/**
- *@function getStats - Gets account statistics (***Admins only**)
- * @param {statsPayload} params
- * @returns
- */
-async function getStats(params) {
-  return await axios(`${url_prefix}/stats`, {
-    headers,
-    method: "GET",
-    params,
-  });
-}
-
-/************************** KYC *************************/
-/**
- * KYC payload types definition
- * @typedef {Object} kycUpdatePayload
- * @property {String} uid - User ID
- * @property {Object} email - Email KYC object
- * @property {Object} id - ID KYC object
- * @property {Object} otp - OTP KYC object
- * @property {Object} payment_methods - Payment methods KYC object
- * @property {Object} bank_details - Bank details KYC object
- * @property {Object} sms - SMS KYC object
- */
-/**
- * KYC payload types definition
- * @typedef {Object} kycPayload
- * @property {"email" | "id" | "payment_methods" | "bank_details" | "sms" | "otp"} type
- */
-/**
- * @function getKYC - Fetch KYC (**Admins only**)
- * @param {kycPayload} params
- * @returns
- */
-async function getKYC(params) {
-  return await axios(`${url_prefix}/kyc`, {
-    headers,
-    method: "GET",
-    params,
-  });
-}
-
-/**
- * @function updateKYC - Bulk KYC update (**Admins only**)
- * @param {kycUpdatePayload []} data
- * @returns
- */
-async function updateKYC(data) {
-  return await axios(`${url_prefix}/kyc`, {
-    headers,
-    method: "PUT",
-    data,
-  });
-}
-
-/************************* USER ******************************/
-/**
- * @function getUsers - Gets one or many users (**Admins only**)
- * @param {Object} params
- * @param {String} [params.id] - User ID
- * @returns
- */
-async function getUsers(params) {
-  return await axios(`${url_prefix}/user`, {
-    headers,
-    method: "GET",
-    params,
-  });
-}
-
-/**
- * @function createUsers - Bulk create user - (**Admins only**)
- * @param {Object} data
- * @param {"basic" | "admin"} data.role
- * @param {String} data.email
- * @returns
- */
-async function createUsers(data) {
-  return await axios(`${url_prefix}/user`, {
-    headers,
-    method: "POST",
-    data,
-  });
-}
-
-/**
- * @function updateUsers - Bulk update users (**Admins only**)
- * @param {Object} data
- * @param {String} data.phone
- * @param {String} data.country
- * @param {String} data.permission
- * @param {String} data.role
- * @returns
- */
-async function updateUsers(data) {
-  return await axios(`${url_prefix}/user`, {
-    headers,
-    method: "PUT",
-    data,
-  });
-}
-
-/**
- * @function dropUsers - Bulk delete users (**Admins only**)
- * @param {String []} data - Array of user ID to delete from
- * @returns
- */
-async function dropUsers(data) {
-  return await axios(`${url_prefix}/user`, {
-    headers,
-    method: "DELETE",
-    data,
-  });
-}
-
-/************************* SECESSION ******************************/
-/**
- * @function getSecessions - Fetch bulk secession (**Admins only**)
- * @param {Object} params
- * @returns
- */
-async function getSecessions(params) {
-  return await axios(`${url_prefix}/secession`, {
-    headers,
-    method: "GET",
-    params,
-  });
-}
 
 /************************* SUPPORT TICKETS ******************************/
 /**
@@ -206,43 +270,6 @@ async function updateSupportTicket(data) {
   });
 }
 
-/************************* CURRENCY ******************************/
-/**
- * Currency payload type definition
- * @typedef {Object} currencyPayload
- * @property {String} id - Currency id
- * @property {String} name - Currency name
- * @property {String} type - Currency type
- */
-/**
- * @function getCurrency - Gets adverts (**Admin only**)
- * @param {Object} params
- * @param {Number} [params.limit] - Response limit
- * @param {String} [params.name] - Specify the currency name
- * @param {String} [params.type] - Specify the currency name
- * @returns
- */
-async function getCurrency(params) {
-  return await axios(`${url_prefix}/currency`, {
-    headers,
-    method: "GET",
-    params,
-  });
-}
-
-/**
- * @function createCurrency - Creates a currency (**Admin only**)
- * @param {currencyPayload} data
- * @returns
- */
-async function createCurrency(data) {
-  return await axios(`${url_prefix}/currency`, {
-    headers,
-    method: "POST",
-    data,
-  });
-}
-
 /************************* WALLET ******************************/
 /**
  * @function getWallet - Gets wallets (**Admin only**)
@@ -253,7 +280,7 @@ async function createCurrency(data) {
  */
 async function getWallet(params) {
   return await axios(`${url_prefix}/wallet`, {
-    headers,
+    headers: headers,
     method: "GET",
     params,
   });
@@ -326,7 +353,6 @@ async function getPolicy(params) {
   });
 }
 
-
 /************************************* REFERRALS **********************************/
 /**
  * @function getReferrals - Gets bulk referrals (**Admin only**)
@@ -335,7 +361,7 @@ async function getPolicy(params) {
  * @param {String} [params.id] - Specify referral ID
  * @returns
  */
- async function getReferrals(params) {
+async function getReferrals(params) {
   return await axios(`${url_prefix}/referrals`, {
     headers,
     method: "GET",

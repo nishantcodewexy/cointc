@@ -8,10 +8,12 @@
     "build": "node .",
     "dev": "nodemon . --trace-warnings",
     "sqlize": "sequelize-cli",
-    "seed-all": "sequelize-cli db:seed:all",
-    "seed-undo": "sequelize-cli db:seed:undo",
     "makemigrations": "sequelize-cli migration:create --name ",
-    "migrate": "sequelize-cli db:migrate"
+    "migrate": "sequelize-cli db:migrate",
+    "db-drop": "sequelize-cli db:drop",
+    "db-create": "sequelize-cli db:create",
+    "db-seed": "sequelize-cli db:seed:all",
+    "db-undo": "sequelize-cli db:seed:undo"
   },
   "dependencies": {
     "@hapi/boom": "^9.1.4",

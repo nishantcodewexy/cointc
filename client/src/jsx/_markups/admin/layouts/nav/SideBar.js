@@ -117,6 +117,10 @@ const SideBar = () => {
                       ? "#"
                       : $path.normalize(`/admin/${path}`)
                   }
+                  style={{
+                    display: "flex",
+                    gap:8
+                  }}
                 >
                   <i className={icon}></i>
                   <span className="nav-text text-capitalize">

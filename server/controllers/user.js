@@ -1,27 +1,47 @@
 const assert = require("assert");
 
+/**
+ * @description - User controller
+ * @param {Object} server  - Server instance
+ * @returns
+ */
 module.exports = (server) => {
   const {
     db,
     db: { User, sequelize },
     boom,
     config: { client_url },
-    helpers: { decrypt, mailer, jwt },
+    helpers: { decrypt, mailer, jwt, generator },
     consts: { roles: _roles },
   } = server.app;
 
   const UserController = {
+    /**
+     * @function create
+     * @description - Creates new user (**Authenticated users only**)
+     * @param {Object} req - Request object
+     * @param {Object} req.pre - Request Prehandler object
+     * @returns
+     */
     async create(req) {
-      const {
-        pre: { role },
-        payload: { email, password, __profile = true, ...restOfPayload },
+      const { role } = req.pre;
+      let {
+        payload: { email, password, ...restOfPayload },
       } = req;
+
       assert(email, boom.badRequest("Expected email"));
-      assert(password, boom.badRequest("Expected password field"));
 
       try {
         const { profile } = __assertRole(role);
 
+        // Determines whether to mail password to user
+        let mail_secret = !password;
+
+        // Generate password if one is not supplied
+        if (mail_secret) {
+          debugger;
+          password = generator.secret();
+        }
         // Check that the user email doesn't already exist
         let _user = await User.findOne({
           where: {
@@ -36,29 +56,29 @@ module.exports = (server) => {
 
         return await sequelize.transaction(async (t) => {
           let newUser = {
-            cols: { email, password, role },
-            options: { transaction: t },
+            data: {
+              email,
+              password,
+              role,
+              profile: {
+                email,
+                ...restOfPayload,
+              },
+            },
+            options: {
+              transaction: t,
+              include: [
+                {
+                  association: profile,
+                },
+              ],
+            },
           };
 
-          // Create user profile only if the __profile payload is true
-          if (__profile) {
-            newUser.cols["profile"] = { email, password, ...restOfPayload };
-            newUser.options["include"] = [
-              {
-                association: profile,
-              },
-            ];
-          }
+          _user = await User.create(newUser.data, newUser.options);
 
-          _user = await User.create(newUser.cols, newUser.options);
+          /******** TODO: Send mail to user ***************/
 
-          /******** Send mail to user ***************/
-          let genPassword = "";
-          // if user profile was not created, generate temporal password for user
-          if (__profile) {
-            // TODO: generate temporal password
-          }
-          // Send mail here...
           /************ End send mail ***************/
 
           await _user.createWallet({ asset: "BTC" }, { transaction: t });
@@ -74,60 +94,49 @@ module.exports = (server) => {
       }
     },
 
+    /**
+     * @function - Authenticates user
+     * @param {Object} req - Request object
+     * @param {Object} req.payload
+     * @param {String} req.payload.email
+     * @param {String | "basic"} req.payload.role
+     * @param {String} req.payload.password
+     * @returns
+     */
     async authenticate(req) {
       try {
         const {
           payload: { email, role = _roles.basic, password },
         } = req;
 
-        const { profile, profile_attributes } = __assertRole(role);
+        const { profile, getter, profile_attributes } = __assertRole(role);
 
         // fetch user record from DB that matches the email
-        let _user = await User.findOne({
+        let account = await User.findOne({
           where: { email, role },
-          include: {
-            association: profile,
-            attributes: profile_attributes,
-            required: true,
-            right: true,
-          },
         });
+        // lazy load profile attached to account
+        let account_profile = await account[getter]();
 
-        return _user
-          ? (await decrypt(password, _user.password)) && {
-              token: jwt.create(_user),
-              ..._user.toPublic(),
-            }
-          : boom.notFound("User not found");
+        if (account) {
+          // Check if password matches
+          if (await decrypt(password, account.password)) {
+            // Update the last_login attribute of the account's profile
+            await account_profile.update({
+              last_login: new Date(Date.now()),
+            });
+
+            return {
+              token: jwt.create(account),
+              ...account.toPublic(),
+              ...account_profile.dataValues,
+            };
+          } else return boom.notFound("Incorrect password!");
+        }
+        return boom.notFound("User account not found");
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
-      }
-    },
-
-    async createUser(req) {
-      const { email, password } = req.payload;
-      const _user = await createUser({ email, password, role: "standard" });
-      if (_user) {
-        // TODO: create standard user profile
-        // TODO: Send mail
-        // const token = jwt.create(_user, 900);
-        /* 
-      let confirmationLink = `${server_url}/confim_email?email=${email}&code=${token}`;
-      // Send email verification
-      const mailObject = {
-        to: email,
-        htmlTemplate: {
-          name: "account_confirmation",
-          transform: {
-            confirmationLink,
-            recipientEmail: email,
-          },
-        },
-        subject: "Cryptcon - Account confirmation",
-      };
-      
-      await mailer.sendMail(mailObject); */
       }
     },
 
@@ -187,36 +196,35 @@ module.exports = (server) => {
         return boom.boomify(err);
       }
     },
-
+    /**
+     * @function profile - Fetches user profile
+     * @param {Object} req
+     * @param {Object} req.pre
+     * @param {Object} req.pre.user - User model
+     * @returns
+     */
     profile: async (req) => {
-      // get user ID from preHandler
       try {
+        // get user ID from preHandler
         let {
           user: { role, id },
         } = req.pre;
+        // Determine user role
+        const { getter } = __assertRole(role);
 
-        const { profile } = __assertRole(role);
-
-        return await User.findOne({
+        // Fetch the user's profile that matches the id and role
+        let account = await User.findOne({
           where: { id, role },
-          include: {
-            association: profile,
-          },
-        }).then((_user) => _user.toPublic());
+        });
+        let accountProfile = await account[getter]();
+        return {
+          ...account.toPublic(),
+          ...accountProfile.dataValues,
+        };
       } catch (error) {
         console.error(error);
         return boom.badRequest(error);
       }
-    },
-
-    kyc: async (req) => {
-      return await this.profile(req)
-        .then((data) => {
-          let kyc = data.kyc;
-          const { type } = req.params;
-          return type ? { [type]: kyc[type] } : kyc;
-        })
-        .catch(boom.boomify);
     },
 
     async findID(req) {
@@ -405,7 +413,7 @@ module.exports = (server) => {
     },
   };
 
-  // **************************************************
+  /*********************** HELPERS ***************************/
   async function __destroy(where, soft, options = {}) {
     return soft
       ? await User.destroy({ where })
@@ -452,12 +460,17 @@ module.exports = (server) => {
         console.error(`Unrecognized user role ->`, role);
         throw new Error("User operation not allowed: Bad role");
     }
+    let accessors = User.associations[profile]["accessors"];
+
+    let getter = accessors?.get;
+    let setter = accessors?.set;
+    let creator = accessors?.create;
 
     let model = profile
       .split("_")
       .map((_p) => _p.charAt(0).toUpperCase() + _p.slice(1, +_p.length))
       .join("");
-    return { profile, profile_attributes, model };
+    return { profile, profile_attributes, model, getter, setter, creator };
   }
 
   return { ...UserController, group: UserGroupController };

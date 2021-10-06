@@ -1,7 +1,8 @@
-export default {
+const ENUMS ={
   LOGIN: "SESSION_LOGIN",
   LOGOUT: "SESSION_LOGOUT",
   REGISTER: "SESSION_REGISTER",
   RESET: "SESSION_REGISTER_RESET",
 };
 
+export default ENUMS;

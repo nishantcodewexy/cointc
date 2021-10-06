@@ -1,14 +1,14 @@
 import { Link } from "react-router-dom";
 import loadable from "@loadable/component";
-// import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
 import { Row, Col, Card } from "react-bootstrap";
-
+import { useSelector, useDispatch} from 'react-redux'
 import pMinDelay from "p-min-delay";
 
 const ApexLine = loadable(() => pMinDelay(import("../components/DepositsAnalysis"), 1000));
 const stats = [
   {
-    name: "users",
+    name: "users stats",
     data: {
       new: 0,
       total: 20,
@@ -32,7 +32,7 @@ const stats = [
     },
   },
   {
-    name: "admin_status",
+    name: "admin_stats",
     data: {
       new: 0,
       total: 20,
@@ -58,6 +58,10 @@ const stats = [
 ];
 
 export default function Home() {
+  useEffect(() => {
+    // get all statistics 
+
+  });
   return (
     <>
     <div className="form-head mb-sm-5 mb-3 d-flex flex-wrap align-items-center">
