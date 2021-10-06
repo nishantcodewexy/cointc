@@ -2,8 +2,8 @@ import { useState, useEffect } from "react";
 
 /**
  * @function useService - Component service hook
- * @param {Function} service 
- * @returns 
+ * @param {Function} service
+ * @returns
  */
 function useService(service) {
   const [reload, dispatchReload] = useState(false);
@@ -18,7 +18,7 @@ function useService(service) {
       return;
     }
     setIsFetching(true);
-    let { success, failure } = await service();
+    let { success, failure } = await service()
     success ? setData(success) : setError(failure);
     setIsFetching(false);
   };

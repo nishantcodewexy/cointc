@@ -32,7 +32,7 @@ class GroupServices {
     } catch (error) {
       console.error("GROUP SERVICE ERROR::", error);
       this.abort();
-      return { ...result, error };
+      return { ...result, error: error?.message };
     }
   };
 
