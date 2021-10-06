@@ -1,6 +1,6 @@
-import Error404 from "./Error404";
-import IdenticonAvatar from "./IdenticonAvatar";
-import EmptyRecord from "./empty.record.component";
+import Error404 from "./Error404.Component";
+import IdenticonAvatar from "./IdenticonAvatar.Component";
+import EmptyRecord from "./EmptyRecord.Component";
 
 const components = {
   Error404,
