@@ -4,6 +4,10 @@ import axios from "axios";
 
 let { headers } = _helpers;
 
+/**
+ * Class of all Group services
+ * @class 
+ */
 class GroupServices {
   constructor({ headers, timeout = 30000, baseURL }) {
     this.source = axios.CancelToken.source();
@@ -15,12 +19,16 @@ class GroupServices {
     });
     return this;
   }
-
-  abort = (message = "request has been cancel") => {
+/**
+ * @method 
+ * @param {String | "request has been canceled"} message 
+ * @returns {String}
+ */
+  abort = (message = "request has been canceled") => {
     this.source.cancel(message.toString());
   };
   /**
-   * @function - Request handler decorator
+   * @method - Request handler decorator
    * @param {Function} request - Request Callback
    * @returns
    */
@@ -36,6 +44,8 @@ class GroupServices {
     }
   };
 
+  
+
   /************************* CURRENCY ******************************/
   /**
    * Currency payload type definition
@@ -45,7 +55,7 @@ class GroupServices {
    * @property {String} type - Currency type
    */
   /**
-   * @function getCurrency - Gets adverts (**Admin only**)
+   * @method getCurrency - Gets adverts (**Admin only**)
    * @param {Object} params
    * @param {Number} [params.limit] - Response limit
    * @param {String} [params.name]- Specify the currency name

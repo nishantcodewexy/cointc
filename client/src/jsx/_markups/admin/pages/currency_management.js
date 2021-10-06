@@ -1,13 +1,12 @@
 import { Card, Row, Col, Button, Table, Modal, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
-import _services from "../../../_services";
-import useService from "../../../_hooks/service.hook";
 import { useState } from "react";
 import useToggler from "../../../_hooks/toggler.hook";
-const { group } = _services;
+import EmptyRecord from "../components/empty.record.component";
 
-function CurrencyMgmt() {
+function CurrencyMgmt({services, useService}) {
+  const { group } = services;
   let get = useService(group.getCurrency);
   const {
     isOpen: isModalOpen,
@@ -17,7 +16,6 @@ function CurrencyMgmt() {
 
   return (
     <>
-      {console.log({ data: get.data, isLoading: get.isFetching })}
       <PageTitle activeMenu="" motherMenu="Currencies" />
       <header className="mb-4">
         <h3>Currency List</h3>
@@ -110,7 +108,7 @@ function CurrencyTable({ data = [] }) {
     <div className="d-flex" style={{ gap: 20 }}>
       <CurrencyForm isOpen={isModalOpen} data={_item} onClose={onCloseModal}>
         {/* {Object.values(_item).join(", ")} */}
-        <a  onClick={onOpenModal}>
+        <a onClick={onOpenModal}>
           <span className="themify-glyph-29"></span> Edit
         </a>
       </CurrencyForm>
@@ -127,46 +125,51 @@ function CurrencyTable({ data = [] }) {
           <li key={key}>{_s}</li>
         ))}
       </ul> */}
-      <Table responsive hover size="sm">
-        <thead>
-          <tr>
-            <th className="user_permission">
-              <div className="custom-control custom-checkbox mx-2">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="check_all_currency_record"
-                  checked={selected.length == data.length}
-                  onChange={() => toggleSelectRecord()}
-                />
-                <label
-                  className="custom-control-label"
-                  htmlFor="check_all_currency_record"
-                ></label>
-              </div>
-            </th>
-            <th>Currency ID</th>
-            <th className="pl-5 width200">Symbol</th>
-            <th className="pl-5 width200">Full name</th>
-            <th className="pl-5 width200">Type</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="customers">
-          {data?.map((item, key) => (
-            <tr key={key} className="btn-reveal-trigger">
-              <td className="user_permission_single">
-                {singleSelect(item.id)}
-              </td>
-              <td className="py-2">{item.id}</td>
-              <td className="py-3 pl-5 width200">{item.iso_code}</td>
-              <td className="py-3 pl-5 width200">{item.name}</td>
-              <td className="py-3 pl-5 width200">{item.type}</td>
-              <td>{action(item)}</td>
+      {data.length ? (
+        <Table responsive hover size="sm">
+          <thead>
+            <tr>
+              <th className="user_permission">
+                <div className="custom-control custom-checkbox mx-2">
+                  <input
+                    type="checkbox"
+                    className="custom-control-input"
+                    id="check_all_record"
+                    disabled={!data.length}
+                    checked={data?.length && selected.length == data.length}
+                    onChange={() => toggleSelectRecord()}
+                  />
+                  <label
+                    className="custom-control-label"
+                    htmlFor="check_all_record"
+                  ></label>
+                </div>
+              </th>
+              <th>Currency ID</th>
+              <th className="pl-5 width200">Symbol</th>
+              <th className="pl-5 width200">Full name</th>
+              <th className="pl-5 width200">Type</th>
+              <th>Action</th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
+          </thead>
+          <tbody id="curencies">
+            {
+              data?.map((item, key) => (
+                <tr key={key} className="btn-reveal-trigger">
+                  <td>{singleSelect(item.id)}</td>
+                  <td className="py-2">{item.id}</td>
+                  <td className="py-3 pl-5 width200">{item.iso_code}</td>
+                  <td className="py-3 pl-5 width200">{item.name}</td>
+                  <td className="py-3 pl-5 width200">{item.type}</td>
+                  <td>{action(item)}</td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </Table>
+      ) : (
+        <EmptyRecord />
+      )}
     </>
   );
 }
