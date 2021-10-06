@@ -26,7 +26,7 @@ module.exports = (server) => {
 
   return {
     method: "POST",
-    path: `/user`,
+    path: `/users`,
     config: {
       pre: [
         {

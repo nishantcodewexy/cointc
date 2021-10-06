@@ -16,7 +16,7 @@ module.exports = (server) => {
   });
 
   return {
-    method: ["GET"],
+    method: "GET",
     path: "/user/{id}",
     config: {
       pre: [
