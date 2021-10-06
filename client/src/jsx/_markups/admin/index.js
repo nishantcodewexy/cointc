@@ -20,6 +20,9 @@ import LoginPage from "./pages/login";
 import _helpers from "../../_helpers";
 import _actions from "../../_actions";
 import _components from "./components";
+import useService from "../../_hooks/service.hook";
+import services from "../../_services";
+
 
 const { history } = _helpers;
 const { Error404 } = _components;
@@ -50,7 +53,7 @@ function AdminMarkup() {
                   exact
                   path={normalize(`/admin/${url}`)}
                   render={(props) =>
-                    Component ? <Component {...props} /> : <UnderConstruction />
+                    Component ? <Component {...{...props, services, useService}} /> : <UnderConstruction />
                   }
                 />
               ))
