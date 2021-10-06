@@ -1,3 +1,4 @@
+import {useSelector} from 'react-redux'
 import _helpers from "../_helpers";
 import _constants from "../_constants";
 import axios from "axios";
@@ -231,6 +232,15 @@ export default new GroupServices({
   baseURL: "/account/group",
 });
 const url_prefix = "/account/group";
+
+export const useGroupServices =()=>{
+  const session = useSelector(state => state.session)
+  return new GroupServices({
+    headers: headers(session),
+    baseURL: "/account/group",
+  });
+}
+
 
 /************************* SUPPORT TICKETS ******************************/
 /**

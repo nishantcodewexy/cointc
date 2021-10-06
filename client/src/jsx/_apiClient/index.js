@@ -5,6 +5,7 @@ import SocketClient from "./socket.regular";
 import AdminUser from "./user.admin";
 import User from "./users.regular";
 import Wallet from "./wallet.regular";
+import * as Qs from 'qs'
 
 class Client {
   constructor(token) {
@@ -28,6 +29,9 @@ class Client {
       timeout: 30000,
       headers,
       cancelToken: this.source.token,
+      paramsSerializer: function (params) {
+        return Qs.stringify(params, {arrayFormat: 'brackets'})
+      },
     });
 
     this.Admin = {

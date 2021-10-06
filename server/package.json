@@ -44,6 +44,7 @@
     "qs": "^6.10.1",
     "ripple-lib": "^1.10.0",
     "sequelize": "^6.6.5",
+    "sequelize-search-builder": "^0.11.0",
     "socket.io": "^4.2.0",
     "underscore": "^1.13.1",
     "web3": "^1.5.2"

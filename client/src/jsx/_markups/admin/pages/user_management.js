@@ -8,7 +8,15 @@ import { useState } from "react";
 
 function UserManagement() {
   const [params,setParams] = useState({
-    q:''
+    q:'',
+    limit:10,
+    offset:10,
+    data:{
+      name:"akan",
+      data:{
+        newName:"akan"
+      }
+    }
   })
   const handleChange = e =>{
     setParams(prev=>({...prev,q:e.target.value}))

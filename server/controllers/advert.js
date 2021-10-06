@@ -12,7 +12,7 @@ module.exports = (server) => {
 
     // Delete advert
     async destroy(req) {
-      const { id } = req.payload;
+      const { id } = req.params;
 
       return await db.Advert.destroy({
         where: id,
@@ -21,9 +21,9 @@ module.exports = (server) => {
 
     // retrieve advert
     async get(req) {
-      const { ad } = req.payload;
+      const { id } = req.params;
 
-      return db.Advert.findByPk(ad);
+      return db.Advert.findByPk(id);
     },
 
     // fetch all adverts

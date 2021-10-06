@@ -1,5 +1,6 @@
 const assert = require("assert");
-
+const searchBuilder = require('sequelize-search-builder');
+const Sequelize = require("sequelize")
 /**
  * @description - User controller
  * @param {Object} server  - Server instance
@@ -266,16 +267,41 @@ module.exports = (server) => {
       const {
         pre:{
           isAdmin
-        }
+        },
+        query
       } = req
 
+
       if(!isAdmin) throw boom.forbidden("user is not authorize")
+
+      const q = query.q||''
+      const searchFields = [
+
+      ]
+      const searchQuery = {}
+
+      q&&searchFields.forEach(key=>{
+        searchQuery[key] = `%${q}%`
+      })
+
+      const search = new searchBuilder(Sequelize,query),
+        whereQuery  = search.getWhereQuery(),
+        orderQuery  = search.getOrderQuery(),
+        limitQuery  = search.getLimitQuery(),
+        offsetQuery = search.getOffsetQuery();
       
       let limit = 20;
       return User.findAndCountAll({
         include: { association: "profile" },
         attributes: { exclude: ["password"] },
-        limit,
+        limit:limitQuery,
+        offset:offsetQuery,
+        order:orderQuery,
+        where:{
+          ...whereQuery,
+          [Sequelize.Op.or]:searchQuery
+        },
+        logging: console.log,
       })
       .then(data=>({
         count:data.count,
