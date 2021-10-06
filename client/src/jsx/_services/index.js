@@ -1,6 +1,11 @@
-import user from "./user.services";
-import group from "./group.service";
+import UserService from "./user.services";
+import GroupService from "./group.service";
 
-const services = { user, group };
+const services = {
+  init: (options) => ({
+    user: new UserService(options),
+    group: new GroupService(options),
+  }),
+};
 
 export default services;

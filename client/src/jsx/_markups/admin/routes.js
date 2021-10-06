@@ -10,8 +10,8 @@ import UserReferralMgmt from "./pages/user_referrals";
 import CustomerSupport from "./pages/support";
 import CurrencyMgmt from "./pages/currency_management";
 import UserKYCMgmt from "./pages/user_kyc_management";
-import Withdrawals from "./pages/withdrawals";
-import Deposits from "./pages/deposits";
+import WalletWithdrawals from "./pages/walllet_withdrawals";
+import WalletDeposits from "./pages/wallet_deposits";
 import AdvertsMgmt from "./pages/advert_management";
 import OrdersMgmt from "./pages/order_management";
 import P2PTradeHistory from "./pages/p2p_trade_history";
@@ -66,8 +66,8 @@ const routes = [
   { url: "currency-management", component: CurrencyMgmt },
 
   // Wallet Management
-  { url: "wallet-withdrawals", component: Withdrawals },
-  { url: "wallet-deposits", component: Deposits },
+  { url: "wallet-withdrawals", component: WalletWithdrawals },
+  { url: "wallet-deposits", component: WalletDeposits },
   { url: "wallet-withdrawal-application-management", component: null },
   { url: "wallet-withdrawal-fee-management", component: null },
 

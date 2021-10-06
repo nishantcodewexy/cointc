@@ -1,16 +1,13 @@
-import _helpers from "../_helpers";
-import _constants from "../_constants";
 import axios from "axios";
-
-let { headers } = _helpers;
 
 /**
  * Class of all Group services
- * @class 
+ * @class
  */
 class GroupServices {
-  constructor({ headers, timeout = 30000, baseURL }) {
+  constructor({ headers, timeout = 30000, baseURL="/account/group" }) {
     this.source = axios.CancelToken.source();
+    this.headers = headers;
     this.axios = axios.create({
       baseURL,
       timeout,
@@ -19,14 +16,18 @@ class GroupServices {
     });
     return this;
   }
-/**
- * @method 
- * @param {String | "request has been canceled"} message 
- * @returns {String}
- */
+
+  getHeaders = () => this.headers;
+  /**
+   * @method
+   * @param {String | "request has been canceled"} message
+   * @returns {String}
+   */
   abort = (message = "request has been canceled") => {
     this.source.cancel(message.toString());
   };
+
+
   /**
    * @method - Request handler decorator
    * @param {Function} request - Request Callback
@@ -43,8 +44,6 @@ class GroupServices {
       return { ...result, error: error?.message };
     }
   };
-
-  
 
   /************************* CURRENCY ******************************/
   /**
@@ -86,6 +85,35 @@ class GroupServices {
           data,
         })
     );
+  };
+
+  /************************* WALLET ******************************/
+  /**
+   * @function getWallet - Gets wallets (**Admin only**)
+   * @param {Object} params
+   * @param {Number} [params.limit] - specify response limit
+   * @param {"all" | "withdrawal" | "deposits"} [params.type] - wallet type
+   * @returns
+   */
+  getWallet = async (params) => {
+    return await axios(`/wallet`, {
+      method: "GET",
+      params,
+    });
+  };
+
+  /**
+   * @function getWalletBalance - Gets a wallet balances (**Admins only**)
+   * @param {Object} params
+   * @param {Object} [params.id] - Wallet ID
+   * @param {Object} [params.limit] - Response limit
+   * @returns
+   */
+  getWalletBalance = async (params) => {
+    return await axios(`/balance`, {
+      method: "GET",
+      params,
+    });
   };
 
   /************************** STATISTICS *************************/
@@ -226,11 +254,7 @@ class GroupServices {
   };
 }
 
-export default new GroupServices({
-  headers: headers(),
-  baseURL: "/account/group",
-});
-const url_prefix = "/account/group";
+export default GroupServices
 
 /************************* SUPPORT TICKETS ******************************/
 /**
@@ -250,8 +274,7 @@ const url_prefix = "/account/group";
  * @returns
  */
 async function getSupportTicket(params) {
-  return await axios(`${url_prefix}/support`, {
-    headers,
+  return await axios(`/support`, {
     method: "GET",
     params,
   });
@@ -263,41 +286,9 @@ async function getSupportTicket(params) {
  * @returns
  */
 async function updateSupportTicket(data) {
-  return await axios(`${url_prefix}/support`, {
-    headers,
+  return await axios(`/support`, {
     method: "PUT",
     data,
-  });
-}
-
-/************************* WALLET ******************************/
-/**
- * @function getWallet - Gets wallets (**Admin only**)
- * @param {Object} params
- * @param {Number} [params.limit] - specify response limit
- * @param {"all" | "withdrawal" | "deposits"} [params.type] - wallet type
- * @returns
- */
-async function getWallet(params) {
-  return await axios(`${url_prefix}/wallet`, {
-    headers: headers,
-    method: "GET",
-    params,
-  });
-}
-
-/**
- * @function getWalletBalance - Gets a wallet balances (**Admins only**)
- * @param {Object} params
- * @param {Object} [params.id] - Wallet ID
- * @param {Object} [params.limit] - Response limit
- * @returns
- */
-async function getWalletBalance(params) {
-  return await axios(`${url_prefix}/balance`, {
-    headers,
-    method: "GET",
-    params,
   });
 }
 
@@ -315,8 +306,7 @@ async function getWalletBalance(params) {
  * @returns
  */
 async function getAdvert(params) {
-  return await axios(`${url_prefix}/advert`, {
-    headers,
+  return await axios(`advert`, {
     method: "GET",
     params,
   });
@@ -330,8 +320,7 @@ async function getAdvert(params) {
  * @returns
  */
 async function getTrades(params) {
-  return await axios(`${url_prefix}/trade`, {
-    headers,
+  return await axios(`trade`, {
     method: "GET",
     params,
   });
@@ -346,8 +335,7 @@ async function getTrades(params) {
  * @returns
  */
 async function getPolicy(params) {
-  return await axios(`${url_prefix}/policies`, {
-    headers,
+  return await axios(`policies`, {
     method: "GET",
     params,
   });
@@ -362,8 +350,7 @@ async function getPolicy(params) {
  * @returns
  */
 async function getReferrals(params) {
-  return await axios(`${url_prefix}/referrals`, {
-    headers,
+  return await axios(`/referrals`, {
     method: "GET",
     params,
   });

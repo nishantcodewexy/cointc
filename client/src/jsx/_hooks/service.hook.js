@@ -23,24 +23,28 @@ function useService(
   options = { getImmediate: true }
 ) {
   const [isReloading, setIsReloading] = useState(false);
-  const [data, setData] = useState(false);
-  const [error, setError] = useState(false);
   const [isFetching, setIsFetching] = useState(false);
   const [_payload, setPayload] = useState(initialPayload);
+  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
 
+  /**************************/
   const request = async (service) => {
     // Only reload once
+    if (isReloading) {
+      setIsReloading(false);
+      return;
+    }
     try {
-      if (isReloading) {
-        setIsReloading(false);
-        return;
-      }
       setIsFetching(true);
-      let { success, failure } = await service();
-      success ? setData(success) : setError(failure);
+      let response = await service();
+      const { success } = response;
+      setData(success);
+      return response;
     } catch (error) {
       console.error(error);
-      setError(error);
+      // setError(failure);
+      return error;
     } finally {
       setIsFetching(false);
     }
@@ -53,38 +57,34 @@ function useService(
    * @param {Object} request.payload - Request payload
    * @returns
    */
-  const dispatchRequest = ({ type, payload }) => {
+  const dispatchRequest = async ({ type, payload }) => {
     setPayload(payload);
 
     switch (String(type)?.toLowerCase()) {
       case "post":
       case "create":
-        request(() =>
-          service?.post ? service.post(_payload) : noService("post")
+        return await request(() =>
+          service?.post ? service.post(payload) : noService("post")
         );
-        break;
 
       case "put":
       case "update":
-        request(() =>
-          service?.put ? service.put(_payload) : noService("put")
+        return await request(() =>
+          service?.put ? service.put(payload) : noService("put")
         );
-        break;
 
       case "drop":
       case "delete":
-        request(() =>
-          service?.drop ? service.drop(_payload) : noService("drop, delete")
+        return await request(() =>
+          service?.drop ? service.drop(payload) : noService("drop, delete")
         );
-        break;
 
       case "get":
       case "fetch":
       default: {
-        request(() =>
-          service?.get ? service.get(_payload) : noService("get")
+        return await request(() =>
+          service?.get ? service.get(payload) : noService("get")
         );
-        break;
       }
     }
   };
@@ -93,13 +93,13 @@ function useService(
 
   // Fetch on mount and watch for subsequent reloads requests
   useEffect(() => {
-    if (options.getImmediate) {
+    if (options.getImmediate && service?.get) {
       dispatchRequest({ type: "get" });
     } else {
       options.getImmediate = true;
     }
   }, [isReloading]);
-
+  console.log({ error, data });
   return {
     data,
     error,

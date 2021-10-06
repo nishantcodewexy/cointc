@@ -2,7 +2,18 @@ import { Card, Row, Col, Button, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
 
-function Deposits() {
+function Deposits({ services, useService }) {
+  const { group } = services;
+  const { data, error, isFetching, isReloading } = useService(
+    {
+      get: group.getWallet,
+    },
+    { type: "deposits" }
+  );
+
+  console.log({
+    data,
+  });
   return (
     <>
       <PageTitle activeMenu="Deposits" motherMenu="Wallet management" />
@@ -11,7 +22,7 @@ function Deposits() {
       </header>
       <Row style={{ marginBottom: 20, width: "100%" }}>
         <Col>
-        <div className="input-group search-area right d-lg-inline-flex d-none">
+          <div className="input-group search-area right d-lg-inline-flex d-none">
             <input
               type="text"
               className="form-control"
@@ -26,9 +37,7 @@ function Deposits() {
             </div>
           </div>
         </Col>
-        <Col sm="auto" style={{ padding: 0 }}>
-         
-        </Col>
+        <Col sm="auto" style={{ padding: 0 }}></Col>
       </Row>
 
       <Row style={{ marginBottom: 60 }}>
@@ -85,10 +94,8 @@ function DepositsHistoryTable() {
     </div>
   );
 
- 
   const action = (
     <div className="d-flex" style={{ gap: 20 }}>
-   
       <a href="">
         <span className="themify-glyph-165"></span> Delete
       </a>
