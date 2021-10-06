@@ -1,6 +1,7 @@
 const assert = require("assert");
 const searchBuilder = require('sequelize-search-builder');
 const Sequelize = require("sequelize")
+
 /**
  * @description - User controller
  * @param {Object} server  - Server instance
@@ -12,7 +13,7 @@ module.exports = (server) => {
     db: { User, sequelize },
     boom,
     config: { client_url },
-    helpers: { decrypt, mailer, jwt, generator },
+    helpers: { decrypt, mailer, jwt, generator,paginator,filters },
     consts: { roles: _roles },
   } = server.app;
 
@@ -268,45 +269,24 @@ module.exports = (server) => {
         pre:{
           isAdmin
         },
-        query
+        query,
       } = req
 
 
       if(!isAdmin) throw boom.forbidden("user is not authorize")
 
-      const q = query.q||''
-      const searchFields = [
-
-      ]
-      const searchQuery = {}
-
-      q&&searchFields.forEach(key=>{
-        searchQuery[key] = `%${q}%`
-      })
-
-      const search = new searchBuilder(Sequelize,query),
-        whereQuery  = search.getWhereQuery(),
-        orderQuery  = search.getOrderQuery(),
-        limitQuery  = search.getLimitQuery(),
-        offsetQuery = search.getOffsetQuery();
       
-      let limit = 20;
-      return User.findAndCountAll({
+      const filterRespond = await filters({query,searchFields:[
+        "email",
+        
+      ]})
+      const queryset = User.findAndCountAll({
         include: { association: "profile" },
         attributes: { exclude: ["password"] },
-        limit:limitQuery,
-        offset:offsetQuery,
-        order:orderQuery,
-        where:{
-          ...whereQuery,
-          [Sequelize.Op.or]:searchQuery
-        },
-        logging: console.log,
+        ...filterRespond
       })
-      .then(data=>({
-        count:data.count,
-        results:data.rows
-      }))
+      const {limit,offset} = filterRespond
+      return paginator({queryset,limit,offset})
       .catch(boom.boomify);
     },
 
@@ -361,8 +341,18 @@ module.exports = (server) => {
     remove: async (req, h) => {
       const {
         payload: { data, soft },
+        params:{id},
+        pre:{
+          isAdmin
+        }
       } = req;
-      
+
+      if(!isAdmin) throw boom.forbidden("unauthorized")
+
+      if(id){
+        data = [id]
+        if(!soft) soft=true
+      }
       return {
         deleted: Boolean(
           await sequelize.transaction(async (t) => {

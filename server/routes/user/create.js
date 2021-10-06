@@ -6,6 +6,11 @@ module.exports = (server) => {
       user: { create },
     },
     consts: { patterns, roles: _roles },
+    helpers:{
+      permissions:{
+        isAdmin
+      }
+    }
   } = server.app;
 
   // define Joi schema
@@ -26,12 +31,16 @@ module.exports = (server) => {
 
   return {
     method: "POST",
-    path: `/user`,
+    path: `/users`,
     config: {
       pre: [
         {
           method: () => _roles.basic,
           assign: "role",
+        },
+        {
+          method: isAdmin,
+          assign: "isAdmin",
         },
       ],
       handler: create,

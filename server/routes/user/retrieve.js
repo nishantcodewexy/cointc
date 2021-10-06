@@ -14,9 +14,9 @@ module.exports = (server) => {
   const schema = Joi.object({
     id: Joi.string().required(),
   });
-
+  
   return {
-    method: ["GET"],
+    method: "GET",
     path: "/user/{id}",
     config: {
       pre: [
