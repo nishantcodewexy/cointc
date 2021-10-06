@@ -11,6 +11,7 @@ const { nanoid } = require("nanoid");
 const glob = require("glob");
 const util = require("util");
 const { Op } = require("sequelize");
+const permissions = require('../permissions')
 // const wallets = require("../wallets");
 const env = process.env.NODE_ENV || "development";
 
@@ -359,6 +360,7 @@ module.exports = {
   sluggify: (text) => {
     return text.toLowerCase();
   },
+  permissions,
   /***********************************************
    * function helps to convert params to sequlize where clauses
    ***********************************************/
@@ -584,5 +586,9 @@ module.exports = {
         prev:_prev,
         results
       }
-    }
+    },
+    // filter2:(params){
+
+    // },
+    
 };

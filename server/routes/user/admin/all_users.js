@@ -6,6 +6,11 @@ module.exports = (server) => {
       user: { getAllUser },
     },
     consts: { roles: _roles },
+    helpers:{
+      permissions:{
+        isAdmin
+      }
+    }
   } = server.app;
 
   return {
@@ -14,11 +19,20 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: () => _roles.admin,
+          method: (req) =>{
+            
+            return _roles.admin
+          },
           assign: "role",
+        },
+        {
+          method:isAdmin,
+          assign: "isAdmin",
         },
       ],
       handler: getAllUser,
+      auth: "jwt",
     },
+    
   };
 };

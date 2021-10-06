@@ -9,7 +9,9 @@
     "dev": "nodemon . --trace-warnings",
     "sqlize": "sequelize-cli",
     "seed-all": "sequelize-cli db:seed:all",
-    "seed-undo": "sequelize-cli db:seed:undo"
+    "seed-undo": "sequelize-cli db:seed:undo",
+    "makemigrations": "sequelize-cli migration:create --name ",
+    "migrate": "sequelize-cli db:migrate"
   },
   "dependencies": {
     "@hapi/boom": "^9.1.4",

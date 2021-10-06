@@ -253,7 +253,15 @@ module.exports = (server) => {
       }
     },
 
-    getAllUser: async () => {
+    getAllUser: async (req) => {
+      
+      const {
+        pre:{
+          isAdmin
+        }
+      } = req
+
+      if(!isAdmin) throw boom.forbidden("user is not authorize")
       
       let limit = 20;
       return User.findAndCountAll({

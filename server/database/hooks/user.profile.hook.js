@@ -15,9 +15,9 @@ module.exports = {
 
 
     // prioryty 4
-    // beforeCreate:async (instance,options)=>{
-        
-    // },
+    beforeCreate:async (instance,options)=>{
+        instance.referral_code = generateReferralCode(instance.email);
+    },
     // beforeDestroy:async (instance,options)=>{
         
     // },

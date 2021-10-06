@@ -2,6 +2,7 @@
 const { Model } = require("sequelize");
 const _ = require("underscore");
 const { generateReferralCode } = require("../../helpers");
+const hooks = require('../hooks/user.profile.hook')
 
 module.exports = (sequelize, DataTypes) => {
   class Profile extends Model {
@@ -69,6 +70,10 @@ module.exports = (sequelize, DataTypes) => {
       verify_token: DataTypes.STRING,
       verify_token_ttl: { type: DataTypes.DATE },
       archived_at: DataTypes.DATE,
+      suitability: {
+        type: DataTypes.INTEGER,
+        defaultValue:0
+      },
     },
     {
       sequelize,
@@ -78,11 +83,7 @@ module.exports = (sequelize, DataTypes) => {
       timestamps: true,
       paranoid: true,
       deletedAt: "archived_at",
-      hooks: {
-        beforeCreate: (profile, options) => {
-          profile.referral_code = generateReferralCode(profile.email);
-        },
-      },
+      hooks
     }
   );
 
