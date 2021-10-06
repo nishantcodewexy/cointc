@@ -1,6 +1,6 @@
 import Home from "./pages";
 import Login from "./pages/login";
-import Error404 from "../Error404";
+import Error404 from "../../Error404";
 import { toQueryString } from "../../_helpers/navigations.helper";
 import { camelCase } from "../../_helpers/utils.helper";
 import Playground from "./pages/Plaground";
@@ -9,7 +9,7 @@ import Playground from "./pages/Plaground";
 const routes =[
   { url: "", component: Home },
   { url: "playground", component: Playground },
-  { url: "*", component: Error404,  },
+  // { url: "*", component: Error404,  },
 ];
 
 

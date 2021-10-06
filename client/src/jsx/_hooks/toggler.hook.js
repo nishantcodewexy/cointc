@@ -2,8 +2,8 @@ import { useState } from "react";
 
 function useToggler(defaultValue) {
   const [isOpen, setIsOpen] = useState(defaultValue);
-  const onOpen = () => setIsOpen(true);
-  const onClose = () => setIsOpen(false);
+  const onOpen = (e) => setIsOpen(true);
+  const onClose = (e) => setIsOpen(false);
 
   return {
     isOpen,

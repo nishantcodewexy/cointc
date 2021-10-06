@@ -1,8 +1,15 @@
 import React, { useContext, /* useState, */ useEffect } from "react";
-import { Route, Switch, Redirect /* useLocation */ } from "react-router-dom";
+import {
+  Route,
+  Switch,
+  Redirect,
+  useParams,
+  useRouteMatch /* useLocation */,
+} from "react-router-dom";
 import routes from "./routes";
 import Nav from "./layouts/nav";
 import { ThemeContext } from "../../../context/ThemeContext";
+import { normalize } from "path";
 /// Style
 import "../../../vendor/bootstrap-select/dist/css/bootstrap-select.min.css";
 import "../../../css/style.css";
@@ -13,77 +20,53 @@ import LoginPage from "./pages/login";
 import _helpers from "../../_helpers";
 import _actions from "../../_actions";
 import _components from "./components";
-import { nanoid } from "@reduxjs/toolkit";
-import useService from "../../_hooks/service.hook";
 
 const { history } = _helpers;
-const { error404 } = _components;
+const { Error404 } = _components;
 
 export default AdminMarkup;
 
-class ComponentLoggger {
-  static counter = nanoid(3);
-  constructor(component) {
-    this.component = component;
-    this.displayName =
-      component.displayName || `Unknown component #${ComponentLoggger.counter}`;
-    this.log(console.log);
-    return this.render();
-  }
-
-  static increment = () => ComponentLoggger.counter++;
-  static decrement = () => ComponentLoggger.counter--;
-
-  log = (cb) => {
-    return cb(`Rendered Component: ${this.displayName}`, this);
-  };
-
-  render = () => this.component;
-}
 function AdminMarkup() {
   const session = useSelector((state) => state?.session);
   const notice = useSelector((state) => state?.notice);
-
+  let match = useRouteMatch();
+  let params = useParams();
   return (
-    <>
-      {notice.message && (
-        <div className={`alert alert-${notice.type}`}>{notice.message}</div>
-      )}
-
+    <Switch>
       <Route exact path="/admin/login">
         {!session?.user ? (
-          new ComponentLoggger(<LoginPage />)
+          <LoginPage />
         ) : (
-          <Redirect to={{ pathname: "/admin" }} />
+          <Redirect to={{ pathname: `${match.path}` }} />
         )}
       </Route>
-      <Route>
-        {session?.user ? (
-          <AdminLayout>
-            {routes.map(({ url, component: Component }, i) => (
-              <Route
-                key={i}
-                exact
-                path={`/admin/${url}`}
-                render={(props) =>
-                  Component ? (
-                    new ComponentLoggger(<Component {...props} />)
-                  ) : (
-                    <UnderConstruction />
-                  )
-                }
-              />
-            ))}
-          </AdminLayout>
-        ) : (
-          <Redirect to={{ pathname: "/admin/login" }} />
-        )}
+      <Route path="/admin">
+        <AdminLayout>
+          <Switch>
+            {session?.user ? (
+              routes.map(({ url, component: Component }, i) => (
+                <Route
+                  key={i}
+                  exact
+                  path={normalize(`/admin/${url}`)}
+                  render={(props) =>
+                    Component ? <Component {...props} /> : <UnderConstruction />
+                  }
+                />
+              ))
+            ) : (
+              <Redirect to={{ pathname: `/admin/login` }} />
+            )}
+            <Route exact path="/admin/">
+              <Redirect to={{ pathname: "/admin" }} />
+            </Route>
+            <Route>
+              <Error404 />
+            </Route>
+          </Switch>
+        </AdminLayout>
       </Route>
-
-      <Route path="*" component={error404} />
-
-      {/* <Redirect from="/admin/*" to="/admin" /> */}
-    </>
+    </Switch>
   );
 }
 
@@ -112,7 +95,7 @@ function AdminLayout({ children }) {
 
       <div className={`${!pagePath ? "content-body" : ""}`}>
         <div className={`${!pagePath ? "container-fluid" : ""}`}>
-          <Switch>{children}</Switch>
+          {children}
         </div>
       </div>
     </div>

@@ -109,8 +109,8 @@ function CurrencyTable({ data = [] }) {
   const action = (_item) => (
     <div className="d-flex" style={{ gap: 20 }}>
       <CurrencyForm isOpen={isModalOpen} data={_item} onClose={onCloseModal}>
-        {Object.values(_item).join(", ")}
-        <a href="#" onClick={onOpenModal}>
+        {/* {Object.values(_item).join(", ")} */}
+        <a  onClick={onOpenModal}>
           <span className="themify-glyph-29"></span> Edit
         </a>
       </CurrencyForm>

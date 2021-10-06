@@ -25,6 +25,7 @@ import { camelCase } from "../../_helpers/utils.helper";
 
 const routes = [
   { url: "", create: (obj) => "" + toQueryString(obj), component: Home },
+  { url: "me", create: (obj) => "" + toQueryString(obj), component: ()=><>Admin profile page</> },
   {
     url: "setting",
     create: (obj) => "setting" + toQueryString(obj),
