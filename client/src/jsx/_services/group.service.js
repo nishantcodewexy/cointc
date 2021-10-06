@@ -1,11 +1,11 @@
 import axios from "axios";
-
+import { useSelector } from "react-redux";
 /**
  * Class of all Group services
  * @class
  */
 class GroupServices {
-  constructor({ headers, timeout = 30000, baseURL="/account/group" }) {
+  constructor({ headers, timeout = 30000, baseURL = "/account/group" }) {
     this.source = axios.CancelToken.source();
     this.headers = headers;
     this.axios = axios.create({
@@ -26,7 +26,6 @@ class GroupServices {
   abort = (message = "request has been canceled") => {
     this.source.cancel(message.toString());
   };
-
 
   /**
    * @method - Request handler decorator
@@ -253,8 +252,17 @@ class GroupServices {
     );
   };
 }
-
-export default GroupServices
+function useGroupService() {
+  const session = useSelector((state) => state?.session);
+  return new GroupServices({
+    headers: {
+      Authorization: session?.user ? `Bearer ${session.user?.token}` : "",
+      "Content-Type": "application/json",
+    },
+    baseURL: "/account/group",
+  });
+}
+export default useGroupService;
 
 export const useGroupServices =()=>{
   const session = useSelector(state => state.session)

@@ -1,11 +1,8 @@
-import UserService from "./user.services";
-import GroupService from "./group.service";
+import useUserService from "./user.services";
+import useGroupService from "./group.service";
 
 const services = {
-  init: (options) => ({
-    user: new UserService(options),
-    group: new GroupService(options),
-  }),
+  useUserService, useGroupService
 };
 
 export default services;
