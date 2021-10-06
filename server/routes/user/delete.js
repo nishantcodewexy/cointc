@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-      user: { getAllUser },
+      user: { remove },
     },
     consts: { roles: _roles },
     helpers:{
@@ -30,7 +30,7 @@ module.exports = (server) => {
           assign: "isAdmin",
         },
       ],
-      handler: getAllUser,
+      handler: remove,
       auth: "jwt",
     },
     

@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-      user: { getAllUser },
+      user: { update },
     },
     consts: { roles: _roles },
     helpers:{
@@ -14,23 +14,16 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "GET",
+    method: ["PUT","PATCH"],
     path: "/users/{id}",
     config: {
       pre: [
-        {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
         {
           method:isAdmin,
           assign: "isAdmin",
         },
       ],
-      handler: getAllUser,
+      handler: update,
       auth: "jwt",
     },
     

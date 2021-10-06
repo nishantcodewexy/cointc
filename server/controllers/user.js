@@ -341,8 +341,18 @@ module.exports = (server) => {
     remove: async (req, h) => {
       const {
         payload: { data, soft },
+        params:{id},
+        pre:{
+          isAdmin
+        }
       } = req;
-      
+
+      if(!isAdmin) throw boom.forbidden("unauthorized")
+
+      if(id){
+        data = [id]
+        if(!soft) soft=true
+      }
       return {
         deleted: Boolean(
           await sequelize.transaction(async (t) => {

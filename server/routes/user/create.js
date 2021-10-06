@@ -6,6 +6,11 @@ module.exports = (server) => {
       user: { create },
     },
     consts: { patterns, roles: _roles },
+    helpers:{
+      permissions:{
+        isAdmin
+      }
+    }
   } = server.app;
 
   // define Joi schema
@@ -32,6 +37,10 @@ module.exports = (server) => {
         {
           method: () => _roles.basic,
           assign: "role",
+        },
+        {
+          method: isAdmin,
+          assign: "isAdmin",
         },
       ],
       handler: create,
