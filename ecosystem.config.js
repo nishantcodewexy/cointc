@@ -7,8 +7,8 @@ module.exports = {
     },
     {
       name: "cointc_frontend",
-      script: "yarn frontend-dev",
-      // script: "yarn frontend-build && serve -s ./frontend/build",
+      // script: "yarn frontend-dev",
+      script: "yarn client-build && serve -s ./client/build",
       watch: "./frontend",
     },
   ],

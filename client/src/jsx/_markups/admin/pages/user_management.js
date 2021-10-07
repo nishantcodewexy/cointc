@@ -48,20 +48,33 @@ function UserManagement({ services, useService }) {
       setParams((prev) => ({ ...prev, q: "" }));
     }
   };
-/**
- * @function useFormRenderer 
- * @param {Object} formData 
- * @param {String} formData.method 
- * @param {Object} formData.payload 
- * @returns 
- */
+  /**
+   * @function useFormRenderer
+   * @param {Object} formData
+   * @param {String} formData.method
+   * @param {Object} formData.payload
+   * @returns
+   */
   function useFormRenderer(formData = { method: null, payload: null }) {
-    const [title ,form] = (() => {
+    const [title, form] = (() => {
       try {
         switch (formData?.method) {
           case "post":
             return [
               "Create new User",
+              <Row>
+                <Col>
+                  <UserForm.Create
+                    action={() => dispatchRequest({ type: "post" })}
+                    {...formData?.payload}
+                    callback={onModalClose}
+                  />
+                </Col>
+              </Row>,
+            ];
+          case "put":
+            return [
+              "Update User",
               <Row>
                 <Col>
                   <UserForm.Modify
@@ -72,8 +85,6 @@ function UserManagement({ services, useService }) {
                 </Col>
               </Row>,
             ];
-          case "put":
-            return ["Update User", <>Make Update</>];
           case "drop":
           case "delete":
             return ["Delete User", <>delete</>];
@@ -135,20 +146,17 @@ function UserManagement({ services, useService }) {
               mapping={{
                 id: "user_id",
               }}
-              omit={[
-                "archived_at",
-                "created_by",
-                "createdAt",
-                "updatedAt",
-                "updated_at",
+              omit="*"
+              extras={[
+                "user_id",
                 "created_at",
-                "profile",
-                "last_seen",
-                "login_at",
-                "permission",
+                "email",
+                "kyc_status",
+                "status",
+                "action",
               ]}
-              extras={["created_at", "email", "kyc_status", "status", "action"]}
               transformers={{
+                user_id: ({ row }) => row?.id,
                 created_at: ({ row }) => {
                   let time = moment(row?.created_at);
                   return time.isValid() ? (
