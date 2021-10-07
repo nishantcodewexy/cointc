@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 import { Card, Row, Col, Table } from "react-bootstrap";
 import PageTitle from "../layouts/PageTitle";
 
@@ -15,30 +15,28 @@ function UserBalance({ services, useService }) {
   useEffect(() => {
     dispatchRequest({ type: "get" });
   }, []);
-  return <>
+  return (
+    <>
       <PageTitle activeMenu="User Balance" motherMenu="User Management" />
       <Row style={{ marginBottom: 60 }}>
         <Col>
-          <Card
-            style={{
-              padding: 10,
-            }}
-          >
+        <header className="mb-4">
+            <h3>User Balances</h3>
+          </header>
+          <Card>
             <TableGenerator
               data={data?.results}
               mapping={{}}
               omit="*"
-              transformers={{
-                
-              }}
+              transformers={{}}
             />
           </Card>
         </Col>
       </Row>
     </>
+  );
 }
 function UserBalanceTable() {
-  
   const chackbox = document.querySelectorAll(".user_permission_single input");
   const motherChackBox = document.querySelector(".user_permission input");
   // console.log(document.querySelectorAll(".publish_review input")[0].checked);
@@ -105,18 +103,10 @@ function UserBalanceTable() {
         <tbody id="customers">
           <tr className="btn-reveal-trigger">
             <td className="user_permission_single">{check(1)}</td>
-            <td className="py-3">
-            abc@gmail.com
-            </td>
-            <td className="py-2 pl-5 width200">
-            USDT
-            </td>
-            <td className="py-2">
-            00.7757575
-            </td>
-            <td className="py-2">
-            00.7757575
-            </td>
+            <td className="py-3">abc@gmail.com</td>
+            <td className="py-2 pl-5 width200">USDT</td>
+            <td className="py-2">00.7757575</td>
+            <td className="py-2">00.7757575</td>
           </tr>
         </tbody>
       </Table>
