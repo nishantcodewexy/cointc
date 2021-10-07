@@ -5,13 +5,12 @@ import styled from "styled-components";
 import { Card, Row, Col, Button, Dropdown, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 
-import PageTitle from "../layouts/PageTitle";
-import avartar5 from "../../../../images/avatar/5.png";
-import avartar1 from "../../../../images/avatar/1.png";
-
 // COMPONENTS
+import PageTitle from "../layouts/PageTitle";
+import _components from "../components";
 import TableGenerator from "../components/TableGenerator.Component";
 
+const { IdenticonAvatar } = _components;
 const SuitabilityRating = styled.div`
   ul.star-rating > li i {
     color: #089248;
@@ -114,14 +113,21 @@ function UsersPermissionTable({ services, useService }) {
           id: "USER ID",
           createdAt: "joined",
         }}
-        omit={'*'}
-        extras={["name", "id", "phone_number", "country", "joined", "permission"]}
+        omit={"*"}
+        extras={[
+          "name",
+          "id",
+          "phone_number",
+          "country",
+          "joined",
+          "permission",
+        ]}
         transformers={{
           name: ({ key, value, row }) => {
-            return <>{row?.profile?.nickname || 'Untitled'}</>;
+            return <>{row?.profile?.nickname || "Untitled"}</>;
           },
-          id: ({row}) => {
-            return <>{row?.id}</>
+          id: ({ row }) => {
+            return <>{row?.id}</>;
           },
           permission: permit,
           joined: ({ row }) => {
@@ -147,111 +153,79 @@ function UsersPermissionTable({ services, useService }) {
   );
 }
 
-function UsersMembershipTable() {
-  const action = (
-    <div className="d-flex" style={{ gap: 20 }}>
-      <a href="">
-        <span className="themify-glyph-29"></span> Edit
-      </a>
-      <a href="">
-        <span className="themify-glyph-165"></span> Delete
-      </a>
-    </div>
-  );
+function UsersMembershipTable({ useService, services }) {
+  const { useGroupService } = services;
+  const group = useGroupService();
 
-  const chackbox = document.querySelectorAll(".user_membership_single input");
-  const motherChackBox = document.querySelector(".user_membership input");
-  // console.log(document.querySelectorAll(".publish_review input")[0].checked);
-  const chackboxFun = (type) => {
-    for (let i = 0; i < chackbox.length; i++) {
-      const element = chackbox[i];
-      if (type === "all") {
-        if (motherChackBox.checked) {
-          element.checked = true;
-        } else {
-          element.checked = false;
-        }
-      } else {
-        if (!element.checked) {
-          motherChackBox.checked = false;
-          break;
-        } else {
-          motherChackBox.checked = true;
-        }
-      }
-    }
-  };
+  let { data, error, isFetching, dispatchRequest } = useService({
+    get: group.listUsers,
+  });
 
-  const chack = (i) => (
-    <div className={`custom-control custom-checkbox ml-2`}>
-      <input
-        type="checkbox"
-        className="custom-control-input "
-        id={`checkAll_user_membership_${i}`}
-        required=""
-        onClick={() => chackboxFun()}
-      />
-      <label
-        className="custom-control-label"
-        htmlFor={`checkAll_user_membership_${i}`}
-      ></label>
-    </div>
+  useEffect(() => {
+    dispatchRequest({ type: "get" });
+  }, []);
+
+  const actions = (id) => (
+    <>
+      <div className="d-flex" style={{ gap: 20 }}>
+        <a href="">
+          <span className="themify-glyph-29"></span> Edit
+        </a>
+        <a href="">
+          <span className="themify-glyph-165"></span> Delete
+        </a>
+      </div>
+    </>
   );
 
   return (
     <>
-      <Table striped responsive size="sm">
-        <thead>
-          <tr>
-            <th className="user_membership">
-              <div className="custom-control custom-checkbox mx-2">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="checkAll_user_membership_all"
-                  onClick={() => chackboxFun("all")}
-                />
-                <label
-                  className="custom-control-label"
-                  htmlFor="checkAll_user_membership_all"
-                ></label>
+      <TableGenerator
+        data={data?.results}
+        mapping={{
+          id: "USER ID",
+          createdAt: "joined",
+        }}
+        omit={"*"}
+        extras={["name", "role", "suitability", "relationship"]}
+        transformers={{
+          name: ({ key, value, row }) => {
+            return (
+              <Link to="/to_user_information">
+                <div className="media d-flex align-items-center">
+                  <div className="avatar avatar-xl mr-4">
+                    <div
+                      className="rounded-circle img-fluid overflow-hidden"
+                      style={{ maxWidth: 50, height: 50 }}
+                    >
+                      <IdenticonAvatar size={50} alt="" id={row.id} />
+                    </div>
+                  </div>
+                  <div className="media-body">
+                    <h5 className="mb-0 fs--1">
+                      {row?.profile?.nickname || "Untitled"}
+                    </h5>
+                    <span>
+                      Last contact:{" "}
+                      <Moment format="DD.MM.YYYY">{row?.updatedAt}</Moment>
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            );
+          },
+          role: ({ row }) => {
+            return (
+              <div className="py-2 d-flex justify-content-center flex-column">
+                <i className="fa fa-users d-block" aria-hidden="true"></i>
+                <a href="mailto:ricky@example.com" className="text-capitalize">
+                  {row?.role}
+                </a>
               </div>
-            </th>
-            <th>Name</th>
-            <th className="text-center">Role</th>
-            <th>Suitability</th>
-            <th className="">Relationship</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody id="user_membership">
-          <tr className="btn-reveal-trigger mb-2">
-            <td className="user_membership_single">{chack(1)}</td>
-            <td className="py-3">
-              <Link to="/to_user_information">
-                <div className="media d-flex align-items-center">
-                  <div className="avatar avatar-xl mr-4">
-                    <div className="">
-                      <img
-                        className="rounded-circle img-fluid"
-                        src={avartar5}
-                        width="30"
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                  <div className="media-body">
-                    <h5 className="mb-0 fs--1">Ricky Antony</h5>
-                    <span>Last contact: 14.02.2021</span>
-                  </div>
-                </div>
-              </Link>
-            </td>
-            <td className="py-2 text-center" style={{}}>
-              <i class="fa fa-users d-block" aria-hidden="true"></i>
-              <a href="mailto:ricky@example.com">Sys Admin</a>
-            </td>
-            <td className="py-2">
+            );
+          },
+          suitability() {
+            return (
               <SuitabilityRating>
                 <ul className="star-rating">
                   <li>
@@ -272,78 +246,37 @@ function UsersMembershipTable() {
                 </ul>
                 <span>40% Progress</span>
               </SuitabilityRating>
-            </td>
-            <td className="py-2 ">
+            );
+          },
+          relationship: () => (
+            <>
               <ul>
                 <li>Message(9)</li>
                 <li>Phone(3)</li>
                 <li>Live meeting(1)</li>
                 <li>Notes(7)</li>
               </ul>
-            </td>
-            <td className="py-2 text-right">{action}</td>
-          </tr>
-
-          <tr className="btn-reveal-trigger mb-2">
-            <td className="user_membership_single">{chack(1)}</td>
-            <td className="py-3">
-              <Link to="/to_user_information">
-                <div className="media d-flex align-items-center">
-                  <div className="avatar avatar-xl mr-4">
-                    <div className="">
-                      <img
-                        className="rounded-circle img-fluid"
-                        src={avartar5}
-                        width="30"
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                  <div className="media-body">
-                    <h5 className="mb-0 fs--1">Ricky Antony</h5>
-                    <span>Last contact: 14.02.2021</span>
-                  </div>
-                </div>
-              </Link>
-            </td>
-            <td className="py-2 text-center" style={{}}>
-              <i class="fa fa-users d-block" aria-hidden="true"></i>
-              <a href="mailto:ricky@example.com">Sys Admin</a>
-            </td>
-            <td className="py-2">
-              <SuitabilityRating>
-                <ul className="star-rating">
-                  <li>
-                    <i className="fa fa-star" />
-                  </li>
-                  <li>
-                    <i className="fa fa-star" />
-                  </li>
-                  <li>
-                    <i className="fa fa-star" />
-                  </li>
-                  <li>
-                    <i className="fa fa-star-1" />
-                  </li>
-                  <li>
-                    <i className="fa fa-star-1" />
-                  </li>
-                </ul>
-                <span>40% Progress</span>
-              </SuitabilityRating>
-            </td>
-            <td className="py-2 ">
-              <ul>
-                <li>Message(9)</li>
-                <li>Phone(3)</li>
-                <li>Live meeting(1)</li>
-                <li>Notes(7)</li>
-              </ul>
-            </td>
-            <td className="py-2 text-right">{action}</td>
-          </tr>
-        </tbody>
-      </Table>
+            </>
+          ),
+          joined: ({ row }) => {
+            return (
+              <Moment format="YYYY/MM/DD" date={row?.profile?.createdAt} />
+            );
+          },
+          phone_number: ({ row }) => {
+            return row?.profile?.kyc?.phone ? (
+              <a href={`tel:${row?.profile?.kyc?.phone}`}>
+                {row?.profile?.kyc?.phone}
+              </a>
+            ) : (
+              "Not specified"
+            );
+          },
+          country: ({ row }) => {
+            return <>{row?.profile?.country || "Not specified"}</>;
+          },
+        }}
+      />
     </>
   );
 }
