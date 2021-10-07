@@ -16,19 +16,14 @@ function EmptyRecord() {
 
 export function EmptyTableRecord({ cols = 1 }) {
   return (
-    <>
-      <td
-        colSpan={cols}
-        className=""
-        style={sharedStyles}
-      >
-        No records found!
+    <tr>
+      <td colSpan={cols} className="">
+        <div style={sharedStyles}>No records found!</div>
       </td>
-    </>
+    </tr>
   );
 }
 
-export const types = {
+export default Object.assign(EmptyRecord, {
   Table: EmptyTableRecord,
-};
-export default Object.assign(EmptyRecord, types);
+});

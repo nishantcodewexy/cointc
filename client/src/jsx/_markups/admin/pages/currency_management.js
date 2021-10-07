@@ -1,27 +1,60 @@
 import { Card, Row, Col, Button, Table, Modal, Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
-import { useState } from "react";
+import { useEffect } from "react";
 import useToggler from "../../../_hooks/toggler.hook";
 import EmptyRecord from "../components/EmptyRecord.Component";
+import useTableSelector from "../../../_hooks/table.select.hook";
+import { LinearProgress, TablePagination } from "@material-ui/core";
+
+// COMPONENTS
+import TableGenerator from "../components/TableGenerator.Component";
 
 function CurrencyMgmt({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();
-  let { data, error, isFetching, isReloading, dispatchRequest } = useService({
+  let { data, error, isFetching, dispatchRequest } = useService({
     get: group.getCurrency,
   });
-  console.log({
-    data,
-    error,
-    isFetching,
-    isReloading,
-  });
+
+  useEffect(() => {
+    dispatchRequest({ type: "get" });
+  }, []);
+
+/*   useEffect(() => {
+    if (data?.results) {
+      const [rows, cols, _data] = getMapping(data.results);
+      console.log({ rows, cols, _data });
+    }
+  }, [data]);
+
+  function getMapping(data) {
+    let rows = [],
+      cols = [];
+    rows = Object.keys(data[0]);
+    cols = Object.values(data);
+    return [rows, cols, data];
+  }
+ */
   const {
     isOpen: isModalOpen,
     onOpen: onOpenModal,
-    onClose: onModalClose,
+    onClose: onCloseModal,
   } = useToggler();
+
+  const actions = (_item) => (
+    <div className="d-flex" style={{ gap: 20 }}>
+      <ModifierForm isOpen={isModalOpen} data={_item} onClose={onCloseModal}>
+        {/* {Object.values(_item).join(", ")} */}
+        <a onClick={onOpenModal}>
+          <span className="themify-glyph-29"></span> Edit
+        </a>
+      </ModifierForm>
+      <a href="">
+        <span className="themify-glyph-165"></span> Delete
+      </a>
+    </div>
+  );
 
   return (
     <>
@@ -48,7 +81,7 @@ function CurrencyMgmt({ services, useService }) {
         </Col>
 
         <Col sm="auto" style={{ padding: 0 }}>
-          <ModifierForm isOpen={isModalOpen} onClose={onModalClose}>
+          <ModifierForm isOpen={isModalOpen} onClose={onCloseModal}>
             <Button onClick={onOpenModal}>
               <i className="fa fa-plus"></i> Add Currency
             </Button>
@@ -58,15 +91,25 @@ function CurrencyMgmt({ services, useService }) {
 
       <Row style={{ marginBottom: 60 }}>
         <Col>
-          <Card
-            style={{
-              padding: 10,
-            }}
-          >
+          <Card>
+            {/* {isFetching ? <div>Loading...</div> : <CurrenciesTable  data={data?.results}/>} */}
+         
             {isFetching ? (
               <div>Loading...</div>
             ) : (
-              <CurrencyTable data={data?.rows} />
+              <TableGenerator data={data?.results} actions = {actions}
+              mapping = {{
+                id: "Currency ID",
+                iso_code: "symbol",
+              }}
+              omit = {[
+                "archived_at",
+                "created_by",
+                "createdAt",
+                "updatedAt",
+                "updated_at",
+                "created_at",
+              ]} />
             )}
           </Card>
         </Col>
@@ -75,26 +118,13 @@ function CurrencyMgmt({ services, useService }) {
   );
 }
 function CurrencyTable({ data = [] }) {
-  const [selected, setSelected] = useState([]);
+  const { selected, toggleSelect, checkedAll } = useTableSelector(data);
+
   const {
     isOpen: isModalOpen,
     onOpen: onOpenModal,
     onClose: onCloseModal,
   } = useToggler();
-
-  function toggleSelectRecord(id) {
-    if (id) {
-      let index = selected.findIndex((_s) => _s == id);
-      console.log(index);
-      index == -1
-        ? setSelected([...selected, id])
-        : setSelected(selected.filter((_s) => _s != id));
-    } else {
-      // get all ids
-      let ids = data.map((_i) => _i.id);
-      selected.length == data.length ? setSelected([]) : setSelected(ids);
-    }
-  }
 
   const singleSelect = (id) => (
     <div className={`custom-control custom-checkbox ml-2`}>
@@ -104,7 +134,7 @@ function CurrencyTable({ data = [] }) {
         id={`check_currency_record_${id}`}
         required=""
         checked={selected.includes(id)}
-        onChange={() => toggleSelectRecord(id)}
+        onChange={() => toggleSelect(id)}
       />
       <label
         className="custom-control-label"
@@ -135,45 +165,49 @@ function CurrencyTable({ data = [] }) {
         ))}
       </ul> */}
       {data.length ? (
-        <Table responsive hover size="sm">
-          <thead>
-            <tr>
-              <th className="user_permission">
-                <div className="custom-control custom-checkbox mx-2">
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="check_all_record"
-                    disabled={!data.length}
-                    checked={data?.length && selected.length == data.length}
-                    onChange={() => toggleSelectRecord()}
-                  />
-                  <label
-                    className="custom-control-label"
-                    htmlFor="check_all_record"
-                  ></label>
-                </div>
-              </th>
-              <th>Currency ID</th>
-              <th className="pl-5 width200">Symbol</th>
-              <th className="pl-5 width200">Full name</th>
-              <th className="pl-5 width200">Type</th>
-              <th>Action</th>
-            </tr>
-          </thead>
-          <tbody id="curencies">
-            {data?.map((item, key) => (
-              <tr key={key} className="btn-reveal-trigger">
-                <td>{singleSelect(item.id)}</td>
-                <td className="py-2">{item.id}</td>
-                <td className="py-3 pl-5 width200">{item.iso_code}</td>
-                <td className="py-3 pl-5 width200">{item.name}</td>
-                <td className="py-3 pl-5 width200">{item.type}</td>
-                <td>{action(item)}</td>
+        <>
+          <Table responsive hover size="sm">
+            <thead>
+              <tr>
+                <th className="user_permission">
+                  <div className="custom-control custom-checkbox mx-2">
+                    <input
+                      type="checkbox"
+                      className="custom-control-input"
+                      id="check_all_record"
+                      disabled={!data.length}
+                      checked={checkedAll}
+                      onChange={() => toggleSelect()}
+                    />
+                    <label
+                      className="custom-control-label"
+                      htmlFor="check_all_record"
+                    ></label>
+                  </div>
+                </th>
+                <th>Currency ID</th>
+                <th className="pl-5 width200">Symbol</th>
+                <th className="pl-5 width200">Full name</th>
+                <th className="pl-5 width200">Type</th>
+                <th>Action</th>
               </tr>
-            ))}
-          </tbody>
-        </Table>
+            </thead>
+            <tbody id="curencies">
+              {data?.map((item, key) => (
+                <tr key={item.id} className="btn-reveal-trigger">
+                  <td>{singleSelect(item.id)}</td>
+                  <td className="py-2">{item.id}</td>
+                  <td className="py-3 pl-5 width200">{item.iso_code}</td>
+                  <td className="py-3 pl-5 width200">{item.name}</td>
+                  <td className="py-3 pl-5 width200">{item.type}</td>
+                  <td>{action(item)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </Table>
+
+          {/* <TablePagination count={data?.count}  /> */}
+        </>
       ) : (
         <EmptyRecord />
       )}

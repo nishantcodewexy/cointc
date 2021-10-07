@@ -1,8 +1,11 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
-const { encrypt } = require("../../helpers");
 const hooks = require('../hooks/user.hook');
+
+
+debugger;
+
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
     /**

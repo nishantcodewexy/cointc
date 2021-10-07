@@ -1,19 +1,34 @@
 import { Card, Row, Col, Button, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
+import useTableSelector from "../../../_hooks/table.select.hook";
+import { LinearProgress, TablePagination } from "@material-ui/core";
+import { useEffect } from "react";
 
+import useToggler from "../../../_hooks/toggler.hook";
+import EmptyRecord from "../components/EmptyRecord.Component";
 function Deposits({ services, useService }) {
-  const { group } = services;
-  const { data, error, isFetching, isReloading } = useService(
-    {
-      get: group.getWallet,
-    },
-    { type: "deposits" }
-  );
-
-  console.log({
-    data,
+  const { useGroupService } = services;
+  const group = useGroupService();
+  let { data, error, isFetching, dispatchRequest } = useService({
+    get: group.getWallet,
   });
+
+  useEffect(() => {
+    dispatchRequest({
+      type: "get",
+      payload: {
+        type: "deposits",
+      },
+    });
+  }, []);
+
+  const {
+    isOpen: isModalOpen,
+    onOpen: onOpenModal,
+    onClose: onModalClose,
+  } = useToggler();
+
   return (
     <>
       <PageTitle activeMenu="Deposits" motherMenu="Wallet management" />

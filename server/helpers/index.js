@@ -339,18 +339,7 @@ module.exports = {
     }
   },
 
-  /***********************************************
-   * Generate text that can be used as OTP
-   ***********************************************/
-  /* generateOTP: function (max = 4) {
-    var digits = "0123456789";
-    let OTP = "";
 
-    for (let i = 0; i < max; i++) {
-      OTP += digits[Math.floor(Math.random() * 10)];
-    }
-    return OTP;
-  }, */
 
   generator: {
     referralCode(email) {
@@ -393,7 +382,7 @@ module.exports = {
  /*  sluggify: (text) => {
     return text.toLowerCase();
   },
-  
+
   /***********************************************
    * function helps to convert params to sequlize where clauses
    ***********************************************/
@@ -408,14 +397,14 @@ module.exports = {
     if(!query) query={}
     if(!searchFields) searchFields=[]
     const q = query.q||''
-    
+
     const searchQuery = {}
 
     q&&searchFields.forEach(key=>{
       searchQuery[key] = {
         [Op.iLike]:`%${q}%`
       }
-      
+
     })
 
     let extraWhere = q?{
@@ -429,7 +418,7 @@ module.exports = {
     const orderQuery  = search.getOrderQuery();
     const limitQuery  = search.getLimitQuery();
     const offsetQuery = search.getOffsetQuery();
-    
+
     return {
       where:{
         ...whereQuery,
@@ -440,19 +429,19 @@ module.exports = {
       limit:limitQuery,
       offset:offsetQuery
     }
-    
+
   },
   /**
-   * 
+   *
    * @param {Promise} queryset - return of findAllAndCount
-   * @param {Number} limit - 
-   * @param {Number} offset 
-   * @returns {Promise} 
+   * @param {Number} limit -
+   * @param {Number} offset
+   * @returns {Promise}
    */
   paginator:async ({queryset,limit,offset}={limit:0,offset:20})=>{
     const {rows,count} = await queryset
     let next,prev;
-    
+
     if(offset){
       prev = {
         limit,
@@ -469,7 +458,7 @@ module.exports = {
       }
     }else{
       next = null
-      
+
     }
 
     return {

@@ -1,33 +1,54 @@
 import { Link } from "react-router-dom";
-import { Card, Row, Col, Button, Dropdown } from "react-bootstrap";
-import UsersTable from "../tables/user.management.table";
-import { useState } from "react";
+import { Card, Row, Col, Button, Modal } from "react-bootstrap";
+import UsersTable from "../tables/user.table";
+import { useEffect, useState } from "react";
+import UserForm from "../forms/user.form";
+import useToggler from "../../../_hooks/toggler.hook";
 
+// COMPONENTS
+import TableGenerator from "../components/TableGenerator.Component";
 
+function UserManagement({ services, useService }) {
+  const { useGroupService } = services;
+  const group = useGroupService();
 
+  const [params, setParams] = useState({
+    q: "",
+    limit: 10,
+    offset: 10,
+    // data: {
+    //   name: "akan",
+    //   data: {
+    //     newName: "akan",
+    //   },
+    // },
+  });
 
-function UserManagement() {
-  const [params,setParams] = useState({
-    q:'',
-    limit:10,
-    offset:10,
-    data:{
-      name:"akan",
-      data:{
-        newName:"akan"
-      }
+  let { data, error, isFetching, dispatchRequest } = useService({
+    get: group.listUsers,
+  });
+
+  useEffect(() => {
+    dispatchRequest({ type: "get" });
+  }, []);
+
+  const handleChange = (e) => {
+    setParams((prev) => ({ ...prev, q: e.target.value }));
+  };
+
+  const {
+    isOpen: isModalOpen,
+    onOpen: onOpenModal,
+    onClose: onModalClose,
+  } = useToggler();
+
+  const handleKeyDown = (e) => {
+    if (e.ctrlKey && e.keyCode === 8) {
+      setParams((prev) => ({ ...prev, q: "" }));
     }
-  })
-  const handleChange = e =>{
-    setParams(prev=>({...prev,q:e.target.value}))
-  }
+  };
 
-  const handleKeyDown = e =>{
-    if(e.ctrlKey&&e.keyCode===8){
-      setParams(prev=>({...prev,q:''}))
-    }
-    
-  }
+  const actions = (id) => <></>;
   return (
     <>
       <Row style={{ marginBottom: 20 }}>
@@ -51,21 +72,42 @@ function UserManagement() {
           </div>
         </Col>
         <Col sm="auto">
-        <Button size="sm">
-              <i className="fa fa-plus"></i>{" "}
-              Add User
-            </Button>
+          {data && (
+            <ModifierForm
+              action={(payload) => dispatchRequest({ type: "post", payload })}
+              isOpen={isModalOpen}
+              onClose={onModalClose}
+            >
+              <Button onClick={onOpenModal}>
+                <i className="fa fa-plus"></i> Add User
+              </Button>
+            </ModifierForm>
+          )}
         </Col>
       </Row>
 
       <Row>
         <Col>
-          <Card
-            style={{
-              padding: 10,
-            }}
-          >
-            <UsersTable params={params} />
+          <Card>
+            <TableGenerator
+              data={data?.results}
+              actions={actions}
+              mapping={{}}
+              omit={[
+                "archived_at",
+                "created_by",
+                "createdAt",
+                "updatedAt",
+                "updated_at",
+                "created_at",
+                "profile",
+              ]}
+              transformers={{
+                permission: ({ key, value }) => (
+                  <>{value ? "permitted" : "Not permitted"}</>
+                ),
+              }}
+            />
           </Card>
         </Col>
       </Row>
@@ -73,5 +115,23 @@ function UserManagement() {
   );
 }
 
+function ModifierForm({ action, children, data: _data = {}, isOpen, onClose }) {
+  return (
+    <>
+      {children}
+      <Modal show={isOpen} onHide={onClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Create User</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <Row>
+            <Col>
+              <UserForm.Modify action={action} callback={onClose} />
+            </Col>
+          </Row>
+        </Modal.Body>
+      </Modal>
+    </>
+  );
+}
 export default UserManagement;
-

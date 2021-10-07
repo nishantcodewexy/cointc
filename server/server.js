@@ -85,10 +85,10 @@ controllers.forEach((file) => {
  * dynamically register routes
  **************************************/
 
-let routes = glob.sync("/routes/**/*.js", {
+let routes = glob.sync("/routes/[!_]**/[!_]*.js", {
   root: cwd,
 });
-
+// debugger;
 routes.forEach((file) => {
   let filePath = require(file);
   HapiServer.route(filePath(HapiServer));

@@ -1,10 +1,12 @@
-
+import helpers from "../_helpers";
 import axios from "axios";
+import { useSelector } from "react-redux";
+
 /**
  * Class of all Group services
  * @class
  */
-class userServices {
+class UserServices {
   constructor({ headers, timeout = 30000, baseURL = "/account" }) {
     this.source = axios.CancelToken.source();
     this.axios = axios.create({
@@ -61,4 +63,11 @@ class userServices {
   };
 }
 
-export default userServices;
+function useUserService() {
+  const session = useSelector((state) => state?.session);
+  return new UserServices({
+    headers: helpers.headers(session),
+    baseURL: "/account",
+  });
+}
+export default useUserService;

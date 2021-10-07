@@ -3,6 +3,7 @@ import AdminBankDetailsTable from "../components/AdminBankDetails.Component";
 import EmptyRecord from "../components/EmptyRecord.Component";
 import useToggler from "../../../_hooks/toggler.hook";
 import PageTitle from "../layouts/PageTitle";
+import { useEffect } from "react";
 
 function AdminBankDetails({ services, useService }) {
   const { useGroupService } = services;
@@ -16,6 +17,9 @@ function AdminBankDetails({ services, useService }) {
     onClose: onModalClose,
   } = useToggler();
 
+  useEffect(() => {
+    dispatchRequest({type: 'get'})
+  }, [])
   return (
     <>
       <PageTitle

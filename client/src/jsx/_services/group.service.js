@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useSelector } from "react-redux";
+import helpers from "../_helpers";
 /**
  * Class of all Group services
  * @class
  */
+
 class GroupServices {
   constructor({ headers, timeout = 30000, baseURL = "/account/group" }) {
     this.source = axios.CancelToken.source();
@@ -33,14 +35,14 @@ class GroupServices {
    * @returns
    */
   decorate = async (request) => {
-    let result = { success: null, error: null };
+    // let result = { success: null, error: null };
     try {
       let { data } = await request();
-      return { ...result, success: data };
+      return data;
     } catch (error) {
       console.error("GROUP SERVICE ERROR::", error);
       this.abort();
-      return { ...result, error: error?.message };
+      return error?.message;
     }
   };
 
@@ -192,7 +194,7 @@ class GroupServices {
    * @param {String} [params.id] - User ID
    * @returns
    */
-  getUsers = async (params) => {
+  listUsers = async (params) => {
     return this.decorate(
       async () =>
         await this.axios(`user`, {
@@ -252,26 +254,15 @@ class GroupServices {
     );
   };
 }
+
 function useGroupService() {
   const session = useSelector((state) => state?.session);
   return new GroupServices({
-    headers: {
-      Authorization: session?.user ? `Bearer ${session.user?.token}` : "",
-      "Content-Type": "application/json",
-    },
+    headers: helpers.headers(session),
     baseURL: "/account/group",
   });
 }
 export default useGroupService;
-
-// export const useGroupServices =()=>{
-//   const session = useSelector(state => state.session)
-//   return new GroupServices({
-//     headers: headers(session),
-//     baseURL: "/account/group",
-//   });
-// }
-
 
 /************************* SUPPORT TICKETS ******************************/
 /**

@@ -1,8 +1,34 @@
 import { Card, Row, Col, Button, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
+import useTableSelector from "../../../_hooks/table.select.hook";
+import { LinearProgress, TablePagination } from "@material-ui/core";
+import { useEffect } from "react";
 
-function Withdrawals() {
+import useToggler from "../../../_hooks/toggler.hook";
+import EmptyRecord from "../components/EmptyRecord.Component";
+function Withdrawals({ services, useService }) {
+  const { useGroupService } = services;
+  const group = useGroupService();
+  let { data, error, isFetching, dispatchRequest } = useService({
+    get: group.getWallet,
+  });
+
+  useEffect(() => {
+    dispatchRequest({
+      type: "get",
+      payload: {
+        type: "withdrawals",
+      },
+    });
+  }, []);
+
+  const {
+    isOpen: isModalOpen,
+    onOpen: onOpenModal,
+    onClose: onModalClose,
+  } = useToggler();
+
   return (
     <>
       <PageTitle activeMenu="Withdrawals" motherMenu="Wallet management" />
@@ -11,7 +37,7 @@ function Withdrawals() {
       </header>
       <Row style={{ marginBottom: 20, width: "100%" }}>
         <Col>
-        <div className="input-group search-area right d-lg-inline-flex d-none">
+          <div className="input-group search-area right d-lg-inline-flex d-none">
             <input
               type="text"
               className="form-control"
@@ -26,9 +52,7 @@ function Withdrawals() {
             </div>
           </div>
         </Col>
-        <Col sm="auto" style={{ padding: 0 }}>
-         
-        </Col>
+        <Col sm="auto" style={{ padding: 0 }}></Col>
       </Row>
 
       <Row style={{ marginBottom: 60 }}>
@@ -87,7 +111,6 @@ function WithdrawalsHistoryTable() {
 
   const action = (
     <div className="d-flex" style={{ gap: 20 }}>
-   
       <a href="">
         <span className="themify-glyph-165"></span> Delete
       </a>
