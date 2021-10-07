@@ -5,14 +5,14 @@ import pt from 'prop-types'
 import {LinearProgress, TablePagination} from '@material-ui/core';
 import useClient from '../../../_apiClient'
 import ActionButton from '../../_shared_component/ActionButton'
-import {useGroupServices} from '../../../_services/group.service'
+
 
 function UsersTable({params}) {
     const [list, setList] = useState(null)
     const [page, setPage] = useState(2);
     const [rowsPerPage, setRowsPerPage] = useState(10);
     const api = useClient()
-    const sdk = useGroupServices()
+    
     
 
     
