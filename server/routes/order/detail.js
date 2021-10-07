@@ -15,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/account/group/trade/{id}",
+    path: "/account/u/order/{id}",
     config: {
       pre: [
         {

@@ -13,9 +13,19 @@ module.exports = (server) => {
 
   const orderController = {
     async create(req) {
+      const {
+        auth:{
+          credentials:{
+            user
+          }
+        }
+        
+      } = req
       
-      const { user } = req.pre.user;
-      return Order.create({ ...req.payload, from_user_id: user.id });
+      
+      
+      return Order.create({ ...req.payload, from_user_id: user.dataValues.id });
+      
     },
 
     // Delete Order
@@ -54,9 +64,9 @@ module.exports = (server) => {
       } = req
 
       
-      if(!isAdmin){
-        throw boom.forbidden("unauthorized")
-      }
+      // if(!isAdmin){
+      //   throw boom.forbidden("unauthorized")
+      // }
       const filterResults = await filters({query,searchFields:[
         "appeal",
         "remark",

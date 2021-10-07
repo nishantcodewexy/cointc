@@ -89,7 +89,7 @@ module.exports = (server) => {
             }
           }
         }
-
+        
         case "statistics":
         case "stats": {
           switch (method) {

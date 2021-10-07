@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const hooks = require("../hooks/order.hook")
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
     /**
@@ -21,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         primaryKey: true,
         defaultValue: () => {
-          return `ORD-${Date.now.toString()}`;
+          return `ORD-${Date.now().toString()}`;
         },
       },
       advert_id: DataTypes.UUID,
@@ -76,6 +77,7 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       paranoid: true,
       tableName: "tbl_orders",
+      hooks
     }
   );
   return Order;
