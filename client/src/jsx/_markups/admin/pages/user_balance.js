@@ -1,7 +1,20 @@
+import { useEffect } from 'react';
 import { Card, Row, Col, Table } from "react-bootstrap";
 import PageTitle from "../layouts/PageTitle";
 
-function UserBalance() {
+// COMPONENTS
+import TableGenerator from "../components/TableGenerator.Component";
+
+function UserBalance({ services, useService }) {
+  const { useGroupService } = services;
+  const group = useGroupService();
+  let { data, error, isFetching, dispatchRequest } = useService({
+    get: group.listUsers,
+  });
+
+  useEffect(() => {
+    dispatchRequest({ type: "get" });
+  }, []);
   return <>
       <PageTitle activeMenu="User Balance" motherMenu="User Management" />
       <Row style={{ marginBottom: 60 }}>
@@ -11,7 +24,14 @@ function UserBalance() {
               padding: 10,
             }}
           >
-            <UserBalanceTable />
+            <TableGenerator
+              data={data?.results}
+              mapping={{}}
+              omit="*"
+              transformers={{
+                
+              }}
+            />
           </Card>
         </Col>
       </Row>
