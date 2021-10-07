@@ -1,32 +1,36 @@
 const assert = require("assert");
 const searchBuilder = require("sequelize-search-builder");
 const Sequelize = require("sequelize");
-
 /**
-* @description - User controller
-* @param {Object} server  - Server instance
-* @returns
-*/
+ * @description - User controller
+ * @param {Object} server  - Server instance
+ * @returns
+ */
 module.exports = (server) => {
+  /*********************** HELPERS ***************************/
+  const { __upsert, __destroy, __assertRole } = require("./_methods")(server);
+
   const {
     db,
-    db: { User, sequelize },
+    db: { User, sequelize, Wallet },
     boom,
     config: { client_url },
-    helpers: { decrypt, mailer, jwt, generator, paginator, filters },
+    helpers: { decrypt, mailer, jwt, generator },
     consts: { roles: _roles },
   } = server.app;
 
   const UserController = {
     /**
-    * @function create
-    * @description - Creates new user (**Authenticated users only**)
-    * @param {Object} req - Request object
-    * @param {Object} req.pre - Request Prehandler object
-    * @returns
-    */
+     * @function create
+     * @description - Creates new user (**Authenticated users only**)
+     * @param {Object} req - Request object
+     * @param {Object} req.pre - Request Prehandler object
+     * @returns
+     */
     async create(req) {
-      const { user: {role} } = req.pre;
+      const {
+        user: { role },
+      } = req.pre;
       let {
         payload: { email, password, sudo = false, ...restOfPayload },
       } = req;
@@ -52,9 +56,9 @@ module.exports = (server) => {
         });
 
         if (_user)
-        throw boom.notAcceptable(
-          `User with the email: ${email} already exist`
-        );
+          throw boom.notAcceptable(
+            `User with the email: ${email} already exist`
+          );
 
         return await sequelize.transaction(async (t) => {
           let newUser = {
@@ -85,12 +89,14 @@ module.exports = (server) => {
 
           await _user.createWallet({ asset: "BTC" }, { transaction: t });
 
-          return sudo ? {
-            created: true
-          } : {
-            token: jwt.create(_user),
-            user: _user.toPublic(),
-          };
+          return sudo
+            ? {
+                created: true,
+              }
+            : {
+                token: jwt.create(_user),
+                user: _user.toPublic(),
+              };
         });
       } catch (error) {
         console.error(error);
@@ -99,14 +105,14 @@ module.exports = (server) => {
     },
 
     /**
-    * @function - Authenticates user
-    * @param {Object} req - Request object
-    * @param {Object} req.payload
-    * @param {String} req.payload.email
-    * @param {String | "basic"} req.payload.role
-    * @param {String} req.payload.password
-    * @returns
-    */
+     * @function - Authenticates user
+     * @param {Object} req - Request object
+     * @param {Object} req.payload
+     * @param {String} req.payload.email
+     * @param {String | "basic"} req.payload.role
+     * @param {String} req.payload.password
+     * @returns
+     */
     async authenticate(req) {
       try {
         const {
@@ -152,11 +158,11 @@ module.exports = (server) => {
       const decoded = jwt.decodeAndVerify(token);
       // debugger;
       return decoded.isValid
-      ? await User.update(
-        { kyc: { email: true } },
-        { where: { id: decoded.payload.user } }
-      ).catch(boom.boomify)
-      : boom.unauthorized(`Cannot confirm user account!: ${decoded.error}`);
+        ? await User.update(
+            { kyc: { email: true } },
+            { where: { id: decoded.payload.user } }
+          ).catch(boom.boomify)
+        : boom.unauthorized(`Cannot confirm user account!: ${decoded.error}`);
     },
 
     resetPassword: async function(req) {
@@ -201,12 +207,12 @@ module.exports = (server) => {
       }
     },
     /**
-    * @function profile - Fetches user profile
-    * @param {Object} req
-    * @param {Object} req.pre
-    * @param {Object} req.pre.user - User model
-    * @returns
-    */
+     * @function profile - Fetches user profile
+     * @param {Object} req
+     * @param {Object} req.pre
+     * @param {Object} req.pre.user - User model
+     * @returns
+     */
     profile: async (req) => {
       try {
         // get user ID from preHandler
@@ -245,10 +251,10 @@ module.exports = (server) => {
         const role = await User.findOne({
           where: { id: user },
         })
-        .then((_user) => _user.role)
-        .catch((error) => {
-          throw new Error(`User Controller:findID - ${error.message}`);
-        });
+          .then((_user) => _user.role)
+          .catch((error) => {
+            throw new Error(`User Controller:findID - ${error.message}`);
+          });
 
         // Do not allow standard users to find admins
         let where = role == _roles.standard ? { id, role } : { id };
@@ -273,17 +279,17 @@ module.exports = (server) => {
         payload: { soft = true },
       } = req;
       let where = { id: user.id };
-      return { deleted: Boolean(await __destroy(where, soft)) };
+      return { deleted: Boolean(await __destroy("User", where, soft)) };
     },
 
     /**
-    * @function update - updates single user record
-    * @param {Object} req
-    * @param {Object} req.payload
-    * @param {Object} req.payload.data  - upsert record
-    * @param {Object} req.payload.authorization  - authorization
-    * @returns
-    */
+     * @function update - updates single user record
+     * @param {Object} req
+     * @param {Object} req.payload
+     * @param {Object} req.payload.data  - upsert record
+     * @param {Object} req.payload.authorization  - authorization
+     * @returns
+     */
     async update(req) {
       try {
         let {
@@ -305,197 +311,8 @@ module.exports = (server) => {
     },
   };
 
-  const UserGroupController = {
-    /**
-    * @function remove - remove user records
-    * @param {Object} req  - request object
-    * @param {Object} req.payload  - request body
-    * @param {Array} req.payload.data  - array of upsert ids records
-    * @returns
-    */
-    remove: async (req, h) => {
-      const {
-        payload: { data, soft },
-        params: { id },
-        pre: { isAdmin },
-      } = req;
-
-      if (!isAdmin) throw boom.forbidden("unauthorized");
-
-      if (id) {
-        data = [id];
-        if (!soft) soft = true;
-      }
-      return {
-        deleted: Boolean(
-          await sequelize.transaction(async (t) => {
-            data.forEach(async (id) => {
-              let where = { id };
-              await __destroy(where, soft, { transaction: t });
-            });
-          })
-        ),
-      };
-    },
-
-    /**
-    * @function update - updates user records
-    * @param {Object} req
-    * @param {Object} req.payload
-    * @param {Array} req.payload.data  - array of upsert records
-    * @returns
-    */
-    async update(req) {
-      try {
-        const {
-          payload: { data, authorization = null },
-        } = req;
-        // TODO: authorization
-        const attributes = ["mode", "nickname"];
-
-        return await sequelize.transaction(async (t) => {
-          data.forEach(async ({ id, ...payload }) => {
-            // Find user
-            const __user = await User.findOne({ where: { id } });
-            // get user role to determine which profile to update
-            const { model } = __assertRole(__user?.role);
-
-            let where = {
-              user_id: id,
-            };
-            __upsert(model, payload, where, { transaction: t, attributes });
-          });
-        });
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
-      }
-    },
-
-    /**
-    * @function create - Creates currency (**Admin only**)
-    * @param {Object} req - Request object
-    * @param {Object} req.payload
-    * @param {Array} req.payload.data
-    * @returns
-    */
-    create: async (req) => {
-      const {
-        payload: { data },
-        pre: { user },
-      } = req;
-
-      try {
-        return await sequelize.transaction(
-          async (t) =>
-          await User.bulkCreate(data, {
-            transaction: t,
-            validate: true,
-            fields: ["email", "role", ],
-          })
-        );
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
-      }
-    },
-
-    list: async (req) => {
-      const {
-        // pre: { isAdmin },
-        query,
-      } = req;
-
-      const filterRespond = await filters({ query, searchFields: ["email"] });
-      const queryset = User.findAndCountAll({
-        include: { association: "profile" },
-        attributes: { exclude: ["password"] },
-        ...filterRespond,
-      });
-      const { limit, offset } = filterRespond;
-      return paginator({ queryset, limit, offset }).catch(boom.boomify);
-    },
-
-    async get(req, h) {
-      const {
-        query: { id },
-      } = req;
-      try {
-        // handle invalid query <id> 400
-        if (!id) return boom.badRequest();
-
-        // Find target user
-        return await User.findOne({
-          where: { id },
-        }).then(
-          (_user) => _user?.toPublic() ?? boom.notFound("User not found!")
-        );
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
-      }
-    },
+  return {
+    ...UserController,
+    group: require("./group/user.group.controller")(server),
   };
-
-  /*********************** HELPERS ***************************/
-  async function __destroy(where, soft, options = {}) {
-    return soft
-    ? await User.destroy({ where })
-    : db.sequelize.destroy({ where, force: true }, options);
-  }
-
-  async function __upsert(model, with_payload, where, options) {
-    return await db[model].update(
-      { ...with_payload },
-      { where },
-      { ...options, returning: true }
-    );
-  }
-  function __assertRole(role) {
-    let profile, profile_attributes;
-    switch (role) {
-      case _roles.admin:
-      profile = "admin_profile";
-      profile_attributes = [
-        "id",
-        "kyc",
-        "created_at",
-        "updated_at",
-        "last_login",
-        "nickname",
-        "archived_at",
-      ];
-      break;
-      case _roles.basic:
-      profile = "profile";
-      profile_attributes = [
-        "id",
-        "email",
-        "mode",
-        "nickname",
-        "kyc",
-        "referral_code",
-        "referrerId",
-        "last_login",
-        "archived_at",
-      ];
-      break;
-      default:
-      console.error(`Unrecognized user role ->`, role);
-      throw new Error("User operation not allowed: Bad role");
-    }
-    let accessors = User.associations[profile]["accessors"];
-
-    let getter = accessors?.get;
-    let setter = accessors?.set;
-    let creator = accessors?.create;
-
-    let model = profile
-    .split("_")
-    .map((_p) => _p.charAt(0).toUpperCase() + _p.slice(1, +_p.length))
-    .join("");
-    return { profile, profile_attributes, model, getter, setter, creator };
-  }
-
-  return { ...UserController, group: UserGroupController };
 };
