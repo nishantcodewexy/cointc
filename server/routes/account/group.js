@@ -42,6 +42,10 @@ module.exports = (server) => {
           assign: "user",
         },
         {
+          method: ()=>_roles.admin,
+          assign: "role",
+        },
+        {
           method: groupRouteHandler,
           assign: "action",
         },

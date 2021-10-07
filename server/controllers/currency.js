@@ -4,6 +4,10 @@ module.exports = (server) => {
   const {
     db: { Currency, sequelize },
     consts: { roles: _roles },
+    helpers:{
+      filters,
+      paginator
+    },
     boom,
   } = server.app;
   /* const queryInterface = sequelize.getQueryInterface();
@@ -17,14 +21,18 @@ module.exports = (server) => {
     async get(req) {
       try {
         let {
-          query: { id },
+          query,
           pre: { user },
         } = req;
-        let where = id ? { id } : null;
+        // let where = id ? { id } : null;
         //TODO: Only admins are allowed to see who created the currency
-
-        let result = await Currency.findAndCountAll({ where });
-        return result;
+        const filterResult = await filters({query,searchFields:[
+          "name",
+          "iso_code",
+          "type"
+        ]})
+        let queryset = Currency.findAndCountAll(filterResult)
+        return paginator({queryset,limit:filterResult,offset:filterResult.offset})
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -40,12 +48,13 @@ module.exports = (server) => {
      * @returns
      */
     create: async (req) => {
+      
       const {
         payload: { data },
         pre: { user },
       } = req;
 
-      Currency.beforeBulkCreate((currencies, options) => {
+      Currency.beforeBulkCreate((currencies=[], options) => {
         for (const currency of currencies) {
           currency.created_by = user.id;
         }

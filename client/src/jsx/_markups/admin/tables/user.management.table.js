@@ -5,25 +5,27 @@ import pt from 'prop-types'
 import {LinearProgress, TablePagination} from '@material-ui/core';
 import useClient from '../../../_apiClient'
 import ActionButton from '../../_shared_component/ActionButton'
-import {useGroupServices} from '../../../_services/group.service'
+
 
 function UsersTable({params}) {
     const [list, setList] = useState(null)
-    const [page, setPage] = useState(2);
-    const [rowsPerPage, setRowsPerPage] = useState(10);
+    const [page, setPage] = useState(0);
+    const [rowsPerPage, setRowsPerPage] = useState(20);
     const api = useClient()
-    const sdk = useGroupServices()
+    
     
 
     
 
     const handleChangePage = (event, newPage) => {
         setPage(newPage);
+        refreshList({limit:rowsPerPage,offset:page*rowsPerPage})
     };
 
     const handleChangeRowsPerPage = (event) => {
         setRowsPerPage(parseInt(event.target.value, 10));
         setPage(0);
+        refreshList({limit:parseInt(event.target.value, 10),offset:0})
     };
 
     /**

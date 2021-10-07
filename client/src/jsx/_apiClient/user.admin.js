@@ -66,7 +66,7 @@ class AdminUser{
     async list(args){
         const {params} = args
         const res = await  this.axios({
-        url:`/admin/users`,
+        url:`/account/group/user`,
         method:'get',
         params
         })
@@ -86,7 +86,7 @@ class AdminUser{
     async delete(args){
         const {data} = args
         const res = await  this.axios({
-        url:`/admin/users/`,
+        url:`/account/group/user`,
         method:'delete',
         data
         })

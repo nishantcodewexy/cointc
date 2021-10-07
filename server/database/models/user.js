@@ -57,6 +57,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM(["basic", "admin"]),
         defaultValue: "basic",
       },
+      permission: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: true,
+      },
       archived_at: DataTypes.DATE,
     },
     {

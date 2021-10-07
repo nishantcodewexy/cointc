@@ -1,9 +1,12 @@
 "use strict";
 
+const Joi = require("joi");
+
+
 module.exports = (server) => {
   const {
     controllers: {
-      user: { getAllUser },
+      order: { archive },
     },
     consts: { roles: _roles },
     helpers:{
@@ -13,9 +16,11 @@ module.exports = (server) => {
     }
   } = server.app;
 
+  
+  
   return {
-    method: ["GET"],
-    path: "/account/group/user",
+    method: "DELETE",
+    path: "/account/group/trade/{id}/archive",
     config: {
       pre: [
         {
@@ -30,9 +35,9 @@ module.exports = (server) => {
           assign: "isAdmin",
         },
       ],
-      handler: getAllUser,
+      handler: archive,
       auth: "jwt",
+  
     },
-    
   };
 };

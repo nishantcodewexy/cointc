@@ -264,13 +264,13 @@ function useGroupService() {
 }
 export default useGroupService;
 
-export const useGroupServices =()=>{
-  const session = useSelector(state => state.session)
-  return new GroupServices({
-    headers: headers(session),
-    baseURL: "/account/group",
-  });
-}
+// export const useGroupServices =()=>{
+//   const session = useSelector(state => state.session)
+//   return new GroupServices({
+//     headers: headers(session),
+//     baseURL: "/account/group",
+//   });
+// }
 
 
 /************************* SUPPORT TICKETS ******************************/
