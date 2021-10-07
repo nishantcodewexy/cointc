@@ -17,8 +17,8 @@ import qs from "qs";
  * @param {Object | {getImmediate = false}} options - service hook options
  * @returns
  */
-function useService(service) {
-  const [prevRequest, setPrevRequest] = useState(null);
+function useService(services) {
+  const [prevRequest, setPrevRequest] = useState({});
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
@@ -27,7 +27,7 @@ function useService(service) {
   const request = async (service, payload) => {
     try {
       setIsFetching(true);
-      await service(payload);
+      return await service(payload);
     } catch (error) {
       console.error(error);
       setError(error.message);
@@ -46,43 +46,48 @@ function useService(service) {
    */
 
   const dispatchRequest = async ({ type, payload }) => {
+    let response = new Error("");
+    console.log({ prevRequest });
+    
     switch (String(type)?.toLowerCase()) {
       case "post":
       case "create":
-        await request(async (payload) => await service.post(payload), payload);
+        console.log(services);
+        response = await request(
+          async (payload) => await services.post(payload),
+          payload
+        );
         setPrevRequest((state) => ({ ...state, [type]: payload }));
-        prevRequest['get']  && await request(service.get, prevRequest['get'])
-        break;
+        prevRequest?.get && (await request(services.get, prevRequest["get"]));
+        return response;
 
       case "put":
       case "update":
-        await request(async (payload) => {
-          await service.put(payload);
+        response = await request(async (payload) => {
+          await services.put(payload);
         }, payload);
         setPrevRequest((state) => ({ ...state, [type]: payload }));
-        prevRequest['get']  && await request(service.get, prevRequest['get'])
-        break;
+        prevRequest?.get && (await request(services.get, prevRequest["get"]));
+        return response;
 
       case "drop":
       case "delete":
-        await request(async (payload) => {
-          await service.drop(payload);
+        response = await request(async (payload) => {
+          await services.drop(payload);
         }, payload);
         setPrevRequest((state) => ({ ...state, [type]: payload }));
-        prevRequest['get']  && await request(service.get, prevRequest['get'])
-
-        break;
+        prevRequest?.get && (await request(services.get, prevRequest["get"]));
+        return response;
 
       case "get":
       case "fetch":
       default: {
-        await request(async (payload) => {
-          let response = await service.get(payload);
-          setData(response);
+        response = await request(async (payload) => {
+          let _resp = await services.get(payload);
+          setData(_resp);
         }, payload);
         setPrevRequest((state) => ({ ...state, [type]: payload }));
-
-        break;
+        return response;
       }
     }
   };
