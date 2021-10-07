@@ -40,7 +40,7 @@ module.exports = (sequelize, DataTypes) => {
         },
       },
       nickname: DataTypes.STRING,
-      last_login: DataTypes.DATE,
+      
       archived_at: DataTypes.DATE,
 
       /* profile: {

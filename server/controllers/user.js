@@ -131,10 +131,11 @@ module.exports = (server) => {
           let account_profile = await account[getter]();
           // Check if password matches
           if (await decrypt(password, account.password)) {
-            // Update the last_login attribute of the account's profile
-            await account_profile.update({
-              last_login: new Date(Date.now()),
-            });
+            // Update the last_login attribute of the user model
+            
+            account.login_at = new Date(Date.now())
+            await account.save()
+            
 
             return {
               token: jwt.create(account),
