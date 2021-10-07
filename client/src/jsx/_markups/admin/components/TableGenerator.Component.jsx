@@ -1,7 +1,7 @@
 import { Table } from "react-bootstrap";
 import pt from "prop-types";
 import React, { useState, useEffect } from "react";
-
+import { nanoid } from "@reduxjs/toolkit";
 // COMPONENTS
 import EmptyRecord from "./EmptyRecord.Component";
 
@@ -12,11 +12,12 @@ import useTableSelector from "../../../_hooks/table.select.hook";
 function TableGenerator({
   data = [],
   transformers = {},
-  actions = {},
+  actions = null,
   mapping = {},
   extras = [],
   omit = [],
 }) {
+  const uuid = nanoid(10);
   const [tableData, setTableData] = useState({
     rows: [],
     fullRows: [],
@@ -78,7 +79,8 @@ function TableGenerator({
    * @returns
    */
   function transformValue({ key, value, ...rest }) {
-    if (key in transformers) return transformers[key]({ key, value, ...rest });
+    if (String(key).toLowerCase() in transformers)
+      return transformers[key]({ key, value, ...rest });
     return String(value);
   }
 
@@ -93,21 +95,21 @@ function TableGenerator({
         <input
           type="checkbox"
           className="custom-control-input "
-          id={`select_table_record_${id}`}
+          id={`select_table_record_${id}_${uuid}`}
           required=""
           checked={selected.includes(id)}
           onChange={() => toggleSelect(id)}
         />
         <label
           className="custom-control-label"
-          htmlFor={`select_table_record_${id}`}
+          htmlFor={`select_table_record_${id}_${uuid}`}
         ></label>
       </div>
     );
   }
 
   return tableData.rows.length ? (
-    <Table responsive hover size="sm">
+    <Table key={uuid} responsive hover size="sm">
       <thead>
         <tr>
           <th>
@@ -115,14 +117,14 @@ function TableGenerator({
               <input
                 type="checkbox"
                 className="custom-control-input"
-                id="select_all_table_record"
+                id={`select_all_table_record#${uuid}`}
                 disabled={!data.length}
                 checked={selected?.length === tableData.rows?.length}
                 onChange={() => bulkSelect(tableData.rows)}
               />
               <label
                 className="custom-control-label"
-                htmlFor="select_all_table_record"
+                htmlFor={`select_all_table_record#${uuid}`}
               ></label>
             </div>
           </th>
@@ -133,7 +135,7 @@ function TableGenerator({
           {extras?.map((extra, key) => (
             <th key={key}>{String(extra)?.replace(/[_]/, " ")}</th>
           ))}
-          <th>Action</th>
+          {actions && <th>Action</th>}
         </tr>
       </thead>
       <tbody>
@@ -151,7 +153,7 @@ function TableGenerator({
                 {transformValue({ key, value: "", row, state: tableData })}
               </td>
             ))}
-            <td>{actions(row[0])}</td>
+            {actions && <td>{actions(row[0])}</td>}
           </tr>
         ))}
       </tbody>
@@ -167,7 +169,7 @@ TableGenerator.propTypes = {
   data: pt.array,
   actions: pt.func,
   mapping: pt.object,
-  omit: pt.array,
+  omit: pt.any,
   extras: pt.array,
   transformers: pt.object,
 };
