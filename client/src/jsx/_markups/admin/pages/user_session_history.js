@@ -68,21 +68,20 @@ function UserSessionHistoryTable({ useService, services }) {
                 className="fa fa-circle text-success"
                 style={{ fontSize: 12 }}
               ></span>{" "}
-              <Moment date={row?.updatedAt} trim fromNow></Moment>
+              <Moment date={row?.last_seen} trim fromNow></Moment>
             </>
           ),
-          login: ({ row }) => (
-            <>
-              <Moment
-                diff={row?.last_login}
-                withTitle
-                format="MMM Do, Y hh:m A"
-                trim
-              >
-                {new Date().toLocaleString()}
+          login: ({ row }) => {
+            let login_time = moment(row?.login_at);
+
+            return login_time.isValid() ? (
+              <Moment withTitle format="MMM Do, Y hh:m A" trim>
+                {login_time}
               </Moment>
-            </>
-          ),
+            ) : (
+              "Unknown"
+            );
+          },
           logout: ({ row }) => (
             <>
               <Moment
@@ -93,7 +92,18 @@ function UserSessionHistoryTable({ useService, services }) {
               />
             </>
           ),
-          login_status: ({ row }) => <>{row?.logged_in}</>,
+          login_status: ({ row }) => {
+            let now = moment();
+            let login_at = moment(row?.login_at);
+            let status = "Failed";
+            if (login_at.isValid()) {
+              status =
+                now.minutes() - login_at.minutes() <= 30
+                  ? "logged In"
+                  : "not logged in";
+            }
+            return status;
+          },
         }}
       />
     </>

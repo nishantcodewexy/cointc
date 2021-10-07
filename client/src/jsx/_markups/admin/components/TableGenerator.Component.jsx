@@ -135,7 +135,6 @@ function TableGenerator({
           {extras?.map((extra, key) => (
             <th key={key}>{String(extra)?.replace(/[_]/, " ")}</th>
           ))}
-          {actions && <th>Action</th>}
         </tr>
       </thead>
       <tbody>
@@ -153,7 +152,6 @@ function TableGenerator({
                 {transformValue({ key, value: "", row, state: tableData })}
               </td>
             ))}
-            {actions && <td>{actions(row[0])}</td>}
           </tr>
         ))}
       </tbody>
