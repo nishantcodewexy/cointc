@@ -2,6 +2,7 @@
 
 const Joi = require("joi");
 
+
 module.exports = (server) => {
   const {
     controllers: {
@@ -15,7 +16,7 @@ module.exports = (server) => {
     }
   } = server.app;
 
-  console.log("controllers",server.app.controllers)
+  
   const schema = Joi.object({
     advert_id:Joi.string().guid({
         version: [

@@ -271,7 +271,7 @@ module.exports = (server) => {
         },
         query,
       } = req
-      console.log("am called")
+      
 
       if(!isAdmin) throw boom.forbidden("user is not authorize")
 

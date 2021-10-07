@@ -20,8 +20,8 @@ module.exports = (server) => {
 
     // Delete Order
     async destroy(req) {
-      const { id } = req.payload;
-
+      const { id } = req.params;
+      
       return await Order.destroy({
         where: id,
         force: true,
