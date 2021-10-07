@@ -47,7 +47,7 @@ const Header = ({}) => {
                   role="button"
                   data-toggle="dropdown"
                 >
-                  <IdenticonAvatar width={20} alt="" id={session?.user?.id} />
+                  <IdenticonAvatar size={50} alt="" id={session?.user?.id} />
                   <div className="header-info">
                     <span>{session?.user?.email}</span>
                     <small className="text-capitalize">
