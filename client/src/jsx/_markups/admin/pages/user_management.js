@@ -1,6 +1,4 @@
-import { Link } from "react-router-dom";
 import { Card, Row, Col, Button, Modal } from "react-bootstrap";
-import UsersTable from "../tables/user.table";
 import { useEffect, useState } from "react";
 import UserForm from "../forms/user.form";
 import useToggler from "../../../_hooks/toggler.hook";
