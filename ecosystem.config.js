@@ -7,8 +7,8 @@ module.exports = {
     },
     {
       name: "cointc_client",
-      // script: "yarn frontend-dev",
-      script: "yarn client-build && serve -s ./client/build",
+      script: "yarn client-dev",
+      // script: "yarn client-build && serve -s ./client/build",
       watch: "./client",
     },
   ],
