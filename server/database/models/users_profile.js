@@ -66,7 +66,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       otp_ttl: DataTypes.DATE,
-      last_login: DataTypes.DATE,
       verify_token: DataTypes.STRING,
       verify_token_ttl: { type: DataTypes.DATE },
       archived_at: DataTypes.DATE,
