@@ -1,15 +1,15 @@
 module.exports = {
   apps: [
     {
-      name: "cointc_backend",
-      script: "yarn backend-dev",
-      watch: "./backend",
+      name: "cointc_server",
+      script: "yarn server-dev",
+      watch: "./server",
     },
     {
-      name: "cointc_frontend",
+      name: "cointc_client",
       // script: "yarn frontend-dev",
       script: "yarn client-build && serve -s ./client/build",
-      watch: "./frontend",
+      watch: "./client",
     },
   ],
 };
