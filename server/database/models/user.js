@@ -65,6 +65,9 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: true,
       },
       archived_at: DataTypes.DATE,
+      last_seen: DataTypes.DATE,
+      login_at: DataTypes.DATE,
+      
     },
     {
       sequelize,
