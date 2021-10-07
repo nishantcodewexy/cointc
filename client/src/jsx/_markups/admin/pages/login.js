@@ -10,11 +10,12 @@ const { user: userAction } = _actions;
 const LoginPage = ({ services, useService }) => {
   const dispatch = useDispatch();
   const location = useLocation();
-  const { user: userService } = services;
+  const { useUserService } = services;
 
+  const account = useUserService();
   const { isFetching, dispatchRequest } = useService(
     {
-      post: userService?.login,
+      post: account?.login,
     },
     {},
     { getImmediate: false }
