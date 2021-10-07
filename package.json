@@ -5,11 +5,11 @@
   "author": "lil-armstrong <oebong1@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "backend-dev": "yarn --cwd ./backend dev",
-    "backend-build": "yarn --cwd ./backend build",
-    "backend-test": "yarn --cwd ./backend test",
-    "frontend-dev": "yarn --cwd ./frontend dev",
-    "frontend-build": "yarn --cwd ./frontend build && serve -s ./frontend/build",
-    "frontend-test": "yarn --cwd ./frontend dev test"
+    "server-dev": "yarn --cwd ./server dev",
+    "server-build": "yarn --cwd ./server build",
+    "server-test": "yarn --cwd ./server test",
+    "client-dev": "yarn --cwd ./client dev",
+    "client-build": "yarn --cwd ./client build && serve -s ./client/build",
+    "client-test": "yarn --cwd ./client dev test"
   }  
 }
