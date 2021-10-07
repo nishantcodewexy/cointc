@@ -1,25 +1,30 @@
-import { Row, Col, Card, Button, Modal, Form} from "react-bootstrap";
+import { Row, Col, Card, Button, Modal, Form } from "react-bootstrap";
 import AdminBankDetailsTable from "../components/AdminBankDetails.Component";
 import EmptyRecord from "../components/EmptyRecord.Component";
 import useToggler from "../../../_hooks/toggler.hook";
 import PageTitle from "../layouts/PageTitle";
 import { useEffect } from "react";
+// COMPONENTS
+import TableGenerator from "../components/TableGenerator.Component";
 
 function AdminBankDetails({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();
-  let { data, error, isFetching, dispatchRequest } = useService(
-    { get: group.getKYC }
-  );
+  let { data, error, isFetching, dispatchRequest } = useService({
+    get: group.getKYC,
+  });
+  useEffect(() => {
+    dispatchRequest({ type: "get" });
+  }, []);
+
   const {
     isOpen: isModalOpen,
     onOpen: onOpenModal,
     onClose: onModalClose,
   } = useToggler();
 
-  useEffect(() => {
-    dispatchRequest({type: 'get'})
-  }, [])
+  const actions = (id) => <></>;
+
   return (
     <>
       <PageTitle
@@ -32,7 +37,7 @@ function AdminBankDetails({ services, useService }) {
         <Row style={{ marginBottom: 20, width: "100%" }}>
           <Col></Col>
           <Col sm="auto" style={{ padding: 0 }}>
-            <Button onClick={() => dispatchRequest({type:"post"})}>
+            <Button onClick={() => dispatchRequest({ type: "post" })}>
               <i className="fa fa-plus"></i> Add New
             </Button>
           </Col>
@@ -44,10 +49,28 @@ function AdminBankDetails({ services, useService }) {
           <Card>
             {isFetching ? (
               <div>Loading...</div>
-            ) : data?.length ? (
-              <AdminBankDetailsTable data={data} />
             ) : (
-              <EmptyRecord />
+              <TableGenerator
+                data={data?.results}
+                actions={actions}
+                  mapping={{
+                  "iso_code": "Symbol"
+                }}
+                omit={[
+                  "archived_at",
+                  "created_by",
+                  "createdAt",
+                  "updatedAt",
+                  "updated_at",
+                  "created_at",
+                  "profile",
+                ]}
+                transformers={{
+                  permission: ({ key, value }) => (
+                    <>{value ? "permitted" : "Not permitted"}</>
+                  ),
+                }}
+              />
             )}
           </Card>
         </Col>
@@ -85,7 +108,6 @@ function modificationForm({ children, data: _data = {}, isOpen, onClose }) {
                     defaultValue={_data?.bank_name}
                     placeholder="Bank name"
                   />
-                 
                 </Form.Group>
 
                 <Form.Group className="mb-3" controlId="formCurrencyType">
