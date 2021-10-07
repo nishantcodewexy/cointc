@@ -28,14 +28,14 @@ module.exports = (server) => {
     total_quantity:Joi.number().required(),
     appeal:Joi.string(),
     remark:Joi.string(),
-    status:Joi.string().valid(
-        "unpaid",
-        "paid",
-        "released",
-        "completed",
-        "disputed",
-        "canceled"
-    ).default("unpaid"),
+    // status:Joi.string().valid(
+    //     "unpaid",
+    //     "paid",
+    //     "released",
+    //     "completed",
+    //     "disputed",
+    //     "canceled"
+    // ).default("unpaid"),
     rating:Joi.number().min(1).max(5),
     trx_id:Joi.string().guid({
         version: [
@@ -47,7 +47,7 @@ module.exports = (server) => {
   
   return {
     method: "POST",
-    path: "/account/group/trade/{id}",
+    path: "/account/u/order",
     config: {
       pre: [
         {
@@ -64,9 +64,9 @@ module.exports = (server) => {
       ],
       handler: create,
       auth: "jwt",
-    //   validate:{
-    //       payload:schema
-    //   }
+      validate:{
+          payload:schema
+      }
     },
   };
 };

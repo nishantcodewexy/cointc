@@ -53,7 +53,7 @@ module.exports = (server) => {
         payload: { data },
         pre: { user },
       } = req;
-
+      
       Currency.beforeBulkCreate((currencies=[], options) => {
         for (const currency of currencies) {
           currency.created_by = user.id;

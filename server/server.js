@@ -75,9 +75,13 @@ HapiServer.app["controllers"] = {};
 let controllers = glob.sync("/controllers/*.js", {
   root: cwd,
 });
+
+// console.log("controller",controllers)
+
 controllers.forEach((file) => {
-  let routeBase = path.basename(file, ".js"),
-    filePath = require(file);
+  let routeBase = path.basename(file, ".js")
+  // console.log("controller base name",routeBase)
+  let filePath = require(file);
   HapiServer.app["controllers"][routeBase] = filePath(HapiServer);
 });
 

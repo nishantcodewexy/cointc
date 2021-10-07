@@ -16,7 +16,7 @@ module.exports = {
 
     // prioryty 4
     // beforeCreate:async (instance,options)=>{
-        
+    //     console.log("this is called",instance)
     // },
     // beforeDestroy:async (instance,options)=>{
         
