@@ -425,9 +425,9 @@ module.exports = {
         ...extraWhere,
         ...extra
       },
-      order:orderQuery,
-      limit:limitQuery,
-      offset:offsetQuery
+      ...(orderQuery?{order:orderQuery}:{}),
+      limit:limitQuery||20,
+      offset:offsetQuery||0
     }
 
   },

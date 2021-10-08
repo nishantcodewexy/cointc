@@ -14,9 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(Secession,{
         foreignKey: { name: "user_id", allowNull: false },
       });
-      Secession.belongsTo(User,{
-        foreignKey: "secessions",
-      });
+      Secession.belongsTo(User);
       
     }
 

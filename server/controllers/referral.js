@@ -100,6 +100,7 @@ module.exports = (server) => {
       } = req
       
       
+      return {}
       
       
       if(isAdmin){
