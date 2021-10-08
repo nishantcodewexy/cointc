@@ -4,7 +4,7 @@ const _ = require("underscore");
 const hooks = require('../hooks/user.hook');
 
 
-debugger;
+// debugger;
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {

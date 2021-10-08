@@ -1,10 +1,12 @@
-import { Card, Row, Col, Button, Modal } from "react-bootstrap";
+import { Card, Row, Col, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import UserForm from "../forms/user.form";
 import useToggler from "../../../_hooks/toggler.hook";
-
+import Moment from "react-moment";
+import moment from "moment";
 // COMPONENTS
 import TableGenerator from "../components/TableGenerator.Component";
+import { ModalForm } from "../components/ModalForm.Component.jsx";
+import UserForm from "../forms/user.form";
 
 function UserManagement({ services, useService }) {
   const { useGroupService } = services;
@@ -38,6 +40,7 @@ function UserManagement({ services, useService }) {
     isOpen: isModalOpen,
     onOpen: onOpenModal,
     onClose: onModalClose,
+    toggledPayload: modalPayload,
   } = useToggler();
 
   const handleKeyDown = (e) => {
@@ -45,8 +48,62 @@ function UserManagement({ services, useService }) {
       setParams((prev) => ({ ...prev, q: "" }));
     }
   };
+  /**
+   * @function useFormRenderer
+   * @param {Object} formData
+   * @param {String} formData.method
+   * @param {Object} formData.payload
+   * @returns
+   */
+  function useFormRenderer(formData = { method: null, payload: null }) {
+    const [title, form] = (() => {
+      try {
+        switch (formData?.method) {
+          case "post":
+            return [
+              "Create new User",
+              <UserForm.Create
+                action={() => dispatchRequest({ type: "post" })}
+                payload={formData?.payload}
+                callback={onModalClose}
+              />,
+            ];
+          case "put":
+            return [
+              "Update User",
+              <UserForm.Modify
+                action={() => dispatchRequest({ type: "put" })}
+                payload={formData?.payload}
+                callback={onModalClose}
+              />,
+            ];
+          case "drop":
+          case "delete":
+            return [
+              "Delete User",
+              <UserForm.Delete
+                action={() => dispatchRequest({ type: "drop" })}
+                payload={formData?.payload}
+                callback={onModalClose}
+              />,
+            ];
+          default:
+            return [null, null];
+        }
+      } catch (error) {
+        console.error(
+          "Must pass in method and payload key to the formData argument"
+        );
+      }
+    })();
+    return [
+      title,
+      <Row>
+        <Col>{form}</Col>
+      </Row>,
+    ];
+  }
 
-  const actions = (id) => <></>;
   return (
     <>
       <Row style={{ marginBottom: 20 }}>
@@ -71,39 +128,94 @@ function UserManagement({ services, useService }) {
         </Col>
         <Col sm="auto">
           {data && (
-            <ModifierForm
-              action={(payload) => dispatchRequest({ type: "post", payload })}
-              isOpen={isModalOpen}
-              onClose={onModalClose}
-            >
-              <Button onClick={onOpenModal}>
-                <i className="fa fa-plus"></i> Add User
-              </Button>
-            </ModifierForm>
+            <Button onClick={() => onOpenModal({ method: "post" })}>
+              <i className="fa fa-plus"></i> Add User
+            </Button>
           )}
         </Col>
       </Row>
+
+      <ModalForm
+        useFormRenderer={useFormRenderer}
+        formData={modalPayload}
+        isOpen={isModalOpen}
+        onClose={onModalClose}
+      ></ModalForm>
 
       <Row>
         <Col>
           <Card>
             <TableGenerator
               data={data?.results}
-              actions={actions}
-              mapping={{}}
-              omit={[
-                "archived_at",
-                "created_by",
-                "createdAt",
-                "updatedAt",
-                "updated_at",
+              mapping={{
+                id: "user_id",
+              }}
+              omit="*"
+              extras={[
+                "user_id",
                 "created_at",
-                "profile",
+                "email",
+                "kyc_status",
+                "status",
+                "action",
               ]}
               transformers={{
-                permission: ({ key, value }) => (
-                  <>{value ? "permitted" : "Not permitted"}</>
-                ),
+                user_id: ({ row }) => row?.id,
+                created_at: ({ row }) => {
+                  let time = moment(row?.created_at);
+                  return time.isValid() ? (
+                    <Moment format="MMM Do, Y, hh:mm A">{time}</Moment>
+                  ) : (
+                    "unknown"
+                  );
+                },
+                action: ({ row }) => {
+                  return (
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 10,
+                      }}
+                    >
+                      <button style={{appearance: 'none', border: 'none', background: 'none'}}
+                        onClick={() =>
+                          onOpenModal({ method: "put", payload: row })
+                        }
+                      >
+                        <span className="themify-glyph-29"></span> Edit
+                      </button>
+                      {/* TODO: Delete user */}
+                      <button style={{appearance: 'none', border: 'none', background: 'none'}}
+                        onClick={() =>
+                          onOpenModal({ method: "delete", payload: row })
+                        }>
+                        <span className="themify-glyph-165"></span> Delete
+                      </button>
+                    </div>
+                  );
+                },
+                email: ({ row }) => row?.email,
+                status: ({ row }) => (row?.archivedAt ? "inactive" : "Active"),
+                kyc_status: ({ row }) => {
+                  let role = row?.role;
+                  const checkKYC = (kyc) => {
+                    if (kyc) {
+                      return Object.keys(kyc).some((item) => kyc[item] == null)
+                        ? false
+                        : true;
+                    }
+                    return false;
+                  };
+
+                  let status =
+                    role == "admin"
+                      ? "completed"
+                      : checkKYC(row?.profile?.kyc)
+                      ? "completed"
+                      : "pending";
+
+                  return status;
+                },
               }}
             />
           </Card>
@@ -113,23 +225,4 @@ function UserManagement({ services, useService }) {
   );
 }
 
-function ModifierForm({ action, children, data: _data = {}, isOpen, onClose }) {
-  return (
-    <>
-      {children}
-      <Modal show={isOpen} onHide={onClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Create User</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Row>
-            <Col>
-              <UserForm.Modify action={action} callback={onClose} />
-            </Col>
-          </Row>
-        </Modal.Body>
-      </Modal>
-    </>
-  );
-}
 export default UserManagement;

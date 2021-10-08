@@ -67,7 +67,7 @@ function useUserService() {
   const session = useSelector((state) => state?.session);
   return new UserServices({
     headers: helpers.headers(session),
-    baseURL: "/account",
+    baseURL: "/api/account",
   });
 }
 export default useUserService;

@@ -2,6 +2,7 @@ import { Table } from "react-bootstrap";
 import pt from "prop-types";
 import React, { useState, useEffect } from "react";
 import { nanoid } from "@reduxjs/toolkit";
+import TablePagination from "@mui/material/TablePagination";
 // COMPONENTS
 import EmptyRecord from "./EmptyRecord.Component";
 
@@ -25,6 +26,13 @@ function TableGenerator({
     cols: [],
   });
   const { selected, toggleSelect, checkedAll, bulkSelect } = useTableSelector();
+
+  let page = 0;
+  let handleChangePage = () => {};
+  let rowsPerPage = 10;
+  let handleChangeRowsPerPage = () => {};
+
+  function onPageChange() {}
 
   useEffect(() => {
     /**
@@ -109,55 +117,66 @@ function TableGenerator({
   }
 
   return tableData.rows.length ? (
-    <Table key={uuid} responsive hover size="sm">
-      <thead>
-        <tr>
-          <th>
-            <div className="custom-control custom-checkbox mx-2">
-              <input
-                type="checkbox"
-                className="custom-control-input"
-                id={`select_all_table_record#${uuid}`}
-                disabled={!data.length}
-                checked={selected?.length === tableData.rows?.length}
-                onChange={() => bulkSelect(tableData.rows)}
-              />
-              <label
-                className="custom-control-label"
-                htmlFor={`select_all_table_record#${uuid}`}
-              ></label>
-            </div>
-          </th>
-          {String(omit) !== "*" &&
-            tableData?.cols?.map((col, key) => (
-              <th key={key}>{String(col)?.replace(/[_]/, " ")}</th>
-            ))}
-          {extras?.map((extra, key) => (
-            <th key={key}>{String(extra)?.replace(/[_]/, " ")}</th>
-          ))}
-          {actions && <th>Action</th>}
-        </tr>
-      </thead>
-      <tbody>
-        {tableData.rows.map((row, key) => (
-          <tr key={key}>
-            <td>{singleSelect(row?.id ?? key)}</td>
+    <>
+      <Table key={uuid} responsive hover size="sm">
+        <thead>
+          <tr>
+            <th>
+              <div className="custom-control custom-checkbox mx-2">
+                <input
+                  type="checkbox"
+                  className="custom-control-input"
+                  id={`select_all_table_record#${uuid}`}
+                  disabled={!data.length}
+                  checked={selected?.length === tableData.rows?.length}
+                  onChange={() => bulkSelect(tableData.rows)}
+                />
+                <label
+                  className="custom-control-label"
+                  htmlFor={`select_all_table_record#${uuid}`}
+                ></label>
+              </div>
+            </th>
             {String(omit) !== "*" &&
-              Object.entries(row).map(([key, value], idx) => (
+              tableData?.cols?.map((col, key) => (
+                <th key={key}>{String(col)?.replace(/[_]/, " ")}</th>
+              ))}
+            {extras?.map((extra, key) => (
+              <th key={key}>{String(extra)?.replace(/[_]/, " ")}</th>
+            ))}
+          </tr>
+        </thead>
+        <tbody>
+          {tableData.rows.map((row, key) => (
+            <tr key={key}>
+              <td>{singleSelect(row?.id ?? key)}</td>
+              {String(omit) !== "*" &&
+                Object.entries(row).map(([key, value], idx) => (
+                  <td key={idx}>
+                    {transformValue({ key, value, row, state: tableData })}
+                  </td>
+                ))}
+              {extras?.map((key, idx) => (
                 <td key={idx}>
-                  {transformValue({ key, value, row, state: tableData })}
+                  {transformValue({ key, value: "", row, state: tableData })}
                 </td>
               ))}
-            {extras?.map((key, idx) => (
-              <td key={idx}>
-                {transformValue({ key, value: "", row, state: tableData })}
-              </td>
-            ))}
-            {actions && <td>{actions(row[0])}</td>}
-          </tr>
-        ))}
-      </tbody>
-    </Table>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+      {/* Pagination */}
+      <div style={{ padding: "20px 10px" }}>
+        <TablePagination
+          component="div"
+          count={100}
+          page={page}
+          onPageChange={handleChangePage}
+          rowsPerPage={rowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
+      </div>
+    </>
   ) : (
     <EmptyRecord />
   );

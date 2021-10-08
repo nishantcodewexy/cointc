@@ -11,6 +11,12 @@ module.exports = (server) => {
   } = server.app;
 
   return {
+    async listReferrals() {
+      const filterRespond = await filters({ query, searchFields: ["email"] });
+      const queryset = User.getUsers();
+      const { limit, offset } = filterRespond;
+      return paginator({ queryset, limit, offset }).catch(boom.boomify);
+    },
     /**
      * @function remove - remove user records
      * @param {Object} req  - request object

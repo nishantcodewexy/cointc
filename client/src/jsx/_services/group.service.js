@@ -255,14 +255,6 @@ class GroupServices {
   };
 }
 
-function useGroupService() {
-  const session = useSelector((state) => state?.session);
-  return new GroupServices({
-    headers: helpers.headers(session),
-    baseURL: "/account/group",
-  });
-}
-export default useGroupService;
 
 /************************* SUPPORT TICKETS ******************************/
 /**
@@ -363,3 +355,14 @@ async function getReferrals(params) {
     params,
   });
 }
+
+
+
+function useGroupService() {
+  const session = useSelector((state) => state?.session);
+  return new GroupServices({
+    headers: helpers.headers(session),
+    baseURL: "/api/account/group",
+  });
+}
+export default useGroupService;
