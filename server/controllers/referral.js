@@ -1,14 +1,16 @@
 "use strict";
 const assert = require("assert");
+const {Op} = require("sequelize")
 
 module.exports = (server) => {
   const {
-    db: { Referral,Profile },
+    db: { Referral,Profile,User },
     boom,
     helpers:{
       filters,
       paginator
-    }
+    },
+    
   } = server.app;
 
   const orderController = {
@@ -20,39 +22,68 @@ module.exports = (server) => {
           }
         },
         payload:{
-          referrer_code
+          referral_code
+        },
+        pre:{
+          isAdmin
         }
         
       } = req
-      
-      const userProfile = await Profile.findOne({where:{
-        user_id:user.id
-      }})
 
-      if(!userProfile) throw boom.notfound()
+
+
       
       
-      return Referral.create({  user_id: user.id,referrer_id:userProfile.referrer_id });
+
+      if(!isAdmin) throw boom.forbidden()
+      
+      const userProfile = await Profile.findOne({
+        where:{
+          referral_code
+        }
+      })
+
+      
+
+      if(!userProfile) throw boom.notFound()
+      
+      let referrer = await User.findByPk(userProfile.user_id,{
+        attributes:[
+          "id",
+          "email",
+        ]
+      });
+      user.addReferrer(referrer)
+      return referrer
+
       
     },
 
     // Delete Order
-    async destroy(req) {
-      const { id } = req.params;
-      
+    async bulkDestroy(req) {
+
+      const {
+        pre:{
+          isAdmin
+        }
+      } = req
+
+      // only allow action if it admin
+      if(!isAdmin) throw boom.forbidden()
+
+      const data = req.payload;
+
       return await Referral.destroy({
-        where: id,
+        where: {
+          [Op.or]:data
+        },
         force: true,
       });
     },
 
     
 
-    // retrieve Order
-    async get(req) {
-      const { id } = req.params;
-      return Referral.findByPk(id);
-    },
+    
 
     // fetch all Orders
     async getAll(req) {

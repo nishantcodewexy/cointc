@@ -16,7 +16,7 @@ module.exports = (server) => {
   } = server.app;
 
   const schema = Joi.object({
-      referral_code:Joi.string().length(6).required()
+      referral_code:Joi.string().length(10).required()
   })
 
   return {
