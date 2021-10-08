@@ -62,32 +62,31 @@ function UserManagement({ services, useService }) {
           case "post":
             return [
               "Create new User",
-              <Row>
-                <Col>
-                  <UserForm.Create
-                    action={() => dispatchRequest({ type: "post" })}
-                    {...formData?.payload}
-                    callback={onModalClose}
-                  />
-                </Col>
-              </Row>,
+              <UserForm.Create
+                action={() => dispatchRequest({ type: "post" })}
+                payload={formData?.payload}
+                callback={onModalClose}
+              />,
             ];
           case "put":
             return [
               "Update User",
-              <Row>
-                <Col>
-                  <UserForm.Modify
-                    action={() => dispatchRequest({ type: "post" })}
-                    {...formData?.payload}
-                    callback={onModalClose}
-                  />
-                </Col>
-              </Row>,
+              <UserForm.Modify
+                action={() => dispatchRequest({ type: "put" })}
+                payload={formData?.payload}
+                callback={onModalClose}
+              />,
             ];
           case "drop":
           case "delete":
-            return ["Delete User", <>delete</>];
+            return [
+              "Delete User",
+              <UserForm.Delete
+                action={() => dispatchRequest({ type: "drop" })}
+                payload={formData?.payload}
+                callback={onModalClose}
+              />,
+            ];
           default:
             return [null, null];
         }
@@ -97,7 +96,12 @@ function UserManagement({ services, useService }) {
         );
       }
     })();
-    return [title, form];
+    return [
+      title,
+      <Row>
+        <Col>{form}</Col>
+      </Row>,
+    ];
   }
 
   return (
@@ -173,17 +177,20 @@ function UserManagement({ services, useService }) {
                         gap: 10,
                       }}
                     >
-                      <a
+                      <button style={{appearance: 'none', border: 'none', background: 'none'}}
                         onClick={() =>
                           onOpenModal({ method: "put", payload: row })
                         }
                       >
                         <span className="themify-glyph-29"></span> Edit
-                      </a>
+                      </button>
                       {/* TODO: Delete user */}
-                      <a>
+                      <button style={{appearance: 'none', border: 'none', background: 'none'}}
+                        onClick={() =>
+                          onOpenModal({ method: "delete", payload: row })
+                        }>
                         <span className="themify-glyph-165"></span> Delete
-                      </a>
+                      </button>
                     </div>
                   );
                 },

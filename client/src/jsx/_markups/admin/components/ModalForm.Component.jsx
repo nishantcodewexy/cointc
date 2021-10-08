@@ -12,7 +12,9 @@ export function ModalForm({
     <>
       <Modal show={isOpen} onHide={onClose}>
         <Modal.Header closeButton>
-          <Modal.Title>{title}</Modal.Title>
+          <Modal.Title>
+            <h3 className="">{title}</h3>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>{form}</Modal.Body>
       </Modal>
