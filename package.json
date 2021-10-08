@@ -11,5 +11,8 @@
     "client-dev": "yarn --cwd ./client dev",
     "client-build": "yarn --cwd ./client build && serve -s ./client/build",
     "client-test": "yarn --cwd ./client dev test"
-  }  
+  },
+  "dependencies": {
+    "@atlaskit/css-reset": "^6.1.4"
+  }
 }

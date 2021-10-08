@@ -68,7 +68,9 @@ function UserSessionHistoryTable({ useService, services }) {
                 className="fa fa-circle text-success"
                 style={{ fontSize: 12 }}
               ></span>{" "}
-              <Moment date={row?.last_seen} trim fromNow></Moment>
+              <Moment trim fromNow>
+                {row?.last_seen}
+              </Moment>
             </>
           ),
           login: ({ row }) => {
