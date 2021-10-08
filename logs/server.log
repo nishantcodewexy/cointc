@@ -1,0 +1,4 @@
+yarn run v1.22.11
+$ yarn --cwd ./server build
+$ node .
+Server is running on http://localhost:8080
