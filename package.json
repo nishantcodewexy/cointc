@@ -10,9 +10,11 @@
     "server-test": "yarn --cwd ./server test",
     "client-dev": "yarn --cwd ./client dev",
     "client-build": "yarn --cwd ./client build && mkdir -p ./server/views && cp -u -r ./client/build/* -t ./server/views",
-    "client-test": "yarn --cwd ./client dev test"
+    "client-test": "yarn --cwd ./client dev test",
+    "install-all": "yarn --cwd server && yarn --cwd client && yarn"
   },
   "dependencies": {
-    "@atlaskit/css-reset": "^6.1.4"
+    "@atlaskit/css-reset": "^6.1.4",
+    "serve": "^12.0.1"
   }
 }
