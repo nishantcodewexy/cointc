@@ -17,7 +17,7 @@ const HapiServer = Hapi.server({
   host: hostname,
   port,
   routes: {
-    // cors: true,
+    cors: true,
     files: {
       relativeTo: path.join(__dirname, "views"),
       // relativeTo: path.join(__dirname, '..', 'client', 'build'),
