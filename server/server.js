@@ -19,7 +19,7 @@ const HapiServer = Hapi.server({
   routes: {
     cors: true,
     files: {
-      relativeTo: path.join(__dirname, 'views'),
+      relativeTo: path.join(__dirname, "views"),
       // relativeTo: path.join(__dirname, '..', 'client', 'build'),
     },
   },
@@ -63,11 +63,8 @@ const HapiServer = Hapi.server({
     },
     {
       plugin: require("./plugins/app.plugin"),
-   
     },
   ]);
-  
-  
 })();
 
 /**************************************

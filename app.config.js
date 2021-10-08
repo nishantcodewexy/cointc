@@ -6,8 +6,8 @@ module.exports = {
       script: "yarn client-build",
       // script: "yarn client-build && serve -s ./client/build",
       watch: "./client",
-      out_file: "logs/client.log",
-      error_file: "logs/client.error.log",
+      out_file: ".logs/client.log",
+      error_file: ".logs/client.error.log",
     },
 
     {
@@ -15,8 +15,8 @@ module.exports = {
       autorestart: true,
       script: "yarn server-build",
       watch: "./server",
-      out_file: "logs/server.log",
-      error_file: "logs/server.error.log",
+      out_file: ".logs/server.log",
+      error_file: ".logs/server.error.log",
     },
   ],
 };
