@@ -9,7 +9,7 @@
     "server-build": "yarn --cwd ./server build",
     "server-test": "yarn --cwd ./server test",
     "client-dev": "yarn --cwd ./client dev",
-    "client-build": "yarn --cwd ./client build && serve -s ./client/build",
+    "client-build": "yarn --cwd ./client build && mkdir -p ./server/views && cp -u -r ./client/build/* -t ./server/views",
     "client-test": "yarn --cwd ./client dev test"
   },
   "dependencies": {
