@@ -101,6 +101,7 @@ controllers.forEach((file) => {
   let routeBase = path.basename(file, ".js");
   // console.log("controller base name",routeBase)
   let filePath = require(file);
+  console.log("routes",routeBase)
   HapiServer.app["controllers"][routeBase] = filePath(HapiServer);
 });
 

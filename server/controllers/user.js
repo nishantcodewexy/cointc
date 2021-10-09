@@ -118,7 +118,7 @@ module.exports = (server) => {
         const {
           payload: { email, role = _roles.basic, password },
         } = req;
-
+        console.log("am here")
         const { getter } = __assertRole(role);
 
         // fetch user record from DB that matches the email
