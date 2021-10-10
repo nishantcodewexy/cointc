@@ -29,7 +29,7 @@ module.exports = (server) => {
      */
     async create(req) {
       const {
-        user: { role },
+        role
       } = req.pre;
       let {
         payload: { email, password, sudo = false, ...restOfPayload },
