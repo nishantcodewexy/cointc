@@ -1,4 +1,4 @@
-
+const boom = require("@hapi/boom")
 const {
     roles:{
         admin,
@@ -41,4 +41,23 @@ module.exports = {
         if(!user) return false
         return user.role===basic
     },
+    /**
+     * return true if is admin or throw an error
+     * @param {Request} req 
+     * @returns {Boolean}
+     */
+    isAdminOrError:async (req)=>{
+      const {
+        auth:{
+          credentials:{
+            user
+          }
+        }
+      } = req
+      if(!user) throw boom.forbidden("unauthorized")
+      const isAdmin =  user.role===admin
+      if(!isAdmin) throw boom.forbidden("unauthorized")
+
+      return isAdmin
+    }
 }

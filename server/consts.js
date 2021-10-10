@@ -9,4 +9,9 @@ module.exports = {
     admin: 'admin',
     basic: 'basic'
   },
+  types:{
+    banks:{
+      USBANK:"USBANK"
+    }
+  }
 };
