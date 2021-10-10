@@ -19,7 +19,15 @@ module.exports = (sequelize, DataTypes) => {
     }
   };
   Referral.init({
-   
+    commission: {
+      type:DataTypes.DOUBLE,
+      validate:{
+        min:0,
+        max:100
+      },
+      defaultValue:process.env.REFERRAL_COMISSION||20
+      
+    },
   }, {
     sequelize,
     modelName: 'Referral',
