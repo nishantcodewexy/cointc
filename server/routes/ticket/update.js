@@ -8,24 +8,23 @@ module.exports = (server) => {
     consts: { 
       roles: _roles,
       types:{
-        banks,
-        country,
-        currencies
+        TicketSubjectType,
+        TicketStatusType
       }
      },
     helpers:{
       permissions:{
-        isAdmin
+        isAdmin,
+        isAdminOrError
       }
     }
   } = server.app;
 
   const schema = Joi.object({
-    account_no:Joi.string().length(8),
-    bank_name:Joi.string().valid(...Object.keys(banks)),
-    ifsc_code:Joi.string().length(10),
-    country:Joi.string().valid(...Object.keys(country)),
-    currency:Joi.string().valid(...Object.keys(currencies))
+    
+    subject:Joi.string().valid(...Object.keys(TicketSubjectType)),
+    status:Joi.string().valid(...Object.keys(TicketStatusType)),
+    
 })
 
 
@@ -41,9 +40,13 @@ module.exports = (server) => {
           },
           assign: "role",
         },
+        // {
+        //   method:isAdmin,
+        //   assign: "isAdmin",
+        // },
         {
-          method:isAdmin,
-          assign: "isAdmin",
+          method:isAdminOrError,
+          assign: "isAdminOrError",
         },
       ],
       handler: update,

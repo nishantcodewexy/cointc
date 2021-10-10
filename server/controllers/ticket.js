@@ -40,10 +40,9 @@ module.exports = (server) => {
         return await Ticket.findOne({
             where:{
                 id,
-                archive_at:null,
                 ...(!isAdmin?{user_id:user.id}:{}),
             },
-            attributes: { exclude: ['user_id',"archive_at","UserId"] }
+            attributes: { exclude: ['user_id',"UserId","deleted_at"] }
         })
     },
     async list(req) {
@@ -66,15 +65,12 @@ module.exports = (server) => {
             const filterResults = await filters({
                 query,
                 searchFields:[
-                    "bank_name",
-                    "currency",
-                    "country"
+                    "description"
                 ],
                 extra:{
                     ...(!isAdmin?{
                         user_id:user.id,
-                    }:{}),
-                    archive_at:null
+                    }:{})
                 }
             })
             
@@ -112,7 +108,6 @@ module.exports = (server) => {
                 ...(!isAdmin?{
                     user_id:user.id,
                 }:{}),
-                archive_at:null,
                 id
             }
         })
@@ -154,12 +149,11 @@ module.exports = (server) => {
             params:{id}
         } = req
 
-        return await Ticket.update({archive_at:new Date(Date.now())},{
+        return await Ticket.destroy({
             where:{
                 ...(!isAdmin?{
                     user_id:user.id,
                 }:{}),
-                archive_at:null,
                 id
             }
         })
