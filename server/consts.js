@@ -1,4 +1,6 @@
 "use strict"
+const {country} = require("./countries.json")
+const currencies = require("./currencies.json")
 
 module.exports = {
   patterns: {
@@ -12,6 +14,16 @@ module.exports = {
   types:{
     banks:{
       USBANK:"USBANK"
+    },
+    country,
+    currencies,
+    TicketSubjectType:{
+      HIGH:"HIGH",
+      LOW:"LOW",
+    },
+    TicketStatusType:{
+      OPEN:"OPEN",
+      CLOSE:"CLOSE",
     }
   }
 };

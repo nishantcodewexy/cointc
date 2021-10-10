@@ -1,5 +1,12 @@
 "use strict";
 const { Model } = require("sequelize");
+const {
+    types:{
+        country,
+        banks,
+        currencies
+    }
+} = require("../../consts")
 module.exports = (sequelize, DataTypes) => {
   class BankDetail extends Model {
     /**
@@ -9,18 +16,51 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      const {User,BankDetail} = models
+
+      User.hasMany(BankDetail,{
+        foreignKey:"user_id"
+      })
+      BankDetail.belongsTo(User)
     }
   }
   BankDetail.init(
     {
-      
-      short_name: DataTypes.STRING,
-      eth_address: DataTypes.STRING,
+      id: {
+            type: DataTypes.UUID,
+            primaryKey: true,
+            defaultValue: DataTypes.UUIDV4,
+      },
+      account_no: {
+        type:DataTypes.STRING,
+        allowNull:false,
+        
+      },
+      bank_name: {
+        type:DataTypes.ENUM(...Object.keys(banks)),
+        allowNull:false
+      },
+      ifsc_code: {
+        type:DataTypes.STRING,
+        validate:{
+            len:10
+        }
+      },
+      country: {
+        type:DataTypes.ENUM(...Object.keys(country)),
+        allowNull:false
+      },
+      currency: {
+        type:DataTypes.ENUM(...Object.keys(currencies)),
+        defaultValue:"USD",
+        allowNull:false
+      },
+      archive_at:DataTypes.DATE
     },
     {
       sequelize,
-      modelName: "Asset",
-      tableName: "tbl_assets",
+      modelName: "BankDetail",
+      tableName: "tbl_bankdetails",
       underscored: true,
     }
   );
