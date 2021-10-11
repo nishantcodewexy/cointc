@@ -34,3 +34,6 @@ yarn*
 /logs/*
 ./old-packages
 serve.json
+
+/mediafiles
+/mediafiles/*

@@ -29,7 +29,7 @@ module.exports = (server) => {
      */
     async create(req) {
       const {
-        user: { role },
+        role
       } = req.pre;
       let {
         payload: { email, password, sudo = false, ...restOfPayload },
@@ -118,7 +118,7 @@ module.exports = (server) => {
         const {
           payload: { email, role = _roles.basic, password },
         } = req;
-
+        console.log("am here")
         const { getter } = __assertRole(role);
 
         // fetch user record from DB that matches the email
