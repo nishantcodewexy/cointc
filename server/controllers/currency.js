@@ -38,6 +38,35 @@ module.exports = (server) => {
         return boom.boomify(error);
       }
     },
+    
+    async list(req) {
+      try {
+        let {
+          query,
+          pre:{
+            isAdmin
+          }
+        } = req;
+        // let where = id ? { id } : null;
+        //TODO: Only admins are allowed to see who created the currency
+        const filterResult = await filters({query,searchFields:[
+          "id",
+          "name",
+          "iso_code",
+          "type",
+          ...(isAdmin?[
+            "created_at",
+            "updated_at",
+            "created_by"
+          ]:[])
+        ]})
+        let queryset = Currency.findAndCountAll(filterResult)
+        return paginator({queryset,limit:filterResult.limit,offset:filterResult.offset})
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
   };
   const CurrencyGroupController = {
     /**
