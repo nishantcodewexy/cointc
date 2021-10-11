@@ -17,7 +17,7 @@ module.exports = (server) => {
 
   return {
     method: "POST",
-    path: "/account/authenticate",
+    path: "/auth/authenticate",
     config: {
       handler: authenticate,
       validate: {

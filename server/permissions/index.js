@@ -13,6 +13,7 @@ module.exports = {
      * @returns {Boolean}
      */
     isAdmin:async (req)=>{
+      try {
         const {
             auth:{
               credentials:{
@@ -22,6 +23,10 @@ module.exports = {
           } = req
         if(!user) return false
         return user.role===admin
+        
+      } catch (error) {
+        return false
+      }
         
     },
     /**

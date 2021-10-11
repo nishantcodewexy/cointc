@@ -21,10 +21,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
       });
       Profile.belongsTo(Upload, {
-        as: "profile_pic",
+        foreignKey: "profile_pic",
       });
       Profile.belongsTo(Upload, {
-        as: "kyc_document",
+        foreignKey: "kyc_document",
       });
       
       
