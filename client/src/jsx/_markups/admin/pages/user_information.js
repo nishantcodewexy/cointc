@@ -60,9 +60,10 @@ function UsersPermissionTable({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();
 
-  let { data, error, isFetching, dispatchRequest } = useService({
+  let service = useService({
     get: group.listUsers,
   });
+  const { dispatchRequest } = service;
 
   useEffect(() => {
     dispatchRequest({ type: "get" });
@@ -107,13 +108,12 @@ function UsersPermissionTable({ services, useService }) {
   return (
     <>
       <TableGenerator
-        data={data?.results}
-        actions={actions}
+        {...{ service }}
         mapping={{
           id: "USER ID",
           createdAt: "joined",
         }}
-        omit={"*"}
+        omit="*"
         extras={[
           "name",
           "id",
@@ -157,9 +157,11 @@ function UsersMembershipTable({ useService, services }) {
   const { useGroupService } = services;
   const group = useGroupService();
 
-  let { data, error, isFetching, dispatchRequest } = useService({
+  let service = useService({
     get: group.listUsers,
   });
+
+  const { dispatchRequest } = service;
 
   useEffect(() => {
     dispatchRequest({ type: "get" });
@@ -181,12 +183,12 @@ function UsersMembershipTable({ useService, services }) {
   return (
     <>
       <TableGenerator
-        data={data?.results}
+        {...{ service }}
         mapping={{
           id: "USER ID",
           createdAt: "joined",
         }}
-        omit={"*"}
+        omit="*"
         extras={["name", "role", "suitability", "relationship"]}
         transformers={{
           name: ({ key, value, row }) => {

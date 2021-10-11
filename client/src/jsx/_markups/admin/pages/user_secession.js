@@ -10,8 +10,7 @@ import {
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import avartar5 from "../../../../images/avatar/5.png";
-import avartar1 from "../../../../images/avatar/1.png";
-import styled from "styled-components";
+
 
 function UserSecessions() {
   return (

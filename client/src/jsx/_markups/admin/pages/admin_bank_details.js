@@ -10,9 +10,10 @@ import TableGenerator from "../components/TableGenerator.Component";
 function AdminBankDetails({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();
-  let { data, error, isFetching, dispatchRequest } = useService({
+  let service = useService({
     get: group.getKYC,
   });
+  const { dispatchRequest, isFetching } = service;
   useEffect(() => {
     dispatchRequest({ type: "get" });
   }, []);
@@ -51,10 +52,9 @@ function AdminBankDetails({ services, useService }) {
               <div>Loading...</div>
             ) : (
               <TableGenerator
-                data={data?.results}
-                actions={actions}
-                  mapping={{
-                  "iso_code": "Symbol"
+                {...{ service }}
+                mapping={{
+                  iso_code: "Symbol",
                 }}
                 omit={[
                   "archived_at",

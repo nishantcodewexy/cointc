@@ -24,18 +24,29 @@ function UserManagement({ services, useService }) {
     // },
   });
 
-  let { data, error, isFetching, dispatchRequest } = useService({
+  let service = useService({
     get: group.listUsers,
     post: group.createUsers,
     put: group.updateUsers,
     drop: group.dropUsers,
   });
 
+  const { data,  dispatchRequest } = service;
   useEffect(() => {
-    dispatchRequest({ type: "get", payload: { "order[createdAt]": "DESC" } });
+    dispatchRequest({
+      type: "get",
+      payload: {
+        "order[updatedAt]": "DESC",
+        "order[createdAt]": "DESC",
+        "options[paranoid]": false,
+      },
+    });
   }, []);
 
-  const handleChange = (e) => {
+  const handleChangePage = (e) => {
+    setParams((prev) => ({ ...prev, q: e.target.value }));
+  };
+  const handleChangeRowsPerPage = (e) => {
     setParams((prev) => ({ ...prev, q: e.target.value }));
   };
 
@@ -118,14 +129,14 @@ function UserManagement({ services, useService }) {
       <Row style={{ marginBottom: 20 }}>
         <Col>
           <div className="input-group search-area right d-lg-inline-flex d-none">
-            <input
+            {/*   <input
               value={params.q}
               onChange={handleChange}
               onKeyDown={handleKeyDown}
               type="text"
               className="form-control"
               placeholder="Find user here..."
-            />
+            /> */}
             {/* <div className="input-group-append">
               <span className="input-group-text">
                 <Link to={"#"}>
@@ -155,10 +166,10 @@ function UserManagement({ services, useService }) {
         <Col>
           <Card>
             <TableGenerator
-              data={data?.results || []}
               mapping={{
                 id: "user_id",
               }}
+              {...{service}}
               omit="*"
               extras={[
                 "user_id",

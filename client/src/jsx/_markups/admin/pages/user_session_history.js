@@ -27,9 +27,10 @@ function UserSessionHistory(props) {
 function UserSessionHistoryTable({ useService, services }) {
   const { useGroupService } = services;
   const group = useGroupService();
-  let { data, error, isFetching, dispatchRequest } = useService({
+  let service = useService({
     get: group.listUsers,
   });
+  const { dispatchRequest } = service;
   useEffect(() => {
     dispatchRequest({ type: "get" });
   }, []);
@@ -37,8 +38,7 @@ function UserSessionHistoryTable({ useService, services }) {
   return (
     <>
       <TableGenerator
-        data={data?.results}
-        mapping={{}}
+        {...{service}}
         omit="*"
         extras={[
           "username",

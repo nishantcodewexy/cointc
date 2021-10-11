@@ -5,7 +5,7 @@ function useTableSelector(data = []) {
   const [isAllSelected, setIsAllSelected] = useState(false);
 
   function singleSelect(id) {
-    console.log(id)
+    // console.log(id)
 
     if (id) {
       let index = selected.findIndex((_s) => _s == id);
@@ -24,7 +24,7 @@ function useTableSelector(data = []) {
     selected.length
       ? setIsAllSelected(selected.length == data?.length)
       : setIsAllSelected(false);
-    console.log({selected})
+    // console.log({selected})
   }, [selected]);
 
   return {
