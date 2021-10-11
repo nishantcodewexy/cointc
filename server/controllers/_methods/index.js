@@ -7,7 +7,7 @@ module.exports = (server) => {
 
   return {
     async __destroy(model, where, soft, options = {}) {
-      console.log({ model, where, soft, options });
+      // console.log({ model, where, soft, options });
       let result = soft
         ? await db[model].destroy({ where })
         : db.sequelize.destroy({ where, force: true }, options);

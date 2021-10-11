@@ -391,7 +391,7 @@ module.exports = {
    * @param {String[]} args.searchFields
    * @returns {Object}
    */
-  filters: async ({ query = {}, searchFields = [], extra = {} }) => {
+  filters: async ({ query = {}, searchFields = [], extras = {} }) => {
     const q = query.q || "";
 
     const searchQuery = {};
@@ -410,7 +410,7 @@ module.exports = {
       : {};
 
     const search = new searchBuilder(Sequelize, query).setConfig({
-      "default-limit": 20,
+      "default-limit": 10,
     });
     const whereQuery = search.getWhereQuery();
     const orderQuery = search.getOrderQuery();
@@ -421,10 +421,10 @@ module.exports = {
       where: {
         ...whereQuery,
         ...extraWhere,
-        ...extra,
+        ...extras,
       },
       ...(orderQuery ? { order: orderQuery } : {}),
-      limit: limitQuery || 20,
+      limit: limitQuery || 10,
       offset: offsetQuery || 0,
     };
   },
@@ -435,13 +435,12 @@ module.exports = {
    * @param {Number} offset
    * @returns {Promise}
    */
-  paginator: async ({ queryset, limit, offset } = { limit: 0, offset: 20 }) => {
+  paginator: async ({ queryset, limit, offset } = { limit: 10, offset: 0 }) => {
     const { rows, count } = await queryset;
     let next, prev;
 
     if (offset) {
       prev = {
-        limit,
         offset: offset - limit,
       };
     } else {
@@ -450,7 +449,6 @@ module.exports = {
 
     if (count > limit) {
       next = {
-        limit,
         offset: offset + limit,
       };
     } else {
@@ -461,6 +459,8 @@ module.exports = {
       count,
       next,
       prev,
+      offset,
+      limit,
       results: rows,
     };
   },
