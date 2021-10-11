@@ -4,7 +4,11 @@ const Joi = require("joi")
 module.exports = (server) => {
   const {
     controllers: {
-      upload: { create },
+      currency: { 
+        group:{
+          create
+        }
+       },
     },
     consts: { 
       roles: _roles,
@@ -14,12 +18,18 @@ module.exports = (server) => {
     },
     helpers:{
       permissions:{
-        isAdmin
+        isAdminOrError
       }
     }
   } = server.app;
 
-  
+  const schema = Joi.array().items(
+    Joi.object({
+      "type":Joi.string().required(),
+      "iso_code":Joi.string().required(),
+      "name":Joi.string().required()
+    })
+  )
 
 
   return {
@@ -37,19 +47,16 @@ module.exports = (server) => {
         [
           
           {
-            method:isAdmin,
-            assign: "isAdmin",
+            method:isAdminOrError,
+            assign: "isAdminOrError",
           },
 
         ]
       ],
       handler: create,
       auth: "jwt",
-      payload:{
-        output: 'stream',
-        parse: true,
-        allow: 'multipart/form-data',
-        multipart: true
+      validate:{
+        payload:schema
       }
       
     },

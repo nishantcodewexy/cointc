@@ -1,5 +1,5 @@
 "use strict";
-
+const uuid = require("uuid")
 module.exports = (server) => {
   const {
     db: { Currency, sequelize },
@@ -81,13 +81,18 @@ module.exports = (server) => {
     create: async (req) => {
       
       const {
-        payload: { data },
-        pre: { user },
+        payload,
+        auth:{
+          credentials:{
+            user
+          }
+        }
       } = req;
       
       Currency.beforeBulkCreate((currencies=[], options) => {
         for (const currency of currencies) {
           currency.created_by = user.id;
+          currency.id = uuid.v4()
         }
         return currencies;
       });
@@ -95,7 +100,7 @@ module.exports = (server) => {
       try {
         return await sequelize.transaction(
           async (t) =>
-            await Currency.bulkCreate(data, {
+            await Currency.bulkCreate(payload, {
               transaction: t,
               validate: true,
               fields: ["id", "type", "iso_code", "name", "created_by"],
