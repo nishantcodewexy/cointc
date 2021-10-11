@@ -136,14 +136,18 @@ module.exports = (server) => {
     },
     async update(req) {
       const {
-        payload: { data },
-        pre: { user },
+        payload,
+        auth:{
+          credentials:{
+            user
+          }
+        }
       } = req;
-
+      
       try {
         return await sequelize.transaction(async (t) => {
           return Promise.all(
-            data.map(
+            payload.map(
               async ({ id, ...row }) =>
                 await Currency.update(
                   { ...row },
