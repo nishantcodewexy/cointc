@@ -82,11 +82,10 @@ export function Update({ action, callback, payload: initialValues = {} }) {
     <Formik
       initialValues={{
         email: initialValues?.email || '',
-        asAdmin:  initialValues?.role == 'admin' ? true : false,
+        id: initialValues?.id,
         suspend: initialValues?.archivedAt ? true : false,
         sudo: true,
-        role: initialValues?.role,
-        id: initialValues?.id
+        asAdmin:  initialValues?.role == 'admin' ? true : false,
       }}
       validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
@@ -94,8 +93,8 @@ export function Update({ action, callback, payload: initialValues = {} }) {
           let { asAdmin, sudo, suspend, ...others } = values;
           let dataPayload = { ...others, role: asAdmin ? "admin" : "basic" };
           console.log(dataPayload)
-          let response = await action({data: [dataPayload], sudo});
-          // callback && callback(response);
+          let response = await action({data: [dataPayload], sudo, suspend});
+          callback && callback(response);
         } catch (error) {
           console.error(error);
         } finally {
@@ -125,11 +124,11 @@ export function Update({ action, callback, payload: initialValues = {} }) {
               placeholder="Email address"
             />
             <Form.Text>
-              Current role: <strong>{values?.role}</strong>
+              Current role: <strong>{initialValues?.role}</strong>
             </Form.Text>
           </Form.Group>
 
-          {values?.role !== "admin" && (
+          {initialValues?.role !== "admin" && (
             <>
               <Form.Group className="mt-3 mb-3" controlId="user_as_admin">
                 <Form.Label
