@@ -6,12 +6,14 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    async __destroy( model, where, soft, options = {}) {
-      return soft
+    async __destroy(model, where, soft, options = {}) {
+      console.log({ model, where, soft, options });
+      let result = soft
         ? await db[model].destroy({ where })
         : db.sequelize.destroy({ where, force: true }, options);
+      return result;
     },
-  
+
     async __upsert(model, with_payload, where, options) {
       return await db[model].update(
         { ...with_payload },
@@ -53,15 +55,15 @@ module.exports = (server) => {
           throw new Error("User operation not allowed: Bad role");
       }
       let accessors = User.associations[profile]["accessors"];
-
       let getter = accessors?.get;
       let setter = accessors?.set;
       let creator = accessors?.create;
 
-      let model = profile
+      let model = User.associations[profile]['target']["name"];
+      /* profile
         .split("_")
         .map((_p) => _p.charAt(0).toUpperCase() + _p.slice(1, +_p.length))
-        .join("");
+        .join(""); */
       return { profile, profile_attributes, model, getter, setter, creator };
     },
   };

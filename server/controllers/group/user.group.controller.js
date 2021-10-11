@@ -32,10 +32,7 @@ module.exports = (server) => {
       const {
         payload: { data, soft },
         params: { id },
-        pre: { isAdmin },
       } = req;
-
-      if (!isAdmin) throw boom.forbidden("unauthorized");
 
       if (id) {
         data = [id];
@@ -63,24 +60,35 @@ module.exports = (server) => {
     async update(req) {
       try {
         const {
-          payload: { data,},
+          payload: { data, suspend = false, sudo },
         } = req;
-        console.log({data})
+        console.log({ data });
         // TODO: authorization
-        const attributes = ["mode", "nickname"];
+        const attributes = ["mode", "nickname", "role", "email"];
 
         return await sequelize.transaction(async (t) => {
-          data.forEach(async ({ id, ...payload }) => {
+          return data.map(async ({ id, ...payload }) => {
             // Find user
             const __user = await User.findOne({ where: { id } });
             // get user role to determine which profile to update
             const { model } = __assertRole(__user?.role);
-
             let where = {
               user_id: id,
             };
-            console.log({payloaad})
-           return  __upsert(model, payload, where, { transaction: t, attributes });
+            if (suspend) {
+              // Soft delete user
+              // payload.archived_at = new Date().toLocaleString();
+              let destroyed = await __destroy(User?.name, { id }, true, {
+                transaction: t,
+              });
+              console.log({ destroyed });
+            }
+
+            console.log({ payload });
+            return await __upsert(model, payload, where, {
+              transaction: t,
+              attributes,
+            });
           });
         });
       } catch (error) {
@@ -122,12 +130,14 @@ module.exports = (server) => {
         // pre: { isAdmin },
         query,
       } = req;
+      const { options } = query;
       const queryFilters = await filters({ query, searchFields: ["email"] });
-
+      console.log({ queryFilters });
       const queryset = await User.findAndCountAll({
         include: { association: "profile" },
         attributes: { exclude: ["password"] },
         ...queryFilters,
+        ...options
       });
       const { limit, offset } = queryFilters;
       return paginator({ queryset, limit, offset }).catch(boom.boomify);
