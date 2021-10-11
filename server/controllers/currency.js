@@ -50,17 +50,19 @@ module.exports = (server) => {
         // let where = id ? { id } : null;
         //TODO: Only admins are allowed to see who created the currency
         const filterResult = await filters({query,searchFields:[
+          "name",
+          "iso_code",
+          "type"
+          
+        ]})
+        let queryset = Currency.findAndCountAll({...filterResult,attributes:[
           "id",
           "name",
           "iso_code",
           "type",
-          ...(isAdmin?[
-            "created_at",
-            "updated_at",
-            "created_by"
-          ]:[])
+          "created_at",
+          "updated_at"
         ]})
-        let queryset = Currency.findAndCountAll(filterResult)
         return paginator({queryset,limit:filterResult.limit,offset:filterResult.offset})
       } catch (error) {
         console.error(error);
