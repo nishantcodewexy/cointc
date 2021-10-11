@@ -1,6 +1,7 @@
 "use strict"
 const {country} = require("./countries.json")
 const currencies = require("./currencies.json")
+const mimetypes = require("./mimetypes.json")
 
 module.exports = {
   patterns: {
@@ -24,6 +25,8 @@ module.exports = {
     TicketStatusType:{
       OPEN:"OPEN",
       CLOSE:"CLOSE",
-    }
-  }
+    },
+    MimeType:mimetypes,
+  },
+  FILE_UPLOAD_PATH:process.env.MEDIA_FILE_DIR||'mediafiles'
 };

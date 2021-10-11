@@ -12,7 +12,7 @@ module.exports = {
     filterFields:async ({object={},include=[],exclude=[],allowNull=false})=>{
         let result = {}
         
-        if(!(include.length||exclude.length)) throw new Error("you must provide one of include or exclude")
+        if(include.length&&exclude.length) throw new Error("you must provide one of include or exclude")
 
         if(include.length){
             

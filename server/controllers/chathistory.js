@@ -76,7 +76,7 @@ module.exports = (server) => {
         
         
         try {
-            const chathistoty = await ChatHistory.create({
+            const chathistory = await ChatHistory.create({
                 ...payload,
                 browser:req.headers['user-agent'],
                 started_at:new Date(Date.now()),
@@ -90,7 +90,7 @@ module.exports = (server) => {
                     "browser",
                 ]
             })
-            return filterFields({object:chathistoty.dataValues,include:[
+            return filterFields({object:chathistory.dataValues,include:[
                 "id",
                 "country",
                 "visitor_email",
