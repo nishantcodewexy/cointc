@@ -17,25 +17,10 @@ module.exports = (server) => {
     }
   } = server.app;
 
-  const schema = Joi.object({
-    data: Joi.array().items(
-      Joi.object({
-        kyc: Joi.object({
-          email: Joi.bool(),
-          payment_methods: Joi.object({
-            we_chat: Joi.any(),
-          }),
-          sms: Joi.string(),
-          id: Joi.string(),
-          account_no: Joi.string(),
-          bank_name: Joi.string(),
-          IFSC_code: Joi.string(),
-          country: Joi.string(),
-          currency: Joi.string(),
-        }),
-      })
-    ),
-  });
+
+  
+
+  
 
 
   return {
@@ -57,9 +42,7 @@ module.exports = (server) => {
       ],
       handler: update,
       auth: "jwt",
-      validate:{
-          payload:schema
-      }
+      
     },
     
   };

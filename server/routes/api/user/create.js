@@ -3,21 +3,27 @@ const Joi = require("joi")
 module.exports = (server) => {
   const {
     controllers: {
-      ticket: { create },
+      user: { 
+        group:{
+          create
+        }
+       },
     },
     consts: { 
       roles: _roles,
+      
     },
     helpers:{
       permissions:{
-        isAdmin
-      }
+        isAdminOrError
+      },
     }
   } = server.app;
 
-  const schema = Joi.object({
-      description:Joi.string().required()
-  })
+  const schema = Joi.array().items(Joi.object({
+      email:Joi.string().email().required().required(),
+      role:Joi.string().valid(...Object.values(_roles)).required()
+  }))
 
 
   return {
@@ -33,9 +39,11 @@ module.exports = (server) => {
           assign: "role",
         },
         {
-          method:isAdmin,
-          assign: "isAdmin",
+          method:isAdminOrError,
+          assign: "isAdminOrError",
         },
+        
+        
       ],
       handler: create,
       auth: "jwt",

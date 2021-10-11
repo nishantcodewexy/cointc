@@ -1,4 +1,7 @@
 const update = require("../../routes/api/_user/update");
+const uuid = require("uuid")
+const faker = require("faker");
+const {filterFields} = require("../../services/model")
 
 module.exports = (server) => {
   /*********************** HELPERS ***************************/
@@ -33,7 +36,7 @@ module.exports = (server) => {
         payload: { data, soft },
         params: { id },
       } = req;
-
+      
       if (id) {
         data = [id];
         if (!soft) soft = true;
@@ -43,7 +46,7 @@ module.exports = (server) => {
           await sequelize.transaction(async (t) => {
             data.forEach(async (id) => {
               let where = { id };
-              await __destroy(where, soft, { transaction: t });
+              await __destroy("User",where, soft, { transaction: t });
             });
           })
         ),
@@ -101,24 +104,40 @@ module.exports = (server) => {
      * @function create - Creates currency (**Admin only**)
      * @param {Object} req - Request object
      * @param {Object} req.payload
-     * @param {Array} req.payload.data
+     * @param {Object[]} req.payload.data
      * @returns
      */
     create: async (req) => {
       const {
-        payload: { data },
-        pre: { user },
+        payload=[],
+        pre: { 
+          isAdminOrError
+         },
       } = req;
-
+      
       try {
-        return await sequelize.transaction(
+        const results =  await sequelize.transaction(
           async (t) =>
-            await User.bulkCreate(data, {
+            await User.bulkCreate(payload.map(v=>({
+              id:uuid.v4(),
+              ...v,
+              password:faker.internet.password()
+            })), {
               transaction: t,
               validate: true,
-              fields: ["email", "role"],
+              fields: ["id","email", "role","password"],
+              
             })
         );
+        
+        return await Promise.all(results.map(user=>filterFields({object:user.dataValues,include:[
+          "id",
+          "email",
+          "role",
+          "createdAt",
+          "updatedAt"
+        ]})))
+      
       } catch (error) {
         console.error(error);
         return boom.boomify(error);

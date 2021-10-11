@@ -3,7 +3,7 @@ const Joi = require("joi")
 module.exports = (server) => {
   const {
     controllers: {
-      ticket: { delete_ }
+      user: { remove }
     },
     consts: { roles: _roles },
     helpers:{
@@ -13,6 +13,9 @@ module.exports = (server) => {
     }
   } = server.app;
 
+  const schema = Joi.object({
+    soft:Joi.boolean().default(true).optional()
+  })
 
   return {
     method: "DELETE",
@@ -20,19 +23,15 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
-        {
           method:isAdmin,
           assign: "isAdmin",
         },
       ],
-      handler: delete_,
-      auth: "jwt"
+      handler: remove,
+      auth: "jwt",
+      validate:{
+        payload:schema
+      }
     },
     
   };

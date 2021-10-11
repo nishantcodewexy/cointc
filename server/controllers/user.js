@@ -1,6 +1,7 @@
 const assert = require("assert");
 const searchBuilder = require("sequelize-search-builder");
 const Sequelize = require("sequelize");
+const Joi = require("joi")
 /**
  * @description - User controller
  * @param {Object} server  - Server instance
@@ -11,13 +12,20 @@ module.exports = (server) => {
   const { __upsert, __destroy, __assertRole } = require("./_methods")(server);
 
   const {
-    db,
+    
     db: { User, sequelize, Wallet,Profile,AdminProfile,Upload },
     boom,
     config: { client_url },
     helpers: { decrypt, mailer, jwt, generator },
-    consts: { roles: _roles },
+    consts: { 
+      roles: _roles,
+      types:{
+        country
+      }
+     },
   } = server.app;
+
+  const group = require("./group/user.group.controller")(server)
 
   const UserController = {
     /**
@@ -335,10 +343,22 @@ module.exports = (server) => {
     remove: async (req) => {
       // get user ID from preHandler
       let {
-        pre: { user },
+        auth:{
+          credentials:{
+            user
+          },
+        },
         payload: { soft = true },
+        pre:{
+          isAdmin
+        }
       } = req;
       let where = { id: user.id };
+
+      if(isAdmin){
+        return group.remove(req)
+      }
+      
       return { deleted: Boolean(await __destroy("User", where, soft)) };
     },
 
@@ -353,17 +373,112 @@ module.exports = (server) => {
     async update(req) {
       try {
         let {
-          pre: { user },
-          payload: { data /* authorization = null */ },
+          pre: { 
+            isAdmin
+           },
+          payload,
+          params:{
+            id
+          },
+          auth:{
+            credentials:{
+              user
+            }
+          }
         } = req;
-        // TODO: authorization
-        const { model } = __assertRole(user?.role);
-        let where = {
-          user_id: user.id,
-        };
 
-        const attributes = ["mode", "nickname"];
-        return { updated: __upsert(model, data, where, { attributes }) };
+
+        let schema
+
+        if(isAdmin&&id!=="me"){
+          schema = Joi.object({
+            kyc: Joi.object({
+              email: Joi.bool(),
+              payment_methods: Joi.object({
+                we_chat: Joi.any(),
+              }),
+              sms: Joi.string(),
+              id: Joi.string(),
+              account_no: Joi.string(),
+              bank_name: Joi.string(),
+              IFSC_code: Joi.string(),
+              country: Joi.string(),
+              currency: Joi.string(),
+            }),
+          })
+
+
+          
+
+        }else if(isAdmin&&id==="me"){
+          schema = Joi.object({
+            nickname:Joi.string().optional()
+          })
+        }else{
+          schema = Joi.object({
+            nickname:Joi.string().optional(),
+            country:Joi.string().valid(...Object.keys(country)).optional(),
+            profile_pic:Joi.string().uuid().optional(),
+            kyc_document:Joi.string().uuid().optional()
+          })
+        }
+
+        
+
+        
+
+        const {error,value} = schema.validate(payload)
+
+        if(error) throw boom.badRequest(error)
+
+        if(isAdmin&&id==="me"){
+          return await AdminProfile.update(payload,{
+            where:{
+              user_id:user.id
+            }
+          })
+
+          
+        }else{
+          return await Profile.update(payload,{
+            where:{
+              user_id:isAdmin&&id!=="me"?id:user.id
+            }
+          })
+        }
+
+        
+        
+        
+
+        
+        // console.log("values",data)
+        // return await User.update(
+        //   data,
+        //   {
+        //     where:{
+        //       ...(isAdmin&&id!=="me"?{id}:{id:user.id})
+        //   },
+        //   include:[
+        //     {
+        //       model:Profile,
+        //       as:"profile"
+        //     },
+        //     {
+        //       model:AdminProfile,
+        //       as:"admin_profile",
+        //     }
+        //   ]
+        // })
+
+        // // TODO: authorization
+        // const { model } = __assertRole(user?.role);
+        // let where = {
+        //   user_id: user.id,
+        // };
+
+        // const attributes = ["mode", "nickname"];
+        // return { updated: __upsert(model, data, where, { attributes }) };
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
