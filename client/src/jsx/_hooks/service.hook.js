@@ -29,7 +29,7 @@ function useService(services) {
       setIsFetching(true);
       return await service(payload);
     } catch (error) {
-      console.error(error);
+      // console.error(error);
       setError(error.message);
       return error;
     } finally {
@@ -45,7 +45,7 @@ function useService(services) {
    * @returns
    */
 
-  const dispatchRequest = async ({ type, payload }) => {
+  const dispatchRequest = async ({ type, payload, overwrite = true }) => {
     let response = new Error("");
     // console.log({ prevRequest });
 
@@ -56,7 +56,7 @@ function useService(services) {
           async (payload) => await services.post(payload),
           payload
         );
-        setPrevRequest((state) => ({ ...state, [type]: payload }));
+        overwrite && setPrevRequest((state) => ({ ...state, [type]: payload }));
         prevRequest?.get &&
           (await dispatchRequest({ type: "get", payload: prevRequest["get"] }));
         return response;
@@ -66,7 +66,7 @@ function useService(services) {
         response = await request(async (payload) => {
           await services.put(payload);
         }, payload);
-        setPrevRequest((state) => ({ ...state, [type]: payload }));
+        overwrite && setPrevRequest((state) => ({ ...state, [type]: payload }));
         prevRequest?.get &&
           (await dispatchRequest({ type: "get", payload: prevRequest["get"] }));
 
@@ -77,7 +77,7 @@ function useService(services) {
         response = await request(async (payload) => {
           await services.drop(payload);
         }, payload);
-        setPrevRequest((state) => ({ ...state, [type]: payload }));
+        overwrite && setPrevRequest((state) => ({ ...state, [type]: payload }));
         prevRequest?.get &&
           (await dispatchRequest({ type: "get", payload: prevRequest["get"] }));
 
@@ -86,12 +86,11 @@ function useService(services) {
       case "get":
       case "fetch":
       default: {
-        console.log("hello", { payload });
         response = await request(async (payload) => {
           let _resp = await services.get(payload);
           setData(_resp);
         }, payload);
-        setPrevRequest((state) => ({ ...state, [type]: payload }));
+        overwrite && setPrevRequest((state) => ({ ...state, [type]: payload }));
         return response;
       }
     }
@@ -106,6 +105,7 @@ function useService(services) {
   return {
     data,
     error,
+    prevRequest,
     isFetching,
     dispatchRetry,
     dispatchRequest,
