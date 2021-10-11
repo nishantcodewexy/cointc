@@ -116,7 +116,11 @@ module.exports = (server) => {
     async destroy(req) {
       const {
         payload: { data, force = false },
-        pre: { user },
+        auth:{
+          credentials:{
+            user
+          }
+        }
       } = req;
 
       try {

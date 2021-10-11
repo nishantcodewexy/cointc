@@ -3,17 +3,24 @@ const Joi = require("joi")
 module.exports = (server) => {
   const {
     controllers: {
-      upload: { bulkDelete }
+      currency: { 
+        group:{
+          destroy
+        }
+       }
     },
     consts: { roles: _roles },
     helpers:{
       permissions:{
-        isAdmin
+        isAdminOrError
       }
     }
   } = server.app;
 
-  const schema = Joi.array().items(Joi.string().uuid())
+  const schema = Joi.object({
+    data:Joi.array().items(Joi.string().uuid()),
+    force:Joi.boolean().default(false).optional()
+  })
 
   return {
     method: "DELETE",
@@ -30,13 +37,13 @@ module.exports = (server) => {
         [
           
           {
-            method:isAdmin,
-            assign: "isAdmin",
+            method:isAdminOrError,
+            assign: "isAdminOrError",
           },
 
         ]
       ],
-      handler: bulkDelete,
+      handler: destroy,
       auth: "jwt",
       validate:{
           payload:schema
