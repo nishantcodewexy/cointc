@@ -12,18 +12,6 @@ function UserManagement({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();
 
-  const [params, setParams] = useState({
-    q: "",
-    limit: 10,
-    offset: 10,
-    // data: {
-    //   name: "akan",
-    //   data: {
-    //     newName: "akan",
-    //   },
-    // },
-  });
-
   let service = useService({
     get: group.listUsers,
     post: group.createUsers,
@@ -31,7 +19,7 @@ function UserManagement({ services, useService }) {
     drop: group.dropUsers,
   });
 
-  const { data,  dispatchRequest } = service;
+  const { data, dispatchRequest } = service;
   useEffect(() => {
     dispatchRequest({
       type: "get",
@@ -43,13 +31,6 @@ function UserManagement({ services, useService }) {
     });
   }, []);
 
-  const handleChangePage = (e) => {
-    setParams((prev) => ({ ...prev, q: e.target.value }));
-  };
-  const handleChangeRowsPerPage = (e) => {
-    setParams((prev) => ({ ...prev, q: e.target.value }));
-  };
-
   const {
     isOpen: isModalOpen,
     onOpen: onOpenModal,
@@ -59,7 +40,7 @@ function UserManagement({ services, useService }) {
 
   const handleKeyDown = (e) => {
     if (e.ctrlKey && e.keyCode === 8) {
-      setParams((prev) => ({ ...prev, q: "" }));
+      // setParams((prev) => ({ ...prev, q: "" }));
     }
   };
   /**
@@ -147,11 +128,9 @@ function UserManagement({ services, useService }) {
           </div>
         </Col>
         <Col sm="auto">
-          {data && (
-            <Button onClick={() => onOpenModal({ method: "post" })}>
-              <i className="fa fa-plus"></i> Add User
-            </Button>
-          )}
+          <Button onClick={() => onOpenModal({ method: "post" })}>
+            <i className="fa fa-plus"></i> Add User
+          </Button>
         </Col>
       </Row>
 
@@ -169,7 +148,7 @@ function UserManagement({ services, useService }) {
               mapping={{
                 id: "user_id",
               }}
-              {...{service}}
+              {...{ service }}
               omit="*"
               extras={[
                 "user_id",

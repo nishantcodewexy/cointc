@@ -165,7 +165,7 @@ class GroupServices {
   getKYC = async (params) => {
     return this.decorate(
       async () =>
-        await this.axios(`kyc`, {
+        await this.axios(`bank-details`, {
           method: "GET",
           params,
         })
