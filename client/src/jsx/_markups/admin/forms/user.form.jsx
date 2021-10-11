@@ -1,24 +1,29 @@
-import { Form, Button } from "react-bootstrap";
-import { Formik } from "formik";
+import { Form, Button, Row, Col } from "react-bootstrap";
+import { Formik, Form as FormikForm, Field } from "formik";
 import Switch from "@mui/material/Switch";
 import Checkbox from "@mui/material/Checkbox";
+import { FormControlUnstyled } from "@mui/core";
 
 export function UserForm({ action, payload = {} }) {
   return <Formik>A form</Formik>;
 }
+
+// CREATE NEW USER FORM
 export function Create({ action, callback, payload: initialData = {} }) {
   return (
     <Formik
       initialValues={{
         email: initialData?.emaill || "",
-        role: "admin",
+        asAdmin: initialData?.role == "admin" || false,
         sudo: true,
       }}
       validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let response = await action(values);
-          callback && callback(response);
+          let { asAdmin, ...others } = values;
+          let dataPayload = { ...others, role: asAdmin ? "admin" : "basic" };
+          await action(dataPayload);
+          callback && callback();
         } catch (error) {
           console.error(error);
         } finally {
@@ -48,6 +53,19 @@ export function Create({ action, callback, payload: initialData = {} }) {
               placeholder="Email address"
             />
           </Form.Group>
+          <Form.Group>
+            <Form.Label
+              style={{
+                display: "flex",
+                gap: 10,
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Form.Text>Create as Administrator</Form.Text>
+              <Switch name="asAdmin" onChange={handleChange} />
+            </Form.Label>
+          </Form.Group>
 
           <Button variant="primary" disabled={isSubmitting} block type="submit">
             {isSubmitting ? "Saving..." : "Save"}
@@ -57,18 +75,27 @@ export function Create({ action, callback, payload: initialData = {} }) {
     </Formik>
   );
 }
-export function Modify({ action, callback, payload: initialValues = {} }) {
+
+// UPDATE USER FORM
+export function Update({ action, callback, payload: initialValues = {} }) {
   return (
     <Formik
       initialValues={{
-        ...initialValues,
+        email: initialValues?.email || '',
+        asAdmin:  initialValues?.role == 'admin' ? true : false,
+        suspend: initialValues?.archivedAt ? true : false,
         sudo: true,
+        role: initialValues?.role,
+        id: initialValues?.id
       }}
       validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let response = await action(values);
-          callback && callback(response);
+          let { asAdmin, sudo, suspend, ...others } = values;
+          let dataPayload = { ...others, role: asAdmin ? "admin" : "basic" };
+          console.log(dataPayload)
+          let response = await action({data: [dataPayload], sudo});
+          // callback && callback(response);
         } catch (error) {
           console.error(error);
         } finally {
@@ -87,6 +114,7 @@ export function Modify({ action, callback, payload: initialValues = {} }) {
       }) => (
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mt-3 mb-3" controlId="user_email">
+            <Form.Label>Email address</Form.Label>
             <Form.Control
               type="email"
               name="email"
@@ -96,13 +124,41 @@ export function Modify({ action, callback, payload: initialValues = {} }) {
               value={values.email}
               placeholder="Email address"
             />
+            <Form.Text>
+              Current role: <strong>{values?.role}</strong>
+            </Form.Text>
           </Form.Group>
 
           {values?.role !== "admin" && (
-            <Form.Group className="mt-3 mb-3" controlId="user_role">
-              <Form.Text>Set as Administrator</Form.Text>
-              <Switch /> Admin
-            </Form.Group>
+            <>
+              <Form.Group className="mt-3 mb-3" controlId="user_as_admin">
+                <Form.Label
+                  style={{
+                    display: "flex",
+                    gap: 10,
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Form.Text>Administrator</Form.Text>
+                  <Switch name="asAdmin" onChange={handleChange} />
+                </Form.Label>
+              </Form.Group>
+
+              <Form.Group className="mt-3 mb-3" controlId="user_suspended">
+                <Form.Label
+                  style={{
+                    display: "flex",
+                    gap: 10,
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Form.Text>Suspend</Form.Text>
+                  <Switch name="suspend" onChange={handleChange} />
+                </Form.Label>
+              </Form.Group>
+            </>
           )}
           <Button variant="primary" disabled={isSubmitting} block type="submit">
             {isSubmitting ? "Saving..." : "Save"}
@@ -112,6 +168,8 @@ export function Modify({ action, callback, payload: initialValues = {} }) {
     </Formik>
   );
 }
+
+// DELETE USER FORM
 export function Drop({ action, callback, payload: initialValues = {} }) {
   return (
     <Formik
@@ -161,8 +219,6 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
             <li>{values?.email}</li>
           </ul>
 
-         
-
           <Form.Group controlId="delete_type" className="mt-3 mb-3">
             <Checkbox />I understand the implications of my action
           </Form.Group>
@@ -170,7 +226,7 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
           <Button variant="primary" disabled={isSubmitting} block type="submit">
             {isSubmitting ? "Processing..." : "Confirm"}
           </Button>
-           <Form.Text controlId="delete_type" className="text-muted">
+          <Form.Text controlId="delete_type" className="text-muted">
             <Switch />
             Permanently delete
           </Form.Text>
@@ -180,7 +236,7 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
   );
 }
 export default Object.assign(UserForm, {
-  Modify,
+  Modify: Update,
   Create,
   Delete: Drop,
   Drop,

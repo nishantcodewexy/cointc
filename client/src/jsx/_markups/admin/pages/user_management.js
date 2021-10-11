@@ -26,10 +26,13 @@ function UserManagement({ services, useService }) {
 
   let { data, error, isFetching, dispatchRequest } = useService({
     get: group.listUsers,
+    post: group.createUsers,
+    put: group.updateUsers,
+    drop: group.dropUsers,
   });
 
   useEffect(() => {
-    dispatchRequest({ type: "get" });
+    dispatchRequest({ type: "get", payload: { "order[createdAt]": "DESC" } });
   }, []);
 
   const handleChange = (e) => {
@@ -63,7 +66,9 @@ function UserManagement({ services, useService }) {
             return [
               "Create new User",
               <UserForm.Create
-                action={() => dispatchRequest({ type: "post" })}
+                action={(requestPayload) =>
+                  dispatchRequest({ type: "post", payload: requestPayload })
+                }
                 payload={formData?.payload}
                 callback={onModalClose}
               />,
@@ -72,7 +77,9 @@ function UserManagement({ services, useService }) {
             return [
               "Update User",
               <UserForm.Modify
-                action={() => dispatchRequest({ type: "put" })}
+                action={(requestPayload) =>
+                  dispatchRequest({ type: "put", payload: requestPayload })
+                }
                 payload={formData?.payload}
                 callback={onModalClose}
               />,
@@ -82,7 +89,9 @@ function UserManagement({ services, useService }) {
             return [
               "Delete User",
               <UserForm.Delete
-                action={() => dispatchRequest({ type: "drop" })}
+                action={(requestPayload) =>
+                  dispatchRequest({ type: "drop", payload: requestPayload })
+                }
                 payload={formData?.payload}
                 callback={onModalClose}
               />,
@@ -146,7 +155,7 @@ function UserManagement({ services, useService }) {
         <Col>
           <Card>
             <TableGenerator
-              data={data?.results}
+              data={data?.results || []}
               mapping={{
                 id: "user_id",
               }}
@@ -177,7 +186,12 @@ function UserManagement({ services, useService }) {
                         gap: 10,
                       }}
                     >
-                      <button style={{appearance: 'none', border: 'none', background: 'none'}}
+                      <button
+                        style={{
+                          appearance: "none",
+                          border: "none",
+                          background: "none",
+                        }}
                         onClick={() =>
                           onOpenModal({ method: "put", payload: row })
                         }
@@ -185,10 +199,16 @@ function UserManagement({ services, useService }) {
                         <span className="themify-glyph-29"></span> Edit
                       </button>
                       {/* TODO: Delete user */}
-                      <button style={{appearance: 'none', border: 'none', background: 'none'}}
+                      <button
+                        style={{
+                          appearance: "none",
+                          border: "none",
+                          background: "none",
+                        }}
                         onClick={() =>
                           onOpenModal({ method: "delete", payload: row })
-                        }>
+                        }
+                      >
                         <span className="themify-glyph-165"></span> Delete
                       </button>
                     </div>

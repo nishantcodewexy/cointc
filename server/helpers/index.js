@@ -1,6 +1,6 @@
 "use strict";
-const searchBuilder = require('sequelize-search-builder');
-const Sequelize = require("sequelize")
+const searchBuilder = require("sequelize-search-builder");
+const Sequelize = require("sequelize");
 
 const fs = require("fs");
 const path = require("path");
@@ -13,7 +13,7 @@ const { nanoid } = require("nanoid");
 const glob = require("glob");
 const util = require("util");
 const { Op } = require("sequelize");
-const permissions = require('../permissions')
+const permissions = require("../permissions");
 // const wallets = require("../wallets");
 const env = process.env.NODE_ENV || "development";
 
@@ -339,8 +339,6 @@ module.exports = {
     }
   },
 
-
-
   generator: {
     referralCode(email) {
       let username = email.split("@")[0];
@@ -379,7 +377,7 @@ module.exports = {
   //   return JSON.parse(Buffer.from(hex, "hex"));
   // },
 
- /*  sluggify: (text) => {
+  /*  sluggify: (text) => {
     return text.toLowerCase();
   },
 
@@ -393,43 +391,42 @@ module.exports = {
    * @param {String[]} args.searchFields
    * @returns {Object}
    */
-  filters: async ({ query, searchFields,extra={} }) => {
-    if(!query) query={}
-    if(!searchFields) searchFields=[]
-    const q = query.q||''
+  filters: async ({ query = {}, searchFields = [], extra = {} }) => {
+    const q = query.q || "";
 
-    const searchQuery = {}
+    const searchQuery = {};
 
-    q&&searchFields.forEach(key=>{
-      searchQuery[key] = {
-        [Op.iLike]:`%${q}%`
-      }
+    q &&
+      searchFields.forEach((key) => {
+        searchQuery[key] = {
+          [Op.iLike]: `%${q}%`,
+        };
+      });
 
-    })
+    let extraWhere = q
+      ? {
+          [Op.or]: searchQuery,
+        }
+      : {};
 
-    let extraWhere = q?{
-      [Op.or]:searchQuery
-    }:{}
-
-    const search = new searchBuilder(Sequelize,query).setConfig({
-      "default-limit": 20
-    })
-    const whereQuery  = search.getWhereQuery();
-    const orderQuery  = search.getOrderQuery();
-    const limitQuery  = search.getLimitQuery();
+    const search = new searchBuilder(Sequelize, query).setConfig({
+      "default-limit": 20,
+    });
+    const whereQuery = search.getWhereQuery();
+    const orderQuery = search.getOrderQuery();
+    const limitQuery = search.getLimitQuery();
     const offsetQuery = search.getOffsetQuery();
 
     return {
-      where:{
+      where: {
         ...whereQuery,
         ...extraWhere,
-        ...extra
+        ...extra,
       },
-      ...(orderQuery?{order:orderQuery}:{}),
-      limit:limitQuery||20,
-      offset:offsetQuery||0
-    }
-
+      ...(orderQuery ? { order: orderQuery } : {}),
+      limit: limitQuery || 20,
+      offset: offsetQuery || 0,
+    };
   },
   /**
    *
@@ -438,35 +435,33 @@ module.exports = {
    * @param {Number} offset
    * @returns {Promise}
    */
-  paginator:async ({queryset,limit,offset}={limit:0,offset:20})=>{
-    const {rows,count} = await queryset
-    let next,prev;
+  paginator: async ({ queryset, limit, offset } = { limit: 0, offset: 20 }) => {
+    const { rows, count } = await queryset;
+    let next, prev;
 
-    if(offset){
+    if (offset) {
       prev = {
         limit,
-        offset:offset-limit
-      }
-    }else{
-      prev = null
+        offset: offset - limit,
+      };
+    } else {
+      prev = null;
     }
 
-    if(count>limit){
+    if (count > limit) {
       next = {
         limit,
-        offset: offset+limit
-      }
-    }else{
-      next = null
-
+        offset: offset + limit,
+      };
+    } else {
+      next = null;
     }
 
     return {
       count,
       next,
       prev,
-      results:rows
-    }
-
-  }
+      results: rows,
+    };
+  },
 };

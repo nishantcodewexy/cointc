@@ -41,11 +41,11 @@ module.exports = (server) => {
         const { profile } = __assertRole(role);
 
         // Determines whether to mail password to user
-        let mail_secret = !password;
+        // let mail_secret = !password;
 
         // Generate password if one is not supplied
-        if (mail_secret) {
-          debugger;
+        if (sudo) {
+          // debugger;
           password = generator.secret();
         }
         // Check that the user email doesn't already exist

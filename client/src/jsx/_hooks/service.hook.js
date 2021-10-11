@@ -47,18 +47,18 @@ function useService(services) {
 
   const dispatchRequest = async ({ type, payload }) => {
     let response = new Error("");
-    console.log({ prevRequest });
-    
+    // console.log({ prevRequest });
+
     switch (String(type)?.toLowerCase()) {
       case "post":
       case "create":
-        console.log(services);
         response = await request(
           async (payload) => await services.post(payload),
           payload
         );
         setPrevRequest((state) => ({ ...state, [type]: payload }));
-        prevRequest?.get && (await request(services.get, prevRequest["get"]));
+        prevRequest?.get &&
+          (await dispatchRequest({ type: "get", payload: prevRequest["get"] }));
         return response;
 
       case "put":
@@ -67,7 +67,9 @@ function useService(services) {
           await services.put(payload);
         }, payload);
         setPrevRequest((state) => ({ ...state, [type]: payload }));
-        prevRequest?.get && (await request(services.get, prevRequest["get"]));
+        prevRequest?.get &&
+          (await dispatchRequest({ type: "get", payload: prevRequest["get"] }));
+
         return response;
 
       case "drop":
@@ -76,12 +78,15 @@ function useService(services) {
           await services.drop(payload);
         }, payload);
         setPrevRequest((state) => ({ ...state, [type]: payload }));
-        prevRequest?.get && (await request(services.get, prevRequest["get"]));
+        prevRequest?.get &&
+          (await dispatchRequest({ type: "get", payload: prevRequest["get"] }));
+
         return response;
 
       case "get":
       case "fetch":
       default: {
+        console.log("hello", { payload });
         response = await request(async (payload) => {
           let _resp = await services.get(payload);
           setData(_resp);

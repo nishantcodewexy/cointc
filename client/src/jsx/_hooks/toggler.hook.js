@@ -3,11 +3,11 @@ import { useState } from "react";
 function useToggler(defaultValue) {
   const [isOpen, setIsOpen] = useState(defaultValue);
   const [toggledPayload, setPayload] = useState(null);
-  const onOpen = (payload) => {
+  const onOpen = (payload = null) => {
     setIsOpen(true);
     setPayload(payload);
   };
-  const onClose = (payload) => {
+  const onClose = (payload = null) => {
     setIsOpen(false);
     setPayload(payload);
   };

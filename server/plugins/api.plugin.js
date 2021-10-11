@@ -6,7 +6,7 @@ module.exports = {
     /**************************************
      * dynamically register API routes
      **************************************/
-    let routes = glob.sync("/routes/[!_]**/[!_]*.js", {
+    let routes = glob.sync("/routes/api/[!_]**/[!_]*.js", {
       root: path.join(__dirname, ".."),
     });
     // debugger;

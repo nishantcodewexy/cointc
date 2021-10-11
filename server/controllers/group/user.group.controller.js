@@ -1,6 +1,10 @@
+const update = require("../../routes/api/_user/update");
+
 module.exports = (server) => {
   /*********************** HELPERS ***************************/
-  const { __upsert, __destroy, __assertRole } = require("../_methods/index")(server);
+  const { __upsert, __destroy, __assertRole } = require("../_methods/index")(
+    server
+  );
 
   const {
     db,
@@ -59,8 +63,9 @@ module.exports = (server) => {
     async update(req) {
       try {
         const {
-          payload: { data, authorization = null },
+          payload: { data,},
         } = req;
+        console.log({data})
         // TODO: authorization
         const attributes = ["mode", "nickname"];
 
@@ -74,7 +79,8 @@ module.exports = (server) => {
             let where = {
               user_id: id,
             };
-            __upsert(model, payload, where, { transaction: t, attributes });
+            console.log({payloaad})
+           return  __upsert(model, payload, where, { transaction: t, attributes });
           });
         });
       } catch (error) {
@@ -116,14 +122,14 @@ module.exports = (server) => {
         // pre: { isAdmin },
         query,
       } = req;
+      const queryFilters = await filters({ query, searchFields: ["email"] });
 
-      const filterRespond = await filters({ query, searchFields: ["email"] });
-      const queryset = User.findAndCountAll({
+      const queryset = await User.findAndCountAll({
         include: { association: "profile" },
         attributes: { exclude: ["password"] },
-        ...filterRespond,
+        ...queryFilters,
       });
-      const { limit, offset } = filterRespond;
+      const { limit, offset } = queryFilters;
       return paginator({ queryset, limit, offset }).catch(boom.boomify);
     },
 

@@ -86,11 +86,10 @@ module.exports = (server) => {
               }
 
               case "put": {
-                return;
+                return user?.group?.update;
               }
               case "get":
               default: {
-                console.log(query);
                 return query?.id ? user.group.get : user.group.list;
               }
             }
