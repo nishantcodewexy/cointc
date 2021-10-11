@@ -27,6 +27,11 @@ module.exports = {
       CLOSE:"CLOSE",
     },
     MimeType:mimetypes,
+    KycStatusType:{
+      PENDING:"PENDING",
+      ACCEPT:"ACCEPT",
+      DENY:"DENY"
+    }
   },
   FILE_UPLOAD_PATH:process.env.MEDIA_FILE_DIR||'mediafiles'
 };
