@@ -13,19 +13,19 @@ export function Update({ action, callback, payload: initialValues = {} }) {
   return (
     <Formik
       initialValues={{
-        email: initialValues?.email || '',
+        email: initialValues?.email || "",
         id: initialValues?.id,
         suspend: initialValues?.archivedAt ? true : false,
         sudo: true,
-        asAdmin:  initialValues?.role == 'admin' ? true : false,
+        asAdmin: initialValues?.role == "admin" ? true : false,
       }}
       validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
         try {
           let { asAdmin, sudo, suspend, ...others } = values;
           let dataPayload = { ...others, role: asAdmin ? "admin" : "basic" };
-          console.log(dataPayload)
-          let response = await action({data: [dataPayload], sudo, suspend});
+          console.log(dataPayload);
+          let response = await action({ data: [dataPayload], sudo, suspend });
           callback && callback(response);
         } catch (error) {
           console.error(error);
@@ -200,31 +200,71 @@ export function Create({ action, callback, payload: initialData = {} }) {
         touched,
       }) => (
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-3" controlId="formCurrencyCode">
-            <Form.Label>Email address</Form.Label>
+          <Form.Group className="mb-4" controlId="formCurrencyCode">
+            <Form.Label>Account number</Form.Label>
             <Form.Control
               type="text"
-              name="name"
+              name="account_no"
               required
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.email}
-              placeholder="Email address"
+              placeholder="Account Number"
             />
           </Form.Group>
-          <Form.Group>
-            <Form.Label
-              style={{
-                display: "flex",
-                gap: 10,
-                alignItems: "center",
-                justifyContent: "space-between",
-              }}
-            >
-              <Form.Text>Create as Administrator</Form.Text>
-              <Switch name="asAdmin" onChange={handleChange} />
-            </Form.Label>
+          <Form.Group className="mb-4" controlId="formCurrencyCode">
+            <Form.Label>Bank name</Form.Label>
+            <Form.Control
+              type="text"
+              name="bank_name"
+              required
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.bank_name}
+              placeholder="Bank Name"
+            />
           </Form.Group>
+          <Form.Group className="mb-4" controlId="formCurrencyCode">
+            <Form.Label>Currency</Form.Label>
+            <Form.Control as="select"
+              type="text"
+              name="currency"
+              required
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.currency}
+              placeholder="Currency"
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-4" controlId="formCurrencyCode">
+            <Form.Label>Country</Form.Label>
+            <Form.Control as="select"
+              type="text"
+              name="country"
+              required
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.country}
+              placeholder="Country"
+            >
+              <option>Nigeria</option>
+            </Form.Control>
+          </Form.Group>
+          
+          <Form.Group className="mb-4" controlId="formCurrencyCode">
+            <Form.Label>IFSC Code</Form.Label>
+            <Form.Control
+              type="text"
+              name="ifsc_code"
+              required
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.ifsc_code}
+              placeholder="IFSC Code"
+            />
+          </Form.Group>
+          
 
           <Button variant="primary" disabled={isSubmitting} block type="submit">
             {isSubmitting ? "Saving..." : "Save"}
