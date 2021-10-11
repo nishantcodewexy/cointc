@@ -7,17 +7,16 @@ import TablePagination from "@mui/material/TablePagination";
 import EmptyRecord from "./EmptyRecord.Component";
 
 // HOOKS
-import useToggler from "../../../_hooks/toggler.hook";
 import useTableSelector from "../../../_hooks/table.select.hook";
 
 function TableGenerator({
-  data = [],
+  service = {},
   transformers = {},
-  actions = null,
   mapping = {},
   extras = [],
   omit = [],
 }) {
+  const { data, prevRequest, isFetching, dispatchRequest } = service;
   const uuid = nanoid(10);
   const [tableData, setTableData] = useState({
     rows: [],
@@ -26,20 +25,27 @@ function TableGenerator({
     cols: [],
   });
   const { selected, toggleSelect, checkedAll, bulkSelect } = useTableSelector();
+  const [count, setCount] = useState(data?.count || 0);
+  const [page, setPage] = useState(0);
+  const [limit, setLimit] = useState(data?.limit || 10);
 
-  let page = 0;
-  let handleChangePage = () => {};
-  let rowsPerPage = 10;
-  let handleChangeRowsPerPage = () => {};
-
-  function onPageChange() {}
+  let onRowsPerPageChange = () => {
+    console.log(arguments);
+  };
+  function onPageChange(e, newPage) {
+    setPage(newPage);
+    dispatchRequest({
+      type: "get",
+      payload: { ...prevRequest?.get, offset: newPage * limit || 0 },
+    });
+  }
 
   useEffect(() => {
     /**
      * @function getMapping - Returns a row/col mapping of the table data
      * @returns {[]}
      */
-    function getMapping() {
+    function getMapping(data = []) {
       let fullRows = data?.map((obj) => {
         let _obj = {};
         Object.entries(obj).forEach((entry) => (_obj[entry[0]] = entry[1]));
@@ -71,11 +77,12 @@ function TableGenerator({
       ];
     }
 
-    if (data?.length) {
-      const [rows, cols, fullRows, fullCols] = getMapping();
-
+    if (data?.results?.length) {
+      const [rows, cols, fullRows, fullCols] = getMapping(data?.results);
       setTableData({ rows, cols, fullRows, fullCols });
     }
+    setCount(data?.count);
+    setLimit(data?.limit);
   }, [data]);
 
   /**
@@ -127,7 +134,7 @@ function TableGenerator({
                   type="checkbox"
                   className="custom-control-input"
                   id={`select_all_table_record#${uuid}`}
-                  disabled={!data.length}
+                  disabled={!tableData.rows.length}
                   checked={selected?.length === tableData.rows?.length}
                   onChange={() => bulkSelect(tableData.rows)}
                 />
@@ -166,16 +173,19 @@ function TableGenerator({
         </tbody>
       </Table>
       {/* Pagination */}
-      <div style={{ padding: "20px 10px" }}>
-        <TablePagination
-          component="div"
-          count={100}
-          page={page}
-          onPageChange={handleChangePage}
-          rowsPerPage={rowsPerPage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
-      </div>
+
+      {
+        <div style={{ padding: "20px 10px" }}>
+          <TablePagination
+            component="div"
+            count={count}
+            page={page}
+            onPageChange={onPageChange}
+            rowsPerPage={limit || 10}
+            onRowsPerPageChange={onRowsPerPageChange}
+          />
+        </div>
+      }
     </>
   ) : (
     <EmptyRecord />
@@ -185,8 +195,8 @@ function TableGenerator({
 export default TableGenerator;
 
 TableGenerator.propTypes = {
-  data: pt.array,
-  actions: pt.func,
+  // data: pt.object,
+  service: pt.object,
   mapping: pt.object,
   omit: pt.any,
   extras: pt.array,
