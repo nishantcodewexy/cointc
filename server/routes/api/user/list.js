@@ -3,7 +3,11 @@
 module.exports = (server) => {
   const {
     controllers: {
-        ticket: { list },
+        user: { 
+          group:{
+            list
+          }
+         },
     },
     consts: { roles: _roles },
     helpers:{

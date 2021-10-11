@@ -3,7 +3,9 @@
 module.exports = (server) => {
   const {
     controllers: {
-        ticket: { retrieve },
+        user: { 
+          findID
+         },
     },
     consts: { roles: _roles },
     helpers:{
@@ -28,9 +30,9 @@ module.exports = (server) => {
         {
           method:isAdmin,
           assign: "isAdmin",
-        },
+        }
       ],
-      handler: retrieve,
+      handler: findID,
       auth: "jwt",
     },
     

@@ -12,7 +12,7 @@ module.exports = (server) => {
 
   const {
     db,
-    db: { User, sequelize, Wallet },
+    db: { User, sequelize, Wallet,Profile,AdminProfile,Upload },
     boom,
     config: { client_url },
     helpers: { decrypt, mailer, jwt, generator },
@@ -243,29 +243,88 @@ module.exports = (server) => {
         // get user ID from preHandler
         let {
           params: { id },
-          pre: { user },
+          pre: { 
+            isAdmin
+          },
+          auth:{
+            credentials:{
+              user
+            }
+          }
         } = req;
 
+        
+        
         // handle invalid params <id> 400
         if (!id) return boom.badRequest();
 
-        const role = await User.findOne({
-          where: { id: user },
+        const result = await User.findOne({
+          where: { 
+            ...(isAdmin&&id!=="me"?{id:id}:{id:user.id})
+           },
+           attributes:[
+             "id",
+             "email",
+             "role",
+             "permission",
+             "last_seen",
+             "login_at",
+             "updated_at"
+           ],
+           
+           include:isAdmin?{
+            model:AdminProfile,
+            as:"admin_profile",
+            attributes:[
+              "nickname",
+              "kyc",
+              "created_at",
+              "updated_at"
+            ]
+           }:{
+            model:Profile,
+            as:"profile",
+            attributes:[
+              "mode",
+              "nickname",
+              "kyc",
+              "referral_code",
+              "created_at",
+              "updated_at",
+              "sutability",
+              "country",
+              "profile_pic",
+              "kyc_status",
+              "date_of_birth",
+              "last_name",
+              "other_names"
+            ],
+            include:{
+              model:Upload
+            }
+           }
         })
-          .then((_user) => _user.role)
-          .catch((error) => {
-            throw new Error(`User Controller:findID - ${error.message}`);
-          });
+
+        if(!result){
+          throw boom.notFound("not found")
+        }
+
+
+        return result
+          // .then((_user) => _user.role)
+          // .catch((error) => {
+          //   throw new Error(`User Controller:findID - ${error.message}`);
+          // });
 
         // Do not allow standard users to find admins
-        let where = role == _roles.standard ? { id, role } : { id };
+        // let where = role == _roles.standard ? { id, role } : { id };
 
-        // Find target user
-        return await User.findOne({
-          where,
-        }).then(
-          (_user) => _user?.toPublic() ?? boom.notFound("User not found!")
-        );
+        // // Find target user
+        // return await User.findOne({
+        //   where,
+        // }).then(
+        //   (_user) => _user?.toPublic() ?? boom.notFound("User not found!")
+        // );
       } catch (error) {
         console.error(error);
         return boom.boomify(error);

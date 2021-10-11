@@ -3,29 +3,39 @@ const Joi = require("joi")
 module.exports = (server) => {
   const {
     controllers: {
-      ticket: { update },
+      user: { 
+        update
+       },
     },
     consts: { 
-      roles: _roles,
-      types:{
-        TicketSubjectType,
-        TicketStatusType
-      }
+      roles: _roles
      },
     helpers:{
       permissions:{
-        isAdmin,
-        isAdminOrError
+        isAdmin
       }
     }
   } = server.app;
 
   const schema = Joi.object({
-    
-    subject:Joi.string().valid(...Object.keys(TicketSubjectType)),
-    status:Joi.string().valid(...Object.keys(TicketStatusType)),
-    
-})
+    data: Joi.array().items(
+      Joi.object({
+        kyc: Joi.object({
+          email: Joi.bool(),
+          payment_methods: Joi.object({
+            we_chat: Joi.any(),
+          }),
+          sms: Joi.string(),
+          id: Joi.string(),
+          account_no: Joi.string(),
+          bank_name: Joi.string(),
+          IFSC_code: Joi.string(),
+          country: Joi.string(),
+          currency: Joi.string(),
+        }),
+      })
+    ),
+  });
 
 
   return {
@@ -40,14 +50,10 @@ module.exports = (server) => {
           },
           assign: "role",
         },
-        // {
-        //   method:isAdmin,
-        //   assign: "isAdmin",
-        // },
         {
-          method:isAdminOrError,
-          assign: "isAdminOrError",
-        },
+          method:isAdmin,
+          assign: "isAdmin",
+        }
       ],
       handler: update,
       auth: "jwt",
