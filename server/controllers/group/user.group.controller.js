@@ -67,7 +67,8 @@ module.exports = (server) => {
         } = req;
         console.log({ data });
         // TODO: authorization
-        const attributes = ["mode", "nickname", "role", "email"];
+        
+        const attributes = ["mode", "nickname", "role"];
 
         return await sequelize.transaction(async (t) => {
           return data.map(async ({ id, ...payload }) => {

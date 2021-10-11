@@ -1,7 +1,8 @@
 const assert = require("assert");
 const searchBuilder = require("sequelize-search-builder");
 const Sequelize = require("sequelize");
-const Joi = require("joi")
+const Joi = require("joi");
+const { roles } = require("../consts");
 /**
  * @description - User controller
  * @param {Object} server  - Server instance
@@ -40,7 +41,7 @@ module.exports = (server) => {
         role
       } = req.pre;
       let {
-        payload: { email, password, sudo = false, ...restOfPayload },
+        payload: { email, password,referrer,sudo = false, ...restOfPayload },
       } = req;
 
       assert(email, boom.badRequest("Expected email"));
@@ -96,6 +97,12 @@ module.exports = (server) => {
           /************ End send mail ***************/
 
           await _user.createWallet({ asset: "BTC" }, { transaction: t });
+
+          if(referrer){
+            const ref = await User.findByPk(referrer)
+            ref&&ref.addReferrer(_user)
+          }
+          
 
           return sudo
             ? {
@@ -265,7 +272,13 @@ module.exports = (server) => {
         
         // handle invalid params <id> 400
         if (!id) return boom.badRequest();
-
+        const _user = await User.findOne({
+          where:{
+            ...(isAdmin&&id!=="me"?{id:id}:{id:user.id})
+          }
+        })
+        if(!_user) throw boom.notFound()
+        
         const result = await User.findOne({
           where: { 
             ...(isAdmin&&id!=="me"?{id:id}:{id:user.id})
@@ -280,7 +293,7 @@ module.exports = (server) => {
              "updated_at"
            ],
            
-           include:isAdmin?{
+           include:_user.role===roles.admin?{
             model:AdminProfile,
             as:"admin_profile",
             attributes:[
@@ -299,7 +312,7 @@ module.exports = (server) => {
               "referral_code",
               "created_at",
               "updated_at",
-              "sutability",
+              "suitability",
               "country",
               "profile_pic",
               "kyc_status",
@@ -391,6 +404,7 @@ module.exports = (server) => {
         let schema
 
         if(isAdmin&&id!=="me"){
+          
           schema = Joi.object({
             kyc: Joi.object({
               email: Joi.bool(),
@@ -405,6 +419,8 @@ module.exports = (server) => {
               country: Joi.string(),
               currency: Joi.string(),
             }),
+            permission:Joi.boolean().optional()
+            
           })
 
 
@@ -431,20 +447,52 @@ module.exports = (server) => {
 
         if(error) throw boom.badRequest(error)
 
+
+        const permission = payload.permission
+
         if(isAdmin&&id==="me"){
-          return await AdminProfile.update(payload,{
+          let profile = await AdminProfile.update(payload,{
             where:{
               user_id:user.id
             }
           })
 
+          if(profile&&[true,false].includes(permission)){
+            await User.update({
+              permission
+            },{
+              where:{
+                id:user.id
+              }
+            })
+          }
+          
+          return profile
+
           
         }else{
-          return await Profile.update(payload,{
+
+          
+          let profile = await Profile.update(payload,{
             where:{
               user_id:isAdmin&&id!=="me"?id:user.id
-            }
+            },
+            
           })
+          if(profile&&[true,false].includes(permission)){
+            console.log("am here")
+            let __user = await User.update({
+              permission
+            },{
+              where:{
+                id:isAdmin&&id!=="me"?id:user.id
+              }
+            })
+
+            
+          }
+          
+          return profile
         }
 
         
