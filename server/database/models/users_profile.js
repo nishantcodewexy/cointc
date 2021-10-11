@@ -2,7 +2,11 @@
 const { Model } = require("sequelize");
 const _ = require("underscore");
 const hooks = require('../hooks/user.profile.hook')
-
+const {
+  types:{
+    KycStatusType
+  }
+} = require("../../consts")
 
 module.exports = (sequelize, DataTypes) => {
   class Profile extends Model {
@@ -12,10 +16,18 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { Profile, User } = models;
+      const { Profile, User,Upload } = models;
       Profile.belongsTo(User, {
         foreignKey: "user_id",
       });
+      Profile.belongsTo(Upload, {
+        as: "profile_pic",
+      });
+      Profile.belongsTo(Upload, {
+        as: "kyc_document",
+      });
+      
+      
     }
     toPublic() {
       return _.omit(this.toJSON(), [
@@ -77,6 +89,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue:''
       },
+      kyc_status:{
+        type:DataTypes.ENUM(Object.keys(KycStatusType)),
+        defaultValue:KycStatusType.PENDING
+      },
+      last_name:{
+        type:DataTypes.STRING
+      },
+      other_names:{
+        type:DataTypes.STRING
+      }
     },
     {
       sequelize,
