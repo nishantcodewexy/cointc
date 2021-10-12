@@ -47,7 +47,7 @@ module.exports = (server) => {
   
   return {
     method: "POST",
-    path: "/account/u/order",
+    path: "/order",
     config: {
       pre: [
         {

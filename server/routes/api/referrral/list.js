@@ -3,19 +3,19 @@
 module.exports = (server) => {
   const {
     controllers: {
-      referral: { getAll },
+      referral: { list },
     },
     consts: { roles: _roles },
     helpers:{
       permissions:{
-        isAdmin
+        isAdmin,
       }
     }
   } = server.app;
 
   return {
     method: "GET",
-    path: "/account/referral",
+    path: "/referrals",
     config: {
       pre: [
         {
@@ -30,7 +30,7 @@ module.exports = (server) => {
           assign: "isAdmin",
         },
       ],
-      handler: getAll,
+      handler: list,
       auth: "jwt",
     },
     

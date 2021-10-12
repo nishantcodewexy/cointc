@@ -16,7 +16,7 @@ module.exports = (server) => {
   const schema = Joi.array().items(Joi.string())
   return {
     method: "DELETE",
-    path: "/account/u/secessions",
+    path: "/secessions",
     config: {
       pre: [
         {

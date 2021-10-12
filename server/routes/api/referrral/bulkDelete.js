@@ -11,7 +11,8 @@ module.exports = (server) => {
     consts: { roles: _roles },
     helpers:{
       permissions:{
-        isAdmin
+        isAdmin,
+        isAdminOrError
       }
     }
   } = server.app;
@@ -23,7 +24,7 @@ module.exports = (server) => {
 
   return {
     method: "DELETE",
-    path: "/account/referral",
+    path: "/referrals",
     config: {
       pre: [
         {
@@ -36,6 +37,10 @@ module.exports = (server) => {
         {
           method:isAdmin,
           assign: "isAdmin",
+        },
+        {
+          method:isAdminOrError,
+          assign: "isAdminOrError",
         },
       ],
       handler: bulkDestroy,
