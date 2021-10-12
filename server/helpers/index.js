@@ -392,8 +392,8 @@ module.exports = {
    * @returns {Object}
    */
   filters: async ({ query = {}, searchFields = [], extras = {} }) => {
+    const { options = {}, ...qObj } = query;
     const q = query.q || "";
-
     const searchQuery = {};
 
     q &&
@@ -409,7 +409,10 @@ module.exports = {
         }
       : {};
 
-    const search = new searchBuilder(Sequelize, query).setConfig({
+    const search = new searchBuilder(Sequelize, {
+      qObj,
+      ...options,
+    }).setConfig({
       "default-limit": 10,
     });
     const whereQuery = search.getWhereQuery();

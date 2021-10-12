@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 import TablePagination from "@mui/material/TablePagination";
 // COMPONENTS
-import EmptyRecord from "./EmptyRecord.Component";
+import Empty from "./Empty.Component";
 
 // HOOKS
 import useTableSelector from "../../../_hooks/table.select.hook";
@@ -16,7 +16,7 @@ function TableGenerator({
   extras = [],
   omit = [],
 }) {
-  const { data, prevRequest, isFetching, dispatchRequest } = service;
+  const { data, prevRequest, error, isFetching, dispatchRequest } = service;
   const uuid = nanoid(10);
   const [tableData, setTableData] = useState({
     rows: [],
@@ -28,17 +28,6 @@ function TableGenerator({
   const [count, setCount] = useState(data?.count || 0);
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(data?.limit || 10);
-
-  let onRowsPerPageChange = () => {
-    console.log(arguments);
-  };
-  function onPageChange(e, newPage) {
-    setPage(newPage);
-    dispatchRequest({
-      type: "get",
-      payload: { ...prevRequest?.get, offset: newPage * limit || 0 },
-    });
-  }
 
   useEffect(() => {
     /**
@@ -76,7 +65,6 @@ function TableGenerator({
         fullCols,
       ];
     }
-
     if (data?.results?.length) {
       const [rows, cols, fullRows, fullCols] = getMapping(data?.results);
       setTableData({ rows, cols, fullRows, fullCols });
@@ -84,6 +72,32 @@ function TableGenerator({
     setCount(data?.count);
     setLimit(data?.limit);
   }, [data]);
+
+  function onRowsPerPageChange(e, { props }) {
+    setLimit(props.value);
+    dispatchRequest({
+      type: "list",
+      payload: {
+        ...prevRequest?.get,
+        limit: props.value,
+        offset: page * limit || 0,
+      },
+      overwrite: false,
+    });
+  }
+
+  /**
+   * @function onPageChange
+   * @param {Object} e
+   * @param {Number} newPage
+   */
+  function onPageChange(e, newPage) {
+    setPage(newPage);
+    dispatchRequest({
+      type: "list",
+      payload: { ...prevRequest?.get, limit, offset: newPage * limit || 0 },
+    });
+  }
 
   /**
    * @function transformValue - Transforms column value using the transformer if specified
@@ -122,8 +136,10 @@ function TableGenerator({
       </div>
     );
   }
-
-  return tableData.rows.length ? (
+  
+  return isFetching ? (
+    <Empty.Loading></Empty.Loading>
+  ) : tableData.rows.length ? (
     <>
       <Table key={uuid} responsive hover size="sm">
         <thead>
@@ -188,7 +204,7 @@ function TableGenerator({
       }
     </>
   ) : (
-    <EmptyRecord />
+    <Empty />
   );
 }
 

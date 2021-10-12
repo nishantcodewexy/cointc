@@ -4,6 +4,7 @@ import "moment-timezone";
 import styled from "styled-components";
 import { Card, Row, Col, Button, Dropdown, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // COMPONENTS
 import PageTitle from "../layouts/PageTitle";
@@ -61,12 +62,41 @@ function UsersPermissionTable({ services, useService }) {
   const group = useGroupService();
 
   let service = useService({
-    get: group.listUsers,
+    list: group.listUsers,
   });
   const { dispatchRequest } = service;
+  function notifySuccess() {
+    toast.success("Success !", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+
+  function notifyError(error) {
+    toast.error(error || "Request Error!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
 
   useEffect(() => {
-    dispatchRequest({ type: "get" });
+    dispatchRequest({
+      type: "list",
+      payload: {
+        "order[updatedAt]": "DESC",
+        "order[createdAt]": "DESC",
+        "options[paranoid]": false,
+      },
+      toast: { success: notifySuccess, error: notifyError },
+    });
   }, []);
 
   const actions = (id) => (

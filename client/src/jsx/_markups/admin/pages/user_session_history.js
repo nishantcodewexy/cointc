@@ -28,11 +28,11 @@ function UserSessionHistoryTable({ useService, services }) {
   const { useGroupService } = services;
   const group = useGroupService();
   let service = useService({
-    get: group.listUsers,
+    list: group.listUsers,
   });
   const { dispatchRequest } = service;
   useEffect(() => {
-    dispatchRequest({ type: "get" });
+    dispatchRequest({ type: "list" });
   }, []);
 
   return (
@@ -68,9 +68,7 @@ function UserSessionHistoryTable({ useService, services }) {
                 className="fa fa-circle text-success"
                 style={{ fontSize: 12 }}
               ></span>{" "}
-              <Moment trim fromNow>
-                {row?.last_seen}
-              </Moment>
+             {row?.last_seen || 'Unknown'}
             </>
           ),
           login: ({ row }) => {

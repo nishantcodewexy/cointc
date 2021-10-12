@@ -1,8 +1,35 @@
+import { useEffect } from "react";
 import { Card, Row, Col, Button, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
+import useToggler from "../../../_hooks/toggler.hook";
 
-function ChatHistory() {
+// COMPONENTS
+import TableGenerator from "../components/TableGenerator.Component";
+
+function ChatHistory({ services, useService }) {
+  const { useGroupService } = services;
+  const group = useGroupService();
+
+  let service = useService({
+    get: group.listChatHistory,
+  });
+
+  const { dispatchRequest, isFetching } = service;
+
+  useEffect(() => {
+    dispatchRequest({ type: "get" });
+  }, []);
+
+  const {
+    isOpen: isModalOpen,
+    onOpen: onOpenModal,
+    onClose: onModalClose,
+    toggledPayload: modalPayload,
+  } = useToggler();
+
+  function useFormRenderer(formData = { method: null, payload: null }) {}
+
   return (
     <>
       <PageTitle activeMenu="History" motherMenu="Chat management" />
@@ -36,99 +63,44 @@ function ChatHistory() {
               padding: 10,
             }}
           >
-            <ChatHistoryTable />
+            <TableGenerator
+              {...{ service }}
+              mapping={{}}
+              omit="*"
+              extras={[
+                "creation_date",
+                "visitor_email",
+                "country",
+                "browser",
+                "duration",
+                "action",
+              ]}
+              transformers={{
+                creation_date: ({ key, value }) => (
+                  <>{value ? "permitted" : "Not permitted"}</>
+                ),
+                visitor_email: ({ key, value }) => (
+                  <>{value ? "permitted" : "Not permitted"}</>
+                ),
+                country: ({ key, value }) => (
+                  <>{value ? "permitted" : "Not permitted"}</>
+                ),
+                browser: ({ key, value }) => (
+                  <>{value ? "permitted" : "Not permitted"}</>
+                ),
+                duration: ({ key, value }) => (
+                  <>{value ? "permitted" : "Not permitted"}</>
+                ),
+                action: ({ key, value }) => (
+                  <>
+                    <span className="themify-glyph-165"></span> Delete
+                  </>
+                ),
+              }}
+            />
           </Card>
         </Col>
       </Row>
-    </>
-  );
-}
-function ChatHistoryTable() {
-  const chackbox = document.querySelectorAll(".chat_history_single input");
-  const motherChackBox = document.querySelector(".chat_history input");
-  // console.log(document.querySelectorAll(".publish_review input")[0].checked);
-  const checkboxFun = (type) => {
-    for (let i = 0; i < chackbox.length; i++) {
-      const element = chackbox[i];
-      if (type === "all") {
-        if (motherChackBox.checked) {
-          element.checked = true;
-        } else {
-          element.checked = false;
-        }
-      } else {
-        if (!element.checked) {
-          motherChackBox.checked = false;
-          break;
-        } else {
-          motherChackBox.checked = true;
-        }
-      }
-    }
-  };
-
-  const check = (i) => (
-    <div className={`custom-control custom-checkbox ml-2`}>
-      <input
-        type="checkbox"
-        className="custom-control-input "
-        id={`checkAll_chat_history_${i}`}
-        required=""
-        onClick={() => checkboxFun()}
-      />
-      <label
-        className="custom-control-label"
-        htmlFor={`checkAll_chat_history_${i}`}
-      ></label>
-    </div>
-  );
-
-  const action = (
-    <div className="d-flex" style={{ gap: 20 }}>
-      <a href="">
-        <span className="themify-glyph-165"></span> Delete
-      </a>
-    </div>
-  );
-  return (
-    <>
-      <Table responsive hover size="sm">
-        <thead>
-          <tr>
-            <th className="chat_history">
-              <div className="custom-control custom-checkbox mx-2">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="checkAll_chat_history_all"
-                  onClick={() => checkboxFun("all")}
-                />
-                <label
-                  className="custom-control-label"
-                  htmlFor="checkAll_chat_history_all"
-                ></label>
-              </div>
-            </th>
-            <th>Creation date</th>
-            <th className="">Visitor Email</th>
-            <th className="">Country</th>
-            <th className="">Browser</th>
-            <th className="">Duratioin</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="customers">
-          <tr className="btn-reveal-trigger">
-            <td className="chat_history_single">{check(1)}</td>
-            <td className="py-2">Wed May 05:11 12/04/2020</td>
-            <td className="py-2">abc@mail.com</td>
-            <td className="py-2">USA</td>
-            <td className="py-2">Chrome (66.035.4545)</td>
-            <td className="py-2">1 min</td>
-            <td>{action}</td>
-          </tr>
-        </tbody>
-      </Table>
     </>
   );
 }

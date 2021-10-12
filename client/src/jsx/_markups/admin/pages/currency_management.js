@@ -3,58 +3,126 @@ import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
 import { useEffect } from "react";
 import useToggler from "../../../_hooks/toggler.hook";
-import EmptyRecord from "../components/EmptyRecord.Component";
+import EmptyRecord from "../components/Empty.Component";
 import useTableSelector from "../../../_hooks/table.select.hook";
 import { LinearProgress, TablePagination } from "@material-ui/core";
-
+import { toast } from "react-toastify";
 // COMPONENTS
 import TableGenerator from "../components/TableGenerator.Component";
+import CurrencyForm from "../forms/currency.form";
+import { ModalForm } from "../components/ModalForm.Component.jsx";
 
 function CurrencyMgmt({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();
-  let { data, error, isFetching, dispatchRequest } = useService({
+  let service = useService({
+    list: group.listCurrency,
     get: group.getCurrency,
+    post: group.createCurrency,
+    put: group.updateCurrency,
+    drop: group.dropCurrency,
   });
+  const { dispatchRequest } = service;
 
-  useEffect(() => {
-    dispatchRequest({ type: "get" });
-  }, []);
-
-/*   useEffect(() => {
-    if (data?.results) {
-      const [rows, cols, _data] = getMapping(data.results);
-      console.log({ rows, cols, _data });
-    }
-  }, [data]);
-
-  function getMapping(data) {
-    let rows = [],
-      cols = [];
-    rows = Object.keys(data[0]);
-    cols = Object.values(data);
-    return [rows, cols, data];
-  }
- */
   const {
     isOpen: isModalOpen,
     onOpen: onOpenModal,
-    onClose: onCloseModal,
+    onClose: onModalClose,
+    toggledPayload: modalPayload,
   } = useToggler();
 
-  const actions = (_item) => (
-    <div className="d-flex" style={{ gap: 20 }}>
-      <ModifierForm isOpen={isModalOpen} data={_item} onClose={onCloseModal}>
-        {/* {Object.values(_item).join(", ")} */}
-        <a onClick={onOpenModal}>
-          <span className="themify-glyph-29"></span> Edit
-        </a>
-      </ModifierForm>
-      <a href="">
-        <span className="themify-glyph-165"></span> Delete
-      </a>
-    </div>
-  );
+  useEffect(() => {
+    dispatchRequest({
+      type: "list",
+      payload: {
+        paranoid: false,
+      },
+      toast: { success: notifySuccess, error: notifyError },
+    });
+  }, []);
+
+  function notifySuccess() {
+    toast.success("Success !", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+
+  function notifyError(error) {
+    toast.error(error || "Request Error!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+
+  function useFormRenderer(formData = { method: null, payload: null }) {
+    const [title, form] = (() => {
+      try {
+        switch (formData?.method) {
+          case "post":
+            return [
+              "Create new Currency",
+              <CurrencyForm
+                action={(requestPayload) =>
+                  dispatchRequest({ type: "post", payload: requestPayload })
+                }
+                payload={formData?.payload}
+                callback={onModalClose}
+              />,
+            ];
+          case "put":
+            return [
+              "Update Currency",
+              <CurrencyForm.Update
+                action={(requestPayload) =>
+                  dispatchRequest({
+                    type: "put",
+                    payload: requestPayload,
+                  })
+                }
+                payload={formData?.payload}
+                callback={onModalClose}
+              />,
+            ];
+          case "drop":
+          case "delete":
+            return [
+              "Confirm Delete",
+              <CurrencyForm.Drop
+                action={(requestPayload) =>
+                  dispatchRequest({
+                    type: "drop",
+                    payload: requestPayload,
+                  })
+                }
+                payload={formData?.payload}
+                callback={onModalClose}
+              />,
+            ];
+          default:
+            return [null, null];
+        }
+      } catch (error) {
+        console.error(
+          "Must pass in method and payload key to the formData argument"
+        );
+      }
+    })();
+    return [
+      title,
+      <Row>
+        <Col>{form}</Col>
+      </Row>,
+    ];
+  }
 
   return (
     <>
@@ -81,201 +149,84 @@ function CurrencyMgmt({ services, useService }) {
         </Col>
 
         <Col sm="auto" style={{ padding: 0 }}>
-          <ModifierForm isOpen={isModalOpen} onClose={onCloseModal}>
-            <Button onClick={onOpenModal}>
-              <i className="fa fa-plus"></i> Add Currency
-            </Button>
-          </ModifierForm>
+          <Button onClick={() => onOpenModal({ method: "post" })}>
+            <i className="fa fa-plus"></i> Add Currency
+          </Button>
         </Col>
       </Row>
+
+      <ModalForm
+        useFormRenderer={useFormRenderer}
+        formData={modalPayload}
+        isOpen={isModalOpen}
+        onClose={onModalClose}
+      ></ModalForm>
 
       <Row style={{ marginBottom: 60 }}>
         <Col>
           <Card>
-            {/* {isFetching ? <div>Loading...</div> : <CurrenciesTable  data={data?.results}/>} */}
-         
-            {isFetching ? (
-              <div>Loading...</div>
-            ) : (
-              <TableGenerator data={data?.results} actions = {actions}
-              mapping = {{
+            <TableGenerator
+              {...{ service }}
+              mapping={{
                 id: "Currency ID",
                 iso_code: "symbol",
               }}
-              omit = {[
-                "archived_at",
-                "created_by",
-                "createdAt",
-                "updatedAt",
-                "updated_at",
-                "created_at",
-              ]} />
-            )}
+              omit="*"
+              extras={["symbol", "full_name", "type", "status", "action"]}
+              transformers={{
+                symbol: ({ row }) => row?.iso_code || "unknown",
+                full_name: ({ row }) => row?.name || "unknown",
+                type: ({ row }) => row?.type || "unknown",
+                action: ({ row }) => (
+                  <div className="d-flex" style={{ gap: 20 }}>
+                    <button
+                      style={{
+                        appearance: "none",
+                        border: "none",
+                        background: "none",
+                      }}
+                      onClick={() =>
+                        onOpenModal({ method: "put", payload: row })
+                      }
+                    >
+                      <span className="themify-glyph-29"></span> Edit
+                    </button>
+
+                    <button
+                      style={{
+                        appearance: "none",
+                        border: "none",
+                        background: "none",
+                      }}
+                      onClick={() =>
+                        onOpenModal({
+                          method: "delete",
+                          payload: { ids: [row?.id] },
+                        })
+                      }
+                    >
+                      <span className="themify-glyph-165"></span> Delete
+                    </button>
+                  </div>
+                ),
+                status: ({ row }) => {
+                  return row?.archived_at ? (
+                    <span className="badge light badge-danger">
+                      <i className="fa fa-circle text-danger mr-1" />
+                      archived
+                    </span>
+                  ) : (
+                    <span className="badge light badge-success">
+                      <i className="fa fa-circle text-success mr-1" />
+                      Active
+                    </span>
+                  );
+                },
+              }}
+            />
           </Card>
         </Col>
       </Row>
-    </>
-  );
-}
-function CurrencyTable({ data = [] }) {
-  const { selected, toggleSelect, checkedAll } = useTableSelector(data);
-
-  const {
-    isOpen: isModalOpen,
-    onOpen: onOpenModal,
-    onClose: onCloseModal,
-  } = useToggler();
-
-  const singleSelect = (id) => (
-    <div className={`custom-control custom-checkbox ml-2`}>
-      <input
-        type="checkbox"
-        className="custom-control-input "
-        id={`check_currency_record_${id}`}
-        required=""
-        checked={selected.includes(id)}
-        onChange={() => toggleSelect(id)}
-      />
-      <label
-        className="custom-control-label"
-        htmlFor={`check_currency_record_${id}`}
-      ></label>
-    </div>
-  );
-
-  const action = (_item) => (
-    <div className="d-flex" style={{ gap: 20 }}>
-      <ModifierForm isOpen={isModalOpen} data={_item} onClose={onCloseModal}>
-        {/* {Object.values(_item).join(", ")} */}
-        <a onClick={onOpenModal}>
-          <span className="themify-glyph-29"></span> Edit
-        </a>
-      </ModifierForm>
-      <a href="">
-        <span className="themify-glyph-165"></span> Delete
-      </a>
-    </div>
-  );
-
-  return (
-    <>
-      {/*  <ul>
-        {selected.map((_s, key) => (
-          <li key={key}>{_s}</li>
-        ))}
-      </ul> */}
-      {data.length ? (
-        <>
-          <Table responsive hover size="sm">
-            <thead>
-              <tr>
-                <th className="user_permission">
-                  <div className="custom-control custom-checkbox mx-2">
-                    <input
-                      type="checkbox"
-                      className="custom-control-input"
-                      id="check_all_record"
-                      disabled={!data.length}
-                      checked={checkedAll}
-                      onChange={() => toggleSelect()}
-                    />
-                    <label
-                      className="custom-control-label"
-                      htmlFor="check_all_record"
-                    ></label>
-                  </div>
-                </th>
-                <th>Currency ID</th>
-                <th className="pl-5 width200">Symbol</th>
-                <th className="pl-5 width200">Full name</th>
-                <th className="pl-5 width200">Type</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody id="curencies">
-              {data?.map((item, key) => (
-                <tr key={item.id} className="btn-reveal-trigger">
-                  <td>{singleSelect(item.id)}</td>
-                  <td className="py-2">{item.id}</td>
-                  <td className="py-3 pl-5 width200">{item.iso_code}</td>
-                  <td className="py-3 pl-5 width200">{item.name}</td>
-                  <td className="py-3 pl-5 width200">{item.type}</td>
-                  <td>{action(item)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </Table>
-
-          {/* <TablePagination count={data?.count}  /> */}
-        </>
-      ) : (
-        <EmptyRecord />
-      )}
-    </>
-  );
-}
-
-function ModifierForm({ children, data: _data = {}, isOpen, onClose }) {
-  return (
-    <>
-      {children}
-
-      <Modal show={isOpen} onHide={onClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Add Currency</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Row>
-            <Col>
-              <Form>
-                <Form.Group className="mb-3" controlId="formCurrencyCode">
-                  <Form.Label>Code</Form.Label>
-                  <Form.Control
-                    type="text"
-                    defaultValue={_data?.iso_code}
-                    placeholder="Currency code"
-                  />
-
-                  <Form.Text className="">
-                    ISO Code / Short name / Symbol
-                  </Form.Text>
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formCurrencyName">
-                  <Form.Label>Full name</Form.Label>
-                  <Form.Control
-                    type="text"
-                    defaultValue={_data?.name}
-                    placeholder="Currency name"
-                  />
-                </Form.Group>
-
-                <Form.Group className="mb-3" controlId="formCurrencyType">
-                  <Form.Label>Type</Form.Label>
-                  <Form.Control
-                    as="select"
-                    value={_data?.type?.toLowerCase()}
-                    defaultValue={_data?.type?.toLowerCase()}
-                    aria-label="Select currency type"
-                  >
-                    <option>Select currency type</option>
-                    <option value="fiat">Fiat</option>
-                    <option value="crypto">Crypto</option>
-                  </Form.Control>
-                </Form.Group>
-              </Form>
-            </Col>
-          </Row>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={onClose}>
-            Close
-          </Button>
-          <Button variant="primary" onClick={onClose}>
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
     </>
   );
 }

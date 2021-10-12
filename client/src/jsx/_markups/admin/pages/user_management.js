@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import useToggler from "../../../_hooks/toggler.hook";
 import Moment from "react-moment";
 import moment from "moment";
+import {  toast } from "react-toastify";
 // COMPONENTS
 import TableGenerator from "../components/TableGenerator.Component";
 import { ModalForm } from "../components/ModalForm.Component.jsx";
@@ -13,21 +14,46 @@ function UserManagement({ services, useService }) {
   const group = useGroupService();
 
   let service = useService({
-    get: group.listUsers,
+    list: group.listUsers,
+    get: group.getUser,
     post: group.createUsers,
     put: group.updateUsers,
     drop: group.dropUsers,
   });
 
+  function notifySuccess () {
+    toast.success("Success !", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  };
+
+  function notifyError(error) {
+    toast.error(error || "Request Error!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+
   const { data, dispatchRequest } = service;
+
   useEffect(() => {
     dispatchRequest({
-      type: "get",
+      type: "list",
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
         "options[paranoid]": false,
       },
+      toast: { success: notifySuccess, error: notifyError },
     });
   }, []);
 
@@ -57,7 +83,7 @@ function UserManagement({ services, useService }) {
           case "post":
             return [
               "Create new User",
-              <UserForm.Create
+              <UserForm
                 action={(requestPayload) =>
                   dispatchRequest({ type: "post", payload: requestPayload })
                 }
@@ -68,9 +94,12 @@ function UserManagement({ services, useService }) {
           case "put":
             return [
               "Update User",
-              <UserForm.Modify
+              <UserForm
                 action={(requestPayload) =>
-                  dispatchRequest({ type: "put", payload: requestPayload })
+                  dispatchRequest({
+                    type: "put",
+                    payload: { id: formData?.payload.id, data: requestPayload },
+                  })
                 }
                 payload={formData?.payload}
                 callback={onModalClose}
@@ -80,9 +109,12 @@ function UserManagement({ services, useService }) {
           case "delete":
             return [
               "Delete User",
-              <UserForm.Delete
+              <UserForm.Drop
                 action={(requestPayload) =>
-                  dispatchRequest({ type: "drop", payload: requestPayload })
+                  dispatchRequest({
+                    type: "drop",
+                    payload: { id: formData?.payload.id, data: requestPayload },
+                  })
                 }
                 payload={formData?.payload}
                 callback={onModalClose}
@@ -107,6 +139,7 @@ function UserManagement({ services, useService }) {
 
   return (
     <>
+      
       <Row style={{ marginBottom: 20 }}>
         <Col>
           <div className="input-group search-area right d-lg-inline-flex d-none">

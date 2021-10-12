@@ -35,14 +35,14 @@ class GroupServices {
    * @returns
    */
   decorate = async (request) => {
-    // let result = { success: null, error: null };
+    let result = { success: null, error: null };
     try {
       let { data } = await request();
-      return data;
+      return { ...result, success: data };
     } catch (error) {
       console.error("GROUP SERVICE ERROR::", error);
       this.abort();
-      return error?.message;
+      return { ...result, error: error?.message };
     }
   };
 
@@ -63,10 +63,20 @@ class GroupServices {
    * @returns
    */
 
-  getCurrency = async (params) => {
+  listCurrency = async (params) => {
     return await this.decorate(
       async () =>
         await this.axios(`currency`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  getCurrency = async (id, params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`currency/${id}`, {
           method: "GET",
           params,
         })
@@ -83,6 +93,25 @@ class GroupServices {
       async () =>
         await this.axios(`currency`, {
           method: "POST",
+          data,
+        })
+    );
+  };
+  updateCurrency = async (data) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`currency`, {
+          method: "PUT",
+          data,
+        })
+    );
+  };
+  
+  dropCurrency = async (data) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`currency`, {
+          method: "DELETE",
           data,
         })
     );
@@ -141,29 +170,9 @@ class GroupServices {
   };
 
   /************************** KYC *************************/
-  /**
-   * KYC payload types definition
-   * @typedef {Object} kycUpdatePayload
-   * @property {String} uid - User ID
-   * @property {Object} email - Email KYC object
-   * @property {Object} id - ID KYC object
-   * @property {Object} otp - OTP KYC object
-   * @property {Object} payment_methods - Payment methods KYC object
-   * @property {Object} bank_details - Bank details KYC object
-   * @property {Object} sms - SMS KYC object
-   */
-  /**
-   * KYC payload types definition
-   * @typedef {Object} kycPayload
-   * @property {"email" | "id" | "payment_methods" | "bank_details" | "sms" | "otp"} type
-   */
-  /**
-   * @function getKYC - Fetch KYC (**Admins only**)
-   * @param {kycPayload} params
-   * @returns
-   */
-  getKYC = async (params) => {
-    return this.decorate(
+
+  listBankDetail = async (params) => {
+    return await this.decorate(
       async () =>
         await this.axios(`bank-details`, {
           method: "GET",
@@ -172,16 +181,21 @@ class GroupServices {
     );
   };
 
-  /**
-   * @function updateKYC - Bulk KYC update (**Admins only**)
-   * @param {kycUpdatePayload []} data
-   * @returns
-   */
-  updateKYC = async (data) => {
-    return this.decorate(
+  getBankDetail = async (id, params) => {
+    return await this.decorate(
       async () =>
-        await this.axios(`kyc`, {
-          method: "PUT",
+        await this.axios(`bank-details/${id}`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  createBankDetail = async (data) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`bank-details`, {
+          method: "POST",
           data,
         })
     );
@@ -197,7 +211,16 @@ class GroupServices {
   listUsers = async (params) => {
     return this.decorate(
       async () =>
-        await this.axios(`user`, {
+        await this.axios(`users`, {
+          method: "GET",
+          params,
+        })
+    );    
+  };
+  getUser = async (id, params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`users/${id}`, {
           method: "GET",
           params,
         })
@@ -213,7 +236,7 @@ class GroupServices {
    */
   createUsers = async (data) => {
     return await this.decorate(async () =>
-      this.axios(`user`, {
+      this.axios(`users`, {
         method: "POST",
         data,
       })
@@ -229,10 +252,10 @@ class GroupServices {
    * @param {String} data.role
    * @returns
    */
-  updateUsers = async (data) => {
-    return this.decorate(
+  updateUsers = async ({ id, data }) => {
+    return await this.decorate(
       async () =>
-        await this.axios(`user`, {
+        await this.axios(`users/${id}`, {
           method: "PUT",
           data,
         })
@@ -253,116 +276,99 @@ class GroupServices {
         })
     );
   };
+
+  /**
+   * @function listChatHistory - list chat histories (**Admins only**)
+   * @returns
+   */
+  listChatHistory = async (params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`chat-history`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  /************************* SUPPORT TICKETS ******************************/
+  /**
+   * Support ticket payload types definition
+   * @typedef {Object} ticketPayload
+   * @property {String} id - Support ticket id
+   * @property {String} [status] - Support ticket status
+   * @property {String} [subject] - Support ticket status
+   * @property {String} [ticket_no] - Support ticket status
+   */
+
+  /**
+   * @function listSupportTickets - Gets adverts (**Admin only**)
+   * @param {Object} params
+   * @param {Number} [params.limit] - Response limit
+   * @param {String} [params.name] - Specify the currency name
+   * @returns
+   */
+  listSupportTickets = async function (params) {
+    return await this.decorate(
+      async () =>
+        await this.axios(`tickets`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+  /**
+   * @function getSupportTicket - Gets adverts (**Admin only**)
+   * @param {Object} params
+   * @param {Number} [params.limit] - Response limit
+   * @param {String} [params.name] - Specify the currency name
+   * @returns
+   */
+  getSupportTicket = async function (id, params) {
+    return await this.decorate(
+      async () =>
+        await this.axios(`tickets/${id}`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  /**
+   * @function updateSupportTicket - Update single support ticket (**Admin only**)
+   * @param {Object} data
+   * @returns
+   */
+  updateSupportTicket = async (id, data) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`tickets/${id}`, {
+          method: "PUT",
+          data,
+        })
+    );
+  };
+  /**
+   * @function updateBulkSupportTicket - Bulk update support ticket (**Admin only**)
+   * @param {ticketPayload []} data
+   * @returns
+   */
+  updateSupportTicket = async (data) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`tickets`, {
+          method: "PUT",
+          data,
+        })
+    );
+  };
 }
-
-
-/************************* SUPPORT TICKETS ******************************/
-/**
- * Support ticket payload types definition
- * @typedef {Object} ticketPayload
- * @property {String} id - Support ticket id
- * @property {String} [status] - Support ticket status
- * @property {String} [subject] - Support ticket status
- * @property {String} [ticket_no] - Support ticket status
- */
-
-/**
- * @function getSupportTicket - Gets adverts (**Admin only**)
- * @param {Object} params
- * @param {Number} [params.limit] - Response limit
- * @param {String} [params.name] - Specify the currency name
- * @returns
- */
-async function getSupportTicket(params) {
-  return await axios(`/support`, {
-    method: "GET",
-    params,
-  });
-}
-
-/**
- * @function updateSupportTicket - Bulk update support ticket (**Admin only**)
- * @param {ticketPayload []} data
- * @returns
- */
-async function updateSupportTicket(data) {
-  return await axios(`/support`, {
-    method: "PUT",
-    data,
-  });
-}
-
-/************************* ADVERTS ******************************/
-/**
- * @function getAdvert - Gets one or many adverts (**Admin only**)
- * @param {Object} params
- * @param {Number} [params.limit] - specify response limit
- * @param {String} [params.id] - specify the advert id
- * @param {"all" | "sell" | "buy"} [params.type] - specify the advert type
- * @param {String} [params.pairs] - specify the advert currency pair
- * @param {Number} [params.min_limit] - specify the advert minimum limit
- * @param {Number} [params.max_limit] - specify the advert maximum limit
- * @param {String} [params.uid] - specify the advert user id
- * @returns
- */
-async function getAdvert(params) {
-  return await axios(`advert`, {
-    method: "GET",
-    params,
-  });
-}
-/***************************** TRADE ******************************/
-/**
- * @function getTrades - Gets trades (**Admin only**)
- * @param {Object} params
- * @param {Number} [params.limit] - Specify response limit
- * @param {"all" | "buy" | "dispute"} [params.type]- Specify trade type
- * @returns
- */
-async function getTrades(params) {
-  return await axios(`trade`, {
-    method: "GET",
-    params,
-  });
-}
-
-/************************************* POLICY **********************************/
-/**
- * @function getPolicy - Gets policies (**Admin only**)
- * @param {Object} params
- * @param {Number} [params.limit] - Specify response limit
- * @param {"all" | "withdrawal_fee"} params.type - Specify policy type
- * @returns
- */
-async function getPolicy(params) {
-  return await axios(`policies`, {
-    method: "GET",
-    params,
-  });
-}
-
-/************************************* REFERRALS **********************************/
-/**
- * @function getReferrals - Gets bulk referrals (**Admin only**)
- * @param {Object} params
- * @param {Number} [params.limit] - Specify response limit
- * @param {String} [params.id] - Specify referral ID
- * @returns
- */
-async function getReferrals(params) {
-  return await axios(`/referrals`, {
-    method: "GET",
-    params,
-  });
-}
-
-
-
+/* ****************************************** */
 function useGroupService() {
   const session = useSelector((state) => state?.session);
   return new GroupServices({
     headers: helpers.headers(session),
-    baseURL: "/api/account/group",
+    baseURL: "/api",
   });
 }
 export default useGroupService;

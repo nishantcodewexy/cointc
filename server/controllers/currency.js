@@ -1,13 +1,10 @@
 "use strict";
-const uuid = require("uuid")
+const uuid = require("uuid");
 module.exports = (server) => {
   const {
     db: { Currency, sequelize },
     consts: { roles: _roles },
-    helpers:{
-      filters,
-      paginator
-    },
+    helpers: { filters, paginator },
     boom,
   } = server.app;
   /* const queryInterface = sequelize.getQueryInterface();
@@ -26,44 +23,54 @@ module.exports = (server) => {
         } = req;
         // let where = id ? { id } : null;
         //TODO: Only admins are allowed to see who created the currency
-        const filterResult = await filters({query,searchFields:[
-          "name",
-          "iso_code",
-          "type"
-        ]})
-        let queryset = Currency.findAndCountAll(filterResult)
-        return paginator({queryset,limit:filterResult,offset:filterResult.offset})
+        const filterResult = await filters({
+          query,
+          searchFields: ["name", "iso_code", "type"],
+        });
+        let queryset = Currency.findAndCountAll(filterResult);
+        return paginator({
+          queryset,
+          limit: filterResult,
+          offset: filterResult.offset,
+        });
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
       }
     },
-    
+
     async list(req) {
       try {
         let {
           query,
-          pre:{
-            isAdmin
-          }
+          pre: { isAdmin },
         } = req;
         // let where = id ? { id } : null;
         //TODO: Only admins are allowed to see who created the currency
-        const filterResult = await filters({query,searchFields:[
-          "name",
-          "iso_code",
-          "type"
-          
-        ]})
-        let queryset = Currency.findAndCountAll({...filterResult,attributes:[
-          "id",
-          "name",
-          "iso_code",
-          "type",
-          "created_at",
-          "updated_at"
-        ]})
-        return paginator({queryset,limit:filterResult.limit,offset:filterResult.offset})
+        const { paranoid = true } = query;
+        const filterResult = await filters({
+          query,
+          searchFields: ["name", "iso_code", "type"],
+        });
+        let queryset = await Currency.findAndCountAll({
+          ...filterResult,
+          paranoid: Boolean(+paranoid),
+          attributes: [
+            "id",
+            "name",
+            "iso_code",
+            "type",
+            "created_at",
+            "updated_at",
+            "archived_at",
+          ],
+        });
+        console.log(queryset);
+        return paginator({
+          queryset,
+          limit: filterResult.limit,
+          offset: filterResult.offset,
+        });
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -79,20 +86,17 @@ module.exports = (server) => {
      * @returns
      */
     create: async (req) => {
-      
       const {
         payload,
-        auth:{
-          credentials:{
-            user
-          }
-        }
+        auth: {
+          credentials: { user },
+        },
       } = req;
-      
-      Currency.beforeBulkCreate((currencies=[], options) => {
+
+      Currency.beforeBulkCreate((currencies = [], options) => {
         for (const currency of currencies) {
           currency.created_by = user.id;
-          currency.id = uuid.v4()
+          currency.id = uuid.v4();
         }
         return currencies;
       });
@@ -116,11 +120,9 @@ module.exports = (server) => {
     async destroy(req) {
       const {
         payload: { data, force = false },
-        auth:{
-          credentials:{
-            user
-          }
-        }
+        auth: {
+          credentials: { user },
+        },
       } = req;
 
       try {
@@ -141,18 +143,16 @@ module.exports = (server) => {
     async update(req) {
       const {
         payload,
-        auth:{
-          credentials:{
-            user
-          }
-        }
+        auth: {
+          credentials: { user },
+        },
       } = req;
-      
+
       try {
         return await sequelize.transaction(async (t) => {
           return Promise.all(
             payload.map(
-              async ({ id, ...row }) =>
+              async ({ id, restore, ...row }) =>
                 await Currency.update(
                   { ...row },
                   {
@@ -161,9 +161,15 @@ module.exports = (server) => {
                     validate: true,
                     returning: ["id", "name", "iso_code", "type", "created_by"],
                     fields: ["name", "iso_code", "type"],
-                    logging: console.log,
+                    // logging: console.log,
                   }
-                ).then(([count, affectedRows]) => affectedRows[0])
+                ).then(async ([count, affectedRows]) => {
+                  restore &&
+                    (await Currency.restore({
+                      where: { id, created_by: user.id },
+                    }));
+                  return affectedRows[0];
+                })
             )
           );
         });
