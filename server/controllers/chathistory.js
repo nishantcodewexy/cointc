@@ -1,6 +1,6 @@
 "use strict";
 const {Op} = require('sequelize');
-
+const boom = require("@hapi/boom")
 const {filterFields} = require("../services/model")
 
 module.exports = (server) => {
@@ -11,7 +11,6 @@ module.exports = (server) => {
       filters,
       paginator
     },
-    boom,
   } = server.app;
   /* const queryInterface = sequelize.getQueryInterface();
       const table = Currency.getTableName(); */
@@ -28,17 +27,23 @@ module.exports = (server) => {
             }
         } = req
 
-        const chathistory =  await ChatHistory.findOne({
-            where:{
-                id
-            },
-            attributes: { exclude: ["deleted_at"] }
-        })
-
-        if(!chathistory){
-            throw boom.notFound()
+        try {
+            
+            const chathistory =  await ChatHistory.findOne({
+                where:{
+                    id
+                },
+                attributes: { exclude: ["deleted_at"] }
+            })
+    
+            if(!chathistory){
+                throw boom.notFound()
+            }
+            return chathistory
+        } catch (error) {
+            console.error(error)
+            throw boom.boomify(error)
         }
-        return chathistory
     },
     async list(req) {
         const {
@@ -108,20 +113,26 @@ module.exports = (server) => {
             throw boom.boomify(error)
         }
     },
-    async delete_(req,reply) {
+    async destroy(req) {
         const {
             params:{id}
         } = req
 
-        const result = await ChatHistory.destroy({
-            where:{
-                id
-            }
-        })
-
-        if(!result) throw boom.notFound()
-
-        return null
+        try {
+            const result = await ChatHistory.destroy({
+                where:{
+                    id
+                }
+            })
+    
+            if(!result) throw boom.notFound()
+    
+            return null
+            
+        } catch (error) {
+            console.error(error)
+            throw boom.boomify(error)
+        }
 
         
     },

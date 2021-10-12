@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-      order: { get },
+      order: { retrieve },
     },
     consts: { roles: _roles },
     helpers:{
@@ -15,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/account/u/order/{id}",
+    path: "/order/{id}",
     config: {
       pre: [
         {
@@ -30,7 +30,7 @@ module.exports = (server) => {
           assign: "isAdmin",
         },
       ],
-      handler: get,
+      handler: retrieve,
       auth: "jwt",
     },
     

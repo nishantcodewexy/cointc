@@ -30,31 +30,37 @@ module.exports = (server) => {
         
       } = req
 
-
+      
+      try {
+        
+          if(!isAdmin) throw boom.forbidden()
+          
+          const userProfile = await Profile.findOne({
+            where:{
+              referral_code
+            }
+          })
+    
+          
+    
+          if(!userProfile) throw boom.notFound()
+          
+          let referrer = await User.findByPk(userProfile.user_id,{
+            attributes:[
+              "id",
+              "email",
+            ]
+          });
+          user.addReferrer(referrer)
+          return referrer
+      } catch (error) {
+        console.error(error)
+        throw boom.boomify(error)
+      }
 
       
       
 
-      if(!isAdmin) throw boom.forbidden()
-      
-      const userProfile = await Profile.findOne({
-        where:{
-          referral_code
-        }
-      })
-
-      
-
-      if(!userProfile) throw boom.notFound()
-      
-      let referrer = await User.findByPk(userProfile.user_id,{
-        attributes:[
-          "id",
-          "email",
-        ]
-      });
-      user.addReferrer(referrer)
-      return referrer
 
       
     },
@@ -71,14 +77,20 @@ module.exports = (server) => {
       // only allow action if it admin
       if(!isAdmin) throw boom.forbidden()
 
-      const data = req.payload;
-
-      return await Referral.destroy({
-        where: {
-          [Op.or]:data
-        },
-        force: true,
-      });
+      try {
+        const data = req.payload;
+  
+        return await Referral.destroy({
+          where: {
+            [Op.or]:data
+          },
+          force: true,
+        });
+        
+      } catch (error) {
+        console.error(error)
+        throw boom.boomify(error)
+      }
     },
 
     
@@ -86,7 +98,7 @@ module.exports = (server) => {
     
 
     // fetch all Orders
-    async getAll(req) {
+    async list(req) {
       const {
         query,
         pre:{
@@ -100,27 +112,32 @@ module.exports = (server) => {
       } = req
       
       
-      return {}
       
+      try {
+        
+        if(isAdmin){
+            const filterResults = await filters({query,searchFields:[]})
       
-      if(isAdmin){
-          const filterResults = await filters({query,searchFields:[]})
-    
-          const queryset = Referral.findAndCountAll(filterResults)
-    
-          return await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
-          
-        }else{
-          const filterResults = await filters({query:{},extra:{
-            referrer_id:user.id
-          }})
-    
-          const queryset = Referral.findAndCountAll(filterResults)
-    
-          const {count} = await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
-          return count
-          
+            const queryset = Referral.findAndCountAll(filterResults)
+      
+            return await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
+            
+          }else{
+            const filterResults = await filters({query:{},extra:{
+              referrer_id:user.id
+            }})
+      
+            const queryset = Referral.findAndCountAll(filterResults)
+      
+            const {count} = await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
+            return count
+            
+        }
+      } catch (error) {
+        console.error(error)
+        throw boom.boomify(error)
       }
+      
     },
   };
   

@@ -3,9 +3,11 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: {
-        group: { create },
-      },
+      user: { 
+        group:{
+          bulkCreate
+        }
+       },
     },
     consts: { roles: _roles },
     helpers: {
@@ -13,16 +15,11 @@ module.exports = (server) => {
     },
   } = server.app;
 
-  const schema = Joi.array().items(
-    Joi.object({
-      email: Joi.string()
-        .email()
-        .required(),
-      role: Joi.string()
-        .valid(...Object.values(_roles))
-        .required(),
-    })
-  );
+  // const schema = Joi.array().items(Joi.object({
+  //     email:Joi.string().email().required().required(),
+  //     role:Joi.string().valid(...Object.values(_roles)).required()
+  // }))
+
 
   return {
     method: "POST",
@@ -40,11 +37,11 @@ module.exports = (server) => {
           assign: "isAdminOrError",
         },
       ],
-      handler: create,
+      handler: bulkCreate,
       auth: "jwt",
-      validate: {
-        payload: schema,
-      },
+      // validate:{
+      //     payload:schema
+      // }
     },
   };
 };

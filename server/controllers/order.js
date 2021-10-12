@@ -1,10 +1,10 @@
 "use strict";
 const assert = require("assert");
+const boom = require("@hapi/boom")
 
 module.exports = (server) => {
   const {
     db: { Order },
-    boom,
     helpers:{
       filters,
       paginator
@@ -23,39 +23,59 @@ module.exports = (server) => {
       } = req
       
       
-      
-      return Order.create({ ...req.payload, from_user_id: user.dataValues.id });
+      try {
+        return Order.create({ ...req.payload, from_user_id: user.dataValues.id });
+        
+      } catch (error) {
+        console.error(error)
+        throw boom.boomify(error)
+      }
       
     },
 
     // Delete Order
     async destroy(req) {
       const { id } = req.params;
-      
-      return await Order.destroy({
-        where: id,
-        force: true,
-      });
+      try {
+        return await Order.destroy({
+          where: id,
+          force: true,
+        });
+        
+      } catch (error) {
+        console.error(error)
+        throw boom.boomify(error)
+      }
     },
 
     // archive
     async archive(req) {
       const { id } = req.payload;
-
-      return await Order.destroy({
-        where: id,
-      });
+      try {
+        return await Order.destroy({
+          where: id,
+        });
+        
+      } catch (error) {
+        console.error(error)
+        throw boom.boomify(error)
+      }
     },
 
     // retrieve Order
-    async get(req) {
+    async retrieve(req) {
       const { id } = req.params;
-
-      return Order.findByPk(id);
+      try {
+        return Order.findByPk(id);
+        
+      } catch (error) {
+        console.error(error)
+        throw boom.boomify(error)
+      }
     },
 
     // fetch all Orders
-    async getAll(req) {
+    async list(req) {
       const {
         query,
         pre:{
@@ -67,15 +87,22 @@ module.exports = (server) => {
       // if(!isAdmin){
       //   throw boom.forbidden("unauthorized")
       // }
-      const filterResults = await filters({query,searchFields:[
-        "appeal",
-        "remark",
-        "status",
-      ]})
 
-      const queryset = Order.findAndCountAll(filterResults)
-
-      return await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
+      try {
+        const filterResults = await filters({query,searchFields:[
+          "appeal",
+          "remark",
+          "status",
+        ]})
+  
+        const queryset = Order.findAndCountAll(filterResults)
+  
+        return await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
+        
+      } catch (error) {
+        console.error(error)
+        throw boom.boomify(error)
+      }
     },
   };
   

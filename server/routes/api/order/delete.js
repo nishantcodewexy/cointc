@@ -20,7 +20,7 @@ module.exports = (server) => {
   
   return {
     method: "DELETE",
-    path: "/account/u/order/{id}",
+    path: "/order/{id}",
     config: {
       pre: [
         {

@@ -3,7 +3,7 @@ const Joi = require("joi")
 module.exports = (server) => {
   const {
     controllers: {
-      bankdetail: { delete_ }
+      bankdetail: { destroy }
     },
     consts: { roles: _roles },
     helpers:{
@@ -31,7 +31,7 @@ module.exports = (server) => {
           assign: "isAdmin",
         },
       ],
-      handler: delete_,
+      handler: destroy,
       auth: "jwt"
     },
     

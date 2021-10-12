@@ -1,6 +1,7 @@
 "use strict";
 const {Op} = require('sequelize');
 const bank_detail = require('../database/models/bank_detail');
+const boom = require("@hapi/boom")
 module.exports = (server) => {
   const {
     db: { BankDetail, sequelize },
@@ -9,7 +10,6 @@ module.exports = (server) => {
       filters,
       paginator
     },
-    boom,
   } = server.app;
   /* const queryInterface = sequelize.getQueryInterface();
       const table = Currency.getTableName(); */
@@ -35,14 +35,20 @@ module.exports = (server) => {
             }
         } = req
 
-        return await BankDetail.findOne({
-            where:{
-                id,
-                archive_at:null,
-                ...(!isAdmin?{user_id:user.id}:{}),
-            },
-            attributes: { exclude: ['user_id',"archive_at","UserId"] }
-        })
+        try {
+            
+            return await BankDetail.findOne({
+                where:{
+                    id,
+                    archive_at:null,
+                    ...(!isAdmin?{user_id:user.id}:{}),
+                },
+                attributes: { exclude: ['user_id',"archive_at","UserId"] }
+            })
+        } catch (error) {
+            console.error(error)
+            throw boom.boomify(error)
+        }
     },
     async list(req) {
         const {
@@ -104,16 +110,21 @@ module.exports = (server) => {
             }
         } = req
 
-
-        return await BankDetail.update(payload,{
-            where:{
-                ...(!isAdmin?{
-                    user_id:user.id,
-                }:{}),
-                archive_at:null,
-                id
-            }
-        })
+        try {
+            return await BankDetail.update(payload,{
+                where:{
+                    ...(!isAdmin?{
+                        user_id:user.id,
+                    }:{}),
+                    archive_at:null,
+                    id
+                }
+            })
+            
+        } catch (error) {
+            console.error(error)
+            throw boom.boomify(error)
+        }
     },
     async create(req) {
         const {
@@ -125,15 +136,15 @@ module.exports = (server) => {
             }
         } = req
         try {
-            const bank_detail = await BankDetail.create({...payload,user_id:user.id})
-            return bank_detail
+            return await BankDetail.create({...payload,user_id:user.id})
+            
             
         } catch (error) {
             console.error(error)
             throw boom.boomify(error)
         }
     },
-    async delete_(req) {
+    async destroy(req) {
         const {
             pre:{
                 isAdmin
@@ -146,15 +157,21 @@ module.exports = (server) => {
             params:{id}
         } = req
 
-        return await BankDetail.update({archive_at:new Date(Date.now())},{
-            where:{
-                ...(!isAdmin?{
-                    user_id:user.id,
-                }:{}),
-                archive_at:null,
-                id
-            }
-        })
+        try{
+            return await BankDetail.update({archive_at:new Date(Date.now())},{
+                where:{
+                    ...(!isAdmin?{
+                        user_id:user.id,
+                    }:{}),
+                    archive_at:null,
+                    id
+                }
+            })
+
+        }catch(error){
+            console.error(error)
+            throw boom.boomify(error)
+        }
         
     },
     // async bulkDelete(req) {
