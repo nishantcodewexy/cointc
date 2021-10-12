@@ -3,6 +3,7 @@ const searchBuilder = require("sequelize-search-builder");
 const Sequelize = require("sequelize");
 const Joi = require("joi");
 const { roles } = require("../consts");
+const boom = require("@hapi/boom")
 /**
  * @description - User controller
  * @param {Object} server  - Server instance
@@ -15,7 +16,6 @@ module.exports = (server) => {
   const {
     
     db: { User, sequelize, Wallet,Profile,AdminProfile,Upload },
-    boom,
     config: { client_url },
     helpers: { decrypt, mailer, jwt, generator },
     consts: { 
@@ -170,15 +170,30 @@ module.exports = (server) => {
       let { email, token } = req.query;
       assert(email, boom.badRequest("Missing credential to confirm email"));
       assert(token, boom.badRequest("Missing credential to confirm email"));
+      
+      let decoded
+      
+    try {
+        decoded = jwt.decodeAndVerify(token);
+    } catch (error) {
+        throw boom.badRequest("invalid token",error)
+    }
 
-      const decoded = jwt.decodeAndVerify(token);
-      // debugger;
-      return decoded.isValid
-        ? await User.update(
-            { kyc: { email: true } },
-            { where: { id: decoded.payload.user } }
-          ).catch(boom.boomify)
-        : boom.unauthorized(`Cannot confirm user account!: ${decoded.error}`);
+
+    try {
+        // debugger;
+        
+        return decoded.isValid
+          ? await User.update(
+              { kyc: { email: true } },
+              { where: { id: decoded.payload.user } }
+            ).catch(boom.boomify)
+          : boom.unauthorized(`Cannot confirm user account!: ${decoded.error}`);
+        
+      } catch (error) {
+        console.error(error)
+        boom.boomify(error)
+      }
     },
 
     resetPassword: async function(req) {
@@ -423,13 +438,40 @@ module.exports = (server) => {
             
           })
 
+          const {error,value} = schema.validate(payload)
 
+          if(error) throw boom.badData(error)
+          
+          const user = await User.findByPk(id)
+          if(user.role==roles.basic){
+            return await Profile.update(value,{
+              where:{
+                user_id:user.id
+              },
+              fields:["kyc"],
+              returning:["kyc"]
+            })
+          }else{
+            throw boom.notFound("not found")
+          }
+          
+
+          
           
 
         }else if(isAdmin&&id==="me"){
           schema = Joi.object({
             nickname:Joi.string().optional()
           })
+          const {error,value} = schema.validate(payload)
+          if(error) throw boom.badData(error)
+
+          return await AdminProfile.update(value,{
+            where:{
+              user_id:user.id
+            }
+          })
+          
         }else{
           schema = Joi.object({
             nickname:Joi.string().optional(),
@@ -437,96 +479,17 @@ module.exports = (server) => {
             profile_pic:Joi.string().uuid().optional(),
             kyc_document:Joi.string().uuid().optional()
           })
-        }
+          const {error,value} = schema.validate(payload)
+          if(error) throw boom.badData(error)
 
-        
-
-        
-
-        const {error,value} = schema.validate(payload)
-
-        if(error) throw boom.badRequest(error)
-
-
-        const permission = payload.permission
-
-        if(isAdmin&&id==="me"){
-          let profile = await AdminProfile.update(payload,{
+          return await Profile.update(value,{
             where:{
-              user_id:user.id
+              user_id:id
             }
           })
-
-          if(profile&&[true,false].includes(permission)){
-            await User.update({
-              permission
-            },{
-              where:{
-                id:user.id
-              }
-            })
-          }
-          
-          return profile
-
-          
-        }else{
-
-          
-          let profile = await Profile.update(payload,{
-            where:{
-              user_id:isAdmin&&id!=="me"?id:user.id
-            },
-            
-          })
-          if(profile&&[true,false].includes(permission)){
-            console.log("am here")
-            let __user = await User.update({
-              permission
-            },{
-              where:{
-                id:isAdmin&&id!=="me"?id:user.id
-              }
-            })
-
-            
-          }
-          
-          return profile
         }
 
         
-        
-        
-
-        
-        // console.log("values",data)
-        // return await User.update(
-        //   data,
-        //   {
-        //     where:{
-        //       ...(isAdmin&&id!=="me"?{id}:{id:user.id})
-        //   },
-        //   include:[
-        //     {
-        //       model:Profile,
-        //       as:"profile"
-        //     },
-        //     {
-        //       model:AdminProfile,
-        //       as:"admin_profile",
-        //     }
-        //   ]
-        // })
-
-        // // TODO: authorization
-        // const { model } = __assertRole(user?.role);
-        // let where = {
-        //   user_id: user.id,
-        // };
-
-        // const attributes = ["mode", "nickname"];
-        // return { updated: __upsert(model, data, where, { attributes }) };
       } catch (error) {
         console.error(error);
         return boom.boomify(error);

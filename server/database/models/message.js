@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       const { Chat, Message, User } = models;
       // Message.belongsTo(User, {});
-      Message.belongsTo(Chat, {});
+      Chat.Messages = Message.belongsTo(Chat, {});
     }
   }
   Message.init(

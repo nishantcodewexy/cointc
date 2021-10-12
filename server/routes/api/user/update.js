@@ -21,7 +21,7 @@ module.exports = (server) => {
   
 
   
-
+  
 
   return {
     method: ["PUT","PATCH"],

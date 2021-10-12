@@ -11,11 +11,11 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       const { User, Advert, Asset } = models;
 
-      User.hasMany(Advert, {
+      Advert.User = User.hasMany(Advert, {
         foreignKey: { name: "from_user_id", allowNull: false },
       });
       
-      Advert.belongsTo(Asset, {
+      User.Adverts = Advert.belongsTo(Asset, {
         foreignKey: "asset_type",
       });
     }
