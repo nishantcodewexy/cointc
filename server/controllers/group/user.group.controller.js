@@ -232,17 +232,23 @@ module.exports = (server) => {
         // pre: { isAdmin },
         query,
       } = req;
-      const { options } = query;
-      const queryFilters = await filters({ query, searchFields: ["email"] });
-      console.log({ queryFilters });
-      const queryset = await User.findAndCountAll({
-        include: { association: "profile" },
-        attributes: { exclude: ["password"] },
-        ...queryFilters,
-        ...options
-      });
-      const { limit, offset } = queryFilters;
-      return paginator({ queryset, limit, offset }).catch(boom.boomify);
+      try {
+        const { options } = query;
+        const queryFilters = await filters({ query, searchFields: ["email"] });
+        console.log({ queryFilters });
+        const queryset = await User.findAndCountAll({
+          include: { association: "profile" },
+          attributes: { exclude: ["password"] },
+          ...queryFilters,
+          ...options
+        });
+        const { limit, offset } = queryFilters;
+        return paginator({ queryset, limit, offset }).catch(boom.boomify);
+        
+      } catch (error) {
+        console.error(error)
+        boom.boomify(error)
+      }
     },
 
     async get(req, h) {
