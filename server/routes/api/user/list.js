@@ -3,19 +3,19 @@
 module.exports = (server) => {
   const {
     controllers: {
-        user: { 
-          group:{
-            list
-          }
-         },
+      user: {
+        group: { list },
+      },
     },
+    db: { User },
     consts: { roles: _roles },
-    helpers:{
-      permissions:{
+    helpers: {
+      jwt:{decodeUser},
+      permissions: {
         isAdmin,
         // isAdminOrError
-      }
-    }
+      },
+    },
   } = server.app;
 
   return {
@@ -23,21 +23,31 @@ module.exports = (server) => {
     path: "/users",
     config: {
       pre: [
-        {
-          method: (req) =>{
-            
-            return _roles.admin
+        // ***This is not needed. You can get the user role
+        // **from the Model
+        /* {
+          method: (req) => {
+            return _roles.admin;
           },
           assign: "role",
-        },
+        }, */
         {
-          method:isAdmin,
-          assign: "isAdmin",
+          method: (req) => {
+            return User.findOne({
+              where: {
+                id: decodeUser(req),
+              },
+            });
+          },
+          assign: "user",
         },
+        // {
+        //   method: isAdmin,
+        //   assign: "isAdmin",
+        // },
       ],
       handler: list,
       auth: "jwt",
     },
-    
   };
 };

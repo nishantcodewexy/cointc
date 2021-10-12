@@ -136,74 +136,83 @@ function TableGenerator({
       </div>
     );
   }
-  return isFetching ? (
-    <Empty.Loading></Empty.Loading>
-  ) : tableData.rows.length ? (
+  return (
     <>
-      <Table key={uuid} responsive hover size="sm">
-        <thead>
-          <tr>
-            <th>
-              <div className="custom-control custom-checkbox mx-2">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id={`select_all_table_record#${uuid}`}
-                  disabled={!tableData.rows.length}
-                  checked={selected?.length === tableData.rows?.length}
-                  onChange={() => bulkSelect(tableData.rows)}
-                />
-                <label
-                  className="custom-control-label"
-                  htmlFor={`select_all_table_record#${uuid}`}
-                ></label>
-              </div>
-            </th>
-            {String(omit) !== "*" &&
-              tableData?.cols?.map((col, key) => (
-                <th key={key}>{String(col)?.replace(/[_]/, " ")}</th>
-              ))}
-            {extras?.map((extra, key) => (
-              <th key={key}>{String(extra)?.replace(/[_]/, " ")}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {tableData.rows.map((row, key) => (
-            <tr key={key}>
-              <td>{singleSelect(row?.id ?? key)}</td>
-              {String(omit) !== "*" &&
-                Object.entries(row).map(([key, value], idx) => (
-                  <td key={idx}>
-                    {transformValue({ key, value, row, state: tableData })}
-                  </td>
+      {tableData.rows.length ? (
+        <>
+          <Table key={uuid} responsive hover size="sm">
+            <thead>
+              <tr>
+                <th>
+                  <div className="custom-control custom-checkbox mx-2">
+                    <input
+                      type="checkbox"
+                      className="custom-control-input"
+                      id={`select_all_table_record#${uuid}`}
+                      disabled={!tableData.rows.length}
+                      checked={selected?.length === tableData.rows?.length}
+                      onChange={() => bulkSelect(tableData.rows)}
+                    />
+                    <label
+                      className="custom-control-label"
+                      htmlFor={`select_all_table_record#${uuid}`}
+                    ></label>
+                  </div>
+                </th>
+                {String(omit) !== "*" &&
+                  tableData?.cols?.map((col, key) => (
+                    <th key={key}>{String(col)?.replace(/[_]/, " ")}</th>
+                  ))}
+                {extras?.map((extra, key) => (
+                  <th key={key}>{String(extra)?.replace(/[_]/, " ")}</th>
                 ))}
-              {extras?.map((key, idx) => (
-                <td key={idx}>
-                  {transformValue({ key, value: "", row, state: tableData })}
-                </td>
+              </tr>
+            </thead>
+            <tbody>
+              {tableData.rows.map((row, key) => (
+                <tr key={key}>
+                  <td>{singleSelect(row?.id ?? key)}</td>
+                  {String(omit) !== "*" &&
+                    Object.entries(row).map(([key, value], idx) => (
+                      <td key={idx}>
+                        {transformValue({ key, value, row, state: tableData })}
+                      </td>
+                    ))}
+                  {extras?.map((key, idx) => (
+                    <td key={idx}>
+                      {transformValue({
+                        key,
+                        value: "",
+                        row,
+                        state: tableData,
+                      })}
+                    </td>
+                  ))}
+                </tr>
               ))}
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-      {/* Pagination */}
+            </tbody>
+          </Table>
+          {/* Pagination */}
 
-      {
-        <div style={{ padding: "20px 10px" }}>
-          <TablePagination
-            component="div"
-            count={count}
-            page={page}
-            onPageChange={onPageChange}
-            rowsPerPage={limit || 10}
-            onRowsPerPageChange={onRowsPerPageChange}
-          />
-        </div>
-      }
+          {
+            <div style={{ padding: "20px 10px" }}>
+              <TablePagination
+                component="div"
+                count={count}
+                page={page}
+                onPageChange={onPageChange}
+                rowsPerPage={limit || 10}
+                onRowsPerPageChange={onRowsPerPageChange}
+              />
+            </div>
+          }
+        </>
+      ) : (
+        <Empty />
+      )}
+
+      {/* {isFetching && <Empty.Loading></Empty.Loading>} */}
     </>
-  ) : (
-    <Empty />
   );
 }
 

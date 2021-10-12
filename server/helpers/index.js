@@ -59,8 +59,8 @@ const JWTHelpers = () => {
             payload: { user },
           },
         } = artifacts;
-        user = await db.User.findOne({ where: { id: user } });
-        return { isValid: Boolean(user), credentials: { user } };
+        let found = await db.User.findOne({ where: { id: user } });
+        return { isValid: Boolean(found), credentials: { found } };
       },
     },
     verify(decoded, options = {}, secret = SECRET_KEY) {
@@ -434,8 +434,8 @@ module.exports = {
    * @param {Number} offset
    * @returns {Promise}
    */
-  paginator: async ({ queryset, limit, offset } = { limit: 10, offset: 0 }) => {
-    const { rows, count } = await queryset;
+  paginator: ({ queryset, limit, offset } = { limit: 10, offset: 0 }) => {
+    const { rows, count } = queryset;
     let next, prev;
 
     if (offset) {

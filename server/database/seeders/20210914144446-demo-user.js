@@ -51,7 +51,7 @@ async function seedAdminUser() {
     }
 
     profileTableRecords.push({
-      id: profile_id,
+      profile_id,
       nickname: faker.name.firstName(),
       user_id: id,
       created_at: faker.date.recent(),
@@ -104,7 +104,7 @@ async function seedUser() {
 
     await this.queryInterface.bulkInsert("tbl_basic_users_profile", [
       {
-        id: profile_id,
+        profile_id,
         referral_code: nanoid(10),
         nickname: faker.name.firstName(),
         email,
