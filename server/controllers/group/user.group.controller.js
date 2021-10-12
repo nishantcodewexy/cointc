@@ -2,6 +2,9 @@ const update = require("../../routes/api/_user/update");
 const uuid = require("uuid")
 const faker = require("faker");
 const {filterFields} = require("../../services/model")
+const Joi = require('joi');
+const boom = require('@hapi/boom')
+const { roles,types:{ProfileModeType,country} } = require("../../consts");
 
 module.exports = (server) => {
   /*********************** HELPERS ***************************/
@@ -11,8 +14,7 @@ module.exports = (server) => {
 
   const {
     db,
-    db: { User, sequelize, Wallet },
-    boom,
+    db: { User, sequelize, Wallet,AdminProfile,Profile },
     helpers: { paginator, filters },
     consts: { roles: _roles },
   } = server.app;
@@ -108,36 +110,116 @@ module.exports = (server) => {
      * @param {Object[]} req.payload.data
      * @returns
      */
-    create: async (req) => {
+    bulkCreate: async (req) => {
       const {
         payload=[],
         pre: { 
           isAdminOrError
          },
       } = req;
+
+      const payloadSchema = Joi.array().items(
+        Joi.object({
+          email:Joi.string().email().required(),
+          role:Joi.string().valid(...Object.keys(_roles)).required(),
+          profile:Joi.object()
+        })
+      )
+      
+      const adminProfileSchema = Joi.object({
+        mode:Joi.string().valid(...Object.keys(ProfileModeType)),
+        nickname:Joi.string().optional()
+
+      })
+
+
+      const userProfileSchema = Joi.object({
+        mode:Joi.string().valid(...Object.keys(ProfileModeType)),
+        nickname:Joi.string().optional(),
+        country:Joi.string().valid(...Object.keys(country)).optional(),
+        last_name:Joi.string().optional(),
+        other_names:Joi.string().optional()
+
+      })
+
+      const {value,error} = payloadSchema.validate(payload)
+      
+      if(error) throw boom.badData("invalid data",error)
+      
+      
+      
+      
       
       try {
-        const results =  await sequelize.transaction(
-          async (t) =>
-            await User.bulkCreate(payload.map(v=>({
-              id:uuid.v4(),
-              ...v,
-              password:faker.internet.password()
-            })), {
-              transaction: t,
-              validate: true,
-              fields: ["id","email", "role","password"],
-              
-            })
+        return  await sequelize.transaction(
+          async (t) =>{
+            return await Promise.all(value.map(async (data)=>{
+              let password = faker.internet.password()
+              if(data.role==roles.admin){
+                let {error} = adminProfileSchema.validate(data.profile||{})
+
+                if(error) return {error}
+
+                let profileData = data.profile || {}
+                delete data.profile
+
+
+                let user = await User.create({
+                  ...data,
+                  password,
+                  profile:profileData,
+                  include:[
+                    {
+                      association:"admin_profile"
+                    }
+                  ]
+                },{
+                  transaction: t,
+                })
+                // await AdminProfile.create({...profileData,user_id:user.id},{
+                //   transaction: t,
+                // })
+                return {
+                  id:user.id,
+                  ...data,
+                  profile:profileData
+                }
+
+              }else{
+                let {error} = userProfileSchema.validate(data.profile||{})
+                if(error) return {error}
+
+                let profileData = data.profile ||{}
+                delete data.profile
+
+                let user = await User.create({
+                  ...data,
+                  password,
+                  profile_admin:profileData
+                },{
+                  transaction: t,
+                  include:[
+                    {
+                      association:"profile"
+                    }
+                  ]
+                })
+                // await Profile.create({...profileData,user_id:user.id},{
+                //   transaction: t,
+                // })
+                return {
+                  id:user.id,
+                  ...data,
+                  profile:profileData
+                }
+              }
+            }))
+
+        }
+          
         );
         
-        return await Promise.all(results.map(user=>filterFields({object:user.dataValues,include:[
-          "id",
-          "email",
-          "role",
-          "createdAt",
-          "updatedAt"
-        ]})))
+       
       
       } catch (error) {
         console.error(error);

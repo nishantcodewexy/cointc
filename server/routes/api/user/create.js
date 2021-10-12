@@ -5,7 +5,7 @@ module.exports = (server) => {
     controllers: {
       user: { 
         group:{
-          create
+          bulkCreate
         }
        },
     },
@@ -20,10 +20,10 @@ module.exports = (server) => {
     }
   } = server.app;
 
-  const schema = Joi.array().items(Joi.object({
-      email:Joi.string().email().required().required(),
-      role:Joi.string().valid(...Object.values(_roles)).required()
-  }))
+  // const schema = Joi.array().items(Joi.object({
+  //     email:Joi.string().email().required().required(),
+  //     role:Joi.string().valid(...Object.values(_roles)).required()
+  // }))
 
 
   return {
@@ -45,11 +45,11 @@ module.exports = (server) => {
         
         
       ],
-      handler: create,
+      handler: bulkCreate,
       auth: "jwt",
-      validate:{
-          payload:schema
-      }
+      // validate:{
+      //     payload:schema
+      // }
     },
     
   };

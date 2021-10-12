@@ -31,6 +31,9 @@ module.exports = {
       PENDING:"PENDING",
       ACCEPT:"ACCEPT",
       DENY:"DENY"
+    },
+    ProfileModeType:{
+      standard:"standard"
     }
   },
   FILE_UPLOAD_PATH:process.env.MEDIA_FILE_DIR||'mediafiles'
