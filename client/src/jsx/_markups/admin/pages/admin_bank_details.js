@@ -2,6 +2,8 @@ import { Row, Col, Card, Button, Modal, Form } from "react-bootstrap";
 import useToggler from "../../../_hooks/toggler.hook";
 import PageTitle from "../layouts/PageTitle";
 import { useEffect } from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 // COMPONENTS
 import TableGenerator from "../components/TableGenerator.Component";
 import { ModalForm } from "../components/ModalForm.Component.jsx";
@@ -11,13 +13,39 @@ function AdminBankDetails({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();
   let service = useService({
-    get: group.getKYC,
+    list: group.listBankDetail,
+    get: group.getBankDetail,
+    post: group.createBankDetail,
   });
   const { dispatchRequest, isFetching } = service;
   useEffect(() => {
-    dispatchRequest({ type: "get" });
+    dispatchRequest({
+      type: "list",
+      toast: { success: notifySuccess, error: notifyError },
+    });
   }, []);
 
+  function notifySuccess() {
+    toast.success("Success !", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+
+  function notifyError(error) {
+    toast.error(error || "Request Error!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
   const {
     isOpen: isModalOpen,
     onOpen: onOpenModal,
@@ -32,7 +60,7 @@ function AdminBankDetails({ services, useService }) {
           case "post":
             return [
               "Add new bank detail",
-              <AdminBankForm.Create
+              <AdminBankForm
                 action={(requestPayload) =>
                   dispatchRequest({ type: "post", payload: requestPayload })
                 }
@@ -42,8 +70,8 @@ function AdminBankDetails({ services, useService }) {
             ];
           case "put":
             return [
-              "Update User",
-              <AdminBankForm.Modify
+              "Update bank detail",
+              <AdminBankForm
                 action={(requestPayload) =>
                   dispatchRequest({ type: "put", payload: requestPayload })
                 }
@@ -79,6 +107,7 @@ function AdminBankDetails({ services, useService }) {
       </Row>,
     ];
   }
+
   return (
     <>
       <PageTitle
@@ -104,7 +133,7 @@ function AdminBankDetails({ services, useService }) {
         isOpen={isModalOpen}
         onClose={onModalClose}
       ></ModalForm>
-      
+
       <Row>
         <Col>
           <Card>
@@ -117,10 +146,66 @@ function AdminBankDetails({ services, useService }) {
                   iso_code: "Symbol",
                 }}
                 omit="*"
+                extras={[
+                  "account_no",
+                  "bank_name",
+                  "currency",
+                  "country",
+                  "ifsc_code",
+                  "action",
+                ]}
                 transformers={{
-                  permission: ({ key, value }) => (
-                    <>{value ? "permitted" : "Not permitted"}</>
-                  ),
+                  account_no: ({ row }) => {
+                    return <>{row?.account_no}</>;
+                  },
+                  bank_name: ({ row }) => {
+                    return <>{row?.bank_name}</>;
+                  },
+                  currency: ({ row }) => {
+                    return <>{row?.ifsc_code}</>;
+                  },
+                  country: ({ row }) => {
+                    return <>{row?.country}</>;
+                  },
+                  ifsc_code: ({ row }) => {
+                    return <>{row?.currency}</>;
+                  },
+                  action: ({ row }) => {
+                    return (
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 10,
+                        }}
+                      >
+                        <button
+                          style={{
+                            appearance: "none",
+                            border: "none",
+                            background: "none",
+                          }}
+                          onClick={() =>
+                            onOpenModal({ method: "put", payload: row })
+                          }
+                        >
+                          <span className="themify-glyph-29"></span> Edit
+                        </button>
+                        {/* TODO: Delete user */}
+                        <button
+                          style={{
+                            appearance: "none",
+                            border: "none",
+                            background: "none",
+                          }}
+                          onClick={() =>
+                            onOpenModal({ method: "delete", payload: row })
+                          }
+                        >
+                          <span className="themify-glyph-165"></span> Delete
+                        </button>
+                      </div>
+                    );
+                  },
                 }}
               />
             )}

@@ -4,6 +4,7 @@ import "moment-timezone";
 import styled from "styled-components";
 import { Card, Row, Col, Button, Dropdown, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
 
 // COMPONENTS
 import PageTitle from "../layouts/PageTitle";
@@ -21,16 +22,12 @@ function UserInformation(props) {
   return (
     <>
       <PageTitle activeMenu="Users information" motherMenu="User Management" />
-      <Row style={{ marginBottom: 60 }}>
-        <Col>
+      <Row>
+        <Col style={{ marginBottom: 60 }}>
           <header className="mb-4">
             <h3>Permissions</h3>
           </header>
-          <Card
-            style={{
-              padding: 10,
-            }}
-          >
+          <Card>
             <UsersPermissionTable {...props} />
           </Card>
         </Col>
@@ -38,15 +35,11 @@ function UserInformation(props) {
 
       {/* Permissions */}
       <Row>
-        <Col>
+        <Col style={{ marginBottom: 60 }}>
           <header className="mb-4">
             <h3>User membership information</h3>
           </header>
-          <Card
-            style={{
-              padding: 10,
-            }}
-          >
+          <Card>
             <UsersMembershipTable {...props} />
           </Card>
         </Col>
@@ -61,26 +54,42 @@ function UsersPermissionTable({ services, useService }) {
   const group = useGroupService();
 
   let service = useService({
-    get: group.listUsers,
+    list: group.listUsers,
   });
   const { dispatchRequest } = service;
+  function notifySuccess() {
+    toast.success("Success !", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+
+  function notifyError(error) {
+    toast.error(error || "Request Error!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
 
   useEffect(() => {
-    dispatchRequest({ type: "get" });
+    dispatchRequest({
+      type: "list",
+      payload: {
+        "order[updatedAt]": "DESC",
+        "order[createdAt]": "DESC",
+        "options[paranoid]": false,
+      },
+      toast: { success: notifySuccess, error: notifyError },
+    });
   }, []);
-
-  const actions = (id) => (
-    <>
-      <div className="d-flex" style={{ gap: 20 }}>
-        <a href="">
-          <span className="themify-glyph-29"></span> Edit
-        </a>
-        <a href="">
-          <span className="themify-glyph-165"></span> Delete
-        </a>
-      </div>
-    </>
-  );
 
   const permit = ({ key, row }) => (
     <div className="d-flex" style={{ gap: 10 }}>
@@ -124,7 +133,13 @@ function UsersPermissionTable({ services, useService }) {
         ]}
         transformers={{
           name: ({ key, value, row }) => {
-            return <>{row?.profile?.nickname || "Untitled"}</>;
+            return (
+              <>
+                {row?.role == "admin"
+                  ? row?.admin_profile?.nickname
+                  : row?.profile?.nickname || "Untitled"}
+              </>
+            );
           },
           id: ({ row }) => {
             return <>{row?.id}</>;
@@ -158,27 +173,14 @@ function UsersMembershipTable({ useService, services }) {
   const group = useGroupService();
 
   let service = useService({
-    get: group.listUsers,
+    list: group.listUsers,
   });
 
   const { dispatchRequest } = service;
 
   useEffect(() => {
-    dispatchRequest({ type: "get" });
+    dispatchRequest({ type: "list" });
   }, []);
-
-  const actions = (id) => (
-    <>
-      <div className="d-flex" style={{ gap: 20 }}>
-        <a href="">
-          <span className="themify-glyph-29"></span> Edit
-        </a>
-        <a href="">
-          <span className="themify-glyph-165"></span> Delete
-        </a>
-      </div>
-    </>
-  );
 
   return (
     <>
@@ -191,7 +193,7 @@ function UsersMembershipTable({ useService, services }) {
         omit="*"
         extras={["name", "role", "suitability", "relationship"]}
         transformers={{
-          name: ({ key, value, row }) => {
+          name: ({ row }) => {
             return (
               <Link to="/to_user_information">
                 <div className="media d-flex align-items-center">

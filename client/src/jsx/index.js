@@ -6,6 +6,8 @@ import { Provider } from "react-redux";
 import { PersistGate } from "redux-persist/integration/react";
 import { CircularProgress } from "@material-ui/core";
 import _helpers from "./_helpers";
+import "react-toastify/dist/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const {
   store: { store, persistor },
@@ -36,7 +38,17 @@ function Markup() {
               <Link to="/admin/login">Admin login</Link>
             </li>
           </ul> */}
-
+          <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
           <Switch>
             {/* Admin user page */}
             <Route path="/admin">

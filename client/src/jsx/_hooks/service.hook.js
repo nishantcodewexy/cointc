@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react";
 import qs from "qs";
+import { useDispatch } from "react-redux";
+import _actions from "../_actions";
+const { user } = _actions;
 /**
  * @description - Specify the services to your component will be using. Usually (get, post, put and delete) request
  * @typedef {Object} Services
@@ -18,24 +21,32 @@ import qs from "qs";
  * @returns
  */
 function useService(services) {
-  const [prevRequest, setPrevRequest] = useState({});
+  const dispatch = useDispatch();
+
+  const [requestStack, setRequestStack] = useState([]);
+  const [lastRequestType, setLastRequestType] = useState("");
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-
+  const [_toast, setToast] = useState(null);
   /**************************/
-  const request = async (service, payload) => {
-    try {
-      setIsFetching(true);
-      return await service(payload);
-    } catch (error) {
-      // console.error(error);
-      setError(error.message);
-      return error;
-    } finally {
-      setIsFetching(false);
+  async function handleResponse(response, save = false, toast = false) {
+    let { success, error, statusCode } = response;
+    // debugger;
+    if (error) {
+      setError(error);
+      toast && _toast?.error && _toast?.error(error);
+      if (statusCode == 401) {
+        dispatch(user.logout());
+      }
+    } else {
+      if (save) {
+        setData(success);
+      }
+      toast && _toast?.success && _toast?.success(success);
     }
-  };
+    return response;
+  }
 
   /**
    * @function dispatchRequest - request dispatcher
@@ -45,67 +56,68 @@ function useService(services) {
    * @returns
    */
 
-  const dispatchRequest = async ({ type, payload, overwrite = true }) => {
-    let response = new Error("");
-    // console.log({ prevRequest });
+  async function dispatchRequest(request) {
+    try {
+      const { type, payload, toast = _toast, overwrite = true } = request;
+      toast && setToast(toast);
 
-    switch (String(type)?.toLowerCase()) {
-      case "post":
-      case "create":
-        response = await request(
-          async (payload) => await services.post(payload),
-          payload
-        );
-        overwrite && setPrevRequest((state) => ({ ...state, [type]: payload }));
-        prevRequest?.get &&
-          (await dispatchRequest({ type: "get", payload: prevRequest["get"] }));
-        return response;
+      let response = new Error("");
+      setIsFetching(true);
+      setLastRequestType(type);
 
-      case "put":
-      case "update":
-        response = await request(async (payload) => {
-          await services.put(payload);
-        }, payload);
-        overwrite && setPrevRequest((state) => ({ ...state, [type]: payload }));
-        prevRequest?.get &&
-          (await dispatchRequest({ type: "get", payload: prevRequest["get"] }));
+      switch (String(type)?.toLowerCase()) {
+        case "post":
+        case "create":
+          response = await services.post(payload);
+          handleResponse(response, false, true);
+          requestStack?.list && dispatchRequest(requestStack["list"]);
+          break;
 
-        return response;
+        case "put":
+        case "update":
+          response = await services.put(payload);
+          handleResponse(response, false, true);
+          requestStack?.list && dispatchRequest(requestStack["list"]);
 
-      case "drop":
-      case "delete":
-        response = await request(async (payload) => {
-          await services.drop(payload);
-        }, payload);
-        overwrite && setPrevRequest((state) => ({ ...state, [type]: payload }));
-        prevRequest?.get &&
-          (await dispatchRequest({ type: "get", payload: prevRequest["get"] }));
+          break;
 
-        return response;
+        case "drop":
+        case "delete":
+          response = await services.drop(payload);
+          handleResponse(response, false, true);
+          requestStack?.list && dispatchRequest(requestStack["list"]);
 
-      case "get":
-      case "fetch":
-      default: {
-        response = await request(async (payload) => {
-          let _resp = await services.get(payload);
-          setData(_resp);
-        }, payload);
-        overwrite && setPrevRequest((state) => ({ ...state, [type]: payload }));
-        return response;
+          break;
+
+        case "get":
+          response = await services?.list(qs.stringify(payload));
+          handleResponse(response, true);
+          break;
+
+        case "list":
+        default: {
+          response = await services?.list(qs.parse(payload));
+          handleResponse(response, true);
+          break;
+        }
       }
+      overwrite && setRequestStack((state) => ({ ...state, [type]: request }));
+      return handleResponse(response);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setIsFetching(false);
     }
-  };
+  }
 
   // Retry previous request using a new or the previous payload
   const dispatchRetry = (payload) =>
-    prevRequest
-      ? request(prevRequest.service, (payload = prevRequest.payload))
-      : null;
+    requestStack ? dispatchRequest(requestStack[lastRequestType]) : null;
 
   return {
     data,
     error,
-    prevRequest,
+    prevRequest: requestStack,
     isFetching,
     dispatchRetry,
     dispatchRequest,
@@ -116,4 +128,6 @@ function noService(type) {
   let message = `No **${type}** service specified`;
   throw new Error(message);
 }
+
+useService.displayName = "useServiceHook";
 export default useService;

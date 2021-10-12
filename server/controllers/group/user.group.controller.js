@@ -1,10 +1,11 @@
 const update = require("../../routes/api/_user/update");
-const uuid = require("uuid")
+const uuid = require("uuid");
 const faker = require("faker");
 const {filterFields} = require("../../services/model")
 const Joi = require('joi');
 const boom = require('@hapi/boom')
 const { roles,types:{ProfileModeType,country} } = require("../../consts");
+const user = require("../../database/models/user");
 
 module.exports = (server) => {
   /*********************** HELPERS ***************************/
@@ -38,7 +39,7 @@ module.exports = (server) => {
         payload: { data, soft },
         params: { id },
       } = req;
-      
+
       if (id) {
         data = [id];
         if (!soft) soft = true;
@@ -48,7 +49,7 @@ module.exports = (server) => {
           await sequelize.transaction(async (t) => {
             data.forEach(async (id) => {
               let where = { id };
-              await __destroy("User",where, soft, { transaction: t });
+              await __destroy("User", where, soft, { transaction: t });
             });
           })
         ),
@@ -69,7 +70,7 @@ module.exports = (server) => {
         } = req;
         console.log({ data });
         // TODO: authorization
-        
+
         const attributes = ["mode", "nickname", "role"];
 
         return await sequelize.transaction(async (t) => {
@@ -112,10 +113,8 @@ module.exports = (server) => {
      */
     bulkCreate: async (req) => {
       const {
-        payload=[],
-        pre: { 
-          isAdminOrError
-         },
+        payload = [],
+        pre: { isAdminOrError },
       } = req;
 
       const payloadSchema = Joi.array().items(

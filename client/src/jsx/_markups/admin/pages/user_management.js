@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import useToggler from "../../../_hooks/toggler.hook";
 import Moment from "react-moment";
 import moment from "moment";
+import { toast } from "react-toastify";
 // COMPONENTS
 import TableGenerator from "../components/TableGenerator.Component";
 import { ModalForm } from "../components/ModalForm.Component.jsx";
@@ -13,21 +14,47 @@ function UserManagement({ services, useService }) {
   const group = useGroupService();
 
   let service = useService({
-    get: group.listUsers,
+    list: group.listUsers,
+    get: group.getUser,
     post: group.createUsers,
     put: group.updateUsers,
     drop: group.dropUsers,
   });
 
+  function notifySuccess() {
+    toast.success("Success !", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+
+  function notifyError(error) {
+    toast.error(error || "Request Error!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+
   const { data, dispatchRequest } = service;
+
   useEffect(() => {
     dispatchRequest({
-      type: "get",
+      type: "list",
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
         "options[paranoid]": false,
+        paranoid: false,
       },
+      toast: { success: notifySuccess, error: notifyError },
     });
   }, []);
 
@@ -57,7 +84,7 @@ function UserManagement({ services, useService }) {
           case "post":
             return [
               "Create new User",
-              <UserForm.Create
+              <UserForm
                 action={(requestPayload) =>
                   dispatchRequest({ type: "post", payload: requestPayload })
                 }
@@ -68,9 +95,12 @@ function UserManagement({ services, useService }) {
           case "put":
             return [
               "Update User",
-              <UserForm.Modify
+              <UserForm.Update
                 action={(requestPayload) =>
-                  dispatchRequest({ type: "put", payload: requestPayload })
+                  dispatchRequest({
+                    type: "put",
+                    payload: { id: formData?.payload.id, data: requestPayload },
+                  })
                 }
                 payload={formData?.payload}
                 callback={onModalClose}
@@ -80,9 +110,12 @@ function UserManagement({ services, useService }) {
           case "delete":
             return [
               "Delete User",
-              <UserForm.Delete
+              <UserForm.Drop
                 action={(requestPayload) =>
-                  dispatchRequest({ type: "drop", payload: requestPayload })
+                  dispatchRequest({
+                    type: "drop",
+                    payload: { id: formData?.payload.id, data: requestPayload },
+                  })
                 }
                 payload={formData?.payload}
                 callback={onModalClose}
@@ -205,7 +238,18 @@ function UserManagement({ services, useService }) {
                   );
                 },
                 email: ({ row }) => row?.email,
-                status: ({ row }) => (row?.archivedAt ? "inactive" : "Active"),
+                status: ({ row }) =>
+                  row?.archived_at ? (
+                    <span className="badge light badge-danger">
+                      <i className="fa fa-circle text-danger mr-1" />
+                      archived
+                    </span>
+                  ) : (
+                    <span className="badge light badge-success">
+                      <i className="fa fa-circle text-success mr-1" />
+                      Active
+                    </span>
+                  ),
                 kyc_status: ({ row }) => {
                   let role = row?.role;
                   const checkKYC = (kyc) => {
@@ -220,7 +264,7 @@ function UserManagement({ services, useService }) {
                   let status =
                     role == "admin"
                       ? "completed"
-                      : checkKYC(row?.profile?.kyc)
+                      : checkKYC(row?.kyc)
                       ? "completed"
                       : "pending";
 

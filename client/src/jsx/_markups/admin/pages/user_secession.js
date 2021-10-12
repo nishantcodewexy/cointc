@@ -8,57 +8,56 @@ import {
   Dropdown,
   Table,
 } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import useToggler from "../../../_hooks/toggler.hook";
+import Moment from "react-moment";
+import moment from "moment";
+import { toast } from "react-toastify";
+// COMPONENTS
+import TableGenerator from "../components/TableGenerator.Component";
+import { ModalForm } from "../components/ModalForm.Component.jsx";
+import UserForm from "../forms/user.form";
+import _components from "../components";
+import { Switch } from "@mui/material";
 import { Link } from "react-router-dom";
 import avartar5 from "../../../../images/avatar/5.png";
+const { IdenticonAvatar } = _components;
 
-
-function UserSecessions() {
+function UserSecessions(props) {
   return (
     <>
       <PageTitle activeMenu="Users secession" motherMenu="User Management" />
       {/* Details of Secession Request */}
-      <Row style={{ marginBottom: 60 }}>
-        <Col>
+      <Row>
+        <Col style={{ marginBottom: 60 }}>
           <header className="mb-4">
             <h3>Details of Secession Request</h3>
           </header>
-          <Card
-            style={{
-              padding: 10,
-            }}
-          >
-            <SecessionRequestTable />
+          <Card>
+            <SecessionRequestTable {...props} />
           </Card>
         </Col>
       </Row>
 
       {/* Secession Upon Approval */}
-      <Row style={{ marginBottom: 60 }}>
-        <Col>
+      <Row>
+        <Col style={{ marginBottom: 60 }}>
           <header className="mb-4">
             <h3>Secession Upon Approval</h3>
           </header>
-          <Card
-            style={{
-              padding: 10,
-            }}
-          >
-            <ApprovedSecessionTable />
+          <Card>
+            <ApprovedSecessionTable {...props} />
           </Card>
         </Col>
       </Row>
       {/* List of Secession Members */}
-      <Row style={{ marginBottom: 60 }}>
-        <Col>
+      <Row>
+        <Col style={{ marginBottom: 60 }}>
           <header className="mb-4">
             <h3>List of Secession Members</h3>
           </header>
-          <Card
-            style={{
-              padding: 10,
-            }}
-          >
-            <PastSecessionListTable />
+          <Card>
+            <PastSecessionListTable {...props} />
           </Card>
         </Col>
       </Row>
@@ -67,131 +66,95 @@ function UserSecessions() {
 }
 export default UserSecessions;
 
-function SecessionRequestTable() {
-  const drop = (
-    <Dropdown>
-      <Dropdown.Toggle
-        variant="primary"
-        className="table-dropdown i-false btn  tp-btn-light sharp"
-      >
-        <span class="fs--1">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="18px"
-            height="18px"
-            viewBox="0 0 24 24"
-            version="1.1"
-          >
-            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-              <rect x="0" y="0" width="24" height="24"></rect>
-              <circle fill="#000000" cx="5" cy="12" r="2"></circle>
-              <circle fill="#000000" cx="12" cy="12" r="2"></circle>
-              <circle fill="#000000" cx="19" cy="12" r="2"></circle>
-            </g>
-          </svg>
-        </span>
-      </Dropdown.Toggle>
-      <Dropdown.Menu>
-        <Dropdown.Item href="#">Edit</Dropdown.Item>
+function SecessionRequestTable({ services, useService }) {
+  const { useGroupService } = services;
+  const group = useGroupService();
 
-        <Dropdown.Item href="#" className="text-danger">
-          Delete
-        </Dropdown.Item>
-      </Dropdown.Menu>
-    </Dropdown>
-  );
+  let service = useService({
+    list: group.listUsers,
+  });
+  const { dispatchRequest } = service;
+  function notifySuccess() {
+    toast.success("Success !", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
 
-  const permit = (
-    <div className="d-flex" style={{ gap: 10 }}>
-      <ButtonGroup size="sm" className="mb-2 mr-2">
-        <Button variant="success">Accept</Button>
-        <Button variant="danger">Deny</Button>
-      </ButtonGroup>
-    </div>
-  );
-  const chackbox = document.querySelectorAll(".user_permission_single input");
-  const motherChackBox = document.querySelector(".user_permission input");
-  // console.log(document.querySelectorAll(".publish_review input")[0].checked);
-  const chackboxFun = (type) => {
-    for (let i = 0; i < chackbox.length; i++) {
-      const element = chackbox[i];
-      if (type === "all") {
-        if (motherChackBox.checked) {
-          element.checked = true;
-        } else {
-          element.checked = false;
-        }
-      } else {
-        if (!element.checked) {
-          motherChackBox.checked = false;
-          break;
-        } else {
-          motherChackBox.checked = true;
-        }
-      }
+  function notifyError(error) {
+    toast.error(error || "Request Error!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+
+  useEffect(() => {
+    dispatchRequest({
+      type: "list",
+      payload: {
+        "order[updatedAt]": "DESC",
+        "order[createdAt]": "DESC",
+        "options[paranoid]": false,
+      },
+      toast: { success: notifySuccess, error: notifyError },
+    });
+  }, []);
+
+  const permit = ({ row }) => {
+    function handleChange(e, value) {
+      console.log({ e, value });
+      // TODO: Send update request to update permission
+      // dispatchRequest({
+      //   type: "put",
+      //   payload: {
+      //     permission: value
+      //   }
+      // });
     }
+    return (
+      <small className="d-flex" style={{ gap: 10, alignItems: "center" }}>
+        Deny
+        <Switch
+          color="default"
+          onChange={handleChange}
+          name="permission"
+          checked={row?.permission}
+          size="small"
+        />
+        Accept
+      </small>
+    );
   };
-
-  const chack = (i) => (
-    <div className={`custom-control custom-checkbox ml-2`}>
-      <input
-        type="checkbox"
-        className="custom-control-input "
-        id={`checkAll_user_permission_${i}`}
-        required=""
-        onClick={() => chackboxFun()}
-      />
-      <label
-        className="custom-control-label"
-        htmlFor={`checkAll_user_permission_${i}`}
-      ></label>
-    </div>
-  );
 
   return (
     <>
-      <Table responsive hover size="sm">
-        <thead>
-          <tr>
-            <th className="user_permission">
-              <div className="custom-control custom-checkbox mx-2">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="checkAll_user_permission_all"
-                  onClick={() => chackboxFun("all")}
-                />
-                <label
-                  className="custom-control-label"
-                  htmlFor="checkAll_user_permission_all"
-                ></label>
-              </div>
-            </th>
-            <th>Name</th>
-            <th>User ID</th>
-            <th>Phone Number</th>
-            <th>Level</th>
-            <th>Permission</th>
-          </tr>
-        </thead>
-        <tbody id="customers">
-          <tr className="btn-reveal-trigger">
-            <td className="user_permission_single">{chack(1)}</td>
-            <td className="py-3">
+      <TableGenerator
+        {...{ service }}
+        mapping={{
+          id: "User ID",
+        }}
+        omit="*"
+        extras={["name", "user_id", "phone_number", "level", "permission"]}
+        transformers={{
+          name: ({ key, value, row }) => {
+            return (
               <Link to="/to_user_information">
                 <div className="media d-flex align-items-center">
                   <div className="avatar avatar-xl mr-4">
-                    <div className="">
-                      <img
-                        className="rounded-circle img-fluid"
-                        src={avartar5}
-                        width="30"
-                        alt=""
-                      />
+                    <div className="rounded-circle overflow-hidden img-fluid">
+                      <IdenticonAvatar size={30} alt="" id={row.id} />
                     </div>
                   </div>
                   <div className="media-body">
-                    <h5 className="mb-0 fs--1">Ricky Antony</h5>
+                    <h5 className="mb-0 fs--1">{row?.role=='admin' ? row?.admin_profile?.nickname : row?.profile?.nickname || 'Untitled'}</h5>
                     <div
                       className="d-flex align-items-center"
                       style={{ gap: 16, fontSize: 12 }}
@@ -209,18 +172,29 @@ function SecessionRequestTable() {
                   </div>
                 </div>
               </Link>
-            </td>
-            <td className="py-2">
-              <a href="mailto:ricky@example.com">243465488</a>
-            </td>
-            <td className="py-2">
-              <a href="tel:2012001851">(201) 200-1851</a>
-            </td>
-            <td className="py-2">1</td>
-            <td className="py-2">{permit}</td>
-          </tr>
-        </tbody>
-      </Table>
+            );
+          },
+          user_id: ({ row }) => {
+            return <>{row?.id}</>;
+          },
+          level: ({ row }) => {
+            return 1;
+          },
+          permission: permit,
+          phone_number: ({ row }) => {
+            return row?.profile?.kyc?.phone ? (
+              <a href={`tel:${row?.profile?.kyc?.phone}`}>
+                {row?.profile?.kyc?.phone}
+              </a>
+            ) : (
+              <span className="badge light badge-danger">
+                <i className="fa fa-circle text-danger mr-1" />
+                Not specified
+              </span>
+            );
+          },
+        }}
+      />
     </>
   );
 }
@@ -445,7 +419,7 @@ function PastSecessionListTable() {
               </Link>
             </td>
             <td className="py-2" style={{}}>
-            Rohit Binary322gmail.com
+              Rohit Binary322gmail.com
             </td>
             <td className="py-2">1 Months ago</td>
 

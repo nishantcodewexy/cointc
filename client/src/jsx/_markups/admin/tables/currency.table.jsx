@@ -5,7 +5,7 @@ import pt from "prop-types";
 import { LinearProgress, TablePagination } from "@material-ui/core";
 import ActionButton from "../../_shared_component/ActionButton";
 import useToggler from "../../../_hooks/toggler.hook";
-import EmptyRecord from "../components/EmptyRecord.Component";
+import EmptyRecord from "../components/Empty.Component";
 import useTableSelector from "../../../_hooks/table.select.hook";
 import UserForm from "../forms/user.form";
 import usePaginator from "../../../_hooks/paginator.hook.js.js";

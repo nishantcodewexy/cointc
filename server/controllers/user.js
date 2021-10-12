@@ -14,19 +14,16 @@ module.exports = (server) => {
   const { __upsert, __destroy, __assertRole } = require("./_methods")(server);
 
   const {
-    
-    db: { User, sequelize, Wallet,Profile,AdminProfile,Upload },
+    db: { User, sequelize, Wallet, BasicProfile, AdminProfile, Upload },
     config: { client_url },
     helpers: { decrypt, mailer, jwt, generator },
-    consts: { 
+    consts: {
       roles: _roles,
-      types:{
-        country
-      }
-     },
+      types: { country },
+    },
   } = server.app;
 
-  const group = require("./group/user.group.controller")(server)
+  const group = require("./group/user.group.controller")(server);
 
   const UserController = {
     /**
@@ -37,11 +34,9 @@ module.exports = (server) => {
      * @returns
      */
     async create(req) {
-      const {
-        role
-      } = req.pre;
+      const { role } = req.pre;
       let {
-        payload: { email, password,referrer,sudo = false, ...restOfPayload },
+        payload: { email, password, referrer, sudo = false, ...restOfPayload },
       } = req;
 
       assert(email, boom.badRequest("Expected email"));
@@ -98,11 +93,10 @@ module.exports = (server) => {
 
           await _user.createWallet({ asset: "BTC" }, { transaction: t });
 
-          if(referrer){
-            const ref = await User.findByPk(referrer)
-            ref&&ref.addReferrer(_user)
+          if (referrer) {
+            const ref = await User.findByPk(referrer);
+            ref && ref.addReferrer(_user);
           }
-          
 
           return sudo
             ? {
@@ -133,29 +127,29 @@ module.exports = (server) => {
         const {
           payload: { email, role = _roles.basic, password },
         } = req;
-        
-        const { getter } = __assertRole(role);
+
+        // const { getter } = __assertRole(role);
 
         // fetch user record from DB that matches the email
         let account = await User.findOne({
           where: { email, role },
+          // include: [AdminProfile, BasicProfile],
+          logger: console.log,
         });
 
         if (account) {
           // lazy load profile attached to account
-          let account_profile = await account[getter]();
+          // let account_profile = await account.getProfilable();
           // Check if password matches
           if (await decrypt(password, account.password)) {
             // Update the last_login attribute of the user model
-            
-            account.login_at = new Date(Date.now())
-            await account.save()
-            
+
+            account.login_at = new Date(Date.now());
+            await account.save();
 
             return {
               token: jwt.create(account),
               ...account.toPublic(),
-              ...account_profile.dataValues,
             };
           } else return boom.notFound("Incorrect password!");
         }
@@ -273,84 +267,75 @@ module.exports = (server) => {
         // get user ID from preHandler
         let {
           params: { id },
-          pre: { 
-            isAdmin
+          pre: { isAdmin },
+          auth: {
+            credentials: { user },
           },
-          auth:{
-            credentials:{
-              user
-            }
-          }
         } = req;
 
-        
-        
         // handle invalid params <id> 400
         if (!id) return boom.badRequest();
         const _user = await User.findOne({
-          where:{
-            ...(isAdmin&&id!=="me"?{id:id}:{id:user.id})
-          }
-        })
-        if(!_user) throw boom.notFound()
-        
-        const result = await User.findOne({
-          where: { 
-            ...(isAdmin&&id!=="me"?{id:id}:{id:user.id})
-           },
-           attributes:[
-             "id",
-             "email",
-             "role",
-             "permission",
-             "last_seen",
-             "login_at",
-             "updated_at"
-           ],
-           
-           include:_user.role===roles.admin?{
-            model:AdminProfile,
-            as:"admin_profile",
-            attributes:[
-              "nickname",
-              "kyc",
-              "created_at",
-              "updated_at"
-            ]
-           }:{
-            model:Profile,
-            as:"profile",
-            attributes:[
-              "mode",
-              "nickname",
-              "kyc",
-              "referral_code",
-              "created_at",
-              "updated_at",
-              "suitability",
-              "country",
-              "profile_pic",
-              "kyc_status",
-              "date_of_birth",
-              "last_name",
-              "other_names"
-            ],
-            include:{
-              model:Upload
-            }
-           }
-        })
+          where: {
+            ...(isAdmin && id !== "me" ? { id: id } : { id: user.id }),
+          },
+        });
+        if (!_user) throw boom.notFound();
 
-        if(!result){
-          throw boom.notFound("not found")
+        const result = await User.findOne({
+          where: {
+            ...(isAdmin && id !== "me" ? { id: id } : { id: user.id }),
+          },
+          attributes: [
+            "id",
+            "email",
+            "role",
+            "permission",
+            "last_seen",
+            "login_at",
+            "updated_at",
+          ],
+
+          include:
+            _user.role === roles.admin
+              ? {
+                  model: AdminProfile,
+                  as: "admin_profile",
+                  attributes: ["nickname", "kyc", "created_at", "updated_at"],
+                }
+              : {
+                  model: BasicProfile,
+                  as: "profile",
+                  attributes: [
+                    "mode",
+                    "nickname",
+                    "kyc",
+                    "referral_code",
+                    "created_at",
+                    "updated_at",
+                    "suitability",
+                    "country",
+                    "profile_pic",
+                    "kyc_status",
+                    "date_of_birth",
+                    "last_name",
+                    "other_names",
+                  ],
+                  include: {
+                    model: Upload,
+                  },
+                },
+        });
+
+        if (!result) {
+          throw boom.notFound("not found");
         }
 
-
-        return result
-          // .then((_user) => _user.role)
-          // .catch((error) => {
-          //   throw new Error(`User Controller:findID - ${error.message}`);
-          // });
+        return result;
+        // .then((_user) => _user.role)
+        // .catch((error) => {
+        //   throw new Error(`User Controller:findID - ${error.message}`);
+        // });
 
         // Do not allow standard users to find admins
         // let where = role == _roles.standard ? { id, role } : { id };
@@ -371,22 +356,18 @@ module.exports = (server) => {
     remove: async (req) => {
       // get user ID from preHandler
       let {
-        auth:{
-          credentials:{
-            user
-          },
+        auth: {
+          credentials: { user },
         },
         payload: { soft = true },
-        pre:{
-          isAdmin
-        }
+        pre: { isAdmin },
       } = req;
       let where = { id: user.id };
 
-      if(isAdmin){
-        return group.remove(req)
+      if (isAdmin) {
+        return group.remove(req);
       }
-      
+
       return { deleted: Boolean(await __destroy("User", where, soft)) };
     },
 
@@ -401,25 +382,17 @@ module.exports = (server) => {
     async update(req) {
       try {
         let {
-          pre: { 
-            isAdmin
-           },
+          pre: { isAdmin },
           payload,
-          params:{
-            id
+          params: { id },
+          auth: {
+            credentials: { user },
           },
-          auth:{
-            credentials:{
-              user
-            }
-          }
         } = req;
 
+        let schema;
 
-        let schema
-
-        if(isAdmin&&id!=="me"){
-          
+        if (isAdmin && id !== "me") {
           schema = Joi.object({
             kyc: Joi.object({
               email: Joi.bool(),

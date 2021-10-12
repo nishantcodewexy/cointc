@@ -46,20 +46,24 @@ class UserServices {
 
   /*************** LOGIN ***************/
   login = async (data) => {
-    const config = {
-      method: "POST",
-      data,
-    };
-    return await this.axios("authenticate", config);
+    return await this.decorate(
+      async () =>
+        await this.axios("auth/authenticate", {
+          method: "POST",
+          data,
+        })
+    );
   };
 
   /**************** REGISTER ************/
   register = async (data) => {
-    const config = {
-      method: "POST",
-      data,
-    };
-    return await this.axios(``, config);
+    return await this.decorate(
+      async () =>
+        await this.axios(`auth/register`, {
+          method: "POST",
+          data,
+        })
+    );
   };
 }
 
@@ -67,7 +71,7 @@ function useUserService() {
   const session = useSelector((state) => state?.session);
   return new UserServices({
     headers: helpers.headers(session),
-    baseURL: "/api/account",
+    baseURL: "/api",
   });
 }
 export default useUserService;

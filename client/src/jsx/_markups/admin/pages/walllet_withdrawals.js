@@ -6,7 +6,7 @@ import { LinearProgress, TablePagination } from "@material-ui/core";
 import { useEffect } from "react";
 
 import useToggler from "../../../_hooks/toggler.hook";
-import EmptyRecord from "../components/EmptyRecord.Component";
+import EmptyRecord from "../components/Empty.Component";
 function Withdrawals({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();

@@ -1,33 +1,30 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
-const hooks = require('../hooks/user.profile.hook')
+const hooks = require("../hooks/user.profile.hook");
+
 const {
-  types:{
-    KycStatusType
-  }
-} = require("../../consts")
+  types: { KycStatusType },
+} = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
-  class Profile extends Model {
+  class BasicProfile extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { Profile, User,Upload } = models;
-      Profile.belongsTo(User, {
+      const { BasicProfile, User, Upload } = models;
+      BasicProfile.belongsTo(User, {
         foreignKey: "user_id",
       });
-      Profile.belongsTo(Upload, {
+      BasicProfile.belongsTo(Upload, {
         foreignKey: "profile_pic",
       });
-      Profile.belongsTo(Upload, {
+      BasicProfile.belongsTo(Upload, {
         foreignKey: "kyc_document",
       });
-      
-      
     }
     toPublic() {
       return _.omit(this.toJSON(), [
@@ -38,7 +35,7 @@ module.exports = (sequelize, DataTypes) => {
       ]);
     }
   }
-  Profile.init(
+  BasicProfile.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -83,34 +80,34 @@ module.exports = (sequelize, DataTypes) => {
       archived_at: DataTypes.DATE,
       suitability: {
         type: DataTypes.INTEGER,
-        defaultValue:0
+        defaultValue: 0,
       },
       country: {
         type: DataTypes.STRING,
-        defaultValue:''
+        defaultValue: "",
       },
-      kyc_status:{
-        type:DataTypes.ENUM(Object.keys(KycStatusType)),
-        defaultValue:KycStatusType.PENDING
+      kyc_status: {
+        type: DataTypes.ENUM(Object.keys(KycStatusType)),
+        defaultValue: KycStatusType.PENDING,
       },
-      last_name:{
-        type:DataTypes.STRING
+      last_name: {
+        type: DataTypes.STRING,
       },
-      other_names:{
-        type:DataTypes.STRING
-      }
+      other_names: {
+        type: DataTypes.STRING,
+      },
     },
     {
       sequelize,
-      modelName: "Profile",
+      modelName: "BasicProfile",
       underscored: true,
-      tableName: "tbl_users_profile",
+      tableName: "tbl_basic_users_profile",
       timestamps: true,
       paranoid: true,
       deletedAt: "archived_at",
-      hooks
+      hooks,
     }
   );
 
-  return Profile;
+  return BasicProfile;
 };

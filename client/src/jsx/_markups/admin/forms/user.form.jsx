@@ -2,27 +2,24 @@ import { Form, Button, Row, Col } from "react-bootstrap";
 import { Formik, Form as FormikForm, Field } from "formik";
 import Switch from "@mui/material/Switch";
 import Checkbox from "@mui/material/Checkbox";
-import { FormControlUnstyled } from "@mui/core";
-
-export function UserForm({ action, payload = {} }) {
-  return <Formik>A form</Formik>;
-}
+import country_list from "country-list";
 
 // CREATE NEW USER FORM
-export function Create({ action, callback, payload: initialData = {} }) {
+export function Create({ action, callback }) {
   return (
     <Formik
       initialValues={{
-        email: initialData?.emaill || "",
-        asAdmin: initialData?.role == "admin" || false,
-        sudo: true,
+        email: "",
+        country: "CN",
+        nickname: "",
+        permission: false,
+        role: "basic",
       }}
-      validate={(values) => {}}
+      // validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let { asAdmin, ...others } = values;
-          let dataPayload = { ...others, role: asAdmin ? "admin" : "basic" };
-          await action(dataPayload);
+          let payload = [values];
+          await action(payload);
           callback && callback();
         } catch (error) {
           console.error(error);
@@ -53,6 +50,41 @@ export function Create({ action, callback, payload: initialData = {} }) {
               placeholder="Email address"
             />
           </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formCurrencyCode">
+            <Form.Label>Nickname</Form.Label>
+            <Form.Control
+              type="text"
+              name="nickname"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              defaultValue={values?.nickname}
+              placeholder="User's nickname"
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-4" controlId="formCurrencyCode">
+            <Form.Label>Country</Form.Label>
+            <Form.Control
+              as="select"
+              type="text"
+              name="country"
+              required
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.country}
+              placeholder="Country"
+            >
+              {country_list.getNames().map((country, key) => {
+                return (
+                  <option key={key} value={country_list.getCode(country)}>
+                    {country}
+                  </option>
+                );
+              })}
+            </Form.Control>
+          </Form.Group>
+
           <Form.Group>
             <Form.Label
               style={{
@@ -62,8 +94,12 @@ export function Create({ action, callback, payload: initialData = {} }) {
                 justifyContent: "space-between",
               }}
             >
-              <Form.Text>Create as Administrator</Form.Text>
-              <Switch name="asAdmin" onChange={handleChange} />
+              <Form.Text>Has Permission </Form.Text>
+              <Switch
+                name="permission"
+                checked={values?.permission}
+                onChange={handleChange}
+              />
             </Form.Label>
           </Form.Group>
 
@@ -75,26 +111,29 @@ export function Create({ action, callback, payload: initialData = {} }) {
     </Formik>
   );
 }
-
-// UPDATE USER FORM
-export function Update({ action, callback, payload: initialValues = {} }) {
+export function Update({ action, callback, payload: initialData = null }) {
   return (
     <Formik
       initialValues={{
-        email: initialValues?.email || '',
-        id: initialValues?.id,
-        suspend: initialValues?.archivedAt ? true : false,
-        sudo: true,
-        asAdmin:  initialValues?.role == 'admin' ? true : false,
+        email: initialData?.email || "",
+        country: initialData?.country || "CN",
+        nickname:
+          initialData?.role == "admin"
+            ? initialData?.admin_profile?.nickname
+            : initialData?.profile?.nickname || "",
+        permission: initialData?.permission || false,
+        role: initialData?.role || "basic",
       }}
-      validate={(values) => {}}
+      // validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let { asAdmin, sudo, suspend, ...others } = values;
-          let dataPayload = { ...others, role: asAdmin ? "admin" : "basic" };
-          console.log(dataPayload)
-          let response = await action({data: [dataPayload], sudo, suspend});
-          callback && callback(response);
+          let { email, ...rest } = values;
+          let payload = rest;
+          if (!initialData)
+            payload = [{ email: values?.email, role: rest?.role }];
+
+          await action(payload);
+          callback && callback();
         } catch (error) {
           console.error(error);
         } finally {
@@ -112,39 +151,62 @@ export function Update({ action, callback, payload: initialValues = {} }) {
         touched,
       }) => (
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mt-3 mb-3" controlId="user_email">
+          <Form.Group className="mb-3" controlId="formCurrencyCode">
             <Form.Label>Email address</Form.Label>
-            <Form.Control
-              type="email"
-              name="email"
-              required
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.email}
-              placeholder="Email address"
-            />
-            <Form.Text>
-              Current role: <strong>{initialValues?.role}</strong>
-            </Form.Text>
+            {!initialData ? (
+              <Form.Control
+                type="email"
+                name="email"
+                required
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.email}
+                placeholder="Email address"
+              />
+            ) : (
+              <Form.Text>
+                <strong className="text-primary">{initialData?.email}</strong>
+              </Form.Text>
+            )}
           </Form.Group>
 
-          {initialValues?.role !== "admin" && (
+          {initialData && (
             <>
-              <Form.Group className="mt-3 mb-3" controlId="user_as_admin">
-                <Form.Label
-                  style={{
-                    display: "flex",
-                    gap: 10,
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Form.Text>Administrator</Form.Text>
-                  <Switch name="asAdmin" onChange={handleChange} />
-                </Form.Label>
+              <Form.Group className="mb-3" controlId="formCurrencyCode">
+                <Form.Label>Nickname</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="nickname"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  defaultValue={values?.nickname}
+                  placeholder="User's nickname"
+                />
               </Form.Group>
 
-              <Form.Group className="mt-3 mb-3" controlId="user_suspended">
+              <Form.Group className="mb-4" controlId="formCurrencyCode">
+                <Form.Label>Country</Form.Label>
+                <Form.Control
+                  as="select"
+                  type="text"
+                  name="country"
+                  required
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.country}
+                  placeholder="Country"
+                >
+                  {country_list.getNames().map((country, key) => {
+                    return (
+                      <option key={key} value={country_list.getCode(country)}>
+                        {country}
+                      </option>
+                    );
+                  })}
+                </Form.Control>
+              </Form.Group>
+
+              <Form.Group>
                 <Form.Label
                   style={{
                     display: "flex",
@@ -153,12 +215,17 @@ export function Update({ action, callback, payload: initialValues = {} }) {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Form.Text>Suspend</Form.Text>
-                  <Switch name="suspend" onChange={handleChange} />
+                  <Form.Text>Has Permission </Form.Text>
+                  <Switch
+                    name="permission"
+                    checked={values?.permission}
+                    onChange={handleChange}
+                  />
                 </Form.Label>
               </Form.Group>
             </>
           )}
+
           <Button variant="primary" disabled={isSubmitting} block type="submit">
             {isSubmitting ? "Saving..." : "Save"}
           </Button>
@@ -225,18 +292,26 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
           <Button variant="primary" disabled={isSubmitting} block type="submit">
             {isSubmitting ? "Processing..." : "Confirm"}
           </Button>
-          <Form.Text controlId="delete_type" className="text-muted">
-            <Switch />
-            Permanently delete
+          <Form.Text controlId="delete_type" className="text-muted mt-3 ">
+            <label
+              htmlFor="perm_delete"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>Permanently delete</span>
+              <Switch name="force" id="perm_delete" value={values?.force} />
+            </label>
           </Form.Text>
         </Form>
       )}
     </Formik>
   );
 }
-export default Object.assign(UserForm, {
-  Modify: Update,
-  Create,
+export default Object.assign(Create, {
+  Update,
   Delete: Drop,
   Drop,
 });

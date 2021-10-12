@@ -9,7 +9,6 @@ module.exports = {
     let routes = glob.sync("/routes/api/[!_]**/[!_]*.js", {
       root: path.join(__dirname, ".."),
     });
-    // debugger;
     routes.forEach((file) => {
       let filePath = require(file);
       HapiServer.route(filePath(HapiServer));

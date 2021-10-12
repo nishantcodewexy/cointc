@@ -393,7 +393,6 @@ module.exports = {
    */
   filters: async ({ query = {}, searchFields = [], extras = {} }) => {
     const q = query.q || "";
-
     const searchQuery = {};
 
     q &&
@@ -423,7 +422,7 @@ module.exports = {
         ...extraWhere,
         ...extras,
       },
-      ...(orderQuery ? { order: orderQuery } : {}),
+      // ...(orderQuery ? { order: orderQuery } : {}),
       limit: limitQuery || 10,
       offset: offsetQuery || 0,
     };

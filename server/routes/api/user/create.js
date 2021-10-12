@@ -1,5 +1,5 @@
 "use strict";
-const Joi = require("joi")
+const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
@@ -9,15 +9,10 @@ module.exports = (server) => {
         }
        },
     },
-    consts: { 
-      roles: _roles,
-      
+    consts: { roles: _roles },
+    helpers: {
+      permissions: { isAdminOrError },
     },
-    helpers:{
-      permissions:{
-        isAdminOrError
-      },
-    }
   } = server.app;
 
   // const schema = Joi.array().items(Joi.object({
@@ -32,18 +27,15 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: (req) =>{
-            
-            return _roles.admin
+          method: (req) => {
+            return _roles.admin;
           },
           assign: "role",
         },
         {
-          method:isAdminOrError,
+          method: isAdminOrError,
           assign: "isAdminOrError",
         },
-        
-        
       ],
       handler: bulkCreate,
       auth: "jwt",
@@ -51,6 +43,5 @@ module.exports = (server) => {
       //     payload:schema
       // }
     },
-    
   };
 };
