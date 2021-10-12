@@ -5,7 +5,113 @@ import Checkbox from "@mui/material/Checkbox";
 import country_list from "country-list";
 
 // CREATE NEW USER FORM
-export function UserForm({ action, callback, payload: initialData = null }) {
+export function Create({ action, callback }) {
+  return (
+    <Formik
+      initialValues={{
+        email: "",
+        country: "CN",
+        nickname: "",
+        permission: false,
+        role: "basic",
+      }}
+      // validate={(values) => {}}
+      onSubmit={async (values, { setSubmitting }) => {
+        try {
+          let payload = [values];
+          await action(payload);
+          callback && callback();
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setSubmitting(false);
+        }
+      }}
+    >
+      {({
+        values,
+        errors,
+        isSubmitting,
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        touched,
+      }) => (
+        <Form onSubmit={handleSubmit}>
+          <Form.Group className="mb-3" controlId="formCurrencyCode">
+            <Form.Label>Email address</Form.Label>
+            <Form.Control
+              type="email"
+              name="email"
+              required
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.email}
+              placeholder="Email address"
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-3" controlId="formCurrencyCode">
+            <Form.Label>Nickname</Form.Label>
+            <Form.Control
+              type="text"
+              name="nickname"
+              onChange={handleChange}
+              onBlur={handleBlur}
+              defaultValue={values?.nickname}
+              placeholder="User's nickname"
+            />
+          </Form.Group>
+
+          <Form.Group className="mb-4" controlId="formCurrencyCode">
+            <Form.Label>Country</Form.Label>
+            <Form.Control
+              as="select"
+              type="text"
+              name="country"
+              required
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.country}
+              placeholder="Country"
+            >
+              {country_list.getNames().map((country, key) => {
+                return (
+                  <option key={key} value={country_list.getCode(country)}>
+                    {country}
+                  </option>
+                );
+              })}
+            </Form.Control>
+          </Form.Group>
+
+          <Form.Group>
+            <Form.Label
+              style={{
+                display: "flex",
+                gap: 10,
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
+              <Form.Text>Has Permission </Form.Text>
+              <Switch
+                name="permission"
+                checked={values?.permission}
+                onChange={handleChange}
+              />
+            </Form.Label>
+          </Form.Group>
+
+          <Button variant="primary" disabled={isSubmitting} block type="submit">
+            {isSubmitting ? "Saving..." : "Save"}
+          </Button>
+        </Form>
+      )}
+    </Formik>
+  );
+}
+export function Update({ action, callback, payload: initialData = null }) {
   return (
     <Formik
       initialValues={{
@@ -129,7 +235,6 @@ export function UserForm({ action, callback, payload: initialData = null }) {
   );
 }
 
-
 // DELETE USER FORM
 export function Drop({ action, callback, payload: initialValues = {} }) {
   return (
@@ -188,24 +293,25 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
             {isSubmitting ? "Processing..." : "Confirm"}
           </Button>
           <Form.Text controlId="delete_type" className="text-muted mt-3 ">
-              <label
-                htmlFor="perm_delete"
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <span>Permanently delete</span>
-                <Switch name="force" id="perm_delete" value={values?.force} />
-              </label>
-            </Form.Text>
+            <label
+              htmlFor="perm_delete"
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+              }}
+            >
+              <span>Permanently delete</span>
+              <Switch name="force" id="perm_delete" value={values?.force} />
+            </label>
+          </Form.Text>
         </Form>
       )}
     </Formik>
   );
 }
-export default Object.assign(UserForm, {
+export default Object.assign(Create, {
+  Update,
   Delete: Drop,
   Drop,
 });

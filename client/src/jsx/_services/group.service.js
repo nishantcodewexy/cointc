@@ -1,6 +1,7 @@
 import axios from "axios";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import helpers from "../_helpers";
+
 /**
  * Class of all Group services
  * @class
@@ -35,14 +36,18 @@ class GroupServices {
    * @returns
    */
   decorate = async (request) => {
-    let result = { success: null, error: null };
+    let result = { success: null, statusCode: null, error: null };
     try {
-      let { data } = await request();
+      let { data, status } = await request();
       return { ...result, success: data };
     } catch (error) {
-      console.error("GROUP SERVICE ERROR::", error);
+      console.error("GROUP SERVICE ERROR::", { error });
       this.abort();
-      return { ...result, error: error?.message };
+      return {
+        ...result,
+        statusCode: error?.response?.status,
+        error: error?.message,
+      };
     }
   };
 
@@ -106,7 +111,7 @@ class GroupServices {
         })
     );
   };
-  
+
   dropCurrency = async (data) => {
     return await this.decorate(
       async () =>
@@ -215,7 +220,7 @@ class GroupServices {
           method: "GET",
           params,
         })
-    );    
+    );
   };
   getUser = async (id, params) => {
     return await this.decorate(
@@ -363,12 +368,13 @@ class GroupServices {
     );
   };
 }
+
 /* ****************************************** */
-function useGroupService() {
+export default function useGroupService() {
   const session = useSelector((state) => state?.session);
+
   return new GroupServices({
     headers: helpers.headers(session),
     baseURL: "/api",
   });
 }
-export default useGroupService;

@@ -11,7 +11,6 @@ module.exports = {
 
     await seedUser.call(this);
     await seedAdminUser.call(this);
-   
   },
 
   down: async (queryInterface, Sequelize) => {
@@ -22,7 +21,7 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     await queryInterface.bulkDelete("tbl_users", null, {});
-    await queryInterface.bulkDelete("tbl_users_profile", null, {});
+    await queryInterface.bulkDelete("tbl_basic_users_profile", null, {});
     await queryInterface.bulkDelete("tbl_admin_users_profile", null, {});
   },
 };
@@ -34,6 +33,7 @@ async function seedAdminUser() {
   for (let i = 0; i < len; ++i) {
     let id = faker.datatype.uuid();
     let email = faker.internet.email();
+    let profile_id = faker.datatype.uuid();
 
     if (i === 0) {
       const superadmin = {
@@ -45,12 +45,13 @@ async function seedAdminUser() {
         created_at: faker.date.recent(),
         updated_at: faker.date.recent(),
         role: "admin",
+        // profile_id
       };
       userTableRecords.push(superadmin);
     }
 
     profileTableRecords.push({
-      id: faker.datatype.uuid(),
+      id: profile_id,
       nickname: faker.name.firstName(),
       user_id: id,
       created_at: faker.date.recent(),
@@ -67,6 +68,7 @@ async function seedAdminUser() {
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
       role: "admin",
+      // profile_id
     });
   }
   await this.queryInterface.bulkInsert("tbl_users", userTableRecords);
@@ -81,6 +83,8 @@ async function seedUser() {
   for (let i = 0; i < len; ++i) {
     const id = faker.datatype.uuid();
     const email = faker.internet.email();
+    let profile_id = faker.datatype.uuid();
+
     await this.queryInterface.bulkInsert(
       "tbl_users",
       [
@@ -91,14 +95,16 @@ async function seedUser() {
           // referral_code: 'seet7pcH'
           created_at: faker.date.recent(),
           updated_at: faker.date.recent(),
+          role: "basic",
+          // profile_id
         },
       ],
       {}
     );
 
-    await this.queryInterface.bulkInsert("tbl_users_profile", [
+    await this.queryInterface.bulkInsert("tbl_basic_users_profile", [
       {
-        id: faker.datatype.uuid(),
+        id: profile_id,
         referral_code: nanoid(10),
         nickname: faker.name.firstName(),
         email,

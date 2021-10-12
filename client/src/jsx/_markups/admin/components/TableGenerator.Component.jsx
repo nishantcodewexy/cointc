@@ -136,7 +136,6 @@ function TableGenerator({
       </div>
     );
   }
-  
   return isFetching ? (
     <Empty.Loading></Empty.Loading>
   ) : tableData.rows.length ? (

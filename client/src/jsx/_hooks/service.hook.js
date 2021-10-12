@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
-import qs from 'qs';
-
+import qs from "qs";
+import { useDispatch } from "react-redux";
+import _actions from "../_actions";
+const { user } = _actions;
 /**
  * @description - Specify the services to your component will be using. Usually (get, post, put and delete) request
  * @typedef {Object} Services
@@ -19,6 +21,8 @@ import qs from 'qs';
  * @returns
  */
 function useService(services) {
+  const dispatch = useDispatch();
+
   const [requestStack, setRequestStack] = useState([]);
   const [lastRequestType, setLastRequestType] = useState("");
   const [isFetching, setIsFetching] = useState(false);
@@ -27,17 +31,21 @@ function useService(services) {
   const [_toast, setToast] = useState(null);
   /**************************/
   async function handleResponse(response, save = false, toast = false) {
-    let { success, error } = response;
+    let { success, error, statusCode } = response;
+    // debugger;
     if (error) {
       setError(error);
-     toast && _toast?.error && _toast?.error(error);
-      return;
+      toast && _toast?.error && _toast?.error(error);
+      if (statusCode == 401) {
+        dispatch(user.logout());
+      }
+    } else {
+      if (save) {
+        setData(success);
+      }
+      toast && _toast?.success && _toast?.success(success);
     }
-    if (save) {
-      setData(success);
-    }
-    toast && _toast?.success && _toast?.success(success);
-    return success;
+    return response;
   }
 
   /**
@@ -82,7 +90,7 @@ function useService(services) {
           break;
 
         case "get":
-          response =  await services?.list(qs.stringify(payload));
+          response = await services?.list(qs.stringify(payload));
           handleResponse(response, true);
           break;
 
@@ -93,11 +101,12 @@ function useService(services) {
           break;
         }
       }
-      setIsFetching(false);
       overwrite && setRequestStack((state) => ({ ...state, [type]: request }));
       return handleResponse(response);
     } catch (error) {
       console.error(error);
+    } finally {
+      setIsFetching(false);
     }
   }
 

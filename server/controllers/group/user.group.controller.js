@@ -1,7 +1,8 @@
 const update = require("../../routes/api/_user/update");
-const uuid = require("uuid")
+const uuid = require("uuid");
 const faker = require("faker");
-const {filterFields} = require("../../services/model")
+const { filterFields } = require("../../services/model");
+const user = require("../../database/models/user");
 
 module.exports = (server) => {
   /*********************** HELPERS ***************************/
@@ -11,7 +12,7 @@ module.exports = (server) => {
 
   const {
     db,
-    db: { User, sequelize, Wallet },
+    db: { User, sequelize, Wallet, AdminProfile, BasicProfile },
     boom,
     helpers: { paginator, filters },
     consts: { roles: _roles },
@@ -36,7 +37,7 @@ module.exports = (server) => {
         payload: { data, soft },
         params: { id },
       } = req;
-      
+
       if (id) {
         data = [id];
         if (!soft) soft = true;
@@ -46,7 +47,7 @@ module.exports = (server) => {
           await sequelize.transaction(async (t) => {
             data.forEach(async (id) => {
               let where = { id };
-              await __destroy("User",where, soft, { transaction: t });
+              await __destroy("User", where, soft, { transaction: t });
             });
           })
         ),
@@ -67,7 +68,7 @@ module.exports = (server) => {
         } = req;
         console.log({ data });
         // TODO: authorization
-        
+
         const attributes = ["mode", "nickname", "role"];
 
         return await sequelize.transaction(async (t) => {
@@ -110,35 +111,35 @@ module.exports = (server) => {
      */
     create: async (req) => {
       const {
-        payload=[],
-        pre: { 
-          isAdminOrError
-         },
+        payload = [],
+        pre: { isAdminOrError },
       } = req;
-      
+
       try {
-        const results =  await sequelize.transaction(
+        const results = await sequelize.transaction(
           async (t) =>
-            await User.bulkCreate(payload.map(v=>({
-              id:uuid.v4(),
-              ...v,
-              password:faker.internet.password()
-            })), {
-              transaction: t,
-              validate: true,
-              fields: ["id","email", "role","password"],
-              
-            })
+            await User.bulkCreate(
+              payload.map((v) => ({
+                id: uuid.v4(),
+                ...v,
+                password: faker.internet.password(),
+              })),
+              {
+                transaction: t,
+                validate: true,
+                fields: ["id", "email", "role", "password"],
+              }
+            )
         );
-        
-        return await Promise.all(results.map(user=>filterFields({object:user.dataValues,include:[
-          "id",
-          "email",
-          "role",
-          "createdAt",
-          "updatedAt"
-        ]})))
-      
+
+        return await Promise.all(
+          results.map((user) =>
+            filterFields({
+              object: user.dataValues,
+              include: ["id", "email", "role", "createdAt", "updatedAt"],
+            })
+          )
+        );
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -146,21 +147,30 @@ module.exports = (server) => {
     },
 
     list: async (req) => {
-      const {
-        // pre: { isAdmin },
-        query,
-      } = req;
-      const { options } = query;
-      const queryFilters = await filters({ query, searchFields: ["email"] });
-      console.log({ queryFilters });
-      const queryset = await User.findAndCountAll({
-        include: { association: "profile" },
-        attributes: { exclude: ["password"] },
-        ...queryFilters,
-        ...options
-      });
-      const { limit, offset } = queryFilters;
-      return paginator({ queryset, limit, offset }).catch(boom.boomify);
+      try {
+        const {
+          // pre: { isAdmin },
+          query,
+        } = req;
+        const { paranoid = 1 } = query;
+        const queryFilters = await filters({ query, searchFields: ["email"] });
+
+        const user = await User.findAndCountAll({
+          // include: [AdminProfile, BasicProfile],
+          attributes: { exclude: ["password"] },
+          ...queryFilters,
+          paranoid: Boolean(+paranoid),
+        });
+
+        const { limit, offset } = queryFilters;
+        return paginator({
+          queryset: user,
+          limit,
+          offset,
+        }).catch(boom.boomify);
+      } catch (error) {
+        console.error(error);
+      }
     },
 
     async get(req, h) {

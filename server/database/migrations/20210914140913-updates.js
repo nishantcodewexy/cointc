@@ -1,30 +1,27 @@
-'use strict';
+"use strict";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    /**
-     * Add altering commands here.
-     *
-     * Example:
-     * await queryInterface.createTable('users', { id: Sequelize.INTEGER });
-     */
-     await queryInterface.addColumn(
-      'tbl_users_profile', // table name
-      'suitability', // new field name
-      {
-        type: Sequelize.INTEGER,
-        defaultValue:0
-      },
-    )
+    return queryInterface.sequelize.transaction((t) => {
+      return Promise.all([
+        queryInterface.addColumn(
+          "tbl_users_profile",
+          "suitability",
+          {
+            type: Sequelize.INTEGER,
+            defaultValue: 0,
+          },
+          { transaction: t }
+        )
+      ]);
+    });
   },
 
   down: async (queryInterface, Sequelize) => {
-    /**
-     * Add reverting commands here.
-     *
-     * Example:
-     * await queryInterface.dropTable('users');
-     */
-     await queryInterface.removeColumn('tbl_users_profile', 'suitability')
-  }
+    return queryInterface.sequelize.transaction(t => {
+      return Promise.all( [
+        queryInterface.removeColumn("tbl_users_profile", "suitability", { transaction: t })
+      ]);
+    });
+  },
 };

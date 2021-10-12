@@ -1,10 +1,10 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
-const hooks = require('../hooks/user.hook');
-
+const hooks = require("../hooks/user.hook");
 
 // debugger;
+const uppercaseFirst = (str) => `${str[0].toUpperCase()}${str.substr(1)}`;
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -14,15 +14,32 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { Profile, User, AdminProfile, Wallet /* Message */ } = models;
-      User.hasOne(Profile, {
+      const { BasicProfile, User, AdminProfile, Wallet /* Message */ } = models;
+      User.hasOne(BasicProfile, {
         foreignKey: "user_id",
-        as: "profile",
+        constraints: false,
+        // scope: {
+        //   role: "basic",
+        // },
+        // as: "profile",
+      });
+      BasicProfile.belongsTo(User, {
+        foreignKey: "user_id",
+        constraints: false,
       });
 
       User.hasOne(AdminProfile, {
         foreignKey: "user_id",
-        as: "admin_profile",
+        constraints: false,
+        // scope: {
+        //   role: "admin",
+        // },
+        // as: "admin_profile",
+      });
+
+      AdminProfile.belongsTo(User, {
+        foreignKey: "user_id",
+        constraints: false,
       });
 
       User.hasMany(Wallet, {
@@ -33,6 +50,11 @@ module.exports = (sequelize, DataTypes) => {
     }
     toPublic() {
       return _.omit(this.toJSON(), ["password"]);
+    }
+    getProfile(options) {
+      if (!this.role) return Promise.resolve(null);
+      const mixinMethodName = `get${uppercaseFirst(this.role)}Profile`;
+      return this[mixinMethodName](options);
     }
   }
   User.init(
@@ -56,10 +78,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: { notEmpty: true },
       },
-      role: {
-        type: DataTypes.ENUM(["basic", "admin"]),
-        defaultValue: "basic",
-      },
+      role: DataTypes.STRING,
       permission: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
@@ -67,7 +86,13 @@ module.exports = (sequelize, DataTypes) => {
       archived_at: DataTypes.DATE,
       last_seen: DataTypes.DATE,
       login_at: DataTypes.DATE,
-      
+
+      online: {
+        type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["createdAt"]),
+        get: function() {
+          return this.get("updateAt") > Date.now() - 7 * 24 * 60 * 60 * 1000;
+        },
+      },
     },
     {
       sequelize,
@@ -76,9 +101,36 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "tbl_users",
       paranoid: true,
       deletedAt: "archived_at",
-      hooks
+      hooks,
+      scopes: {
+        admin: {
+          role: "admin",
+        },
+        basic: {
+          role: "basic",
+        },
+      },
     }
   );
+  User.addHook("afterFind", async (findResult) => {
+    if (!Array.isArray(findResult)) findResult = [findResult];
+    for (const instance of findResult) {
+      if (instance?.role === "admin") {
+        instance.profile = await instance.getAdminProfile();
+      } else if (instance?.role === "basic") {
+        instance.profile = await instance.getBasicProfile();
+      }
+      instance.dataValues = {
+        ...instance.dataValues,
+        ...instance.profile.dataValues,
+      };
 
+      // To prevent mistakes:
+      /*    delete instance?.basic;
+      delete instance?.dataValues.basic;
+      delete instance?.admin;
+      delete instance?.dataValues.admin; */
+    }
+  });
   return User;
 };

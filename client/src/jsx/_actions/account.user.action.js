@@ -24,25 +24,24 @@ export default accountUserActions;
  * @returns
  */
 function login(request) {
-  return (dispatch) => {
+  return async (dispatch) => {
     dispatch(log({ type: NOTICE.CLEAR }));
-    dispatch(log({ type: REQUEST.SESSION_LOGIN}));
+    dispatch(log({ type: REQUEST.SESSION_LOGIN }));
 
-    request()
-      .then((resp) => {
-        if (resp instanceof Error) throw resp;
-        const { data } = resp;
-        dispatch(log({ type: SESSION.LOGIN, data }));
-      })
-      .catch((error) => {
-        console.error(error);
-        dispatch(
-          log({
-            type: NOTICE.ERROR,
-            data: error?.response?.data?.message || error.toString(),
-          })
-        );
-      });
+    try {
+      let { success, error } = await request();
+      if (error) throw new Error(error);
+
+      dispatch(log({ type: SESSION.LOGIN, data: success }));
+    } catch (error) {
+      console.error(error);
+      dispatch(
+        log({
+          type: NOTICE.ERROR,
+          data: error?.response?.data?.message || error.toString(),
+        })
+      );
+    }
   };
 }
 

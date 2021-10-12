@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import useToggler from "../../../_hooks/toggler.hook";
 import Moment from "react-moment";
 import moment from "moment";
-import {  toast } from "react-toastify";
+import { toast } from "react-toastify";
 // COMPONENTS
 import TableGenerator from "../components/TableGenerator.Component";
 import { ModalForm } from "../components/ModalForm.Component.jsx";
@@ -21,7 +21,7 @@ function UserManagement({ services, useService }) {
     drop: group.dropUsers,
   });
 
-  function notifySuccess () {
+  function notifySuccess() {
     toast.success("Success !", {
       position: "top-right",
       autoClose: 3000,
@@ -30,7 +30,7 @@ function UserManagement({ services, useService }) {
       pauseOnHover: true,
       draggable: true,
     });
-  };
+  }
 
   function notifyError(error) {
     toast.error(error || "Request Error!", {
@@ -52,6 +52,7 @@ function UserManagement({ services, useService }) {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
         "options[paranoid]": false,
+        paranoid: false,
       },
       toast: { success: notifySuccess, error: notifyError },
     });
@@ -94,7 +95,7 @@ function UserManagement({ services, useService }) {
           case "put":
             return [
               "Update User",
-              <UserForm
+              <UserForm.Update
                 action={(requestPayload) =>
                   dispatchRequest({
                     type: "put",
@@ -139,7 +140,6 @@ function UserManagement({ services, useService }) {
 
   return (
     <>
-      
       <Row style={{ marginBottom: 20 }}>
         <Col>
           <div className="input-group search-area right d-lg-inline-flex d-none">
@@ -238,7 +238,18 @@ function UserManagement({ services, useService }) {
                   );
                 },
                 email: ({ row }) => row?.email,
-                status: ({ row }) => (row?.archivedAt ? "inactive" : "Active"),
+                status: ({ row }) =>
+                  row?.archived_at ? (
+                    <span className="badge light badge-danger">
+                      <i className="fa fa-circle text-danger mr-1" />
+                      archived
+                    </span>
+                  ) : (
+                    <span className="badge light badge-success">
+                      <i className="fa fa-circle text-success mr-1" />
+                      Active
+                    </span>
+                  ),
                 kyc_status: ({ row }) => {
                   let role = row?.role;
                   const checkKYC = (kyc) => {
@@ -253,7 +264,7 @@ function UserManagement({ services, useService }) {
                   let status =
                     role == "admin"
                       ? "completed"
-                      : checkKYC(row?.profile?.kyc)
+                      : checkKYC(row?.kyc)
                       ? "completed"
                       : "pending";
 

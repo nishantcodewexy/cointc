@@ -1,5 +1,5 @@
 import { Form, Button } from "react-bootstrap";
-import Switch from "@mui/material/Switch";
+import {Switch} from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import { Formik } from "formik";
 

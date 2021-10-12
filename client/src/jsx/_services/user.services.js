@@ -46,20 +46,24 @@ class UserServices {
 
   /*************** LOGIN ***************/
   login = async (data) => {
-    const config = {
-      method: "POST",
-      data,
-    };
-    return await this.axios("auth/authenticate", config);
+    return await this.decorate(
+      async () =>
+        await this.axios("auth/authenticate", {
+          method: "POST",
+          data,
+        })
+    );
   };
 
   /**************** REGISTER ************/
   register = async (data) => {
-    const config = {
-      method: "POST",
-      data,
-    };
-    return await this.axios(`auth/register`, config);
+    return await this.decorate(
+      async () =>
+        await this.axios(`auth/register`, {
+          method: "POST",
+          data,
+        })
+    );
   };
 }
 

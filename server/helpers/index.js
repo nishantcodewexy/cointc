@@ -392,7 +392,6 @@ module.exports = {
    * @returns {Object}
    */
   filters: async ({ query = {}, searchFields = [], extras = {} }) => {
-    const { options = {}, ...qObj } = query;
     const q = query.q || "";
     const searchQuery = {};
 
@@ -409,10 +408,7 @@ module.exports = {
         }
       : {};
 
-    const search = new searchBuilder(Sequelize, {
-      qObj,
-      ...options,
-    }).setConfig({
+    const search = new searchBuilder(Sequelize, query).setConfig({
       "default-limit": 10,
     });
     const whereQuery = search.getWhereQuery();
@@ -426,7 +422,7 @@ module.exports = {
         ...extraWhere,
         ...extras,
       },
-      ...(orderQuery ? { order: orderQuery } : {}),
+      // ...(orderQuery ? { order: orderQuery } : {}),
       limit: limitQuery || 10,
       offset: offsetQuery || 0,
     };

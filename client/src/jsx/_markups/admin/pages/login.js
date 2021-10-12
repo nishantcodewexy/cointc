@@ -44,7 +44,7 @@ const LoginPage = ({ services, useService }) => {
         const { email, password } = values;
         setSubmitting(true);
         try {
-          const { from } = location.state || { from: { pathname: "/admin" } };
+          // const { from } = location.state || { from: { pathname: "/admin" } };
           let request = async () =>
             await dispatchRequest({
               type: "post",
