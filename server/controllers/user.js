@@ -150,7 +150,6 @@ module.exports = (server) => {
             return {
               token: jwt.create(account),
               ...account.toPublic(),
-              ...account.profile.dataValues,
             };
           } else return boom.notFound("Incorrect password!");
         }
