@@ -14,6 +14,9 @@ const glob = require("glob");
 const util = require("util");
 const { Op } = require("sequelize");
 const permissions = require("../permissions");
+const {
+  roles: { admin, basic },
+} = require("../consts");
 // const wallets = require("../wallets");
 const env = process.env.NODE_ENV || "development";
 
@@ -463,4 +466,11 @@ module.exports = {
       results: rows,
     };
   },
+
+  isBasic(user){
+    return user?.role === basic
+  },
+  isAdmin(user){
+    return user?.role === admin
+  }
 };

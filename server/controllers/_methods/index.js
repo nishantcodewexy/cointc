@@ -6,21 +6,18 @@ module.exports = (server) => {
   } = server.app;
   
   return {
-    async __destroy(model, where, soft, options = {}) {
-      // console.log({ model, where, soft, options });
-      let result = soft
-        ? await db[model].destroy({ where })
-        : db.sequelize.destroy({ where, force: true }, options);
-      return result;
+    async __destroy(model, where, force, options = {}) {
+      return await db[model].destroy({ where, force }, options);
     },
 
-    async __upsert(model, with_payload, where, options) {
+    async __update(model, with_payload, where, options) {
       return await db[model].update(
         { ...with_payload },
         { where },
         { ...options, returning: true }
       );
     },
+
     __assertRole: function(role) {
       let profile, profile_attributes;
       switch (role) {

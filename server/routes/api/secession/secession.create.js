@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: { remove },
+      secession: { create },
     },
     consts: { roles: _roles },
     helpers: {
@@ -12,22 +12,20 @@ module.exports = (server) => {
   } = server.app;
 
   const schema = Joi.object({
-    force: Joi.boolean()
-      .default(false)
-      .optional(),
+    description: Joi.string(),
   });
 
   return {
-    method: "DELETE",
-    path: "/users/{id}",
+    method: "POST",
+    path: "/account/u/secessions",
     config: {
-      // pre: [
-      //   {
-      //     method: isUser,
-      //     assign: "user",
-      //   },
-      // ],
-      handler: remove,
+      pre: [
+        {
+          method: isUser,
+          assign: "user",
+        },
+      ],
+      handler: create,
       auth: "jwt",
       validate: {
         payload: schema,

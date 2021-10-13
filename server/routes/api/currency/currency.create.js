@@ -18,7 +18,7 @@ module.exports = (server) => {
     },
     helpers:{
       permissions:{
-        isAdminOrError
+         isUser
       }
     }
   } = server.app;
@@ -36,19 +36,12 @@ module.exports = (server) => {
     method: "POST",
     path: "/currency",
     config: {
-      pre: [
-        {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
+      pre: [      
         [
           
           {
-            method:isAdminOrError,
-            assign: "isAdminOrError",
+            method:isUser,
+            assign: "user",
           },
 
         ]

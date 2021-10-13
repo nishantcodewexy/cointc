@@ -14,7 +14,7 @@ import "../../../css/style.css";
 
 import UnderConstruction from "./components/UnderConstruction.Component";
 import { useSelector } from "react-redux";
-import LoginPage from "./pages/login";
+import LoginPage from "./pages/login.page";
 import _helpers from "../../_helpers";
 import _actions from "../../_actions";
 import _components from "./components";

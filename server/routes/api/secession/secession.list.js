@@ -3,14 +3,12 @@
 module.exports = (server) => {
   const {
     controllers: {
-        secession: { getAll },
+      secession: { getAll },
     },
     consts: { roles: _roles },
-    helpers:{
-      permissions:{
-        isAdmin
-      }
-    }
+    helpers: {
+      permissions: { isUser },
+    },
   } = server.app;
 
   return {
@@ -19,20 +17,12 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
-        {
-          method:isAdmin,
-          assign: "isAdmin",
+          method: isUser,
+          assign: "user",
         },
       ],
       handler: getAll,
       auth: "jwt",
     },
-    
   };
 };

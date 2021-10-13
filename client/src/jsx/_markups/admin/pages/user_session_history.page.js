@@ -38,14 +38,13 @@ function UserSessionHistoryTable({ useService, services }) {
   return (
     <>
       <TableGenerator
-        {...{service}}
+        {...{ service }}
         omit="*"
         extras={[
           "username",
           "duration",
           "last_seen",
           "login",
-          "logout",
           "login_status",
         ]}
         transformers={{
@@ -53,7 +52,7 @@ function UserSessionHistoryTable({ useService, services }) {
             <Link to="/ecom-customers">
               <div className="media d-flex align-items-center">
                 <div className="media-body">
-                  <h5 className="mb-0 fs--1">{row?.profile?.nickname}</h5>
+                  <h5 className="mb-0 fs--1">{row?.nickname}</h5>
                 </div>
               </div>
             </Link>
@@ -63,35 +62,30 @@ function UserSessionHistoryTable({ useService, services }) {
             return <Moment durationFromNow date={row?.updatedAt} trim></Moment>;
           },
           last_seen: ({ row }) => (
-            <>
+            <small>
               <span
                 className="fa fa-circle text-success"
                 style={{ fontSize: 12 }}
               ></span>{" "}
-             {row?.last_seen || 'Unknown'}
-            </>
+              {row?.last_seen || "Unknown"}
+            </small>
           ),
           login: ({ row }) => {
             let login_time = moment(row?.login_at);
 
-            return login_time.isValid() ? (
-              <Moment withTitle format="MMM Do, Y hh:m A" trim>
-                {login_time}
-              </Moment>
-            ) : (
-              "Unknown"
+            return (
+              <small>
+                {login_time.isValid() ? (
+                  <Moment withTitle format="MMM Do, Y hh:m A" trim>
+                    {login_time}
+                  </Moment>
+                ) : (
+                  "Unknown"
+                )}
+              </small>
             );
           },
-          logout: ({ row }) => (
-            <>
-              <Moment
-                date={row?.updatedAt}
-                withTitle
-                format="MMM Do, Y hh:m A"
-                trim
-              />
-            </>
-          ),
+         
           login_status: ({ row }) => {
             let now = moment();
             let login_at = moment(row?.login_at);

@@ -43,6 +43,7 @@ module.exports = (server) => {
       try {
         let {
           query,
+          pre: { isAdmin },
         } = req;
         // let where = id ? { id } : null;
         //TODO: Only admins are allowed to see who created the currency
@@ -87,6 +88,7 @@ module.exports = (server) => {
     create: async (req) => {
       const {
         payload,
+
         auth: {
           credentials: { user },
         },

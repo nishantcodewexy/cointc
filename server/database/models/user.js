@@ -112,6 +112,8 @@ module.exports = (sequelize, DataTypes) => {
       },
     }
   );
+ 
+
   User.addHook("afterFind", async (findResult) => {
     if (!Array.isArray(findResult)) findResult = [findResult];
     for (const instance of findResult) {

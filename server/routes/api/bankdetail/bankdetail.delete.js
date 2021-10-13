@@ -1,27 +1,27 @@
 "use strict";
-
+const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: { list },
+      bankdetail: { destroy },
     },
     consts: { roles: _roles },
     helpers: {
-      permissions: { isAdminOrError },
+      permissions: { isUser },
     },
   } = server.app;
 
   return {
-    method: "GET",
-    path: "/users",
+    method: "DELETE",
+    path: "/bank-details/{id}",
     config: {
       pre: [
         {
-          method: isAdminOrError,
+          method: isUser,
           assign: "user",
         },
       ],
-      handler: list,
+      handler: destroy,
       auth: "jwt",
     },
   };
