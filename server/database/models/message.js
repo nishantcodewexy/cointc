@@ -17,6 +17,9 @@ module.exports = (sequelize, DataTypes) => {
           allowNull:false
         }
       });
+      
+      Message.belongsTo(User)
+
       Chat.Messages = Message.belongsTo(Chat, {});
     }
   }

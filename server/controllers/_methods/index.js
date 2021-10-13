@@ -4,7 +4,7 @@ module.exports = (server) => {
     db: { User },
     consts: { roles: _roles },
   } = server.app;
-
+  
   return {
     async __destroy(model, where, soft, options = {}) {
       // console.log({ model, where, soft, options });
