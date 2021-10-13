@@ -11,14 +11,19 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       const { Chat, Message, User } = models;
-      // Message.belongsTo(User, {});
+      Message.User = User.hasMany(Message,{
+        foreignKey:{
+          name:"sender_id",
+          allowNull:false
+        }
+      });
       Chat.Messages = Message.belongsTo(Chat, {});
     }
   }
   Message.init(
     {
       sender_id: {
-        type: DataTypes.STRING,
+        type: DataTypes.UUID,
         allowNull: false,
       },
       text: {

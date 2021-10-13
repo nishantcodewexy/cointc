@@ -4,6 +4,11 @@ const Sequelize = require("sequelize");
 const Joi = require("joi");
 const { roles } = require("../consts");
 const boom = require("@hapi/boom")
+const {
+  types:{
+    KycStatusType
+  }
+} = require("../consts")
 /**
  * @description - User controller
  * @param {Object} server  - Server instance
@@ -22,7 +27,7 @@ module.exports = (server) => {
     helpers: { decrypt, mailer, jwt, generator },
     consts: {
       roles: _roles,
-      types: { country },
+      types: { country, },
     },
   } = server.app;
 
@@ -300,15 +305,13 @@ module.exports = (server) => {
           ],
 
           include:
-            _user.role === roles.admin
+            isAdmin
               ? {
                   model: AdminProfile,
-                  as: "admin_profile",
                   attributes: ["nickname", "kyc", "created_at", "updated_at"],
                 }
               : {
                   model: BasicProfile,
-                  as: "profile",
                   attributes: [
                     "mode",
                     "nickname",
@@ -410,7 +413,8 @@ module.exports = (server) => {
               country: Joi.string(),
               currency: Joi.string(),
             }),
-            permission:Joi.boolean().optional()
+            permission:Joi.boolean().optional(),
+            kyc_status:Joi.string().valid(...Object.keys(KycStatusType)).optional()
             
           })
 
@@ -419,13 +423,16 @@ module.exports = (server) => {
           if(error) throw boom.badData(error)
           
           const user = await User.findByPk(id)
+          
+          if(!user) throw boom.notFound("user does not exist")
+
           if(user.role==roles.basic){
-            return await Profile.update(value,{
+            return await BasicProfile.update(value,{
               where:{
                 user_id:user.id
               },
-              fields:["kyc"],
-              returning:["kyc"]
+              fields:["kyc","kyc_status"],
+              returning:["kyc","kyc_status"]
             })
           }else{
             throw boom.notFound("not found")
@@ -445,7 +452,8 @@ module.exports = (server) => {
           return await AdminProfile.update(value,{
             where:{
               user_id:user.id
-            }
+            },
+            fields:["nickname"]
           })
           
         }else{

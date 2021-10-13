@@ -11,7 +11,7 @@ module.exports = (server) => {
     consts: { roles: _roles },
     helpers: {
       permissions: {
-        isAdmin,
+        isAdminOrError,
       },
     },
   } = server.app;
@@ -22,12 +22,12 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: isAdmin,
+          method: isAdminOrError,
           assign: "admin",
         }
 
       ],
-      handler: async (req)=>({}),
+      handler: list,
       auth: "jwt",
     },
   };

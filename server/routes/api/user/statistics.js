@@ -16,7 +16,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: ()=>{ },
+      handler: ()=>null,
       auth: "jwt",
     },
   };
