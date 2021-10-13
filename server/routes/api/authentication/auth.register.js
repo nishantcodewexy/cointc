@@ -25,20 +25,20 @@ module.exports = (server) => {
     referrer: Joi.string()
       .min(21)
       .optional(),
+      // role: Joi.string().min(21).required(),
     // user should not be able to set his role only admin should be able to set anothers users role
-    // role: Joi.string().min(21).required(),
   }).with("password", "repeat_password");
 
   return {
     method: "POST",
     path: `/auth/register`,
     config: {
-      pre: [
-        {
-          method: () => _roles.basic,
-          assign: "role",
-        }
-      ],
+      // pre: [
+      //   {
+      //     method: () => _roles.basic,
+      //     assign: "role",
+      //   }
+      // ],
       handler: create,
       validate: {
         payload: schema,

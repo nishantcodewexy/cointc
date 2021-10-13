@@ -10,10 +10,8 @@ module.exports = (server) => {
     db: { User },
     consts: { roles: _roles },
     helpers: {
-      jwt:{decodeUser},
       permissions: {
         isAdmin,
-        // isAdminOrError
       },
     },
   } = server.app;
@@ -31,20 +29,11 @@ module.exports = (server) => {
           },
           assign: "role",
         }, */
+
         {
-          method: (req) => {
-            return User.findOne({
-              where: {
-                id: decodeUser(req),
-              },
-            });
-          },
-          assign: "user",
+          method: isAdmin,
+          assign: "admin",
         },
-        // {
-        //   method: isAdmin,
-        //   assign: "isAdmin",
-        // },
       ],
       handler: list,
       auth: "jwt",

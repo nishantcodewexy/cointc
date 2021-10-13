@@ -16,7 +16,9 @@ module.exports = {
           credentials: { user },
         },
       } = req;
-      if (!user) return false;
+      // if (!user) return false;
+      if (!user)
+        throw boom.forbidden("Unauthorized! User is not an administrator");
       return user.role === admin;
     } catch (error) {
       return false;
@@ -33,8 +35,9 @@ module.exports = {
         credentials: { user },
       },
     } = req;
-    if (!user) return false;
-    return user.role === basic;
+    if (!user) throw boom.forbidden("Unauthorized! User is not basic");
+    // if (!user) return false;
+    return user?.role === basic;
   },
   /**
    * return true if is admin or throw an error
@@ -47,8 +50,10 @@ module.exports = {
         credentials: { user },
       },
     } = req;
+    debugger;
     if (!user) throw boom.forbidden("unauthorized");
     const isAdmin = user.role === admin;
+    debugger;
     if (!isAdmin) throw boom.forbidden("unauthorized");
 
     return isAdmin;

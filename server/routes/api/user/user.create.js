@@ -11,7 +11,7 @@ module.exports = (server) => {
     },
     consts: { roles: _roles },
     helpers: {
-      permissions: { isAdminOrError },
+      permissions: { isAdmin },
     },
   } = server.app;
 
@@ -33,8 +33,8 @@ module.exports = (server) => {
           assign: "role",
         },
         {
-          method: isAdminOrError,
-          assign: "isAdminOrError",
+          method: isAdmin,
+          assign: "isAdmin",
         },
       ],
       handler: bulkCreate,

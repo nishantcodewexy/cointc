@@ -35,6 +35,7 @@ async function seedAdminUser() {
     let email = faker.internet.email();
     let profile_id = faker.datatype.uuid();
 
+    // Add a general superadmin user as the first query
     if (i === 0) {
       const superadmin = {
         id,

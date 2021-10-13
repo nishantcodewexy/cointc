@@ -59,8 +59,8 @@ const JWTHelpers = () => {
             payload: { user },
           },
         } = artifacts;
-        let found = await db.User.findOne({ where: { id: user } });
-        return { isValid: Boolean(found), credentials: { found } };
+        user = await db.User.findOne({ where: { id: user } });
+        return { isValid: Boolean(user), credentials: { user } };
       },
     },
     verify(decoded, options = {}, secret = SECRET_KEY) {

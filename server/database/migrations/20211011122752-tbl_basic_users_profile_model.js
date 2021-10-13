@@ -24,6 +24,11 @@ module.exports = {
               { transaction: t }
             ),
 
+          // "email" in description &&
+          //   queryInterface.removeColumn(table_name, "email", {
+          //     transaction: t,
+          //   }),
+
           !("profile_pic" in description) &&
             queryInterface.addColumn(
               table_name,
@@ -36,6 +41,9 @@ module.exports = {
                   },
                   key: "id",
                 },
+              },
+              {
+                transaction: t,
               }
             ),
 
@@ -51,6 +59,9 @@ module.exports = {
                   },
                   key: "id",
                 },
+              },
+              {
+                transaction: t,
               }
             ),
 
@@ -61,6 +72,9 @@ module.exports = {
               {
                 type: Sequelize.ENUM(Object.keys(KycStatusType)),
                 defaultValue: KycStatusType.PENDING,
+              },
+              {
+                transaction: t,
               }
             ),
 
@@ -70,6 +84,9 @@ module.exports = {
               "date_of_birth", // new field name
               {
                 type: Sequelize.DATE,
+              },
+              {
+                transaction: t,
               }
             ),
 
@@ -79,6 +96,9 @@ module.exports = {
               "last_name", // new field name
               {
                 type: Sequelize.STRING,
+              },
+              {
+                transaction: t,
               }
             ),
 
@@ -88,6 +108,9 @@ module.exports = {
               "other_names", // new field name
               {
                 type: Sequelize.STRING,
+              },
+              {
+                transaction: t,
               }
             ),
 
@@ -101,6 +124,9 @@ module.exports = {
               {
                 type: Sequelize.STRING,
                 defaultValue: "",
+              },
+              {
+                transaction: t,
               }
             ),
         ]);
