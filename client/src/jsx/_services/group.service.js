@@ -205,6 +205,25 @@ class GroupServices {
         })
     );
   };
+  updateBankDetail = async ({ id, ...data }) => {
+    console.log({data})
+    return await this.decorate(
+      async () =>
+        await this.axios(`bank-details/${id}`, {
+          method: "PUT",
+          data,
+        })
+    );
+  };
+  dropBankDetail = async ({id, ...data}) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`bank-details/${id}`, {
+          method: "DELETE",
+          data,
+        })
+    );
+  };
   bulkDropBankDetail = async ( data) => {
     return await this.decorate(
       async () =>
@@ -215,15 +234,7 @@ class GroupServices {
     );
   };
 
-  dropBankDetail = async ({id, data}) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`bank-details/${id}`, {
-          method: "DELETE",
-          data,
-        })
-    );
-  };
+  
 
   /************************* USER ******************************/
   /**

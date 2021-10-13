@@ -73,10 +73,7 @@ module.exports = (server) => {
     },
     async update(req) {
       const {
-        pre: { isAdmin },
-        auth: {
-          credentials: { user },
-        },
+        pre: { user },
         payload,
         params: { id },
       } = req;
@@ -84,11 +81,7 @@ module.exports = (server) => {
       try {
         return await BankDetail.update(payload, {
           where: {
-            ...(!isAdmin
-              ? {
-                  user_id: user.id,
-                }
-              : {}),
+            user_id: user?.id,
             archive_at: null,
             id,
           },
@@ -98,6 +91,7 @@ module.exports = (server) => {
         throw boom.boomify(error);
       }
     },
+
     async create(req) {
       const {
         payload,

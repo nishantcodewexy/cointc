@@ -60,11 +60,7 @@ export function Drop({ action, callback, payload: initialData = {} }) {
 }
 
 // MODIFY BANK DETAIL FORM
-export function BankDetailForm({
-  action,
-  callback,
-  payload: initialData = {},
-}) {
+export function Update({ action, callback, payload: initialData = {} }) {
   const group = services.useGroupService();
   const currencyService = useService({
     list: group.listCurrency,
@@ -77,11 +73,156 @@ export function BankDetailForm({
   return (
     <Formik
       initialValues={{
-        account_no: initialData?.account_no || "06910395",
-        bank_name: initialData?.bank_name || "USBANK",
-        currency: initialData?.currency || "AUD",
-        country: initialData?.country || "CN",
-        ifsc_code: initialData?.ifsc_code || "SBUNAS1213",
+        id: initialData?.id,
+        account_no: initialData?.account_no || "",
+        bank_name: initialData?.bank_name || "",
+        currency: initialData?.currency || "",
+        country: initialData?.country || "",
+        ifsc_code: initialData?.ifsc_code || "",
+      }}
+      validate={(values) => {}}
+      onSubmit={async (values, { setSubmitting }) => {
+        try {
+          await action(values);
+          callback && callback();
+        } catch (error) {
+          console.error(error);
+        } finally {
+          setSubmitting(false);
+        }
+      }}
+    >
+      {({
+        values,
+        errors,
+        isSubmitting,
+        handleSubmit,
+        handleChange,
+        handleBlur,
+        touched,
+      }) =>
+        values?.id ? (
+          <Form onSubmit={handleSubmit}>
+            {console.log(values)}
+            <Form.Group className="mb-4" controlId="formCurrencyCode">
+              <Form.Label>Account number</Form.Label>
+              <Form.Control
+                type="text"
+                name="account_no"
+                required
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.account_no}
+                placeholder="Account Number"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-4" controlId="formCurrencyCode">
+              <Form.Label>Bank name</Form.Label>
+              <Form.Control
+                type="text"
+                name="bank_name"
+                required
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.bank_name}
+                placeholder="Bank Name"
+              />
+            </Form.Group>
+
+            <Form.Group className="mb-4" controlId="formCurrencyCode">
+              <Form.Label>Currency</Form.Label>
+              <Form.Control
+                as="select"
+                type="text"
+                name="currency"
+                required
+                onChange={handleChange}
+                onBlur={handleBlur}
+                defaultValue={values.currency}
+                placeholder="Currency"
+              >
+                <option>Select currency</option>
+                {currencyService &&
+                  currencyService?.data?.results.map((data, key) => {
+                    return (
+                      <option value={data?.iso_code} key={key}>
+                        {data?.name} ({data?.iso_code?.toUpperCase()})
+                      </option>
+                    );
+                  })}
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group className="mb-4" controlId="formCurrencyCode">
+              <Form.Label>Country</Form.Label>
+              <Form.Control
+                as="select"
+                type="text"
+                name="country"
+                required
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.country}
+                placeholder="Country"
+              >
+                {country_list.getNames().map((country, key) => {
+                  return (
+                    <option key={key} value={country_list.getCode(country)}>
+                      {country}
+                    </option>
+                  );
+                })}
+              </Form.Control>
+            </Form.Group>
+
+            <Form.Group className="mb-4" controlId="formCurrencyCode">
+              <Form.Label>IFSC Code</Form.Label>
+              <Form.Control
+                type="text"
+                name="ifsc_code"
+                required
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.ifsc_code}
+                placeholder="IFSC Code"
+              />
+            </Form.Group>
+
+            <Button
+              variant="primary"
+              disabled={isSubmitting}
+              block
+              type="submit"
+            >
+              {isSubmitting ? "Saving..." : "Save"}
+            </Button>
+          </Form>
+        ) : (
+          "ID not provided"
+        )
+      }
+    </Formik>
+  );
+}
+export function Create({ action, callback }) {
+  const group = services.useGroupService();
+  const currencyService = useService({
+    list: group.listCurrency,
+  });
+
+  useEffect(() => {
+    currencyService.dispatchRequest({ type: "list" });
+  }, []);
+
+  return (
+    <Formik
+      initialValues={{
+        account_no: "",
+        bank_name: "",
+        currency: "",
+        country: "",
+        ifsc_code: "",
       }}
       validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
@@ -200,7 +341,8 @@ export function BankDetailForm({
   );
 }
 
-export default Object.assign(BankDetailForm, {
+export default Object.assign(Create, {
   Delete: Drop,
   Drop,
+  Update,
 });
