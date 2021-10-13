@@ -3,15 +3,6 @@ const uuid = require("uuid");
 const faker = require("faker");
 const { filterFields } = require("../../services/model");
 const Joi = require("joi");
-<<<<<<< HEAD
-const {
-  roles,
-  types: { ProfileModeType, country },
-} = require("../../consts");
-const Sequelize = require("sequelize")
-=======
-
->>>>>>> b8f4f43ecc150cb9fc57733d45a634b0b0574b89
 module.exports = (server) => {
   /*********************** HELPERS ***************************/
   const { __upsert, __destroy, __assertRole } = require("../_methods/index")(

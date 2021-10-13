@@ -34,7 +34,17 @@ module.exports = {
     },
     ProfileModeType:{
       standard:"standard"
-    }
+    },
+    LogType:{
+      AUTH_HISTORY:"AUTH_HISTORY",
+      TRADE_HISTORY:"TRADE_HISTORY",
+      CHAT_HISTORY:"CHAT_HISTORY",
+      SMS_HISTORY:"SMS_HISTORY",
+      DEPOSIT_AND_WITHDRAW:"DEPOSIT_AND_WITHDRAW",
+    },
+    // LoginStatusType:{
+
+    // }
   },
   FILE_UPLOAD_PATH:process.env.MEDIA_FILE_DIR||'mediafiles'
 };
