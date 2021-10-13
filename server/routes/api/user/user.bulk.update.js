@@ -29,12 +29,12 @@ module.exports = (server) => {
     method: ["PUT", "PATCH"],
     path: "/users",
     config: {
-      // pre: [
-      //   {
-      //     method: isAdminOrError,
-      //     assign: "user",
-      //   },
-      // ],
+      pre: [
+        {
+          method: isAdminOrError,
+          assign: "user",
+        },
+      ],
       handler: bulkUpdate,
       auth: "jwt",
       validate: {

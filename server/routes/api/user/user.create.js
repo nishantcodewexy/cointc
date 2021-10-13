@@ -20,12 +20,12 @@ module.exports = (server) => {
     method: "POST",
     path: "/users",
     config: {
-      // pre: [
-      //   {
-      //     method: isUser,
-      //     assign: "user",
-      //   },
-      // ],
+      pre: [
+        {
+          method: isUser,
+          assign: "user",
+        },
+      ],
       handler: bulkCreate,
       auth: "jwt",
       // validate:{

@@ -21,12 +21,12 @@ module.exports = (server) => {
     method: ["PUT", "PATCH"],
     path: "/users/{id}",
     config: {
-      // pre: [
-      //   {
-      //     method: isUser,
-      //     assign: "user",
-      //   },
-      // ],
+      pre: [
+        {
+          method: isUser,
+          assign: "user",
+        },
+      ],
       handler: update,
       auth: "jwt",
     },

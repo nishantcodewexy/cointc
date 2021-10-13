@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-      user: { list },
+      user: { bulkList },
     },
     consts: { roles: _roles },
     helpers: {
@@ -21,7 +21,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: list,
+      handler: bulkList,
       auth: "jwt",
     },
   };
