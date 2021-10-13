@@ -1,11 +1,12 @@
 const update = require("../../routes/api/_user/update");
 const uuid = require("uuid");
 const faker = require("faker");
-const {filterFields} = require("../../services/model")
-const Joi = require('joi');
-const boom = require('@hapi/boom')
-const { roles,types:{ProfileModeType,country} } = require("../../consts");
-const user = require("../../database/models/user");
+const { filterFields } = require("../../services/model");
+const Joi = require("joi");
+const {
+  roles,
+  types: { ProfileModeType, country },
+} = require("../../consts");
 
 module.exports = (server) => {
   /*********************** HELPERS ***************************/
@@ -15,7 +16,8 @@ module.exports = (server) => {
 
   const {
     db,
-    db: { User, sequelize, Wallet,AdminProfile,Profile },
+    db: { User, sequelize, Wallet, AdminProfile, BasicProfile },
+    boom,
     helpers: { paginator, filters },
     consts: { roles: _roles },
   } = server.app;
@@ -119,107 +121,105 @@ module.exports = (server) => {
 
       const payloadSchema = Joi.array().items(
         Joi.object({
-          email:Joi.string().email().required(),
-          role:Joi.string().valid(...Object.keys(_roles)).required(),
-          profile:Joi.object()
+          email: Joi.string()
+            .email()
+            .required(),
+          role: Joi.string()
+            .valid(...Object.keys(_roles))
+            .required(),
+          profile: Joi.object(),
         })
-      )
-      
+      );
+
       const adminProfileSchema = Joi.object({
-        mode:Joi.string().valid(...Object.keys(ProfileModeType)),
-        nickname:Joi.string().optional()
-
-      })
-
+        mode: Joi.string().valid(...Object.keys(ProfileModeType)),
+        nickname: Joi.string().optional(),
+      });
 
       const userProfileSchema = Joi.object({
-        mode:Joi.string().valid(...Object.keys(ProfileModeType)),
-        nickname:Joi.string().optional(),
-        country:Joi.string().valid(...Object.keys(country)).optional(),
-        last_name:Joi.string().optional(),
-        other_names:Joi.string().optional()
+        mode: Joi.string().valid(...Object.keys(ProfileModeType)),
+        nickname: Joi.string().optional(),
+        country: Joi.string()
+          .valid(...Object.keys(country))
+          .optional(),
+        last_name: Joi.string().optional(),
+        other_names: Joi.string().optional(),
+      });
 
-      })
+      const { value, error } = payloadSchema.validate(payload);
 
-      const {value,error} = payloadSchema.validate(payload)
-      
-      if(error) throw boom.badData("invalid data",error)
-      
-      
-      
-      
-      
+      if (error) throw boom.badData("invalid data", error);
+
       try {
-        return  await sequelize.transaction(
-          async (t) =>{
-            return await Promise.all(value.map(async (data)=>{
-              let password = faker.internet.password()
-              if(data.role==roles.admin){
-                let {error} = adminProfileSchema.validate(data.profile||{})
+        return await sequelize.transaction(async (t) => {
+          return await Promise.all(
+            value.map(async (data) => {
+              let password = faker.internet.password();
+              if (data.role == roles.admin) {
+                let { error } = adminProfileSchema.validate(data.profile || {});
 
-                if(error) return {error}
+                if (error) return { error };
 
-                let profileData = data.profile || {}
-                delete data.profile
+                let profileData = data.profile || {};
+                delete data.profile;
 
-
-                let user = await User.create({
-                  ...data,
-                  password,
-                  profile:profileData,
-                  include:[
-                    {
-                      association:"admin_profile"
-                    }
-                  ]
-                },{
-                  transaction: t,
-                })
+                let user = await User.create(
+                  {
+                    ...data,
+                    password,
+                    profile: profileData,
+                    include: [
+                      {
+                        association: "admin_profile",
+                      },
+                    ],
+                  },
+                  {
+                    transaction: t,
+                  }
+                );
                 // await AdminProfile.create({...profileData,user_id:user.id},{
                 //   transaction: t,
                 // })
                 return {
-                  id:user.id,
+                  id: user.id,
                   ...data,
-                  profile:profileData
-                }
+                  profile: profileData,
+                };
+              } else {
+                let { error } = userProfileSchema.validate(data.profile || {});
+                if (error) return { error };
 
-              }else{
-                let {error} = userProfileSchema.validate(data.profile||{})
-                if(error) return {error}
+                let profileData = data.profile || {};
+                delete data.profile;
 
-                let profileData = data.profile ||{}
-                delete data.profile
-
-                let user = await User.create({
-                  ...data,
-                  password,
-                  profile_admin:profileData
-                },{
-                  transaction: t,
-                  include:[
-                    {
-                      association:"profile"
-                    }
-                  ]
-                })
+                let user = await User.create(
+                  {
+                    ...data,
+                    password,
+                    profile_admin: profileData,
+                  },
+                  {
+                    transaction: t,
+                    include: [
+                      {
+                        association: "profile",
+                      },
+                    ],
+                  }
+                );
                 // await Profile.create({...profileData,user_id:user.id},{
                 //   transaction: t,
                 // })
                 return {
-                  id:user.id,
+                  id: user.id,
                   ...data,
-                  profile:profileData
-                }
+                  profile: profileData,
+                };
               }
-            }))
-
-        }
-          
-        );
-        
-       
-      
+            })
+          );
+        });
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -250,8 +250,9 @@ module.exports = (server) => {
           queryset: user,
           limit,
           offset,
-        }).catch(boom.boomify);
+        });
       } catch (error) {
+        boom.boomify;
         console.error(error);
       }
     },

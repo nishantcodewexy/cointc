@@ -120,16 +120,16 @@ module.exports = (sequelize, DataTypes) => {
       } else if (instance?.role === "basic") {
         instance.profile = await instance.getBasicProfile();
       }
-      instance.dataValues = {
-        ...instance.dataValues,
-        ...instance.profile.dataValues,
-      };
-
+      if (instance)
+        instance.dataValues = {
+          ...instance?.dataValues,
+          ...instance?.profile?.dataValues,
+        };
       // To prevent mistakes:
-      /*    delete instance?.basic;
-      delete instance?.dataValues.basic;
-      delete instance?.admin;
-      delete instance?.dataValues.admin; */
+      //    delete instance?.basic;
+      // delete instance?.dataValues.basic;
+      // delete instance?.admin;
+      // delete instance?.dataValues.admin;
     }
   });
   return User;

@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   AdminProfile.init(
     {
-      id: {
+      profile_id: {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,

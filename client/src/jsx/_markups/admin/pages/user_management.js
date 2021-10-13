@@ -51,8 +51,7 @@ function UserManagement({ services, useService }) {
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
-        "options[paranoid]": false,
-        paranoid: false,
+        paranoid: 0,
       },
       toast: { success: notifySuccess, error: notifyError },
     });

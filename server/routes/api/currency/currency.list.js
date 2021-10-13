@@ -19,13 +19,6 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
-        {
           method:isAdmin,
           assign: "isAdmin",
         },

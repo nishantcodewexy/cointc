@@ -31,7 +31,7 @@ function Create({ action, callback }) {
             </Form.Label>
             <Form.Control
               type="text"
-              autoCapitalize
+              autoCapitalize="characters"
               name="iso_code"
               defaultValue={values?.iso_code}
               placeholder="Currency symbol"
@@ -63,7 +63,6 @@ function Create({ action, callback }) {
             <Form.Control
               as="select"
               name="type"
-              value={values?.type?.toLowerCase()}
               defaultValue={values?.type?.toLowerCase()}
               onChange={handleChange}
               aria-label="Select currency type"

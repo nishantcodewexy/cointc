@@ -133,13 +133,7 @@ function UsersPermissionTable({ services, useService }) {
         ]}
         transformers={{
           name: ({ key, value, row }) => {
-            return (
-              <>
-                {row?.role == "admin"
-                  ? row?.admin_profile?.nickname
-                  : row?.profile?.nickname || "Untitled"}
-              </>
-            );
+            return <>{row?.nickname || "Untitled"}</>;
           },
           id: ({ row }) => {
             return <>{row?.id}</>;
@@ -207,7 +201,7 @@ function UsersMembershipTable({ useService, services }) {
                   </div>
                   <div className="media-body">
                     <h5 className="mb-0 fs--1">
-                      {row?.profile?.nickname || "Untitled"}
+                      {row?.nickname || "Untitled"}
                     </h5>
                     <span>
                       Last contact:{" "}

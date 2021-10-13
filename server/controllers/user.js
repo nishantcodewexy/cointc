@@ -37,15 +37,13 @@ module.exports = (server) => {
      * @returns
      */
     async create(req) {
-      const { role } = req.pre;
       let {
         payload: { email, password, referrer, sudo = false, ...restOfPayload },
       } = req;
-
       assert(email, boom.badRequest("Expected email"));
       // return {status: 'done'};
       try {
-        const { profile } = __assertRole(role);
+        // const { profile } = __assertRole(role);
 
         // Determines whether to mail password to user
         // let mail_secret = !password;
@@ -54,7 +52,9 @@ module.exports = (server) => {
         if (sudo) {
           // debugger;
           password = generator.secret();
-        }
+        } else if (!password)
+          return boom.badRequest("Empty password not allowed");
+
         // Check that the user email doesn't already exist
         let _user = await User.findOne({
           where: {
@@ -68,23 +68,22 @@ module.exports = (server) => {
           );
 
         return await sequelize.transaction(async (t) => {
+          let profile = "BasicProfile";
+          let role = "basic";
+
           let newUser = {
             data: {
               email,
               password,
               role,
-              profile: {
+              [profile]: {
                 email,
                 ...restOfPayload,
               },
             },
             options: {
               transaction: t,
-              include: [
-                {
-                  association: profile,
-                },
-              ],
+              include: profile,
             },
           };
 
@@ -101,13 +100,14 @@ module.exports = (server) => {
             ref && ref.addReferrer(_user);
           }
 
+          const { BasicProfile, ...rest } = _user.toPublic();
           return sudo
             ? {
                 created: true,
               }
             : {
                 token: jwt.create(_user),
-                user: _user.toPublic(),
+                user: { ...rest, ...BasicProfile },
               };
         });
       } catch (error) {

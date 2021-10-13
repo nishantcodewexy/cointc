@@ -434,8 +434,8 @@ module.exports = {
    * @param {Number} offset
    * @returns {Promise}
    */
-  paginator: async ({ queryset, limit, offset } = { limit: 10, offset: 0 }) => {
-    const { rows, count } = await queryset;
+  paginator: ({ queryset, limit, offset } = { limit: 10, offset: 0 }) => {
+    const { rows, count } = queryset;
     let next, prev;
 
     if (offset) {

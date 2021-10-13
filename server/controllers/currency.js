@@ -15,7 +15,7 @@ module.exports = (server) => {
      * @param {Object} req
      * @returns
      */
-    async get(req) {
+    async retrieve(req) {
       try {
         let {
           query,
@@ -43,7 +43,6 @@ module.exports = (server) => {
       try {
         let {
           query,
-          pre: { isAdmin },
         } = req;
         // let where = id ? { id } : null;
         //TODO: Only admins are allowed to see who created the currency
