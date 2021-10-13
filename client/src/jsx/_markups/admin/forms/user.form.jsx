@@ -241,7 +241,8 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
     <Formik
       initialValues={{
         ...initialValues,
-        sudo: true,
+        force: false,
+        confirm: false,
       }}
       validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
@@ -265,6 +266,7 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
         touched,
       }) => (
         <Form onSubmit={handleSubmit}>
+          {console.log(values)}
           <div
             style={{
               display: "flex",
@@ -275,26 +277,36 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
               color: "#d33",
             }}
           >
-            <span className="simple-trash" style={{ fontSize: 70 }}></span>
+            <span className="simple-trash" style={{ fontSize: 45 }}></span>
           </div>
-          <h4 className="">Hold on!</h4>
-          <p className="">
+          <strong className="d-block text-center ">
             You are about to delete the user with the following email address
-          </p>
-          <ul className="text-danger fw-bold" style={{ fontWeight: "bold" }}>
-            <li>{values?.email}</li>
+          </strong>
+
+          <ul className="d-block text-center">
+            <li className="badge badge-default text-white">{values?.email}</li>
           </ul>
 
-          <Form.Group controlId="delete_type" className="mt-3 mb-3">
-            <Checkbox />I understand the implications of my action
-          </Form.Group>
+          <strong className="d-block text-danger text-center my-1">
+            {values?.force && "This is an irreversible action!"}
+          </strong>
+          <Form.Group className="mt-3 mb-1">
+              <Checkbox
+                id="confirm_del"
+                name="confirm"
+                onChange={handleChange}
+              />
+              <Form.Label htmlFor="confirm_del">
+                I understand the implications of my action
+              </Form.Label>
+            </Form.Group>
 
-          <Button variant="primary" disabled={isSubmitting} block type="submit">
+          <Button variant="danger" disabled={isSubmitting || !values?.confirm} block type="submit">
             {isSubmitting ? "Processing..." : "Confirm"}
           </Button>
-          <Form.Text controlId="delete_type" className="text-muted mt-3 ">
-            <label
-              htmlFor="perm_delete"
+          <Form.Text className="text-muted mt-3 ">
+            <Form.Label
+              htmlFor="perm_del"
               style={{
                 display: "flex",
                 justifyContent: "space-between",
@@ -302,8 +314,13 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
               }}
             >
               <span>Permanently delete</span>
-              <Switch name="force" id="perm_delete" value={values?.force} />
-            </label>
+              <Switch
+                name="force"
+                onChange={handleChange}
+                id="perm_del"
+                defaultValue={values?.force}
+              />
+            </Form.Label>
           </Form.Text>
         </Form>
       )}

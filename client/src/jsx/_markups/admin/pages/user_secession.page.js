@@ -154,7 +154,7 @@ function SecessionRequestTable({ services, useService }) {
                     </div>
                   </div>
                   <div className="media-body">
-                    <h5 className="mb-0 fs--1">{row?.role=='admin' ? row?.admin_profile?.nickname : row?.profile?.nickname || 'Untitled'}</h5>
+                    <h5 className="mb-0 fs--1">{row?.nickname || 'Untitled'}</h5>
                     <div
                       className="d-flex align-items-center"
                       style={{ gap: 16, fontSize: 12 }}

@@ -1,38 +1,37 @@
 "use strict";
-const Joi = require("joi")
+const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: { remove }
+      user: { remove },
     },
     consts: { roles: _roles },
-    helpers:{
-      permissions:{
-        isAdmin
-      }
-    }
+    helpers: {
+      permissions: { isUser },
+    },
   } = server.app;
 
   const schema = Joi.object({
-    soft:Joi.boolean().default(true).optional()
-  })
+    force: Joi.boolean()
+      .default(false)
+      .optional(),
+  });
 
   return {
     method: "DELETE",
     path: "/users/{id}",
     config: {
-      pre: [
-        {
-          method:isAdmin,
-          assign: "isAdmin",
-        },
-      ],
+      // pre: [
+      //   {
+      //     method: isUser,
+      //     assign: "user",
+      //   },
+      // ],
       handler: remove,
       auth: "jwt",
-      validate:{
-        payload:schema
-      }
+      validate: {
+        payload: schema,
+      },
     },
-    
   };
 };

@@ -3,10 +3,6 @@ const uuid = require("uuid");
 const faker = require("faker");
 const { filterFields } = require("../../services/model");
 const Joi = require("joi");
-const {
-  roles,
-  types: { ProfileModeType, country },
-} = require("../../consts");
 
 module.exports = (server) => {
   /*********************** HELPERS ***************************/
@@ -19,7 +15,10 @@ module.exports = (server) => {
     db: { User, sequelize, Wallet, AdminProfile, BasicProfile },
     boom,
     helpers: { paginator, filters },
-    consts: { roles: _roles },
+    consts: {
+      roles: _roles,
+      types: { ProfileModeType, country },
+    },
   } = server.app;
 
   return {
@@ -65,7 +64,7 @@ module.exports = (server) => {
      * @param {Array} req.payload.data  - array of upsert records
      * @returns
      */
-    async update(req) {
+    async bulkUpdate(req) {
       try {
         const {
           payload: { data, suspend = false, sudo },

@@ -7,6 +7,11 @@ import useService from "../../../_hooks/service.hook";
 import { useEffect } from "react";
 import country_list from "country-list";
 // DELETE USER FORM
+/**
+ * @function Drop
+ * @param {Object} param0 
+ * @returns 
+ */
 export function Drop({ action, callback, payload: initialData = {} }) {
   return (
     <Formik
@@ -60,6 +65,11 @@ export function Drop({ action, callback, payload: initialData = {} }) {
 }
 
 // MODIFY BANK DETAIL FORM
+/**
+ * @function Update
+ * @param {Object} param0 
+ * @returns 
+ */
 export function Update({ action, callback, payload: initialData = {} }) {
   const group = services.useGroupService();
   const currencyService = useService({
@@ -205,6 +215,12 @@ export function Update({ action, callback, payload: initialData = {} }) {
     </Formik>
   );
 }
+
+/**
+ * @function Create
+ * @param {Object} param0 
+ * @returns 
+ */
 export function Create({ action, callback }) {
   const group = services.useGroupService();
   const currencyService = useService({

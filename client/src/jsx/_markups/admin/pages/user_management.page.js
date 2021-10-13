@@ -213,6 +213,7 @@ function UserManagement({ services, useService }) {
                           appearance: "none",
                           border: "none",
                           background: "none",
+                          fontSize: 14
                         }}
                         onClick={() =>
                           onOpenModal({ method: "put", payload: row })
@@ -226,6 +227,7 @@ function UserManagement({ services, useService }) {
                           appearance: "none",
                           border: "none",
                           background: "none",
+                          fontSize: 14
                         }}
                         onClick={() =>
                           onOpenModal({ method: "delete", payload: row })

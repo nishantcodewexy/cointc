@@ -34,16 +34,10 @@ module.exports = (server) => {
     path: "/currency",
     config: {
       pre: [
-        {
-          method: (req) => {
-            return _roles.admin;
-          },
-          assign: "role",
-        },
         [
           {
             method: isAdminOrError,
-            assign: "isAdminOrError",
+            assign: "user",
           },
         ],
       ],

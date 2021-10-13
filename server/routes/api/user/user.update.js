@@ -7,7 +7,7 @@ module.exports = (server) => {
     },
     consts: { roles: _roles },
     helpers: {
-      permissions: { isAdmin },
+      permissions: { isUser },
     },
   } = server.app;
 
@@ -15,18 +15,12 @@ module.exports = (server) => {
     method: ["PUT", "PATCH"],
     path: "/users/{id}",
     config: {
-      pre: [
-        {
-          method: (req) => {
-            return _roles.admin;
-          },
-          assign: "role",
-        },
-        {
-          method: isAdmin,
-          assign: "isAdmin",
-        },
-      ],
+      // pre: [
+      //   {
+      //     method: isUser,
+      //     assign: "user",
+      //   },
+      // ],
       handler: update,
       auth: "jwt",
     },

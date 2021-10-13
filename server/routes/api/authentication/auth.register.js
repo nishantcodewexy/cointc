@@ -33,12 +33,6 @@ module.exports = (server) => {
     method: "POST",
     path: `/auth/register`,
     config: {
-      // pre: [
-      //   {
-      //     method: () => _roles.basic,
-      //     assign: "role",
-      //   }
-      // ],
       handler: create,
       validate: {
         payload: schema,

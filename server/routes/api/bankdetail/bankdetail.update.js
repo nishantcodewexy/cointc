@@ -10,12 +10,14 @@ module.exports = (server) => {
       types: { banks, country, currencies },
     },
     helpers: {
-      permissions: { isAdmin },
+      permissions: { isUser },
     },
   } = server.app;
 
   const schema = Joi.object({
-    account_no: Joi.string().min(8).max(15),
+    account_no: Joi.string()
+      .min(8)
+      .max(15),
     bank_name: Joi.string().valid(...Object.keys(banks)),
     country: Joi.string().valid(...Object.keys(country)),
     currency: Joi.string().valid(...Object.keys(currencies)),
@@ -28,7 +30,7 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: isAdmin,
+          method: isUser,
           assign: "user",
         },
       ],

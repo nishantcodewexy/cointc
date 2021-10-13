@@ -7,7 +7,7 @@ module.exports = (server) => {
     },
     consts: { roles: _roles },
     helpers: {
-      permissions: { isAdmin },
+      permissions: { isUser },
     },
   } = server.app;
 
@@ -17,7 +17,7 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: isAdmin,
+          method: isUser,
           assign: "user",
         },
       ],

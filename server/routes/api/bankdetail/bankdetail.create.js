@@ -15,7 +15,7 @@ module.exports = (server) => {
     },
     helpers:{
       permissions:{
-        isAdmin
+        isUser
       }
     }
   } = server.app;
@@ -35,15 +35,8 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
-        {
-          method:isAdmin,
-          assign: "isAdmin",
+          method:isUser,
+          assign: "user",
         },
       ],
       handler: create,

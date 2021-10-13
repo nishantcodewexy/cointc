@@ -18,7 +18,7 @@ module.exports = (server) => {
     },
     helpers:{
       permissions:{
-        isAdmin
+         isUser
       }
     }
   } = server.app;
@@ -40,8 +40,8 @@ module.exports = (server) => {
         [
           
           {
-            method:isAdmin,
-            assign: "isAdmin",
+            method:isUser,
+            assign: "user",
           },
 
         ]

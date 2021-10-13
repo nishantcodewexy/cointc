@@ -3,15 +3,11 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: { 
-        group:{
-          bulkCreate
-        }
-       },
+      user: { bulkCreate },
     },
     consts: { roles: _roles },
     helpers: {
-      permissions: { isAdmin },
+      permissions: { isUser },
     },
   } = server.app;
 
@@ -20,23 +16,16 @@ module.exports = (server) => {
   //     role:Joi.string().valid(...Object.values(_roles)).required()
   // }))
 
-
   return {
     method: "POST",
     path: "/users",
     config: {
-      pre: [
-        {
-          method: (req) => {
-            return _roles.admin;
-          },
-          assign: "role",
-        },
-        {
-          method: isAdmin,
-          assign: "isAdmin",
-        },
-      ],
+      // pre: [
+      //   {
+      //     method: isUser,
+      //     assign: "user",
+      //   },
+      // ],
       handler: bulkCreate,
       auth: "jwt",
       // validate:{
