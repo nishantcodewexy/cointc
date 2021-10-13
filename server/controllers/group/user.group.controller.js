@@ -227,26 +227,32 @@ module.exports = (server) => {
     },
 
     list: async (req) => {
-      const {
-        // pre: { isAdmin },
-        query,
-      } = req;
       try {
-        const { options } = query;
+        const {
+          // pre: { isAdmin },
+          query,
+        } = req;
+        const { paranoid = 1 } = query;
+        console.log("am here")
+        return {}
         const queryFilters = await filters({ query, searchFields: ["email"] });
-        console.log({ queryFilters });
-        const queryset = await User.findAndCountAll({
-          include: { association: "profile" },
+
+        const user = await User.findAndCountAll({
+          // include: [AdminProfile, BasicProfile],
           attributes: { exclude: ["password"] },
           ...queryFilters,
-          ...options
+          paranoid: Boolean(+paranoid),
         });
+
         const { limit, offset } = queryFilters;
-        return paginator({ queryset, limit, offset }).catch(boom.boomify);
-        
+        console.log("am here",user)
+        return paginator({
+          queryset: user,
+          limit,
+          offset,
+        }).catch(boom.boomify);
       } catch (error) {
-        console.error(error)
-        boom.boomify(error)
+        console.error(error);
       }
     },
 

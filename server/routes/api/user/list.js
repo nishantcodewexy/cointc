@@ -23,19 +23,19 @@ module.exports = (server) => {
     path: "/users",
     config: {
       pre: [
-        {
-          method: (req) =>{
+        // {
+        //   method: (req) =>{
             
-            return _roles.admin
-          },
-          assign: "role",
-        },
-        {
-          method:isAdmin,
-          assign: "isAdmin",
-        },
+        //     return _roles.admin
+        //   },
+        //   assign: "role",
+        // },
+        // {
+        //   method:isAdmin,
+        //   assign: "isAdmin",
+        // },
       ],
-      handler: list,
+      handler: async (req)=>({}),
       auth: "jwt",
     },
     
