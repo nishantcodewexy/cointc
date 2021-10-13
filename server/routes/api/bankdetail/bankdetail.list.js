@@ -5,11 +5,9 @@ module.exports = (server) => {
     controllers: {
         bankdetail: { list },
     },
-    consts: { roles: _roles },
     helpers:{
       permissions:{
         isAdmin,
-        // isAdminOrError
       }
     }
   } = server.app;
@@ -20,15 +18,8 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
-        {
           method:isAdmin,
-          assign: "isAdmin",
+          assign: "user",
         },
       ],
       handler: list,

@@ -13,11 +13,10 @@ export function Drop({ action, callback, payload: initialData = {} }) {
       initialValues={{
         confirm: false,
         id: initialData?.id || null,
-        sudo: true,
       }}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let response = await action(values);
+          let response = await action({ id: values?.id, force: values?.force });
           callback && callback(response);
         } catch (error) {
           console.error(error);
@@ -29,31 +28,20 @@ export function Drop({ action, callback, payload: initialData = {} }) {
       {({ values, errors, isSubmitting, handleSubmit, handleChange }) =>
         values?.id !== null ? (
           <Form onSubmit={handleSubmit}>
-            <div
-              style={{
-                display: "flex",
-                marginBottom: 20,
-                alignItems: "center",
-                flexDirection: "column",
-                width: "100%",
-                color: "#d33",
-              }}
-            >
-              <span className="simple-trash" style={{ fontSize: 70 }}></span>
-            </div>
-            <h4 className="">Hold on!</h4>
-            <p className="">Are you sure you wish to delete this info</p>
-
-            <Form.Group controlId="delete_type" className="mt-3 mb-3">
-              <Form.Lable>
-                <Checkbox name="confirm" onChange={handleChange} />I understand
-                the implications of my action
-              </Form.Lable>
+            <strong className="text-danger text-center d-block">
+              This operation will permanently delete this item. Continue?
+            </strong>
+            <Form.Group className="mt-3 mb-1">
+              <Checkbox
+                id="delete_bankdetail"
+                name="confirm"
+                onChange={handleChange}
+              />
+              <Form.Label htmlFor="delete_bankdetail">
+                I understand the implications of my action
+              </Form.Label>
             </Form.Group>
-            <Form.Text controlId="delete_type" className="text-muted mt-3 mb-3">
-              <Switch />
-              Permanently delete
-            </Form.Text>
+
             <Button
               variant="primary"
               disabled={isSubmitting || !values?.confirm}
@@ -62,7 +50,6 @@ export function Drop({ action, callback, payload: initialData = {} }) {
             >
               {isSubmitting ? "Processing..." : "Confirm"}
             </Button>
-            
           </Form>
         ) : (
           <>No ID provided</>
@@ -86,6 +73,7 @@ export function BankDetailForm({
   useEffect(() => {
     currencyService.dispatchRequest({ type: "list" });
   }, []);
+
   return (
     <Formik
       initialValues={{
@@ -98,9 +86,8 @@ export function BankDetailForm({
       validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          console.log(values);
-          // await action(values);
-          // callback && callback();
+          await action(values);
+          callback && callback();
         } catch (error) {
           console.error(error);
         } finally {
@@ -118,6 +105,7 @@ export function BankDetailForm({
         touched,
       }) => (
         <Form onSubmit={handleSubmit}>
+          {console.log(values)}
           <Form.Group className="mb-4" controlId="formCurrencyCode">
             <Form.Label>Account number</Form.Label>
             <Form.Control
@@ -156,10 +144,15 @@ export function BankDetailForm({
               defaultValue={values.currency}
               placeholder="Currency"
             >
-              <option></option>
-              {/*    {currencyService && currencyService?.data?.results.map((data, key) => {
-                return <option key={key}>{data?.symbol}</option>;
-              })} */}
+              <option>Select currency</option>
+              {currencyService &&
+                currencyService?.data?.results.map((data, key) => {
+                  return (
+                    <option value={data?.iso_code} key={key}>
+                      {data?.name} ({data?.iso_code?.toUpperCase()})
+                    </option>
+                  );
+                })}
             </Form.Control>
           </Form.Group>
 

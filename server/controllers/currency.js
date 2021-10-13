@@ -45,7 +45,6 @@ module.exports = (server) => {
           query,
           pre: { isAdmin },
         } = req;
-        console.log(isAdmin)
         // let where = id ? { id } : null;
         //TODO: Only admins are allowed to see who created the currency
         const { paranoid = true } = query;

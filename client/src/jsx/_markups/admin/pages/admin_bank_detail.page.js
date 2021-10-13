@@ -16,12 +16,15 @@ function AdminBankDetails({ services, useService }) {
     list: group.listBankDetail,
     get: group.getBankDetail,
     post: group.createBankDetail,
+    drop: group.dropBankDetail,
   });
   const { dispatchRequest, isFetching } = service;
   useEffect(() => {
     dispatchRequest({
       type: "list",
       toast: { success: notifySuccess, error: notifyError },
+      payload: {
+      },
     });
   }, []);
 
@@ -82,10 +85,10 @@ function AdminBankDetails({ services, useService }) {
           case "drop":
           case "delete":
             return [
-              "Delete User",
+              "Delete Bank details",
               <AdminBankForm.Delete
-                action={(requestPayload) =>
-                  dispatchRequest({ type: "drop", payload: requestPayload })
+                action={({ id, ...data }) =>
+                  dispatchRequest({ type: "drop", payload: { id, data } })
                 }
                 payload={formData?.payload}
                 callback={onModalClose}
