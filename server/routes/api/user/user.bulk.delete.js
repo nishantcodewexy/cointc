@@ -23,12 +23,12 @@ module.exports = (server) => {
     method: "DELETE",
     path: `/users`,
     config: {
-      // pre: [
-      //   {
-      //     method: isAdminOrError,
-      //     assign: "user",
-      //   },
-      // ],
+      pre: [
+        {
+          method: isAdminOrError,
+          assign: "user",
+        },
+      ],
       handler: bulkRemove,
       validate: {
         payload: schema,

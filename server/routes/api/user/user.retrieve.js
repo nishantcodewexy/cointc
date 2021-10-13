@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-      user: { findID },
+      user: { list },
     },
     consts: { roles: _roles },
     helpers: {
@@ -15,13 +15,13 @@ module.exports = (server) => {
     method: "GET",
     path: "/users/{id}",
     config: {
-      // pre: [
-      //   {
-      //     method: isUser,
-      //     assign: "user",
-      //   },
-      // ],
-      handler: findID,
+      pre: [
+        {
+          method: isUser,
+          assign: "user",
+        },
+      ],
+      handler: list,
       auth: "jwt",
     },
   };

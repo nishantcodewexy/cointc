@@ -21,12 +21,12 @@ module.exports = (server) => {
     method: "DELETE",
     path: "/users/{id}",
     config: {
-      // pre: [
-      //   {
-      //     method: isUser,
-      //     assign: "user",
-      //   },
-      // ],
+      pre: [
+        {
+          method: isUser,
+          assign: "user",
+        },
+      ],
       handler: remove,
       auth: "jwt",
       validate: {

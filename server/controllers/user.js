@@ -18,15 +18,21 @@ module.exports = (server) => {
     db: { User, sequelize, Wallet, BasicProfile, AdminProfile, Upload },
     boom,
     config: { client_url },
-    helpers: { decrypt, mailer, jwt, isAdmin, isBasic, generator, paginator, filters },
+    helpers: {
+      decrypt,
+      mailer,
+      jwt,
+      isAdmin,
+      isBasic,
+      generator,
+      paginator,
+      filters,
+    },
     consts: {
       roles: _roles,
       types: { ProfileModeType, country },
     },
   } = server.app;
-
-  const group = require("./group/user.group.controller")(server);
-
   const UserController = {
     // CREATE------------------------------------------------------------
     /**
@@ -117,16 +123,14 @@ module.exports = (server) => {
     },
 
     /**
-     * @function create - Creates currency (**Admin only**)
+     * @function bulkCreate - Creates currency (**Admin only**)
      * @param {Object} req - Request object
      * @param {Object} req.payload
      * @param {Object[]} req.payload.data
      * @returns
      */
     bulkCreate: async (req) => {
-      const {
-        payload = [],
-      } = req;
+      const { payload = [] } = req;
 
       const payloadSchema = Joi.array().items(
         Joi.object({
@@ -236,12 +240,29 @@ module.exports = (server) => {
     },
 
     // UPDATE------------------------------------------------------------
+    async updateMe(req) {
+      try {
+        let {
+          pre: { user },
+          payload,
+        } = req;
+
+        return User.update(payload, {
+          where: {
+            id: user?.id
+          }, returning: payload?.returning || true
+        });
+
+      } catch (error) {
+        console.error(error);
+      }
+    },
+
     /**
      * @function update - updates single user record
      * @param {Object} req
      * @param {Object} req.payload
      * @param {Object} req.payload.data  - upsert record
-     * @param {Object} req.payload.authorization  - authorization
      * @returns
      */
     async update(req) {
@@ -251,8 +272,6 @@ module.exports = (server) => {
           payload,
           params: { id },
         } = req;
-
-        let schema;
 
         if (user && id !== "me") {
           schema = Joi.object({
@@ -393,6 +412,7 @@ module.exports = (server) => {
         return boom.boomify(error);
       }
     },
+
     /**
      * @function - Authenticates user
      * @param {Object} req - Request object
@@ -446,16 +466,18 @@ module.exports = (server) => {
     },
 
     // LIST------------------------------------------------------------
-    list: async (req) => {
+    /**
+     * @function bulkList - Fetched multiple User
+     * @param {Object} req
+     * @returns
+     */
+    bulkList: async (req) => {
       try {
-        const {
-          query,
-        } = req;
+        const { query } = req;
         const { paranoid = 1 } = query;
         const queryFilters = await filters({ query, searchFields: ["email"] });
 
         const user = await User.findAndCountAll({
-          // include: [AdminProfile, BasicProfile],
           attributes: { exclude: ["password"] },
           ...queryFilters,
           paranoid: Boolean(+paranoid),
@@ -472,7 +494,13 @@ module.exports = (server) => {
         console.error(error);
       }
     },
-    async get(req, h) {
+
+    /**
+     * @function get - gets single User
+     * @param {Object} req
+     * @returns
+     */
+    async list(req) {
       const {
         query: { id },
       } = req;
@@ -730,6 +758,5 @@ module.exports = (server) => {
 
   return {
     ...UserController,
-    group: require("./group/user.group.controller")(server),
   };
 };
