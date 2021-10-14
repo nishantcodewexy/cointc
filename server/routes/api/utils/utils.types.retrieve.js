@@ -3,7 +3,7 @@ module.exports = (server) => {
       controllers: {
         // user: { archive },
       },
-      helpers: { jwt: {decodeUser} },
+      // helpers: { jwt: {decodeUser} },
       consts:{
           types
       }
@@ -11,15 +11,12 @@ module.exports = (server) => {
   
     return {
       method: ["GET"],
-      path: `/utils/types`,
+      path: `/utils/types/{type}`,
       config: {
-        pre: [
-          {
-            method: decodeUser,
-            assign: "user",
-          },
-        ],
-        handler: ()=>types,
+        
+        handler: async (req)=>{
+          return types[req.params.type]
+        },
         
       },
     };

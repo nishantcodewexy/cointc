@@ -1,34 +1,38 @@
 "use strict";
 const Joi = require("joi");
-
+const {types:{AssetType}} = require("../../../consts")
 module.exports = (server) => {
   const {
     controllers: {
-      wallet: { getByAddress },
+      wallet: { create },
     },
     helpers: {
-      jwt: { decodeUser },
+      permissions:{
+        isUser
+      },
+      handleValidation
     },
   } = server.app;
 
   const schema = Joi.object({
-    address: Joi.string().required(),
-  });
+    currency:Joi.string().valid(...Object.values(AssetType)).required(),
+  })
 
   return {
-    method: ["GET"],
-    path: "/wallet/{address}",
+    method: "POST",
+    path: "/wallets",
     config: {
       pre: [
         {
-          method: decodeUser,
+          method: isUser,
           assign: "user",
         },
+        {
+          method: handleValidation(schema),
+          assign: "payload",
+        },
       ],
-      handler: getByAddress,
-      validate: {
-        params: schema,
-      },
+      handler: create,
       auth: "jwt",
     },
   };

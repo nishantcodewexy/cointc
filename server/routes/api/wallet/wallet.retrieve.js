@@ -4,10 +4,12 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      wallet: { getByAddress },
+      wallet: { retrieve },
     },
     helpers: {
-      jwt: { decodeUser },
+      permissions:{
+        isUser
+      }
     },
   } = server.app;
 
@@ -17,15 +19,15 @@ module.exports = (server) => {
 
   return {
     method: ["GET"],
-    path: "/wallet/{address}",
+    path: "/wallets/{address}",
     config: {
       pre: [
         {
-          method: decodeUser,
+          method: isUser,
           assign: "user",
         },
       ],
-      handler: getByAddress,
+      handler: retrieve,
       validate: {
         params: schema,
       },

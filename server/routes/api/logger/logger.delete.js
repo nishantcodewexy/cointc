@@ -3,27 +3,28 @@
 module.exports = (server) => {
   const {
     controllers: {
-        upload: { retrieve },
+        logger: { destroy },
     },
     helpers:{
       permissions:{
-        isUser
-      }
+        isAdminOrError
+      },
       
     }
   } = server.app;
 
   return {
-    method: "GET",
-    path: "/uploads/{id}",
+    method: "DELETE",
+    path: "/logs/{id}",
     config: {
       pre: [
+        
         {
-          method: isUser,
-          assign: "user",
-        }
+          method:isAdminOrError,
+          assign: "isAdmin",
+        },
       ],
-      handler: retrieve,
+      handler: destroy,
       auth: "jwt",
     },
     

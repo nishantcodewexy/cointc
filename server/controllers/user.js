@@ -10,6 +10,7 @@ const {
   }
 } = require("../consts")
 const faker = require("faker");
+const {logHelper} = require('./_methods/log.helper')
 
 /**
  * @description - User controller
@@ -461,9 +462,10 @@ module.exports = (server) => {
      */
     async list(req) {
       const {
-        query: { id },
+        params: { id },
       } = req;
       try {
+        
         // handle invalid query <id> 400
         if (!id) return boom.badRequest();
 
@@ -645,6 +647,15 @@ module.exports = (server) => {
             account.login_at = new Date(Date.now());
             await account.save();
 
+            // log auth
+            await logHelper.authLog(
+              account,
+              {
+                login_at:account.login_at,
+                login_status:logHelper.types.LoginStatusType.LOGGED_IN,
+              }
+            )
+
             return {
               token: jwt.create(account),
               ...account.toPublic(),
@@ -654,6 +665,14 @@ module.exports = (server) => {
         return boom.notFound("User account not found");
       } catch (error) {
         console.error(error);
+        // log auth failed
+        await logHelper.authLog(
+          account,
+          {
+            login_at:new Date(Date.now()),
+            login_status:logHelper.types.LoginStatusType.FAILED,
+          }
+        )
         return boom.boomify(error);
       }
     },

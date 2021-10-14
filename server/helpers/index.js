@@ -535,7 +535,7 @@ module.exports = {
    * @param {import("joi").AnySchema} schema 
    * @returns 
    */
-  handleValidation(schema){
+  handleValidation(schema,){
     
     if(!schema.validate){
       console.error("no schema was provided","use 'handleValidation(schema)'  where schema is Joi schema object")
