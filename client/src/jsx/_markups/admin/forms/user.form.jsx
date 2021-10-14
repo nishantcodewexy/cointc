@@ -12,13 +12,17 @@ export function Create({ action, callback }) {
         email: "",
         country: "CN",
         nickname: "",
-        permission: false,
-        role: "basic",
+        admin: false,
+        other_names: "",
+        last_name: "",
       }}
       // validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let payload = [values];
+          let { admin, email, ...profile } = values;
+          let role = admin ? "admin" : "basic";
+          let payload = [{ email, role, profile }];
+          // Send request
           await action(payload);
           callback && callback();
         } catch (error) {
@@ -39,7 +43,7 @@ export function Create({ action, callback }) {
       }) => (
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formCurrencyCode">
-            <Form.Label>Email address</Form.Label>
+            <Form.Label as="strong">Email address</Form.Label>
             <Form.Control
               type="email"
               name="email"
@@ -52,7 +56,33 @@ export function Create({ action, callback }) {
           </Form.Group>
 
           <Form.Group className="mb-3" controlId="formCurrencyCode">
-            <Form.Label>Nickname</Form.Label>
+            <Row>
+              <Col>
+                <Form.Label as="strong">Last name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="last_name"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  defaultValue={values?.last_name}
+                  placeholder="Last name"
+                />
+              </Col>
+              <Col>
+                <Form.Label as="strong">Other names</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="other_names"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  defaultValue={values?.other_names}
+                  placeholder="Other names"
+                />
+              </Col>
+            </Row>
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="formCurrencyCode">
+            <Form.Label as="strong">Nickname</Form.Label>
             <Form.Control
               type="text"
               name="nickname"
@@ -64,7 +94,7 @@ export function Create({ action, callback }) {
           </Form.Group>
 
           <Form.Group className="mb-4" controlId="formCurrencyCode">
-            <Form.Label>Country</Form.Label>
+            <Form.Label as="strong">Country</Form.Label>
             <Form.Control
               as="select"
               type="text"
@@ -85,7 +115,11 @@ export function Create({ action, callback }) {
             </Form.Control>
           </Form.Group>
 
-          <Form.Group>
+          <Button variant="primary" disabled={isSubmitting} block type="submit">
+            {isSubmitting ? "Saving..." : "Save"}
+          </Button>
+
+          <Form.Group className="mt-3">
             <Form.Label
               style={{
                 display: "flex",
@@ -94,45 +128,36 @@ export function Create({ action, callback }) {
                 justifyContent: "space-between",
               }}
             >
-              <Form.Text>Has Permission </Form.Text>
+              <strong>Create as Administrator </strong>
               <Switch
-                name="permission"
-                checked={values?.permission}
+                name="admin"
+                checked={values?.admin}
+                defaultValue={values?.admin}
                 onChange={handleChange}
               />
             </Form.Label>
           </Form.Group>
-
-          <Button variant="primary" disabled={isSubmitting} block type="submit">
-            {isSubmitting ? "Saving..." : "Save"}
-          </Button>
         </Form>
       )}
     </Formik>
   );
 }
+
 export function Update({ action, callback, payload: initialData = null }) {
   return (
     <Formik
       initialValues={{
-        email: initialData?.email || "",
         country: initialData?.country || "CN",
         nickname:
-          initialData?.role == "admin"
-            ? initialData?.admin_profile?.nickname
-            : initialData?.profile?.nickname || "",
+          initialData?.nickname || "",
         permission: initialData?.permission || false,
-        role: initialData?.role || "basic",
+        other_names: initialData?.other_names || "",
+        last_name: initialData?.last_name || "",
       }}
       // validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let { email, ...rest } = values;
-          let payload = rest;
-          if (!initialData)
-            payload = [{ email: values?.email, role: rest?.role }];
-
-          await action(payload);
+          await action(values);
           callback && callback();
         } catch (error) {
           console.error(error);
@@ -152,28 +177,42 @@ export function Update({ action, callback, payload: initialData = null }) {
       }) => (
         <Form onSubmit={handleSubmit}>
           <Form.Group className="mb-3" controlId="formCurrencyCode">
-            <Form.Label>Email address</Form.Label>
-            {!initialData ? (
-              <Form.Control
-                type="email"
-                name="email"
-                required
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.email}
-                placeholder="Email address"
-              />
-            ) : (
-              <Form.Text>
-                <strong className="text-primary">{initialData?.email}</strong>
-              </Form.Text>
-            )}
+            <Form.Label as="strong">Email address</Form.Label>
+            <Form.Text>
+              <strong className="text-primary">{initialData?.email}</strong>
+            </Form.Text>
           </Form.Group>
 
+          <Form.Group>
+            <Row>
+              <Col>
+                <Form.Label as="strong">Last name</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="last_name"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  defaultValue={values?.last_name}
+                  placeholder="Last name"
+                />
+              </Col>
+              <Col>
+                <Form.Label as="strong">Other names</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="other_names"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  defaultValue={values?.other_names}
+                  placeholder="Other names"
+                />
+              </Col>
+            </Row>
+          </Form.Group>
           {initialData && (
             <>
               <Form.Group className="mb-3" controlId="formCurrencyCode">
-                <Form.Label>Nickname</Form.Label>
+                <Form.Label as="strong">Nickname</Form.Label>
                 <Form.Control
                   type="text"
                   name="nickname"
@@ -185,7 +224,7 @@ export function Update({ action, callback, payload: initialData = null }) {
               </Form.Group>
 
               <Form.Group className="mb-4" controlId="formCurrencyCode">
-                <Form.Label>Country</Form.Label>
+                <Form.Label as="strong">Country</Form.Label>
                 <Form.Control
                   as="select"
                   type="text"
@@ -205,24 +244,6 @@ export function Update({ action, callback, payload: initialData = null }) {
                   })}
                 </Form.Control>
               </Form.Group>
-
-              <Form.Group>
-                <Form.Label
-                  style={{
-                    display: "flex",
-                    gap: 10,
-                    alignItems: "center",
-                    justifyContent: "space-between",
-                  }}
-                >
-                  <Form.Text>Has Permission </Form.Text>
-                  <Switch
-                    name="permission"
-                    checked={values?.permission}
-                    onChange={handleChange}
-                  />
-                </Form.Label>
-              </Form.Group>
             </>
           )}
 
@@ -240,14 +261,14 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
   return (
     <Formik
       initialValues={{
-        ...initialValues,
-        force: false,
+        force: initialValues?.force || false,
         confirm: false,
       }}
       validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let response = await action(values);
+          const { force } = values;
+          let response = await action({ force });
           callback && callback(response);
         } catch (error) {
           console.error(error);
@@ -266,7 +287,6 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
         touched,
       }) => (
         <Form onSubmit={handleSubmit}>
-          {console.log(values)}
           <div
             style={{
               display: "flex",
@@ -284,44 +304,29 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
           </strong>
 
           <ul className="d-block text-center">
-            <li className="badge badge-default text-white">{values?.email}</li>
+            <li className="badge badge-default text-white">
+              {initialValues?.email}
+            </li>
           </ul>
 
           <strong className="d-block text-danger text-center my-1">
             {values?.force && "This is an irreversible action!"}
           </strong>
           <Form.Group className="mt-3 mb-1">
-              <Checkbox
-                id="confirm_del"
-                name="confirm"
-                onChange={handleChange}
-              />
-              <Form.Label htmlFor="confirm_del">
-                I understand the implications of my action
-              </Form.Label>
-            </Form.Group>
+            <Checkbox id="confirm_del" name="confirm" onChange={handleChange} />
+            <Form.Label htmlFor="confirm_del">
+              I understand the implications of my action
+            </Form.Label>
+          </Form.Group>
 
-          <Button variant="danger" disabled={isSubmitting || !values?.confirm} block type="submit">
+          <Button
+            variant="danger"
+            disabled={isSubmitting || !values?.confirm}
+            block
+            type="submit"
+          >
             {isSubmitting ? "Processing..." : "Confirm"}
           </Button>
-          <Form.Text className="text-muted mt-3 ">
-            <Form.Label
-              htmlFor="perm_del"
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-              }}
-            >
-              <span>Permanently delete</span>
-              <Switch
-                name="force"
-                onChange={handleChange}
-                id="perm_del"
-                defaultValue={values?.force}
-              />
-            </Form.Label>
-          </Form.Text>
         </Form>
       )}
     </Formik>

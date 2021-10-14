@@ -16,7 +16,7 @@ function CurrencyMgmt({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();
   let service = useService({
-    list: group.listCurrency,
+    list: group.bulkRetrieveCurrency,
     get: group.getCurrency,
     post: group.createCurrency,
     put: group.updateCurrency,

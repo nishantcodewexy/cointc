@@ -3,6 +3,7 @@ const {Model} = require("sequelize")
 
 
 
+const model = require("../../services/model");
 
 module.exports = (server) => {
   const {
@@ -13,16 +14,25 @@ module.exports = (server) => {
   } = server.app;
   
   return {
+    async __create(model, payload, options) {
+      return await db[model].create(payload, options);
+    },
     async __destroy(model, where, force, options = {}) {
-      return await db[model].destroy({ where, force }, options);
+      return await db[model].destroy(
+        { where, force },
+        { ...options, logging: console.log }
+      );
     },
 
-    async __update(model, with_payload, where, options) {
-      return await db[model].update(
-        { ...with_payload },
-        { where },
-        { ...options, returning: true }
-      );
+    async __update(model, values, options) {
+      let [affectedRowCount, affectedRow] = await db[model]?.update(values, {
+        ...options,
+        logging: console.log,
+      });
+      return { count: affectedRowCount, results: affectedRow || null };
+    },
+    async __upsert(model, values, options) {
+      return await db[model]?.upsert(values, options);
     },
     /**
      * 
@@ -99,7 +109,7 @@ module.exports = (server) => {
       let setter = accessors?.set;
       let creator = accessors?.create;
 
-      let model = User.associations[profile]['target']["name"];
+      let model = User.associations[profile]["target"]["name"];
       /* profile
         .split("_")
         .map((_p) => _p.charAt(0).toUpperCase() + _p.slice(1, +_p.length))

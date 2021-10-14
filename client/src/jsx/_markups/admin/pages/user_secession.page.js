@@ -71,7 +71,7 @@ function SecessionRequestTable({ services, useService }) {
   const group = useGroupService();
 
   let service = useService({
-    list: group.listUsers,
+    list: group.bulkRetrieveUsers,
   });
   const { dispatchRequest } = service;
   function notifySuccess() {
@@ -154,7 +154,9 @@ function SecessionRequestTable({ services, useService }) {
                     </div>
                   </div>
                   <div className="media-body">
-                    <h5 className="mb-0 fs--1">{row?.nickname || 'Untitled'}</h5>
+                    <h5 className="mb-0 fs--1">
+                      {row?.nickname || "Untitled"}
+                    </h5>
                     <div
                       className="d-flex align-items-center"
                       style={{ gap: 16, fontSize: 12 }}

@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       User.hasOne(BasicProfile, {
         foreignKey: "user_id",
         constraints: false,
+        onDelete: "cascade",
         // scope: {
         //   role: "basic",
         // },
@@ -32,10 +33,6 @@ module.exports = (sequelize, DataTypes) => {
       User.hasOne(AdminProfile, {
         foreignKey: "user_id",
         constraints: false,
-        // scope: {
-        //   role: "admin",
-        // },
-        // as: "admin_profile",
       });
 
       AdminProfile.belongsTo(User, {
@@ -45,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
 
       User.hasMany(Wallet, {
         foreignKey: "owner_id",
+
         // as: "wallet",
       });
       // User.hasMany(Message, {})
@@ -57,6 +55,12 @@ module.exports = (sequelize, DataTypes) => {
       const mixinMethodName = `get${uppercaseFirst(this.role)}Profile`;
       return this[mixinMethodName](options);
     }
+    // setProfile(options) {
+    //   debugger;
+    //   if (!this.role) return Promise.resolve(null);
+    //   const mixinMethodName = `set${uppercaseFirst(this.role)}Profile`;
+    //   return this[mixinMethodName](options);
+    // }
   }
   User.init(
     {
@@ -126,7 +130,6 @@ module.exports = (sequelize, DataTypes) => {
       },
     }
   );
- 
 
   User.addHook("afterFind", async (findResult) => {
     if (!Array.isArray(findResult)) findResult = [findResult];
@@ -138,8 +141,8 @@ module.exports = (sequelize, DataTypes) => {
       }
       if (instance)
         instance.dataValues = {
-          ...instance?.dataValues,
           ...instance?.profile?.dataValues,
+          ...instance?.dataValues,
         };
       // To prevent mistakes:
       //    delete instance?.basic;

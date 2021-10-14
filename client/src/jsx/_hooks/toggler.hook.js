@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function useToggler(defaultValue) {
+function useToggler(defaultValue = false) {
   const [isOpen, setIsOpen] = useState(defaultValue);
   const [toggledPayload, setPayload] = useState(null);
   const onOpen = (payload = null) => {

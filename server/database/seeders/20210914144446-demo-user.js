@@ -57,6 +57,7 @@ async function seedAdminUser() {
       user_id: id,
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
+      // country: faker.address.countryCode(),
     });
 
     if (i == 0) continue;
@@ -111,6 +112,7 @@ async function seedUser() {
         email,
         user_id: id,
         created_at: faker.date.recent(),
+        country: faker.address.countryCode(),
         updated_at: faker.date.recent(),
       },
     ]);

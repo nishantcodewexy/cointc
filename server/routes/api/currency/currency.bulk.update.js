@@ -5,12 +5,11 @@ module.exports = (server) => {
   const {
     controllers: {
       currency: {
-        update
+        bulkUpdate
       },
     },
     consts: {
       roles: _roles,
-      types: { country },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -41,7 +40,7 @@ module.exports = (server) => {
           },
         ],
       ],
-      handler: update,
+      handler: bulkUpdate,
       auth: "jwt",
       validate: {
         payload: schema,

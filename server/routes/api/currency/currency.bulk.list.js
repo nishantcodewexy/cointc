@@ -1,34 +1,32 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
   const {
     controllers: {
-      user: { update },
+        currency: { bulkList },
     },
     consts: { roles: _roles },
-    helpers: {
-      permissions: { isAdminOrError },
-    },
+    helpers:{
+      permissions:{
+        isUser
+      }
+    }
   } = server.app;
 
-
-  
-
-  
-  
-
   return {
-    method: ["PUT", "PATCH"],
-    path: "/users/{id}",
+    method: "GET",
+    path: "/currency",
     config: {
       pre: [
         {
-          method: isAdminOrError,
+          method:isUser,
           assign: "user",
         },
+        
       ],
-      handler: update,
+      handler: bulkList,
       auth: "jwt",
     },
+    
   };
 };

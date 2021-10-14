@@ -68,7 +68,7 @@ class GroupServices {
    * @returns
    */
 
-  listCurrency = async (params) => {
+  bulkRetrieveCurrency = async (params) => {
     return await this.decorate(
       async () =>
         await this.axios(`currency`, {
@@ -206,7 +206,7 @@ class GroupServices {
     );
   };
   updateBankDetail = async ({ id, ...data }) => {
-    console.log({data})
+    console.log({ data });
     return await this.decorate(
       async () =>
         await this.axios(`bank-details/${id}`, {
@@ -215,7 +215,7 @@ class GroupServices {
         })
     );
   };
-  dropBankDetail = async ({id, ...data}) => {
+  dropBankDetail = async ({ id, ...data }) => {
     return await this.decorate(
       async () =>
         await this.axios(`bank-details/${id}`, {
@@ -224,7 +224,7 @@ class GroupServices {
         })
     );
   };
-  bulkDropBankDetail = async ( data) => {
+  bulkDropBankDetail = async (data) => {
     return await this.decorate(
       async () =>
         await this.axios(`bank-details`, {
@@ -234,17 +234,15 @@ class GroupServices {
     );
   };
 
-  
-
   /************************* USER ******************************/
   /**
-   * @function getUsers - Gets one or many users (**Admins only**)
+   * @function bulkListUsers - Gets one or many users (**Admins only**)
    * @param {Object} params
    * @param {String} [params.id] - User ID
    * @returns
    */
-  listUsers = async (params) => {
-    return this.decorate(
+  bulkRetrieveUsers = async (params) => {
+    return await this.decorate(
       async () =>
         await this.axios(`users`, {
           method: "GET",
@@ -252,7 +250,7 @@ class GroupServices {
         })
     );
   };
-  getUser = async (id, params) => {
+  retrieveUser = async (id, params) => {
     return await this.decorate(
       async () =>
         await this.axios(`users/${id}`, {
@@ -263,13 +261,11 @@ class GroupServices {
   };
 
   /**
-   * @function createUsers - Bulk create user - (**Admins only**)
+   * @function bulkCreateUser - Bulk create user - (**Admins only**)
    * @param {Object} data
-   * @param {"basic" | "admin"} data.role
-   * @param {String} data.email
    * @returns
    */
-  createUsers = async (data) => {
+  bulkCreateUsers = async (data) => {
     return await this.decorate(async () =>
       this.axios(`users`, {
         method: "POST",
@@ -279,15 +275,27 @@ class GroupServices {
   };
 
   /**
-   * @function updateUsers - Bulk update users (**Admins only**)
+   * @function bulkUpdateUsers - Bulk update users (**Admins only**)
    * @param {Object} data
-   * @param {String} data.phone
-   * @param {String} data.country
-   * @param {String} data.permission
-   * @param {String} data.role
    * @returns
    */
-  updateUsers = async ({ id, data }) => {
+  bulkUpdateUsers = async (data) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`users`, {
+          method: "PUT",
+          data,
+        })
+    );
+  };
+  /**
+   * @function updateUser -  update single users (**Admins only**)
+   * @param {Object} payload
+   * @param {String} payload.id
+   * @param {String} payload.data
+   * @returns
+   */
+  updateUser = async ({ id, data }) => {
     return await this.decorate(
       async () =>
         await this.axios(`users/${id}`, {
@@ -298,14 +306,28 @@ class GroupServices {
   };
 
   /**
-   * @function dropUsers - Bulk delete users (**Admins only**)
-   * @param {String []} data - Array of user ID to delete from
+   * @function removeUser - Bulk delete users (**Admins only**)
+   * @param {String} id
    * @returns
    */
-  dropUsers = async (data) => {
+  removeUser = async ({ id, data }) => {
     return await this.decorate(
       async () =>
-        await this.axios(`user`, {
+        await this.axios(`users/${id}`, {
+          method: "DELETE",
+          data,
+        })
+    );
+  };
+  /**
+   * @function bulkDropUsers - Bulk delete users (**Admins only**)
+   * @param {String []} data - Array of IDs to delete from
+   * @returns
+   */
+  bulkRemoveUsers = async (data) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`users`, {
           method: "DELETE",
           data,
         })
