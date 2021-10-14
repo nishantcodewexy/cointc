@@ -90,13 +90,13 @@ function useService(services) {
           break;
 
         case "get":
-          response = await services?.list(qs.stringify(payload));
+          response = await services?.list(payload);
           handleResponse(response, true);
           break;
 
         case "list":
         default: {
-          response = await services?.list(qs.parse(payload));
+          response = await services?.list(payload);
           handleResponse(response, true);
           break;
         }
