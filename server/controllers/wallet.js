@@ -49,7 +49,7 @@ module.exports = (server) => {
         },
       }).toPublic();
     },
-
+    
     // Fetch total user wallet balance
     totalBalance: async (req) => {
       let {
