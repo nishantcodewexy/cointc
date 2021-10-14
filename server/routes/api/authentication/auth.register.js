@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: { create },
+      user: { createMe },
     },
     consts: { patterns, roles: _roles },
     helpers:{
@@ -33,7 +33,7 @@ module.exports = (server) => {
     method: "POST",
     path: `/auth/register`,
     config: {
-      handler: create,
+      handler: createMe,
       validate: {
         payload: schema,
       },

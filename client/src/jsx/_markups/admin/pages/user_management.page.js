@@ -14,11 +14,11 @@ function UserManagement({ services, useService }) {
   const group = useGroupService();
 
   let service = useService({
-    list: group.listUsers,
-    get: group.getUser,
-    post: group.createUsers,
-    put: group.updateUsers,
-    drop: group.dropUsers,
+    list: group.bulkRetrieveUsers,
+    post: group.bulkCreateUsers,
+    get: group.retrieveUser,
+    put: group.updateUser,
+    drop: group.removeUser,
   });
 
   function notifySuccess() {
@@ -43,7 +43,7 @@ function UserManagement({ services, useService }) {
     });
   }
 
-  const { data, dispatchRequest } = service;
+  const { dispatchRequest } = service;
 
   useEffect(() => {
     dispatchRequest({
@@ -51,7 +51,7 @@ function UserManagement({ services, useService }) {
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
-        paranoid: 0,
+        "paranoid": false,
       },
       toast: { success: notifySuccess, error: notifyError },
     });
@@ -95,10 +95,10 @@ function UserManagement({ services, useService }) {
             return [
               "Update User",
               <UserForm.Update
-                action={(requestPayload) =>
+                action={(data) =>
                   dispatchRequest({
                     type: "put",
-                    payload: { id: formData?.payload.id, data: requestPayload },
+                    payload: { id: formData?.payload.id, data },
                   })
                 }
                 payload={formData?.payload}
@@ -110,10 +110,10 @@ function UserManagement({ services, useService }) {
             return [
               "Delete User",
               <UserForm.Drop
-                action={(requestPayload) =>
+                action={(data) =>
                   dispatchRequest({
                     type: "drop",
-                    payload: { id: formData?.payload.id, data: requestPayload },
+                    payload: { id: formData?.payload.id, data },
                   })
                 }
                 payload={formData?.payload}
@@ -213,7 +213,7 @@ function UserManagement({ services, useService }) {
                           appearance: "none",
                           border: "none",
                           background: "none",
-                          fontSize: 14
+                          fontSize: 12,
                         }}
                         onClick={() =>
                           onOpenModal({ method: "put", payload: row })
@@ -227,7 +227,7 @@ function UserManagement({ services, useService }) {
                           appearance: "none",
                           border: "none",
                           background: "none",
-                          fontSize: 14
+                          fontSize: 12,
                         }}
                         onClick={() =>
                           onOpenModal({ method: "delete", payload: row })

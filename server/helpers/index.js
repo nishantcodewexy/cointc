@@ -412,12 +412,13 @@ module.exports = {
       : {};
 
     const search = new searchBuilder(Sequelize, query).setConfig({
-      "default-limit": 10,
-    });
-    const whereQuery = search.getWhereQuery();
-    const orderQuery = search.getOrderQuery();
-    const limitQuery = search.getLimitQuery();
-    const offsetQuery = search.getOffsetQuery();
+        "default-limit": 10,
+        logging: true,
+      }),
+      whereQuery = search.getWhereQuery(),
+      orderQuery = search.getOrderQuery(),
+      limitQuery = search.getLimitQuery(),
+      offsetQuery = search.getOffsetQuery();
 
     return {
       where: {
@@ -425,7 +426,7 @@ module.exports = {
         ...extraWhere,
         ...extras,
       },
-      // ...(orderQuery ? { order: orderQuery } : {}),
+      ...(orderQuery ? { order: orderQuery } : {}),
       limit: limitQuery || 10,
       offset: offsetQuery || 0,
     };
@@ -467,10 +468,10 @@ module.exports = {
     };
   },
 
-  isBasic(user){
-    return user?.role === basic
+  isBasic(user) {
+    return user?.role === basic;
   },
-  isAdmin(user){
-    return user?.role === admin
-  }
+  isAdmin(user) {
+    return user?.role === admin;
+  },
 };

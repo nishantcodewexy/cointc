@@ -3,25 +3,25 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: { update },
+      user: { updateMe },
     },
     consts: { roles: _roles },
     helpers: {
-      permissions: { isAdminOrError },
+      permissions: { isUser },
     },
   } = server.app;
 
   return {
     method: ["PUT", "PATCH"],
-    path: "/users/{id}",
+    path: "/users/me",
     config: {
       pre: [
         {
-          method: isAdminOrError,
+          method: isUser,
           assign: "user",
         },
       ],
-      handler: update,
+      handler: updateMe,
       auth: "jwt",
     },
   };

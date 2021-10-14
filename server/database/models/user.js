@@ -56,6 +56,12 @@ module.exports = (sequelize, DataTypes) => {
       const mixinMethodName = `get${uppercaseFirst(this.role)}Profile`;
       return this[mixinMethodName](options);
     }
+    // setProfile(options) {
+    //   debugger;
+    //   if (!this.role) return Promise.resolve(null);
+    //   const mixinMethodName = `set${uppercaseFirst(this.role)}Profile`;
+    //   return this[mixinMethodName](options);
+    // }
   }
   User.init(
     {
