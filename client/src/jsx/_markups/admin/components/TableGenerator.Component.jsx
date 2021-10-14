@@ -78,7 +78,7 @@ function TableGenerator({
     dispatchRequest({
       type: "list",
       payload: {
-        ...prevRequest?.get,
+        ...prevRequest?.list,
         limit: props.value,
         offset: page * limit || 0,
       },
