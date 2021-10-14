@@ -12,7 +12,9 @@ const faker = require("faker");
  */
 module.exports = (server) => {
   /*********************** HELPERS ***************************/
-  const { __upsert, __destroy, __assertRole } = require("./_methods")(server);
+  const { __upsert, __update, __destroy, __assertRole } = require("./_methods")(
+    server
+  );
 
   const {
     db: { User, sequelize, Wallet, BasicProfile, AdminProfile, Upload },
@@ -42,25 +44,13 @@ module.exports = (server) => {
      * @param {Object} req.pre - Request Prehandler object
      * @returns
      */
-    async create(req) {
+    async createMe(req) {
       let {
-        payload: { email, password, referrer, sudo = false, ...restOfPayload },
+        payload: { email, password, referrer, ...restOfPayload },
       } = req;
       assert(email, boom.badRequest("Expected email"));
       // return {status: 'done'};
       try {
-        // const { profile } = __assertRole(role);
-
-        // Determines whether to mail password to user
-        // let mail_secret = !password;
-
-        // Generate password if one is not supplied
-        if (sudo) {
-          // debugger;
-          password = generator.secret();
-        } else if (!password)
-          return boom.badRequest("Empty password not allowed");
-
         // Check that the user email doesn't already exist
         let _user = await User.findOne({
           where: {
@@ -149,7 +139,7 @@ module.exports = (server) => {
         nickname: Joi.string().optional(),
       });
 
-      const userProfileSchema = Joi.object({
+      const basicProfileSchema = Joi.object({
         mode: Joi.string().valid(...Object.keys(ProfileModeType)),
         nickname: Joi.string().optional(),
         country: Joi.string()
@@ -200,7 +190,7 @@ module.exports = (server) => {
                   profile: profileData,
                 };
               } else {
-                let { error } = userProfileSchema.validate(data.profile || {});
+                let { error } = basicProfileSchema.validate(data.profile || {});
                 if (error) return { error };
 
                 let profileData = data.profile || {};
@@ -240,26 +230,54 @@ module.exports = (server) => {
     },
 
     // UPDATE------------------------------------------------------------
+    /**
+     * @function updateMe - Update personal profile
+     * @param {Object} req
+     * @returns
+     */
     async updateMe(req) {
       try {
         let {
           pre: { user },
           payload,
         } = req;
+        //determine the allowed attributes to modify per user role
 
-        return User.update(payload, {
+        //  Generally allowed attrinutes
+        let attributes = [
+          "last_name",
+          "other_names",
+          "nickname",
+          "kyc",
+          "mode",
+          "country",
+          "kyc_document",
+        ];
+        // Admin only allowed attributes
+        attributes = isAdmin(user) && [
+          "suitability",
+          "kyc_status",
+          "kyc_document",
+          "permission",
+          ...attributes,
+        ];
+
+        let options = {
+          returning: true,
+          attributes,
           where: {
-            id: user?.id
-          }, returning: payload?.returning || true
-        });
-
+            id: user?.id,
+          },
+        };
+        let model = user?.__proto__.constructor.name;
+        return await __update(model, payload, options);
       } catch (error) {
         console.error(error);
       }
     },
 
     /**
-     * @function update - updates single user record
+     * @function update - updates single user record - (**only Admin**)
      * @param {Object} req
      * @param {Object} req.payload
      * @param {Object} req.payload.data  - upsert record
@@ -269,92 +287,41 @@ module.exports = (server) => {
       try {
         let {
           pre: { user },
-          payload,
+          payload = {},
           params: { id },
         } = req;
+        // user is an admin
+        // let { email, role, permission, ...profileData } = payload;
+        let target_user = await User.findOne({ where: { id } });
+        //determine the targe user's allowed attributes
+        let attributes = isBasic(target_user)
+          ? [
+              "mode",
+              "nickname",
+              "kyc",
+              "suitability",
+              "country",
+              "kyc_status",
+              "last_name",
+              "other_names",
+              "kyc_document",
+            ]
+          : ["nickname", "kyc"];
+        let target_profile = target_user?.profile;
 
-        if (user && id !== "me") {
-          schema = Joi.object({
-            kyc: Joi.object({
-              email: Joi.bool(),
-              payment_methods: Joi.object({
-                we_chat: Joi.any(),
-              }),
-              sms: Joi.string(),
-              id: Joi.string(),
-              account_no: Joi.string(),
-              bank_name: Joi.string(),
-              IFSC_code: Joi.string(),
-              country: Joi.string(),
-              currency: Joi.string(),
-            }),
-            permission: Joi.boolean().optional(),
-          });
-        } else if (user && id === "me") {
-          schema = Joi.object({
-            nickname: Joi.string().optional(),
-          });
-        } else {
-          schema = Joi.object({
-            nickname: Joi.string().optional(),
-            country: Joi.string()
-              .valid(...Object.keys(country))
-              .optional(),
-            profile_pic: Joi.string()
-              .uuid()
-              .optional(),
-            kyc_document: Joi.string()
-              .uuid()
-              .optional(),
-          });
-        }
-
-        const { error, value } = schema.validate(payload);
-
-        if (error) throw boom.badRequest(error);
-
-        const permission = payload?.permission;
-
-        if (user && id === "me") {
-          let profile = await AdminProfile.update(payload, {
+        if (target_profile) {
+          let options = {
+            attributes,
             where: {
-              user_id: user.id,
+              profile_id: target_profile?.profile_id,
             },
-          });
-
-          if (profile && [true, false].includes(permission)) {
-            await User.update(
-              {
-                permission,
-              },
-              {
-                where: {
-                  id: user.id,
-                },
-              }
-            );
-          }
-          return profile;
-        } else {
-          let profile = await BasicProfile.update(payload, {
-            where: {
-              user_id: user && id !== "me" ? id : user.id,
-            },
-          });
-          if (profile && [true, false].includes(permission)) {
-            let __user = await User.update(
-              {
-                permission,
-              },
-              {
-                where: {
-                  id: user && id !== "me" ? id : user.id,
-                },
-              }
-            );
-          }
-          return profile;
+            returning: true,
+            logging: console.log,
+          };
+          let model = target_profile?.__proto__.constructor.name;
+          return await __update(model, payload, options);
         }
+        return boom.notFound("User profile does not exist");
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -401,7 +368,7 @@ module.exports = (server) => {
             // }
 
             console.log({ payload });
-            return await __upsert(model, payload, where, {
+            return await __update(model, payload, where, {
               transaction: t,
               attributes,
             });
@@ -412,16 +379,6 @@ module.exports = (server) => {
         return boom.boomify(error);
       }
     },
-
-    /**
-     * @function - Authenticates user
-     * @param {Object} req - Request object
-     * @param {Object} req.payload
-     * @param {String} req.payload.email
-     * @param {String | "basic"} req.payload.role
-     * @param {String} req.payload.password
-     * @returns
-     */
 
     // DELETE------------------------------------------------------------
 
@@ -474,15 +431,18 @@ module.exports = (server) => {
     bulkList: async (req) => {
       try {
         const { query } = req;
-        const { paranoid = 1 } = query;
         const queryFilters = await filters({ query, searchFields: ["email"] });
-
-        const user = await User.findAndCountAll({
+        const paranoid = query?.paranoid
+        ? Boolean(JSON.parse(query?.paranoid))
+        : true;
+        
+        const options = {
           attributes: { exclude: ["password"] },
           ...queryFilters,
-          paranoid: Boolean(+paranoid),
-        });
+          paranoid,
+        };
 
+        const user = await User.findAndCountAll(options);
         const { limit, offset } = queryFilters;
         return paginator({
           queryset: user,
@@ -654,6 +614,15 @@ module.exports = (server) => {
         return boom.boomify(error);
       }
     },
+    /**
+     * @function - Authenticates user
+     * @param {Object} req - Request object
+     * @param {Object} req.payload
+     * @param {String} req.payload.email
+     * @param {String | "basic"} req.payload.role
+     * @param {String} req.payload.password
+     * @returns
+     */
     async authenticate(req) {
       try {
         const {
