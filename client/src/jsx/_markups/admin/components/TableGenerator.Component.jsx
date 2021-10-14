@@ -2,7 +2,7 @@ import { Table } from "react-bootstrap";
 import pt from "prop-types";
 import React, { useState, useEffect } from "react";
 import { nanoid } from "@reduxjs/toolkit";
-import TablePagination from "@mui/material/TablePagination";
+import { TablePagination, Skeleton } from "@mui/material";
 // COMPONENTS
 import Empty from "./Empty.Component";
 
@@ -151,7 +151,7 @@ function TableGenerator({
     );
   }
   return (
-    <>
+    <div style={{ position: "relative", minHeight: 250 }}>
       {tableData.rows.length ? (
         <>
           <Table key={uuid} responsive hover size="sm">
@@ -211,26 +211,45 @@ function TableGenerator({
             </tbody>
           </Table>
           {/* Pagination */}
-
-          {
-            <div style={{ padding: "20px 10px" }}>
-              <TablePagination
-                component="div"
-                count={count}
-                page={page}
-                onPageChange={onPageChange}
-                rowsPerPage={limit || 10}
-                onRowsPerPageChange={onRowsPerPageChange}
-              />
-            </div>
-          }
+          <div style={{ padding: "20px 10px" }}>
+            <TablePagination
+              component="div"
+              count={count}
+              page={page}
+              onPageChange={onPageChange}
+              rowsPerPage={limit || 10}
+              onRowsPerPageChange={onRowsPerPageChange}
+            />
+          </div>
         </>
       ) : (
         <Empty />
       )}
-
-      {/* {isFetching && <Empty.Loading></Empty.Loading>} */}
-    </>
+      {isFetching && (
+        <div
+          style={{
+            padding: "10px 70px 70px",
+            position: "absolute",
+            overflow: "hidden",
+            top: 0,
+            width: "100%",
+            left: 0,
+            height: "100%",
+            background: "#ffffffed",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+          }}
+        >
+          <Skeleton style={{ width: "100%", paddingTop: "5%" }} />
+          <Skeleton style={{ width: "100%" }} animation="wave" />
+          <Skeleton style={{ width: "100%" }} animation={false} />
+          <Skeleton style={{ width: "100%" }} animation={'wave'} />
+          <Skeleton style={{ width: "100%" }} animation={false} />
+          <Skeleton style={{ width: "100%" , paddingTop: "5%" }} />
+        </div>
+      )}
+    </div>
   );
 }
 

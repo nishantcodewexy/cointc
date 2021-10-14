@@ -39,7 +39,7 @@ function UserInformation(props) {
           <header className="mb-4">
             <h3>User membership information</h3>
           </header>
-          <Card>
+          <Card >
             <UsersMembershipTable {...props} />
           </Card>
         </Col>
