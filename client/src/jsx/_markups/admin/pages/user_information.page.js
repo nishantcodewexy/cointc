@@ -54,7 +54,7 @@ function UsersPermissionTable({ services, useService }) {
   const group = useGroupService();
 
   let service = useService({
-    list: group.listUsers,
+    list: group.bulkRetrieveUsers,
   });
   const { dispatchRequest } = service;
   function notifySuccess() {
@@ -167,7 +167,7 @@ function UsersMembershipTable({ useService, services }) {
   const group = useGroupService();
 
   let service = useService({
-    list: group.listUsers,
+    list: group.bulkRetrieveUsers,
   });
 
   const { dispatchRequest } = service;
@@ -222,27 +222,27 @@ function UsersMembershipTable({ useService, services }) {
               </div>
             );
           },
-          suitability() {
+          suitability({ row }) {
+            let suitability = Number.isNaN(row?.suitability)
+              ? row?.suitability
+              : 0;
+            let progress = (suitability / 5) * 100;
+
             return (
               <SuitabilityRating>
                 <ul className="star-rating">
-                  <li>
-                    <i className="fa fa-star" />
-                  </li>
-                  <li>
-                    <i className="fa fa-star" />
-                  </li>
-                  <li>
-                    <i className="fa fa-star" />
-                  </li>
-                  <li>
-                    <i className="fa fa-star-1" />
-                  </li>
-                  <li>
-                    <i className="fa fa-star-1" />
-                  </li>
+                  {Array(5)
+                    .fill(false)
+                    .fill(true, 0, suitability)
+                    .map((val, idx) => {
+                      return (
+                        <li key={idx}>
+                          <i className={`fa fa-star${!val ? "-1" : ""}`} />
+                        </li>
+                      );
+                    })}
                 </ul>
-                <span>40% Progress</span>
+                <small>{progress}% Progress</small>
               </SuitabilityRating>
             );
           },

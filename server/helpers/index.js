@@ -366,7 +366,7 @@ module.exports = {
         "ABCDEFGHIJKLMNOPGRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_@$#!~";
       let secret = "";
       for (let i = 0; i < len; i++) {
-        secret += chars[Math.floor(Math.random() * 10)];
+        secret += chars[Math.floor(Math.random() * chars.length)];
       }
       return secret;
     },

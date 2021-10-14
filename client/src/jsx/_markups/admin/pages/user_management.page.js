@@ -1,12 +1,13 @@
 import { Card, Row, Col, Button } from "react-bootstrap";
 import { useEffect, useState } from "react";
-import useToggler from "../../../_hooks/toggler.hook";
 import Moment from "react-moment";
 import moment from "moment";
 import { toast } from "react-toastify";
+import { Popper } from "@mui/material";
 // COMPONENTS
 import TableGenerator from "../components/TableGenerator.Component";
 import { ModalForm } from "../components/ModalForm.Component.jsx";
+import useToggler from "../../../_hooks/toggler.hook";
 import UserForm from "../forms/user.form";
 
 function UserManagement({ services, useService }) {
@@ -51,7 +52,7 @@ function UserManagement({ services, useService }) {
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
-        "paranoid": false,
+        paranoid: false,
       },
       toast: { success: notifySuccess, error: notifyError },
     });
@@ -84,8 +85,8 @@ function UserManagement({ services, useService }) {
             return [
               "Create new User",
               <UserForm
-                action={(requestPayload) =>
-                  dispatchRequest({ type: "post", payload: requestPayload })
+                action={(data) =>
+                  dispatchRequest({ type: "post", payload: data })
                 }
                 payload={formData?.payload}
                 callback={onModalClose}
@@ -200,7 +201,69 @@ function UserManagement({ services, useService }) {
                     "unknown"
                   );
                 },
-                action: ({ row }) => {
+
+                email: ({ row }) => row?.email,
+                status: ({ row }) => {
+                  return row?.archived_at ? (
+                    <span className="badge light badge-danger">
+                      <i className="fa fa-circle text-danger mr-1" />
+                      archived
+                    </span>
+                  ) : (
+                    <span className="badge light badge-success">
+                      <i className="fa fa-circle text-success mr-1" />
+                      Active
+                    </span>
+                  );
+                },
+                kyc_status: ({ row }) => {
+                  let role = row?.role;
+                  const checkKYC = (kyc) => {
+                    if (kyc) {
+                      return Object.keys(kyc).some((item) => kyc[item] == null)
+                        ? false
+                        : true;
+                    }
+                    return false;
+                  };
+                  console.log(row?.kyc);
+                  let status =
+                    role == "admin" ? (
+                      <small className="badge badge-success text-white">
+                        <i className="fa fa-check-circle text-white mr-2" />
+                        completed
+                      </small>
+                    ) : checkKYC(row?.kyc) ? (
+                      <small className="badge badge-success">completed</small>
+                    ) : (
+                      <small className="badge badge-default text-white">
+                        pending
+                      </small>
+                    );
+
+                  return status;
+                },
+
+                action: function Action({ row }) {
+                  const {
+                    isOpen,
+                    onOpen: onPopoverOpen,
+                    onClose: onPopoverClose,
+                    isOpen: isPopoverOpen,
+                    toggledPayload: popOverTarget,
+                  } = useToggler();
+                  const handleClick = (event) => {
+                    onPopoverOpen(popOverTarget ? null : event.currentTarget);
+                    // onPopoverOpen(popOverTarget ? null : event.target);
+                  };
+
+                  const handleClose = () => {
+                    onPopoverClose(null);
+                  };
+
+                  const open = Boolean(popOverTarget);
+                  const id = open ? row?.id : undefined;
+
                   return (
                     <div
                       style={{
@@ -227,49 +290,55 @@ function UserManagement({ services, useService }) {
                           appearance: "none",
                           border: "none",
                           background: "none",
+                          position: "relative",
                           fontSize: 12,
                         }}
-                        onClick={() =>
-                          onOpenModal({ method: "delete", payload: row })
-                        }
+                        aria-describedby={id}
+                        variant="contained"
+                        onClick={handleClick}
                       >
                         <span className="themify-glyph-165"></span> Delete
                       </button>
+
+                      {id && (
+                        <Popper id={id} open={isOpen} anchorEl={popOverTarget}>
+                          <ul
+                            className="bg-white shadow"
+                            style={{
+                              padding: 10,
+                            }}
+                          >
+                            <li>
+                              <a
+                                href="#"
+                                onClick={() =>
+                                  onOpenModal({
+                                    method: "delete",
+                                    payload: { ...row, force: false },
+                                  })
+                                }
+                              >
+                                <small>Delete</small>
+                              </a>
+                            </li>
+                            <li>
+                              <a
+                                href="#"
+                                onClick={() =>
+                                  onOpenModal({
+                                    method: "delete",
+                                    payload: { ...row, force: true },
+                                  })
+                                }
+                              >
+                                <small>Permanently delete</small>
+                              </a>
+                            </li>
+                          </ul>
+                        </Popper>
+                      )}
                     </div>
                   );
-                },
-                email: ({ row }) => row?.email,
-                status: ({ row }) =>
-                  row?.archived_at ? (
-                    <span className="badge light badge-danger">
-                      <i className="fa fa-circle text-danger mr-1" />
-                      archived
-                    </span>
-                  ) : (
-                    <span className="badge light badge-success">
-                      <i className="fa fa-circle text-success mr-1" />
-                      Active
-                    </span>
-                  ),
-                kyc_status: ({ row }) => {
-                  let role = row?.role;
-                  const checkKYC = (kyc) => {
-                    if (kyc) {
-                      return Object.keys(kyc).some((item) => kyc[item] == null)
-                        ? false
-                        : true;
-                    }
-                    return false;
-                  };
-
-                  let status =
-                    role == "admin"
-                      ? "completed"
-                      : checkKYC(row?.kyc)
-                      ? "completed"
-                      : "pending";
-
-                  return status;
                 },
               }}
             />

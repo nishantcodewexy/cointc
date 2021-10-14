@@ -75,13 +75,18 @@ function TableGenerator({
 
   function onRowsPerPageChange(e, { props }) {
     setLimit(props.value);
+    let payload = {
+      ...(() => prevRequest?.list?.payload || {})(),
+      limit: props.value,
+      offset: page * limit || 0,
+    };
+    let toast = {
+      ...(() => prevRequest?.list?.toast || {})(),
+    };
     dispatchRequest({
       type: "list",
-      payload: {
-        ...prevRequest?.list,
-        limit: props.value,
-        offset: page * limit || 0,
-      },
+      payload,
+      toast,
       overwrite: false,
     });
   }
@@ -93,9 +98,18 @@ function TableGenerator({
    */
   function onPageChange(e, newPage) {
     setPage(newPage);
+    let payload = {
+      ...(() => prevRequest?.list?.payload || {})(),
+      limit,
+      offset: newPage * limit || 0,
+    };
+    let toast = {
+      ...(() => prevRequest?.list?.toast || {})(),
+    };
     dispatchRequest({
       type: "list",
-      payload: { ...prevRequest?.get, limit, offset: newPage * limit || 0 },
+      payload,
+      toast,
     });
   }
 
@@ -107,9 +121,9 @@ function TableGenerator({
    * @param {Object} modifiers.state
    * @returns
    */
-  function transformValue({ key, value, ...rest }) {
-    if (String(key).toLowerCase() in transformers)
-      return transformers[key]({ key, value, ...rest });
+  function TransformValue({ item, value, ...rest }) {
+    if (String(item).toLowerCase() in transformers)
+      return transformers[item]({ item, value, ...rest });
     return String(value);
   }
 
@@ -173,19 +187,23 @@ function TableGenerator({
                 <tr key={key}>
                   <td>{singleSelect(row?.id ?? key)}</td>
                   {String(omit) !== "*" &&
-                    Object.entries(row).map(([key, value], idx) => (
+                    Object.entries(row).map(([item, value], idx) => (
                       <td key={idx}>
-                        {transformValue({ key, value, row, state: tableData })}
+                        <TransformValue
+                          {...{ item, value, row, state: tableData }}
+                        />
                       </td>
                     ))}
-                  {extras?.map((key, idx) => (
+                  {extras?.map((item, idx) => (
                     <td key={idx}>
-                      {transformValue({
-                        key,
-                        value: "",
-                        row,
-                        state: tableData,
-                      })}
+                      <TransformValue
+                        {...{
+                          item,
+                          value: "",
+                          row,
+                          state: tableData,
+                        }}
+                      />
                     </td>
                   ))}
                 </tr>

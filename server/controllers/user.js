@@ -130,8 +130,8 @@ module.exports = (server) => {
           role: Joi.string()
             .valid(...Object.keys(_roles))
             .required(),
-          profile: Joi.object(),
-        })
+          profile: Joi.object().optional(),
+        }) /* .unknown(true) */
       );
 
       const adminProfileSchema = Joi.object({
@@ -150,76 +150,70 @@ module.exports = (server) => {
       });
 
       const { value, error } = payloadSchema.validate(payload);
-
-      if (error) throw boom.badData("invalid data", error);
+      if (error) throw boom.badData("invalid data for User", error.message);
 
       try {
         return await sequelize.transaction(async (t) => {
           return await Promise.all(
             value.map(async (data) => {
-              let password = faker.internet.password();
-              if (data.role == roles.admin) {
-                let { error } = adminProfileSchema.validate(data.profile || {});
+              let password = generator.secret();
+              let savedProfile = null;
+              // if (data.role == roles.admin) {
+              if (isAdmin(data)) {
+                let { error, value } = adminProfileSchema.validate(
+                  data?.profile || {}
+                );
+                if (error)
+                  throw boom.badData(
+                    "invalid data for UserProfile::Admin",
+                    error.message
+                  );
 
-                if (error) return { error };
+                let profileData = value || {};
+                delete data?.profile;
 
-                let profileData = data.profile || {};
-                delete data.profile;
-
-                let user = await User.create(
+                let newUser = await User.create(
                   {
                     ...data,
                     password,
-                    profile: profileData,
-                    include: [
-                      {
-                        association: "admin_profile",
-                      },
-                    ],
+                    AdminProfile: profileData,
+                    include: AdminProfile,
                   },
                   {
                     transaction: t,
                   }
                 );
-                // await AdminProfile.create({...profileData,user_id:user.id},{
-                //   transaction: t,
-                // })
-                return {
-                  id: user.id,
-                  ...data,
-                  profile: profileData,
-                };
+                let { AdminProfile: profile, ...rest } = newUser.toPublic();
+                savedProfile = { ...profile, ...rest };
               } else {
-                let { error } = basicProfileSchema.validate(data.profile || {});
-                if (error) return { error };
+                let { error, value } = basicProfileSchema.validate(
+                  data.profile
+                );
+                if (error)
+                  throw boom.badData(
+                    "invalid data for UserProfile::Basic",
+                    error.message
+                  );
+                // if (error) return { error };
 
-                let profileData = data.profile || {};
-                delete data.profile;
+                delete data?.profile;
 
-                let user = await User.create(
+                let newUser = await User.create(
                   {
                     ...data,
                     password,
-                    profile_admin: profileData,
+                    BasicProfile: { email: data?.email, ...value },
                   },
                   {
                     transaction: t,
-                    include: [
-                      {
-                        association: "profile",
-                      },
-                    ],
+                    include: BasicProfile,
                   }
                 );
-                // await Profile.create({...profileData,user_id:user.id},{
-                //   transaction: t,
-                // })
-                return {
-                  id: user.id,
-                  ...data,
-                  profile: profileData,
-                };
+                let { BasicProfile: profile, ...rest } = newUser.toPublic();
+
+                savedProfile = { ...profile, ...rest };
               }
+              return savedProfile;
             })
           );
         });
@@ -433,9 +427,9 @@ module.exports = (server) => {
         const { query } = req;
         const queryFilters = await filters({ query, searchFields: ["email"] });
         const paranoid = query?.paranoid
-        ? Boolean(JSON.parse(query?.paranoid))
-        : true;
-        
+          ? Boolean(JSON.parse(query?.paranoid))
+          : true;
+
         const options = {
           attributes: { exclude: ["password"] },
           ...queryFilters,
