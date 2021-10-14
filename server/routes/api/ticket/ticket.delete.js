@@ -3,13 +3,14 @@ const Joi = require("joi")
 module.exports = (server) => {
   const {
     controllers: {
-      ticket: { delete_ }
+      ticket: { destory }
     },
     consts: { roles: _roles },
     helpers:{
       permissions:{
-        isAdmin
+        isAdminOrError
       }
+      
     }
   } = server.app;
 
@@ -20,18 +21,11 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
-        {
-          method:isAdmin,
-          assign: "isAdmin",
+          method:isAdminOrError,
+          assign: "user",
         },
       ],
-      handler: delete_,
+      handler: destory,
       auth: "jwt"
     },
     

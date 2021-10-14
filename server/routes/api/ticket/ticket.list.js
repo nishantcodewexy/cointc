@@ -3,34 +3,29 @@
 module.exports = (server) => {
   const {
     controllers: {
-        ticket: { retrieve },
+        ticket: { list },
     },
     consts: { roles: _roles },
     helpers:{
       permissions:{
-        isAdmin
-      }
+        isUser
+      },
+      
     }
   } = server.app;
 
   return {
     method: "GET",
-    path: "/tickets/{id}",
+    path: "/tickets",
     config: {
       pre: [
+        
         {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
-        {
-          method:isAdmin,
-          assign: "isAdmin",
+          method:isUser,
+          assign: "user",
         },
       ],
-      handler: retrieve,
+      handler: list,
       auth: "jwt",
     },
     

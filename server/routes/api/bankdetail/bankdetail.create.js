@@ -15,7 +15,8 @@ module.exports = (server) => {
     },
     helpers:{
       permissions:{
-        isUser
+        isUser,
+        isAdminOrError
       }
     }
   } = server.app;
@@ -37,6 +38,10 @@ module.exports = (server) => {
         {
           method:isUser,
           assign: "user",
+        },
+        {
+          method:isAdminOrError,
+          assign: "isAdmin",
         },
       ],
       handler: create,

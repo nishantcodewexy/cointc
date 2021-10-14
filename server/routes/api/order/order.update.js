@@ -1,35 +1,40 @@
 "use strict";
 
+const {handleValidation} = require("../../../helpers")
+const Joi = require("joi")
 module.exports = (server) => {
   const {
     controllers: {
-        bankdetail: { retrieve },
+      order: { update },
     },
     consts: { roles: _roles },
     helpers:{
       permissions:{
-        isUser,
-        isAdminOrError
+        isUser
       }
+      
     }
   } = server.app;
 
+  const schema = Joi.object({
+      appeal:Joi.string().optional(),
+  })
+
   return {
-    method: "GET",
-    path: "/bank-details/{id}",
+    method: ["PUT","PATCH"],
+    path: "/order/{id}",
     config: {
       pre: [
-        
         {
           method:isUser,
           assign: "user",
         },
         {
-          method:isAdminOrError,
-          assign: "isAdmin",
+          method:handleValidation(schema),
+          assign: "data",
         },
       ],
-      handler: retrieve,
+      handler: update,
       auth: "jwt",
     },
     

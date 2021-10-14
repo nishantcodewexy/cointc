@@ -5,9 +5,8 @@ module.exports = (server) => {
   const {
     controllers: {
       currency: { 
-        group:{
-          create
-        }
+        create
+        
        },
     },
     consts: { 
@@ -18,6 +17,7 @@ module.exports = (server) => {
     },
     helpers:{
       permissions:{
+         isAdminOrError,
          isUser
       }
     }
@@ -40,9 +40,14 @@ module.exports = (server) => {
         [
           
           {
+            method:isAdminOrError,
+            assign: "isAdmin",
+          },
+          {
             method:isUser,
             assign: "user",
           },
+          
 
         ]
       ],

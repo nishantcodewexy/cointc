@@ -7,9 +7,8 @@ module.exports = (server) => {
     },
     consts: { roles: _roles },
     helpers:{
-      permissions:{
-        isAdmin
-      }
+      isAdmin
+      
     }
   } = server.app;
 

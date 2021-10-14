@@ -7,7 +7,7 @@ module.exports = (server) => {
     },
     consts: { roles: _roles },
     helpers: {
-      permissions: { isUser },
+      permissions: { isUser,isAdminOrError },
     },
   } = server.app;
 
@@ -19,6 +19,10 @@ module.exports = (server) => {
         {
           method: isUser,
           assign: "user",
+        },
+        {
+          method: isAdminOrError,
+          assign: "isAdmin",
         },
       ],
       handler: destroy,

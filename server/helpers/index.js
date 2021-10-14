@@ -12,14 +12,14 @@ const assert = require("assert");
 const { nanoid } = require("nanoid");
 const glob = require("glob");
 const util = require("util");
-const { Op } = require("sequelize");
+const { Op,QueryInterface } = require("sequelize");
 const permissions = require("../permissions");
 const {
   roles: { admin, basic },
 } = require("../consts");
 // const wallets = require("../wallets");
 const env = process.env.NODE_ENV || "development";
-
+const boom = require("boom")
 const {
   PORT,
   HOSTNAME,
@@ -36,6 +36,61 @@ const {
   // ETHERSCAN_API_KEY,
   // MAINNET_API_KEY,
 } = process.env;
+
+
+/****************************************************
+ * declare all the jsdoc type def here and import in in another file to get autocomplete feature
+ ****************************************************/
+/**
+ * 
+ * @typedef FiltersArgs
+ * @property {Object} query
+ * @property {String[]} searchFields
+ * @property {Object} extras
+ */
+/**
+ * 
+ * @typedef FiltersResponse
+ * @property {Object} where
+ * @property {String[]} [order]
+ * @property {Number} limit
+ * @property {Number} offset
+ */
+
+/**
+ * 
+ * @typedef PaginatorArgs
+ * @property {QueryInterface} queryset
+ * @property {Number} limit
+ * @property {Number} offset
+ */
+/**
+ * 
+ * @typedef PaginatorResponse
+ * @property {Number} count
+ * @property {Object} [next]
+ * @property {Number} next.offset
+ * @property {Object} [prev]
+ * @property {Number} prev.offset
+ * @property {Number} offset
+ * @property {Number} limit
+ * @property {Object[]} results
+ */
+
+
+/**
+ * 
+ * @typedef filterFieldsArgs
+ * @property {Object} object
+ * @property {String[]} include
+ * @property {exclude[]} exclude
+ * @property {Boolean} allowNull
+ */
+
+
+
+
+
 /****************************************************
  * Validate the required configuration information
  ****************************************************/
@@ -389,10 +444,8 @@ module.exports = {
    ***********************************************/
   /**
    *
-   * @param {Object} args
-   * @param {Object} args.query
-   * @param {String[]} args.searchFields
-   * @returns {Object}
+   * @param {FiltersArgs} args
+   * @returns {FiltersResponse}
    */
   filters: async ({ query = {}, searchFields = [], extras = {} }) => {
     const q = query.q || "";
@@ -425,17 +478,16 @@ module.exports = {
         ...extraWhere,
         ...extras,
       },
-      // ...(orderQuery ? { order: orderQuery } : {}),
+      ...(orderQuery ? { order: orderQuery } : {}),
       limit: limitQuery || 10,
-      offset: offsetQuery || 0,
+      offset: offsetQuery || 0
+      
     };
   },
   /**
    *
-   * @param {Promise} queryset - return of findAllAndCount
-   * @param {Number} limit -
-   * @param {Number} offset
-   * @returns {Promise}
+   * @param {PaginatorArgs}  - return of findAllAndCount
+   * @returns {PaginatorResponse}
    */
   paginator: ({ queryset, limit, offset } = { limit: 10, offset: 0 }) => {
     const { rows, count } = queryset;
@@ -472,5 +524,68 @@ module.exports = {
   },
   isAdmin(user){
     return user?.role === admin
-  }
+  },
+  /**
+   * this function is created to help return user 
+   * information when data validation in joi fails
+   * @param {import("joi").AnySchema} schema 
+   * @returns 
+   */
+  handleValidation(schema){
+    
+    if(!schema.validate){
+      console.error("no schema was provided","use 'handleValidation(schema)'  where schema is Joi schema object")
+      throw boom.internal("error occured")
+    }
+    return async function(req) {
+      const {error,value} = schema.validate(req.payload)
+      if(error) throw boom.badRequest(error)
+      return value
+    }
+  },
+
+  /**
+   * 
+   * @param {filterFieldsArgs}  
+   * @returns {Promise<Object>} 
+   */
+  filterFields:async ({object={},include=[],exclude=[],allowNull=false})=>{
+    let result = {}
+    
+    if(include.length&&exclude.length) throw new Error("you must provide one of include or exclude")
+
+    if(include.length){
+        
+        Object.entries(object).forEach(data=>{
+            if(include.includes(data[0])){
+                if(data[1]||allowNull){
+                    result[data[0]] = data[1]
+                }
+            }
+        })
+        
+    }else if(exclude.length){
+        Object.entries(object).forEach(data=>{
+            if(!exclude.includes(data[0])){
+                if(data[1]||allowNull){
+                    result[data[0]] = data[1]
+                }
+            }
+        })
+        
+    }else{
+        Object.entries(object).forEach(data=>{
+            if(data[1]||allowNull){
+                result[data[0]] = data[1]
+            }
+            
+        })
+
+    }
+
+
+    return result
+    
+    
+}
 };

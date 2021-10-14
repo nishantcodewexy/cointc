@@ -42,9 +42,10 @@ module.exports = {
       SMS_HISTORY:"SMS_HISTORY",
       DEPOSIT_AND_WITHDRAW:"DEPOSIT_AND_WITHDRAW",
     },
-    // LoginStatusType:{
-
-    // }
+    AdvertType:{
+      maker:"maker",
+      taker:"taker"
+    }
   },
   FILE_UPLOAD_PATH:process.env.MEDIA_FILE_DIR||'mediafiles'
 };

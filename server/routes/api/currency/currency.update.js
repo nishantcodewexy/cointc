@@ -5,7 +5,7 @@ module.exports = (server) => {
   const {
     controllers: {
       currency: {
-        group: { update },
+        update
       },
     },
     consts: {
@@ -37,7 +37,7 @@ module.exports = (server) => {
         [
           {
             method: isAdminOrError,
-            assign: "user",
+            assign: "isAdmin",
           },
         ],
       ],

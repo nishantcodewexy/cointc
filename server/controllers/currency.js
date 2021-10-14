@@ -1,6 +1,7 @@
 "use strict";
 const uuid = require("uuid");
 module.exports = (server) => {
+  const {__findAllWithPagination} = require("./_methods")(server)
   const {
     db: { Currency, sequelize },
     consts: { roles: _roles },
@@ -43,19 +44,24 @@ module.exports = (server) => {
       try {
         let {
           query,
-          pre: { isAdmin },
+          pre:{
+            user
+          }
         } = req;
-        // let where = id ? { id } : null;
-        //TODO: Only admins are allowed to see who created the currency
-        const { paranoid = true } = query;
-        const filterResult = await filters({
-          query,
-          searchFields: ["name", "iso_code", "type"],
-        });
-        let queryset = await Currency.findAndCountAll({
-          ...filterResult,
-          paranoid: Boolean(+paranoid),
-          attributes: [
+        
+
+        let { paranoid = true } = query;
+        
+
+        let options,searchFields
+
+        paranoid = query.paranoid
+        delete query.paranoid
+        options = {}
+
+        searchFields = ["name", "iso_code", "type"]
+        options = {
+          attributes:[
             "id",
             "name",
             "iso_code",
@@ -63,125 +69,121 @@ module.exports = (server) => {
             "created_at",
             "updated_at",
             "archived_at",
-          ],
-        });
-        console.log(queryset);
-        return paginator({
-          queryset,
-          limit: filterResult.limit,
-          offset: filterResult.offset,
-        });
+          ]
+        }
+        if(user.isAdmin){
+          options = {...options,paranoid}
+        }
+
+        return await __findAllWithPagination("Currency",query,{},searchFields,options)
+        
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
       }
     },
-  };
-  const CurrencyGroupController = {
-    /**
+        /**
      * @function create - Creates currency (**Admin only**)
      * @param {Object} req - Request object
-     * @param {Object} req.payload
-     * @param {Array} req.payload.data
+     * @param {Object[]} req.payload
      * @returns
      */
-    create: async (req) => {
-      const {
-        payload,
+         create: async (req) => {
+          const {
+            payload,
+            pre:{
+              user
+            }
+          } = req;
+         
 
-        auth: {
-          credentials: { user },
-        },
-      } = req;
-
-      Currency.beforeBulkCreate((currencies = [], options) => {
-        for (const currency of currencies) {
-          currency.created_by = user.id;
-          currency.id = uuid.v4();
-        }
-        return currencies;
-      });
-
-      try {
-        return await sequelize.transaction(
-          async (t) =>
-            await Currency.bulkCreate(payload, {
-              transaction: t,
-              validate: true,
-              fields: ["id", "type", "iso_code", "name", "created_by"],
-              returning: ["id", "type", "iso_code", "name"],
-            })
-        );
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
-      }
-    },
-
-    async destroy(req) {
-      const {
-        payload: { data, force = false },
-        auth: {
-          credentials: { user },
-        },
-      } = req;
-
-      try {
-        return {
-          deleted: await sequelize.transaction(async (t) => {
-            return await Currency.destroy({
-              where: { id: data, created_by: user.id },
-              transaction: t,
-              force,
-            }).then((affectedRows) => affectedRows);
-          }),
-        };
-      } catch (error) {
-        console.error(error);
-        return boom.forbidden(error);
-      }
-    },
-    async update(req) {
-      const {
-        payload,
-        auth: {
-          credentials: { user },
-        },
-      } = req;
-
-      try {
-        return await sequelize.transaction(async (t) => {
-          return Promise.all(
-            payload.map(
-              async ({ id, restore, ...row }) =>
-                await Currency.update(
-                  { ...row },
-                  {
-                    where: { id, created_by: user.id },
-                    transaction: t,
-                    validate: true,
-                    returning: ["id", "name", "iso_code", "type", "created_by"],
-                    fields: ["name", "iso_code", "type"],
-                    // logging: console.log,
-                  }
-                ).then(async ([count, affectedRows]) => {
-                  restore &&
-                    (await Currency.restore({
-                      where: { id, created_by: user.id },
-                    }));
-                  return affectedRows[0];
+          /**
+           * @type {Array}
+           */
+          const data = payload?.map(currency=>({
+            ...currency,
+            created_by : user.id,
+            id : uuid.v4(),
+          }))
+          
+          
+          try {
+            return await sequelize.transaction(
+              async (t) =>
+                 await Currency.bulkCreate(data, {
+                  transaction: t,
+                  validate: true,
+                  fields: ["id", "type", "iso_code", "name", "created_by"],
+                  returning: ["id", "type", "iso_code", "name"],
                 })
-            )
-          );
-        });
-      } catch (error) {
-        console.error(error);
-        return boom.forbidden(error);
-      }
-    },
+            );
+          } catch (error) {
+            console.error(error);
+            return boom.boomify(error);
+          }
+        },
+        async update(req) {
+          const {
+            payload,
+            auth: {
+              credentials: { user },
+            },
+          } = req;
+    
+          try {
+            return await sequelize.transaction(async (t) => {
+              return Promise.all(
+                payload.map(
+                  async ({ id, restore, ...row }) =>
+                    await Currency.update(
+                      { ...row },
+                      {
+                        where: { id, created_by: user.id },
+                        transaction: t,
+                        validate: true,
+                        returning: ["id", "name", "iso_code", "type", "created_by"],
+                        fields: ["name", "iso_code", "type"],
+                        // logging: console.log,
+                      }
+                    ).then(async ([count, affectedRows]) => {
+                      restore &&
+                        (await Currency.restore({
+                          where: { id, created_by: user.id },
+                        }));
+                      return affectedRows[0];
+                    })
+                )
+              );
+            });
+          } catch (error) {
+            console.error(error);
+            return boom.forbidden(error);
+          }
+        },
+        async destroy(req) {
+          const {
+            payload: { data, force = false },
+            pre:{
+              user
+            }
+          } = req;
+    
+          try {
+            return {
+              deleted: await sequelize.transaction(async (t) => {
+                return await Currency.destroy({
+                  where: { id: data, created_by: user.id },
+                  transaction: t,
+                  force,
+                }).then((affectedRows) => affectedRows);
+              }),
+            };
+          } catch (error) {
+            console.error(error);
+            return boom.forbidden(error);
+          }
+        },
   };
-  return {
-    ...CurrencyController,
-    group: CurrencyGroupController,
-  };
+  
+  return CurrencyController
 };

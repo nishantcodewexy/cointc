@@ -1,30 +1,27 @@
 "use strict";
+const {
+  permissions:{
+    isUser
+  },
+} = require("../../../helpers")
+
 
 module.exports = (server) => {
   const {
     controllers: {
-        bankdetail: { list },
+      order: { list },
     },
-    helpers:{
-      permissions:{
-        isUser,
-        isAdminOrError
-      }
-    }
+    consts: { roles: _roles }
   } = server.app;
 
   return {
     method: "GET",
-    path: "/bank-details",
+    path: "/order",
     config: {
       pre: [
         {
           method:isUser,
           assign: "user",
-        },
-        {
-          method:isAdminOrError,
-          assign: "isAdmin",
         },
       ],
       handler: list,

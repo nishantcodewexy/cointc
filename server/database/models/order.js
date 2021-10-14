@@ -10,9 +10,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      const { Order, Advert } = models;
+      const { Order, Advert,User } = models;
       Order.belongsTo(Advert);
       Advert.hasOne(Order);
+      User.hasMany(Order,{foreignKey:"from_user_id"})
     }
   }
 

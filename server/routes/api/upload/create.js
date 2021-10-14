@@ -13,9 +13,8 @@ module.exports = (server) => {
       }
     },
     helpers:{
-      permissions:{
-        isAdmin
-      }
+      isAdmin
+      
     }
   } = server.app;
 

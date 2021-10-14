@@ -21,7 +21,7 @@ module.exports = (server) => {
     db: { User },
     helpers: {
       jwt: { decodeUser },
-      permissions: { isAdmin },
+      isAdmin
     },
     boom,
     consts: { roles: _roles },

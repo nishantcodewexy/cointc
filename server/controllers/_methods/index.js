@@ -1,8 +1,15 @@
+const {Model} = require("sequelize")
+
+
+
+
+
 module.exports = (server) => {
   const {
     db,
     db: { User },
     consts: { roles: _roles },
+    helpers:{filters,paginator}
   } = server.app;
   
   return {
@@ -17,6 +24,42 @@ module.exports = (server) => {
         { ...options, returning: true }
       );
     },
+    /**
+     * 
+     * @param {Model} model 
+     * @param {Object} query 
+     * @param {Object} where 
+     * @param {Object} extra
+     * @param {String[]} searchFields
+     * @param {Object} options 
+     * @returns {Promise<import('../../helpers').PaginatorResponse>}
+     */
+    async __findAllWithPagination(model, query, extra, searchFields=[], options={}) {
+      /**
+       * @type {import('../../helpers').FiltersResponse}
+       */
+      const filterResults = await filters({query,extra,searchFields})
+      
+      const queryset = await db[model].findAndCountAll({...filterResults,...options});
+      const {limit,offset} = filterResults
+      return paginator({queryset,limit,offset})
+      
+    },
+    
+    // async __retrieve(model, with_payload, where, options) {
+    //   return await db[model].update(
+    //     { ...with_payload },
+    //     { where },
+    //     { ...options, returning: true }
+    //   );
+    // },
+    // async __list(model, with_payload, where, options) {
+    //   return await db[model].update(
+    //     { ...with_payload },
+    //     { where },
+    //     { ...options, returning: true }
+    //   );
+    // },
 
     __assertRole: function(role) {
       let profile, profile_attributes;

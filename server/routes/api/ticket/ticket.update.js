@@ -14,7 +14,6 @@ module.exports = (server) => {
      },
     helpers:{
       permissions:{
-        isAdmin,
         isAdminOrError
       }
     }
@@ -33,17 +32,6 @@ module.exports = (server) => {
     path: "/tickets/{id}",
     config: {
       pre: [
-        {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
-        // {
-        //   method:isAdmin,
-        //   assign: "isAdmin",
-        // },
         {
           method:isAdminOrError,
           assign: "isAdminOrError",

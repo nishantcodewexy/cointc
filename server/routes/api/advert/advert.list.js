@@ -3,17 +3,20 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      advert: { get },
+      advert: { list },
     },
+    helpers:{
+      isAdmin
+    }
   } = server.app;
 
   
 
   return {
     method: "GET",
-    path: "/adverts/{id}",
+    path: "/adverts",
     config: {
-      handler: get,
+      handler: list,
       auth: 'jwt'
     },
   };

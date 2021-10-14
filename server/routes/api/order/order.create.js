@@ -1,7 +1,12 @@
 "use strict";
 
 const Joi = require("joi");
-
+const {
+  permissions:{
+    isUser
+  },
+  handleValidation
+} = require("../../../helpers")
 
 module.exports = (server) => {
   const {
@@ -9,11 +14,6 @@ module.exports = (server) => {
       order: { create },
     },
     consts: { roles: _roles },
-    helpers:{
-      permissions:{
-        isAdmin
-      }
-    }
   } = server.app;
 
   
@@ -51,22 +51,16 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
+          method:isUser,
+          assign: "user",
         },
         {
-          method:isAdmin,
-          assign: "isAdmin",
+          method:handleValidation(schema),
+          assign: "data",
         },
       ],
       handler: create,
       auth: "jwt",
-      validate:{
-          payload:schema
-      }
     },
   };
 };

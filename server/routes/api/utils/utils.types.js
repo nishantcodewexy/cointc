@@ -1,7 +1,7 @@
 module.exports = (server) => {
     const {
       controllers: {
-        user: { archive },
+        // user: { archive },
       },
       helpers: { jwt: {decodeUser} },
       consts:{

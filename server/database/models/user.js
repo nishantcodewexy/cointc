@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
+const { roles } = require("../../consts");
 const hooks = require("../hooks/user.hook");
 
 // debugger;
@@ -93,6 +94,19 @@ module.exports = (sequelize, DataTypes) => {
           return this.get("updateAt") > Date.now() - 7 * 24 * 60 * 60 * 1000;
         },
       },
+      isAdmin: {
+        type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["role"]),
+        get: function() {
+          return this.get("role")==roles.admin;
+        },
+      },
+      isBasic: {
+        type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["role"]),
+        get: function() {
+          return this.get("role")==roles.basic;
+        },
+      },
+      
     },
     {
       sequelize,

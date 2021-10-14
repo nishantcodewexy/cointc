@@ -58,10 +58,12 @@ module.exports = (sequelize, DataTypes) => {
       archive_at:DataTypes.DATE
     },
     {
+      paranoid:true,
       sequelize,
       modelName: "BankDetail",
       tableName: "tbl_bankdetails",
       underscored: true,
+      deletedAt:"archive_at"
     }
   );
   return BankDetail;

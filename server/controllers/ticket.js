@@ -4,6 +4,7 @@ const {Op} = require('sequelize');
 const {filterFields} = require("../services/model")
 
 module.exports = (server) => {
+    const {__findAllWithPagination,__update,__destroy} = require("./_methods")(server)
   const {
     db: { Ticket, sequelize },
     consts: { roles: _roles },
@@ -23,60 +24,51 @@ module.exports = (server) => {
      */
     async retrieve(req) {
         const {
-            query,
             pre:{
-                isAdmin
-            },
-            auth:{
-                credentials:{
-                    user
-                }
+                user
             },
             params:{
                 id
             }
         } = req
 
+        let where
+
+        if(user.isAdmin){
+            where = {}
+        }else{
+            where = {
+                user_id:user.id
+            }
+        }
+
         return await Ticket.findOne({
-            where:{
-                id,
-                ...(!isAdmin?{user_id:user.id}:{}),
-            },
-            attributes: { exclude: ['user_id',"UserId","deleted_at"] }
+            where,
+            attributes: { exclude: ["UserId","deleted_at"] }
         })
     },
     async list(req) {
         const {
             query,
             pre:{
-                isAdmin
-            },
-            auth:{
-                credentials:{
-                    user
-                }
+                user
             }
         } = req
 
-        
+        let where,searchFields
+        searchFields = [
+            "description"
+        ]
         try {
-
-
-            const filterResults = await filters({
-                query,
-                searchFields:[
-                    "description"
-                ],
-                extra:{
-                    ...(!isAdmin?{
-                        user_id:user.id,
-                    }:{})
+            if(user.isAdmin){
+                where = {}
+            }else{
+                where = {
+                    user_id:user.id
                 }
-            })
-            
-            
-            const queryset = Ticket.findAndCountAll(filterResults)
-            return await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
+            }
+
+            return await __findAllWithPagination("Ticket",query,where,searchFields,{})
             
         } catch (error) {
             console.error(error)
@@ -88,42 +80,25 @@ module.exports = (server) => {
     },
     async update(req) {
         const {
-            pre:{
-                isAdmin
-            },
-            auth:{
-                credentials:{
-                    user
-                }
-            },
             payload,
             params:{
                 id
             }
         } = req
 
-
-        return await Ticket.update(payload,{
-            where:{
-                ...(!isAdmin?{
-                    user_id:user.id,
-                }:{}),
-                id
-            }
-        })
+        return await __update("Ticket",payload,{id},{})
+        
     },
     async create(req) {
         const {
-            payload,
-            auth:{
-                credentials:{
-                    user
-                }
+            pre:{
+                user,
+                data
             }
         } = req
         try {
-            const object =  await Ticket.create({...payload,user_id:user.id})
-            return filterFields({object:object.dataValues,exclude:[
+            const object =  await Ticket.create({...data,user_id:user.id})
+            return await filterFields({object:object.dataValues,exclude:[
                 "user_id",
                 "deleted_at",
                 "UserId",
@@ -136,27 +111,15 @@ module.exports = (server) => {
             throw boom.boomify(error)
         }
     },
-    async delete_(req) {
+    async destory(req) {
         const {
-            pre:{
-                isAdmin
-            },
-            auth:{
-                credentials:{
-                    user
-                }
+            query:{
+                force
             },
             params:{id}
         } = req
 
-        return await Ticket.destroy({
-            where:{
-                ...(!isAdmin?{
-                    user_id:user.id,
-                }:{}),
-                id
-            }
-        })
+        return await __destroy("Ticket",{id},Boolean(force),{})
         
     },
     // async bulkDelete(req) {
@@ -169,8 +132,5 @@ module.exports = (server) => {
   const CurrencyGroupController = {}
     
   
-  return {
-    ...CurrencyController,
-    group: CurrencyGroupController,
-  };
+  return CurrencyController
 };

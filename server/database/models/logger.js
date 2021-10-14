@@ -6,7 +6,7 @@ const {
     }
 } = require("../../consts")
 module.exports = (sequelize, DataTypes) => {
-  class Log extends Model {
+  class Logger extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -14,17 +14,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      const { User, Log } = models;
+      const { User, Logger } = models;
 
-      User.hasMany(Log)
+      User.hasMany(Logger)
       
-      Log.belongsTo(User, {
+      Logger.belongsTo(User, {
         foreignKey: "user_id",
       });
     }
 
   }
-  Log.init(
+  Logger.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -42,12 +42,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Log",
+      modelName: "Logger",
       underscored: true,
-      tableName: 'tbl_logs',
+      tableName: 'tbl_loggers',
       paranoid:true,
       deletedAt:"deleted_at"
     }
   );
-  return Log;
+  return Logger;
 };
