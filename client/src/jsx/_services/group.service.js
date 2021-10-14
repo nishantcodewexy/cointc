@@ -68,7 +68,7 @@ class GroupServices {
    * @returns
    */
 
-  listCurrency = async (params) => {
+  bulkRetrieveCurrency = async (params) => {
     return await this.decorate(
       async () =>
         await this.axios(`currency`, {

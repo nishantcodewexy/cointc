@@ -397,7 +397,9 @@ module.exports = {
   filters: async ({ query = {}, searchFields = [], extras = {} }) => {
     const q = query.q || "";
     const searchQuery = {};
-
+    const paranoid = query?.paranoid
+    ? Boolean(JSON.parse(query?.paranoid))
+    : true;
     q &&
       searchFields.forEach((key) => {
         searchQuery[key] = {
@@ -429,6 +431,7 @@ module.exports = {
       ...(orderQuery ? { order: orderQuery } : {}),
       limit: limitQuery || 10,
       offset: offsetQuery || 0,
+      paranoid
     };
   },
   /**

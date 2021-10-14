@@ -9,75 +9,9 @@ module.exports = (server) => {
   } = server.app;
   /* const queryInterface = sequelize.getQueryInterface();
       const table = Currency.getTableName(); */
-  const CurrencyController = {
-    /**
-     * @function get - Gets currency collection
-     * @param {Object} req
-     * @returns
-     */
-    async retrieve(req) {
-      try {
-        let {
-          query,
-          pre: { user },
-        } = req;
-        // let where = id ? { id } : null;
-        //TODO: Only admins are allowed to see who created the currency
-        const filterResult = await filters({
-          query,
-          searchFields: ["name", "iso_code", "type"],
-        });
-        let queryset = Currency.findAndCountAll(filterResult);
-        return paginator({
-          queryset,
-          limit: filterResult,
-          offset: filterResult.offset,
-        });
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
-      }
-    },
 
-    async list(req) {
-      try {
-        let {
-          query,
-          pre: { isAdmin },
-        } = req;
-        // let where = id ? { id } : null;
-        //TODO: Only admins are allowed to see who created the currency
-        const { paranoid = true } = query;
-        const filterResult = await filters({
-          query,
-          searchFields: ["name", "iso_code", "type"],
-        });
-        let queryset = await Currency.findAndCountAll({
-          ...filterResult,
-          paranoid: Boolean(+paranoid),
-          attributes: [
-            "id",
-            "name",
-            "iso_code",
-            "type",
-            "created_at",
-            "updated_at",
-            "archived_at",
-          ],
-        });
-        console.log(queryset);
-        return paginator({
-          queryset,
-          limit: filterResult.limit,
-          offset: filterResult.offset,
-        });
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
-      }
-    },
-  };
-  const CurrencyGroupController = {
+  const CurrencyController = {
+    // CREATE------------------------------------------------------------
     /**
      * @function create - Creates currency (**Admin only**)
      * @param {Object} req - Request object
@@ -85,7 +19,7 @@ module.exports = (server) => {
      * @param {Array} req.payload.data
      * @returns
      */
-    create: async (req) => {
+    bulkCreate: async (req) => {
       const {
         payload,
 
@@ -118,30 +52,45 @@ module.exports = (server) => {
       }
     },
 
-    async destroy(req) {
+    // UPDATE------------------------------------------------------------
+    /**
+     * @function update - Updates single currency
+     * @param {Object} req
+     * @returns
+     */
+    async update(req) {
       const {
-        payload: { data, force = false },
-        auth: {
-          credentials: { user },
-        },
+        payload,
+        param: { id },
+        pre: { user },
       } = req;
 
       try {
-        return {
-          deleted: await sequelize.transaction(async (t) => {
-            return await Currency.destroy({
-              where: { id: data, created_by: user.id },
-              transaction: t,
-              force,
-            }).then((affectedRows) => affectedRows);
-          }),
-        };
+        const { restore, ...data } = payload;
+        return await Currency.update(data, {
+          where: { id, created_by: user.id },
+          validate: true,
+          returning: ["id", "name", "iso_code", "type", "created_by"],
+          fields: ["name", "iso_code", "type"],
+          // logging: console.log,
+        }).then(async ([count, affectedRows]) => {
+          restore &&
+            (await Currency.restore({
+              where: { id, created_by: user.id },
+            }));
+          return affectedRows[0];
+        });
       } catch (error) {
         console.error(error);
         return boom.forbidden(error);
       }
     },
-    async update(req) {
+    /**
+     * @function update - Updates single currency
+     * @param {Object} req
+     * @returns
+     */
+    async bulkUpdate(req) {
       const {
         payload,
         auth: {
@@ -179,9 +128,107 @@ module.exports = (server) => {
         return boom.forbidden(error);
       }
     },
+
+    // DELETE------------------------------------------------------------
+    /**
+     * @function destroy - Destroy single currency record
+     * @param {Object} req
+     * @returns
+     */
+    async bulkRemove(req) {
+      const {
+        payload: { data, force = false },
+        auth: {
+          credentials: { user },
+        },
+      } = req;
+
+      try {
+        return {
+          deleted: await sequelize.transaction(async (t) => {
+            return await Currency.destroy({
+              where: { id: data, created_by: user.id },
+              transaction: t,
+              force,
+            }).then((affectedRows) => affectedRows);
+          }),
+        };
+      } catch (error) {
+        console.error(error);
+        return boom.forbidden(error);
+      }
+    },
+
+    // LIST------------------------------------------------------------
+
+    /**
+     * @function get - Gets single currency
+     * @param {Object} req
+     * @returns
+     */
+    async list(req) {
+      try {
+        let {
+          query,
+          pre: { user },
+        } = req;
+        // let where = id ? { id } : null;
+        //TODO: Only admins are allowed to see who created the currency
+        const filterResult = await filters({
+          query,
+          searchFields: ["name", "iso_code", "type"],
+        });
+        let queryset = Currency.findAndCountAll(filterResult);
+        return paginator({
+          queryset,
+          limit: filterResult,
+          offset: filterResult.offset,
+        });
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
+
+    /**
+     * @function bulkList - Get multiple Currencies (**Only Admins**)
+     * @param {Object} req
+     * @returns
+     */
+    async bulkList(req) {
+      try {
+        let { query } = req;
+        const queryFilters = await filters({
+          query,
+          searchFields: ["name", "iso_code", "type"],
+        });
+
+        const options = {
+          ...queryFilters,
+          attributes: [
+            "id",
+            "name",
+            "iso_code",
+            "type",
+            "created_at",
+            "updated_at",
+            "archived_at",
+          ],
+        };
+        let queryset = await Currency.findAndCountAll({});
+        const { limit, offset } = queryFilters;
+
+        return paginator({
+          queryset,
+          limit,
+          offset,
+        });
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
   };
-  return {
-    ...CurrencyController,
-    group: CurrencyGroupController,
-  };
+
+  return CurrencyController;
 };

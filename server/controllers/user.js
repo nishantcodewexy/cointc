@@ -426,20 +426,17 @@ module.exports = (server) => {
       try {
         const { query } = req;
         const queryFilters = await filters({ query, searchFields: ["email"] });
-        const paranoid = query?.paranoid
-          ? Boolean(JSON.parse(query?.paranoid))
-          : true;
 
         const options = {
-          attributes: { exclude: ["password"] },
           ...queryFilters,
-          paranoid,
+          attributes: { exclude: ["password"] },
         };
 
-        const user = await User.findAndCountAll(options);
+        let queryset = await User.findAndCountAll(options);
         const { limit, offset } = queryFilters;
+
         return paginator({
-          queryset: user,
+          queryset,
           limit,
           offset,
         });
