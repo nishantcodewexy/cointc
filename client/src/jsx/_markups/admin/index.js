@@ -32,11 +32,12 @@ function AdminMarkup() {
   useEffect(() => {
     setServices(
       new Services({
-        headers: _helpers.headers(session),
+        token: session?.user?.token || "",
         baseURL: "/api",
       })
     );
-  }, []);
+
+  }, [session]);
 
   return services ? (
     <Switch>

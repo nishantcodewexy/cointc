@@ -1,8 +1,7 @@
 import Service from "./Services";
 
 export default class InitService {
-  constructor(options = { headers: null, timeout: 30000, baseURL: "/api" }) {
-    console.log(options);
+  constructor(options = { token: null, timeout: 30000, baseURL: "/api" }) {
 
     let providers = {
       user: require("./user.service").default,

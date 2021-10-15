@@ -36,7 +36,7 @@ export default class ChatService extends Services {
 
     const socket = io({
       extraHeaders: {
-        authorization: this.getHeaders(),
+        authorization: this.getToken(),
       },
       params,
     });

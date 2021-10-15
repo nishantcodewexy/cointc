@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
       return [to.replace(/-/g, ""), from.replace(/-/g, "")].sort().join("-");
     }
   }
+
   Chat.init(
     {
       to: {
@@ -41,5 +42,6 @@ module.exports = (sequelize, DataTypes) => {
       hooks,
     }
   );
+  
   return Chat;
 };

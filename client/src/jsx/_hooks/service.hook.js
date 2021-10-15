@@ -76,7 +76,6 @@ function useService(config = {}) {
         reload = true,
       } = request;
 
-      console.log("Called service: " + type);
 
       setIsFetching(true);
       setLastRequestType(type);
