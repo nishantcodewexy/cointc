@@ -14,6 +14,7 @@ import UserForm from "../forms/user.form";
 import { SERVICE } from "../../../_constants";
 
 function UserManagement({ services, useService }) {
+  console.log(services)
   const { group } = services;
   // const group = useGroupService();
 

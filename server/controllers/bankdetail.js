@@ -139,10 +139,6 @@ module.exports = (server) => {
 
     // },
   };
-  const BankDetailGroupController = {};
 
-  return {
-    ...BankDetailController,
-    group: BankDetailGroupController,
-  };
+  return BankDetailController
 };

@@ -27,13 +27,18 @@ export default AdminMarkup;
 function AdminMarkup() {
   const session = useSelector((state) => state?.session);
   const notice = useSelector((state) => state?.notice);
-  // const [services, setServices] = useState(_services);
-  const services = new Services({
-    headers: _helpers.headers(session),
-    baseURL: "/api",
-  });
-  
-  return (
+  const [services, setServices] = useState(null);
+
+  useEffect(() => {
+    setServices(
+      new Services({
+        headers: _helpers.headers(session),
+        baseURL: "/api",
+      })
+    );
+  }, []);
+
+  return services ? (
     <Switch>
       <Route exact path="/admin/login">
         {!session?.user ? (
@@ -73,6 +78,8 @@ function AdminMarkup() {
         </AdminLayout>
       </Route>
     </Switch>
+  ) : (
+    "Initializing services..."
   );
 }
 

@@ -1,4 +1,4 @@
-import { Row, Col, Card, Button} from "react-bootstrap";
+import { Row, Col, Card, Button } from "react-bootstrap";
 import useToggler from "../../../_hooks/toggler.hook";
 import PageTitle from "../layouts/PageTitle";
 import { useEffect } from "react";
@@ -68,6 +68,7 @@ function AdminBankDetails({ services, useService }) {
             return [
               "Add new bank detail",
               <BankDetailForm
+                {...{ services }}
                 action={(requestPayload) =>
                   dispatchRequest({
                     type: SERVICE?.CREATE,
@@ -82,6 +83,7 @@ function AdminBankDetails({ services, useService }) {
             return [
               "Update bank detail",
               <BankDetailForm.Update
+                {...{ services }}
                 action={(requestPayload) =>
                   dispatchRequest({
                     type: SERVICE?.UPDATE,
@@ -96,6 +98,7 @@ function AdminBankDetails({ services, useService }) {
             return [
               "Delete Bank details",
               <BankDetailForm.Remove
+                {...{ services }}
                 action={(requestPayload) =>
                   dispatchRequest({
                     type: SERVICE?.DROP,

@@ -10,7 +10,7 @@ const faker = require("faker");
  * @param {Object} server  - Server instance
  * @returns
  */
-module.exports = (server) => {
+function UserController(server) {
   /*********************** HELPERS ***************************/
   const { __upsert, __update, __destroy, __assertRole } = require("./_methods")(
     server
@@ -35,7 +35,7 @@ module.exports = (server) => {
       types: { ProfileModeType, country },
     },
   } = server.app;
-  const UserController = {
+  return {
     // CREATE------------------------------------------------------------
     /**
      * @function create
@@ -284,6 +284,19 @@ module.exports = (server) => {
           payload = {},
           params: { id },
         } = req;
+
+        allowedUserAttrbs = ["permission"];
+        let userUpdates = {},
+          profileUpdates = {};
+
+        Object.keys(payload).forEach((key) => {
+          if (allowedUserAttrbs.includes(key)) {
+            userUpdates[key] = allowedUserAttrbs[key];
+          } else {
+            profileUpdates[key] = allowedUserAttrbs[key];
+          }
+        });
+
         // user is an admin
         // let { email, role, permission, ...profileData } = payload;
         let target_user = await User.findOne({ where: { id } });
@@ -301,6 +314,7 @@ module.exports = (server) => {
               "kyc_document",
             ]
           : ["nickname", "kyc"];
+
         let target_profile = target_user?.profile;
 
         if (target_profile) {
@@ -313,7 +327,12 @@ module.exports = (server) => {
             logging: console.log,
           };
           let model = target_profile?.__proto__.constructor.name;
-          return await __update(model, payload, options);
+          return await sequelize.transaction((t) => {
+            return Promise.all([
+              __update("User", userUpdates, { where: { id }, logging: true }),
+              __update(model, profileUpdates, options),
+            ]);
+          });
         }
         return boom.notFound("User profile does not exist");
       } catch (error) {
@@ -422,7 +441,7 @@ module.exports = (server) => {
      * @param {Object} req
      * @returns
      */
-     bulkRetrieve: async (req) => {
+    bulkRetrieve: async (req) => {
       try {
         const { query } = req;
         const queryFilters = await filters({ query, searchFields: ["email"] });
@@ -715,8 +734,6 @@ module.exports = (server) => {
       return paginator({ queryset, limit, offset }).catch(boom.boomify);
     },
   };
+}
 
-  return {
-    ...UserController,
-  };
-};
+module.exports = UserController;

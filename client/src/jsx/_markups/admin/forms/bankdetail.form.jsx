@@ -2,7 +2,6 @@ import { Form, Button } from "react-bootstrap";
 import { Formik } from "formik";
 import Switch from "@mui/material/Switch";
 import Checkbox from "@mui/material/Checkbox";
-import services from "../../../_services";
 import useService from "../../../_hooks/service.hook";
 import { useEffect } from "react";
 import country_list from "country-list";
@@ -73,8 +72,8 @@ export function Remove({ action, callback, payload: initialData = {} }) {
  * @param {Object} param0
  * @returns
  */
-export function Update({ action, callback, payload: initialData = {} }) {
-  const group = services.useGroupService();
+export function Update({ action, services, callback, payload: initialData = {} }) {
+  const { group } = services;
   const currencyService = useService({
     [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveCurrency,
   });
@@ -222,8 +221,8 @@ export function Update({ action, callback, payload: initialData = {} }) {
  * @param {Object} param0
  * @returns
  */
-export function Create({ action, callback }) {
-  const group = services.useGroupService();
+export function Create({ action, services, callback }) {
+  const { group } = services;
   const currencyService = useService({
     [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveCurrency,
   });
