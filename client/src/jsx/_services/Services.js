@@ -1,4 +1,5 @@
 import axios from "axios";
+import Qs from 'qs';
 
 export default class Services {
   constructor(init) {
@@ -14,6 +15,9 @@ export default class Services {
       baseURL: this?.baseURL,
       timeout: this?.timeout,
       cancelToken: this.source.token,
+      paramsSerializer: function (params) {
+        return Qs.stringify(params, {arrayFormat: 'brackets'})
+      },
     });
 
     this.decoratorMessage = `${this._name}::SERVICE ERROR`;

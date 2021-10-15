@@ -252,11 +252,10 @@ const ChatBubble = styled.div`
 `;
 
 function Messenger({ services, useService }) {
-  const { useGroupService } = services;
-  const group = useGroupService();
+  const { account, chat } = services;
 
   let userService = useService({
-    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
+    [SERVICE?.BULK_RETRIEVE]: account.bulkRetrieveUser,
   });
   const api = useAPI();
 
@@ -292,9 +291,12 @@ function Messenger({ services, useService }) {
   };
 
   const handleSocketConnection = () => {
-    const socket = api.SocketClient.getAuthSocket();
-    socket.on("connect", () => {
+    const socket = chat?.authorizeSocket();
+    socket.on("connect", (_socket) => {
       ref.current = socket;
+      socket.on("disconnect", () => {
+        console.log("user disconnected");
+      });
     });
     return socket;
   };
@@ -322,7 +324,7 @@ function Messenger({ services, useService }) {
 
     const socket = handleSocketConnection();
     return () => {
-      api.abort();
+      chat.abort();
       socket.disconnect();
     };
   }, []);

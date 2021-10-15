@@ -1,4 +1,5 @@
 import Services from "./Services";
+import { io, Socket } from "socket.io-client";
 
 /**
  * Class of all Group services
@@ -15,7 +16,7 @@ export default class ChatService extends Services {
    * @function bulkRetrieveChatHistory - list chat histories (**Admins only**)
    * @returns
    */
-   bulkRetrieveChatHistory = async (params) => {
+  bulkRetrieveChatHistory = async (params) => {
     return await this.decorate(
       async () =>
         await this.axios(`chat-history`, {
@@ -23,5 +24,23 @@ export default class ChatService extends Services {
           params,
         })
     );
+  };
+  /**
+   * @param {Object} args
+   * @param {String} args.url
+   * @param {Object} args.params
+   * @returns {Socket}
+   */
+  authorizeSocket = (args = {}) => {
+    const { params } = args;
+
+    const socket = io({
+      extraHeaders: {
+        authorization: this.getHeaders(),
+      },
+      params,
+    });
+
+    return socket;
   };
 }
