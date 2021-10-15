@@ -4,7 +4,7 @@ import Switch from "@mui/material/Switch";
 import Checkbox from "@mui/material/Checkbox";
 import country_list from "country-list";
 
-// CREATE NEW USER FORM
+// CREATOR FORM
 export function Create({ action, callback }) {
   return (
     <Formik
@@ -23,8 +23,10 @@ export function Create({ action, callback }) {
           let role = admin ? "admin" : "basic";
           let payload = [{ email, role, profile }];
           // Send request
-          await action(payload);
-          callback && callback();
+          let { success } = await action(payload);
+          if (success) {
+            callback && callback();
+          }
         } catch (error) {
           console.error(error);
         } finally {
@@ -143,13 +145,13 @@ export function Create({ action, callback }) {
   );
 }
 
+// UPDATER FORM
 export function Update({ action, callback, payload: initialData = null }) {
   return (
     <Formik
       initialValues={{
         country: initialData?.country || "CN",
-        nickname:
-          initialData?.nickname || "",
+        nickname: initialData?.nickname || "",
         permission: initialData?.permission || false,
         other_names: initialData?.other_names || "",
         last_name: initialData?.last_name || "",
@@ -157,10 +159,10 @@ export function Update({ action, callback, payload: initialData = null }) {
       // validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          await action(values);
-          callback && callback();
-        } catch (error) {
-          console.error(error);
+          let { success } = await action(values);
+          if (success) {
+            callback && callback();
+          }
         } finally {
           setSubmitting(false);
         }
@@ -256,8 +258,8 @@ export function Update({ action, callback, payload: initialData = null }) {
   );
 }
 
-// DELETE USER FORM
-export function Drop({ action, callback, payload: initialValues = {} }) {
+// REMOVAL FORM
+export function Remove({ action, callback, payload: initialValues = {} }) {
   return (
     <Formik
       initialValues={{
@@ -268,8 +270,8 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
       onSubmit={async (values, { setSubmitting }) => {
         try {
           const { force } = values;
-          let response = await action({ force });
-          callback && callback(response);
+          let { success } = await action({ force });
+          success && callback && callback();
         } catch (error) {
           console.error(error);
         } finally {
@@ -332,8 +334,12 @@ export function Drop({ action, callback, payload: initialValues = {} }) {
     </Formik>
   );
 }
+
 export default Object.assign(Create, {
+  Remove,
+  Drop: Remove,
+  Delete: Remove,
   Update,
-  Delete: Drop,
-  Drop,
+  Modify: Update,
+  Add: Create,
 });

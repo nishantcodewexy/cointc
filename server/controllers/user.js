@@ -422,7 +422,7 @@ module.exports = (server) => {
      * @param {Object} req
      * @returns
      */
-    bulkList: async (req) => {
+     bulkRetrieve: async (req) => {
       try {
         const { query } = req;
         const queryFilters = await filters({ query, searchFields: ["email"] });
@@ -441,8 +441,8 @@ module.exports = (server) => {
           offset,
         });
       } catch (error) {
-        boom.boomify;
         console.error(error);
+        return boom.boomify(error);
       }
     },
 
@@ -451,7 +451,7 @@ module.exports = (server) => {
      * @param {Object} req
      * @returns
      */
-    async list(req) {
+    async retrieve(req) {
       const {
         query: { id },
       } = req;

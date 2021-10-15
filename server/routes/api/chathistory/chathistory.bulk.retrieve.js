@@ -3,9 +3,8 @@
 module.exports = (server) => {
   const {
     controllers: {
-        chathistory: { list },
+        chathistory: { bulkRetrieve },
     },
-    consts: { roles: _roles },
     helpers:{
       permissions:{
         isAdminOrError
@@ -18,20 +17,14 @@ module.exports = (server) => {
     path: "/chat-history",
     config: {
       pre: [
-        {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
+        
         {
           method:isAdminOrError,
-          assign: "isAdminOrError",
+          assign: "user",
         },
         
       ],
-      handler: list,
+      handler: bulkRetrieve,
       auth: "jwt",
     },
     

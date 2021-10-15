@@ -1,17 +1,15 @@
 import React, { useContext, useState, useEffect } from "react";
-import {
-  Route,
-  Switch,
-  Redirect,
-} from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 import routes from "./routes";
 import Nav from "./layouts/nav";
 import { ThemeContext } from "../../../context/ThemeContext";
 import { normalize } from "path";
-/// Style
+
+/// STYLE
 import "../../../vendor/bootstrap-select/dist/css/bootstrap-select.min.css";
 import "../../../css/style.css";
 
+// COMPONENTS
 import UnderConstruction from "./components/UnderConstruction.Component";
 import { useSelector } from "react-redux";
 import LoginPage from "./pages/login.page";
@@ -19,7 +17,7 @@ import _helpers from "../../_helpers";
 import _actions from "../../_actions";
 import _components from "./components";
 import useService from "../../_hooks/service.hook";
-import services from "../../_services";
+import Services from "../../_services";
 
 const { history } = _helpers;
 const { Error404 } = _components;
@@ -30,12 +28,16 @@ function AdminMarkup() {
   const session = useSelector((state) => state?.session);
   const notice = useSelector((state) => state?.notice);
   // const [services, setServices] = useState(_services);
-
+  const services = new Services({
+    headers: _helpers.headers(session),
+    baseURL: "/api",
+  });
+  
   return (
     <Switch>
       <Route exact path="/admin/login">
         {!session?.user ? (
-          <LoginPage  {...{ services, useService }} />
+          <LoginPage {...{ services, useService }} />
         ) : (
           <Redirect to={{ pathname: `/admin` }} />
         )}

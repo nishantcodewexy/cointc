@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      secession: { remove },
+      chathistory: { remove },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -12,13 +12,15 @@ module.exports = (server) => {
 
   return {
     method: "DELETE",
-    path: "/secessions/{id}",
+    path: "/chat-history/{id}",
     config: {
       pre: [
-        {
-          method: isAdminOrError,
-          assign: "user",
-        },
+        [
+          {
+            method: isAdminOrError,
+            assign: "user",
+          },
+        ],
       ],
       handler: remove,
       auth: "jwt",

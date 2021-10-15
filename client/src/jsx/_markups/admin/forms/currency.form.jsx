@@ -1,8 +1,16 @@
 import { Form, Button } from "react-bootstrap";
-import {Switch} from "@mui/material";
+import { Switch } from "@mui/material";
 import Checkbox from "@mui/material/Checkbox";
 import { Formik } from "formik";
 
+/**
+ * @function Create - currency creation form
+ * @param {Object} params
+ * @param {Object} params.action
+ * @param {Object} params.callback
+ * @param {Object} params.payload
+ * @returns
+ */
 function Create({ action, callback }) {
   return (
     <Formik
@@ -13,9 +21,11 @@ function Create({ action, callback }) {
       }}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let payload = [values];
-          let response = await action([values]);
-          callback && callback(response);
+          values = { ...values, iso_code: values?.iso_code?.toUpperCase() };
+          let { success } = await action(values);
+          if (success) {
+            callback && callback();
+          }
         } catch (error) {
           console.error(error);
         } finally {
@@ -33,6 +43,7 @@ function Create({ action, callback }) {
               type="text"
               autoCapitalize="characters"
               name="iso_code"
+              className="text-uppercase"
               defaultValue={values?.iso_code}
               placeholder="Currency symbol"
               onChange={handleChange}
@@ -82,6 +93,14 @@ function Create({ action, callback }) {
   );
 }
 
+/**
+ * @function Update - Update currecny form
+ * @param {Object} params
+ * @param {Object} params.action
+ * @param {Object} params.callback
+ * @param {Object} params.payload
+ * @returns
+ */
 function Update({ action, callback, payload: initialData = {} }) {
   return (
     <Formik
@@ -94,8 +113,8 @@ function Update({ action, callback, payload: initialData = {} }) {
       }}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let response = await action([values]);
-          callback && callback(response);
+          let { success } = await action(values);
+          success && callback && callback();
         } catch (error) {
           console.error(error);
         } finally {
@@ -105,7 +124,6 @@ function Update({ action, callback, payload: initialData = {} }) {
     >
       {({ values, errors, isSubmitting, handleSubmit, handleChange }) => (
         <Form onSubmit={handleSubmit}>
-          {console.log(initialData)}
           <Form.Group className="mb-3" controlId="formCurrencyCode">
             <Form.Label>
               <strong>Code</strong>
@@ -175,20 +193,26 @@ function Update({ action, callback, payload: initialData = {} }) {
   );
 }
 
-export function Drop({ action, callback, payload: initialData = {} }) {
+/**
+ * @function Remove - Currency removal from
+ * @param {Object} params
+ * @param {Function} params.action
+ * @param {Function} params.callback
+ * @param {Object} params.payload
+ * @returns
+ */
+export function Remove({ action, callback, payload: initialData = {} }) {
   return (
     <Formik
       initialValues={{
         confirm: false,
-        ids: initialData?.ids || null,
         force: false,
       }}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let { ids, force } = values;
-
-          let response = await action({ data: ids, force });
-          callback && callback(response);
+          let { force } = values;
+          let { success } = await action({ force });
+          success && callback && callback();
         } catch (error) {
           console.error(error);
         } finally {
@@ -197,7 +221,7 @@ export function Drop({ action, callback, payload: initialData = {} }) {
       }}
     >
       {({ values, errors, isSubmitting, handleSubmit, handleChange }) =>
-        values?.ids !== null ? (
+        initialData?.id !== null ? (
           <Form onSubmit={handleSubmit}>
             <div
               style={{
@@ -258,7 +282,12 @@ export function Drop({ action, callback, payload: initialData = {} }) {
     </Formik>
   );
 }
+
 export default Object.assign(Create, {
-  Drop,
+  Remove,
+  Drop: Remove,
+  Delete: Remove,
   Update,
+  Modify: Update,
+  Add: Create,
 });

@@ -4,24 +4,27 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      currency: { bulkCreate },
+      currency: { update },
     },
+    consts: { roles: _roles },
     helpers: {
       permissions: { isAdminOrError },
     },
   } = server.app;
 
-  const schema = Joi.array().items(
-    Joi.object({
-      type: Joi.string().required(),
-      iso_code: Joi.string().required(),
-      name: Joi.string().required(),
-    })
-  );
+  const schema = Joi.object({
+    id: Joi.string()
+      .uuid()
+      .required(),
+    type: Joi.string().optional(),
+    iso_code: Joi.string().optional(),
+    name: Joi.string().optional(),
+    restore: Joi.bool().optional(),
+  });
 
   return {
-    method: "POST",
-    path: "/currency/bulk",
+    method: ["PUT", "PATCH"],
+    path: "/currency/{id}",
     config: {
       pre: [
         [
@@ -31,7 +34,7 @@ module.exports = (server) => {
           },
         ],
       ],
-      handler: bulkCreate,
+      handler: update,
       auth: "jwt",
       validate: {
         payload: schema,

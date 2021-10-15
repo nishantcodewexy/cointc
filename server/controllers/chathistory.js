@@ -1,153 +1,149 @@
 "use strict";
-const {Op} = require('sequelize');
-const boom = require("@hapi/boom")
-const {filterFields} = require("../services/model")
+
+const boom = require("@hapi/boom");
+const { filterFields } = require("../services/model");
 
 module.exports = (server) => {
   const {
-    db: { ChatHistory, sequelize },
+    db: { ChatHistory },
     consts: { roles: _roles },
-    helpers:{
-      filters,
-      paginator
-    },
+    helpers: { filters, paginator },
   } = server.app;
-  /* const queryInterface = sequelize.getQueryInterface();
-      const table = Currency.getTableName(); */
-  const CurrencyController = {
+
+  const ChatHistoryController = {
+    // CREATE ------------------------------------------------------------
+
     /**
-     * @function get - Gets currency collection
+     * @function create - Creates a single chat history
+     * @param {Object} req
+     * @returns
+     */
+    async create(req) {
+      const { payload } = req;
+
+      try {
+        const chathistory = await ChatHistory.create(
+          {
+            ...payload,
+            browser: req.headers["user-agent"],
+            started_at: new Date(Date.now()),
+            ended_at: new Date(Date.now()),
+          },
+          {
+            fields: [
+              "country",
+              "visitor_email",
+              "started_at",
+              "ended_at",
+              "browser",
+            ],
+          }
+        );
+        return filterFields({
+          object: chathistory.dataValues,
+          include: [
+            "id",
+            "country",
+            "visitor_email",
+            "browser",
+            "started_at",
+            "ended_at",
+            "type",
+            "created_at",
+            "updated_at",
+          ],
+        });
+      } catch (error) {
+        console.error(error);
+        throw boom.boomify(error);
+      }
+    },
+
+    //   RETRIEVE ------------------------------------------------------
+
+    /**
+     * @function retrieve - Retrieves a single chat history collection
      * @param {Object} req
      * @returns
      */
     async retrieve(req) {
-        const {
-            params:{
-                id
-            }
-        } = req
+      const {
+        params: { id },
+      } = req;
 
-        try {
-            
-            const chathistory =  await ChatHistory.findOne({
-                where:{
-                    id
-                },
-                attributes: { exclude: ["deleted_at"] }
-            })
-    
-            if(!chathistory){
-                throw boom.notFound()
-            }
-            return chathistory
-        } catch (error) {
-            console.error(error)
-            throw boom.boomify(error)
+      try {
+        const chathistory = await ChatHistory.findOne({
+          where: {
+            id,
+          },
+          attributes: { exclude: ["deleted_at"] },
+        });
+
+        if (!chathistory) {
+          throw boom.notFound();
         }
+        return chathistory;
+      } catch (error) {
+        console.error(error);
+        throw boom.boomify(error);
+      }
     },
-    async list(req) {
-        const {
-            query,
-        } = req
 
-        
-        try {
+    /**
+     * @function bulkRetrieve - Retrieves multiple chat history collection
+     * @param {Object} req
+     * @returns
+     */
+    async bulkRetrieve(req) {
+      try {
+        const { query } = req;
+        const queryFilters = await filters({
+          query,
+          searchFields: ["browser"],
+        });
 
+        const options = {
+          ...queryFilters,
+        };
 
-            const filterResults = await filters({
-                query,
-                searchFields:[
-                    "browser"
-                ]
-            })
-            
-            
-            const queryset = ChatHistory.findAndCountAll(filterResults)
-            return await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
-            
-        } catch (error) {
-            console.error(error)
-            throw boom.boomify(error)
-            
-        }
+        const queryset = await ChatHistory.findAndCountAll(options);
+        const { limit, offset } = queryFilters;
 
-        
+        return paginator({
+          queryset,
+          limit,
+          offset,
+        });
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
     },
-    async create(req) {
-        const {
-            payload,
-            
-        } = req
-        
-        
-        try {
-            const chathistory = await ChatHistory.create({
-                ...payload,
-                browser:req.headers['user-agent'],
-                started_at:new Date(Date.now()),
-                ended_at:new Date(Date.now())
-            },{
-                fields:[
-                    "country",
-                    "visitor_email",
-                    "started_at",
-                    "ended_at",
-                    "browser",
-                ]
-            })
-            return filterFields({object:chathistory.dataValues,include:[
-                "id",
-                "country",
-                "visitor_email",
-                "browser",
-                "started_at",
-                "ended_at",
-                "type",
-                "created_at",
-                "updated_at"
-            ]})
-            
-            
-        } catch (error) {
-            console.error(error)
-            throw boom.boomify(error)
-        }
-    },
-    async destroy(req) {
-        const {
-            params:{id}
-        } = req
 
-        try {
-            const result = await ChatHistory.destroy({
-                where:{
-                    id
-                }
-            })
-    
-            if(!result) throw boom.notFound()
-    
-            return null
-            
-        } catch (error) {
-            console.error(error)
-            throw boom.boomify(error)
-        }
+    // UPDATE ----------------------------------------------------------
 
-        
+    // REMOVE ----------------------------------------------------------
+    async remove(req) {
+      const {
+        params: { id },
+      } = req;
+
+      try {
+        const result = await ChatHistory.destroy({
+          where: {
+            id,
+          },
+        });
+
+        if (!result) throw boom.notFound();
+
+        return null;
+      } catch (error) {
+        console.error(error);
+        throw boom.boomify(error);
+      }
     },
-    // async bulkDelete(req) {
-      
-    // },
-    // async bulkCreate(req) {
-      
-    // },
   };
-  const CurrencyGroupController = {}
-    
-  
-  return {
-    ...CurrencyController,
-    group: CurrencyGroupController,
-  };
+
+  return ChatHistoryController;
 };

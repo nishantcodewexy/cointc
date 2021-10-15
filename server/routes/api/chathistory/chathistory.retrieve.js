@@ -3,28 +3,25 @@
 module.exports = (server) => {
   const {
     controllers: {
-        bankdetail: { list },
+      chathistory: { retrieve },
     },
-    helpers:{
-      permissions:{
-        isUser,
-      }
-    }
+    helpers: {
+      permissions: { isAdminOrError },
+    },
   } = server.app;
 
   return {
     method: "GET",
-    path: "/bank-details",
+    path: "/chat-history/{id}",
     config: {
       pre: [
         {
-          method:isUser,
+          method: isAdminOrError,
           assign: "user",
         },
       ],
-      handler: list,
+      handler: retrieve,
       auth: "jwt",
     },
-    
   };
 };

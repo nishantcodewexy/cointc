@@ -5,7 +5,6 @@ module.exports = (server) => {
     controllers: {
       secession: { create },
     },
-    consts: { roles: _roles },
     helpers: {
       permissions: { isUser },
     },
@@ -17,7 +16,7 @@ module.exports = (server) => {
 
   return {
     method: "POST",
-    path: "/account/u/secessions",
+    path: "/secessions",
     config: {
       pre: [
         {

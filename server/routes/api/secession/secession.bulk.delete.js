@@ -3,26 +3,26 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      secession: { bulkDelete },
+      secession: { bulkRemove },
     },
-    consts: { roles: _roles },
     helpers: {
-      permissions: { isUser },
+      permissions: { isAdminOrError },
     },
   } = server.app;
 
-  const schema = Joi.array().items(Joi.string());
+  const schema = Joi.array().items(Joi.string().uuid());
+
   return {
     method: "DELETE",
     path: "/secessions",
     config: {
       pre: [
         {
-          method: isUser,
+          method: isAdminOrError,
           assign: "user",
         },
       ],
-      handler: bulkDelete,
+      handler: bulkRemove,
       auth: "jwt",
       validate: {
         payload: schema,

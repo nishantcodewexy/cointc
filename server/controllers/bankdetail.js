@@ -40,7 +40,7 @@ module.exports = (server) => {
         throw boom.boomify(error);
       }
     },
-    async list(req) {
+    async bulkRetrieve(req) {
       const {
         query,
         pre: { user },
