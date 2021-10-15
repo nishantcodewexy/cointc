@@ -3,10 +3,14 @@ import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
 import { useEffect } from "react";
 import useToggler from "../../../_hooks/toggler.hook";
-import EmptyRecord from "../components/Empty.Component";
+/* import EmptyRecord from "../components/Empty.Component";
 import useTableSelector from "../../../_hooks/table.select.hook";
-import { LinearProgress, TablePagination } from "@material-ui/core";
+import { LinearProgress, TablePagination } from "@material-ui/core"; */
 import { toast } from "react-toastify";
+
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
+
 // COMPONENTS
 import TableGenerator from "../components/TableGenerator.Component";
 import CurrencyForm from "../forms/currency.form";
@@ -16,11 +20,11 @@ function CurrencyMgmt({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();
   let service = useService({
-    list: group.bulkRetrieveCurrency,
-    get: group.getCurrency,
-    post: group.createCurrency,
-    put: group.updateCurrency,
-    drop: group.dropCurrency,
+    [SERVICE?.RETRIEVE]: group.retrieveCurrency,
+    [SERVICE?.CREATE]: group.createCurrency,
+    [SERVICE?.UPDATE]: group.updateCurrency,
+    [SERVICE?.DROP]: group.dropCurrency,
+    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveCurrency,
   });
   const { dispatchRequest } = service;
 
@@ -33,8 +37,10 @@ function CurrencyMgmt({ services, useService }) {
 
   useEffect(() => {
     dispatchRequest({
-      type: "list",
+      type: SERVICE.BULK_RETRIEVE,
       payload: {
+        "order[updatedAt]": "DESC",
+        "order[createdAt]": "DESC",
         paranoid: false,
       },
       toast: { success: notifySuccess, error: notifyError },
@@ -67,40 +73,39 @@ function CurrencyMgmt({ services, useService }) {
     const [title, form] = (() => {
       try {
         switch (formData?.method) {
-          case "post":
+          case SERVICE?.CREATE:
             return [
               "Create new Currency",
               <CurrencyForm
-                action={(requestPayload) =>
-                  dispatchRequest({ type: "post", payload: requestPayload })
+                action={(data) =>
+                  dispatchRequest({ type: SERVICE?.CREATE, payload: data })
                 }
                 payload={formData?.payload}
                 callback={onModalClose}
               />,
             ];
-          case "put":
+          case SERVICE?.UPDATE:
             return [
               "Update Currency",
               <CurrencyForm.Update
-                action={(requestPayload) =>
+                action={(data) =>
                   dispatchRequest({
-                    type: "put",
-                    payload: requestPayload,
+                    type: SERVICE?.UPDATE,
+                    payload: { id: formData?.payload?.id, data },
                   })
                 }
                 payload={formData?.payload}
                 callback={onModalClose}
               />,
             ];
-          case "drop":
-          case "delete":
+          case SERVICE?.DROP:
             return [
               "Confirm Delete",
               <CurrencyForm.Drop
-                action={(requestPayload) =>
+                action={(data) =>
                   dispatchRequest({
-                    type: "drop",
-                    payload: requestPayload,
+                    type: SERVICE?.DROP,
+                    payload: { id: formData?.payload?.id, data },
                   })
                 }
                 payload={formData?.payload}
@@ -149,7 +154,7 @@ function CurrencyMgmt({ services, useService }) {
         </Col>
 
         <Col sm="auto" style={{ padding: 0 }}>
-          <Button onClick={() => onOpenModal({ method: "post" })}>
+          <Button onClick={() => onOpenModal({ method: SERVICE?.CREATE })}>
             <i className="fa fa-plus"></i> Add Currency
           </Button>
         </Col>
@@ -186,7 +191,7 @@ function CurrencyMgmt({ services, useService }) {
                         background: "none",
                       }}
                       onClick={() =>
-                        onOpenModal({ method: "put", payload: row })
+                        onOpenModal({ method: SERVICE?.UPDATE, payload: row })
                       }
                     >
                       <span className="themify-glyph-29"></span> Edit
@@ -200,8 +205,8 @@ function CurrencyMgmt({ services, useService }) {
                       }}
                       onClick={() =>
                         onOpenModal({
-                          method: "delete",
-                          payload: { ids: [row?.id] },
+                          method: SERVICE?.DROP,
+                          payload: { id: row?.id },
                         })
                       }
                     >

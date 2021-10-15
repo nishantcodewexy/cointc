@@ -1,16 +1,19 @@
-import { useRef, useEffect } from "react";
-import { Row, Col, Card, ListGroup } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import PageTitle from "../layouts/PageTitle";
+import { useRef, useEffect, useState } from "react";
+import { Row, Col, Card } from "react-bootstrap";
 import styled from "styled-components";
 import PerfectScrollbar from "react-perfect-scrollbar";
 import useScrollPosition from "use-scroll-position";
-import { useState } from "react";
-import _components from "../components";
-import useAPI from "../../../_apiClient";
 import { formatDistance } from "date-fns";
 import { useSelector } from "react-redux";
 import moment from "moment";
+
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
+
+// COMPONENTS
+import PageTitle from "../layouts/PageTitle";
+import _components from "../components";
+import useAPI from "../../../_apiClient";
 const { IdenticonAvatar, Empty } = _components;
 
 function ChatMessenger({ services, useService }) {
@@ -252,14 +255,14 @@ function Messenger({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();
 
-  let contactService = useService({
-    list: group.listUsers,
+  let userService = useService({
+    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
   });
   const api = useAPI();
 
   const { user } = useSelector((state) => state.session);
   const ref = useRef();
-  let scrollPosition = useScrollPosition();
+  // let scrollPosition = useScrollPosition();
   const [toggleChatBox, setToggleChatBox] = useState(true);
   const [isChatting, setChatting] = useState(false);
   const [messages, setMessages] = useState(null);
@@ -313,8 +316,9 @@ function Messenger({ services, useService }) {
       setMessageText("");
     }
   };
+
   useEffect(() => {
-    contactService.dispatchRequest({ type: "list" });
+    userService.dispatchRequest({ type: [SERVICE?.BULK_RETRIEVE] });
 
     const socket = handleSocketConnection();
     return () => {
@@ -332,8 +336,8 @@ function Messenger({ services, useService }) {
           <PerfectScrollbar>
             <ul className="contacts">
               {/* <li className="contact-first-letter">A</li> */}
-              {contactService &&
-                contactService?.data?.results?.map((contact, key) => {
+              {userService &&
+                userService?.data?.results?.map((contact, key) => {
                   return (
                     <li
                       className="contact_single"
@@ -348,26 +352,18 @@ function Messenger({ services, useService }) {
                               id={contact?.id}
                             />
                           </div>
-                          {/* <span className="online_icon"></span> */}
-                          <span className="online_icon online"></span>
+                          <span
+                            className={`online_icon ${
+                              contact?.online ? "online" : "offline"
+                            }`}
+                          ></span>
                         </div>
 
                         <div className="user_info">
-                          <span>{contact?.email}</span>
-                          <p>
-                            {(() => {
-                              let now = moment();
-                              let login_at = moment(contact?.login_at);
-                              let status = "Unknown";
-                              if (login_at.isValid()) {
-                                status =
-                                  now.minutes() - login_at.minutes() <= 30
-                                    ? "Online"
-                                    : "Offline";
-                              }
-                              return status;
-                            })()}
-                          </p>
+                          <span>
+                            {contact?.nicknamme || contact?.email || "Unamed"}
+                          </span>
+                          <p>{contact?.online ? "online" : "offline"}</p>
                         </div>
                       </div>
                     </li>
@@ -381,7 +377,6 @@ function Messenger({ services, useService }) {
         <ChatMessagesBox>
           {isChatting ? (
             <>
-              {" "}
               <ChatMessages>
                 <PerfectScrollbar
                   className={`card-body contacts_body p-0 dz-scroll  ${

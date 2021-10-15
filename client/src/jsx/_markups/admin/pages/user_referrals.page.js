@@ -1,5 +1,7 @@
 import { Card, Row, Col, Table } from "react-bootstrap";
 import PageTitle from "../layouts/PageTitle";
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
 
 function UserReferralMgmt() {
   return (

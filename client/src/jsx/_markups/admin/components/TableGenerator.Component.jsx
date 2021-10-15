@@ -3,9 +3,12 @@ import pt from "prop-types";
 import React, { useState, useEffect } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 import { TablePagination, Skeleton } from "@mui/material";
+
 // COMPONENTS
 import Empty from "./Empty.Component";
 
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
 // HOOKS
 import useTableSelector from "../../../_hooks/table.select.hook";
 
@@ -17,6 +20,7 @@ function TableGenerator({
   omit = [],
 }) {
   const { data, prevRequest, error, isFetching, dispatchRequest } = service;
+
   const uuid = nanoid(10);
   const [tableData, setTableData] = useState({
     rows: [],
@@ -24,7 +28,7 @@ function TableGenerator({
     fullCols: [],
     cols: [],
   });
-  const { selected, toggleSelect, checkedAll, bulkSelect } = useTableSelector();
+  const { selected, toggleSelect, bulkSelect } = useTableSelector();
   const [count, setCount] = useState(data?.count || 0);
   const [page, setPage] = useState(0);
   const [limit, setLimit] = useState(data?.limit || 10);
@@ -76,15 +80,15 @@ function TableGenerator({
   function onRowsPerPageChange(e, { props }) {
     setLimit(props.value);
     let payload = {
-      ...(() => prevRequest?.list?.payload || {})(),
+      ...(() => prevRequest[SERVICE.BULK_RETRIEVE]?.payload || {})(),
       limit: props.value,
       offset: page * limit || 0,
     };
     let toast = {
-      ...(() => prevRequest?.list?.toast || {})(),
+      ...(() => prevRequest[SERVICE.BULK_RETRIEVE]?.toast || {})(),
     };
     dispatchRequest({
-      type: "list",
+      type: SERVICE.BULK_RETRIEVE,
       payload,
       toast,
       overwrite: false,
@@ -99,15 +103,15 @@ function TableGenerator({
   function onPageChange(e, newPage) {
     setPage(newPage);
     let payload = {
-      ...(() => prevRequest?.list?.payload || {})(),
+      ...(() => prevRequest[SERVICE.BULK_RETRIEVE]?.payload || {})(),
       limit,
       offset: newPage * limit || 0,
     };
     let toast = {
-      ...(() => prevRequest?.list?.toast || {})(),
+      ...(() => prevRequest[SERVICE.BULK_RETRIEVE]?.toast || {})(),
     };
     dispatchRequest({
-      type: "list",
+      type: SERVICE.BULK_RETRIEVE,
       payload,
       toast,
     });
@@ -244,9 +248,9 @@ function TableGenerator({
           <Skeleton style={{ width: "100%", paddingTop: "5%" }} />
           <Skeleton style={{ width: "100%" }} animation="wave" />
           <Skeleton style={{ width: "100%" }} animation={false} />
-          <Skeleton style={{ width: "100%" }} animation={'wave'} />
+          <Skeleton style={{ width: "100%" }} animation={"wave"} />
           <Skeleton style={{ width: "100%" }} animation={false} />
-          <Skeleton style={{ width: "100%" , paddingTop: "5%" }} />
+          <Skeleton style={{ width: "100%", paddingTop: "5%" }} />
         </div>
       )}
     </div>

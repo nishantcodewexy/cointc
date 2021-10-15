@@ -2,6 +2,8 @@ import { Card, Row, Col, Button, Dropdown, Table } from "react-bootstrap";
 import { useEffect } from "react";
 import PageTitle from "../layouts/PageTitle";
 import useToggler from "../../../_hooks/toggler.hook";
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
 
 // COMPONENTS
 import TableGenerator from "../components/TableGenerator.Component";

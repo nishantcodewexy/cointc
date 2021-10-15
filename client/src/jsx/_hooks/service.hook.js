@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import qs from "qs";
 import { useDispatch } from "react-redux";
 import _actions from "../_actions";
+import {SERVICE} from '../_constants'
 const { user } = _actions;
 /**
  * @description - Specify the services to your component will be using. Usually (get, post, put and delete) request
@@ -22,7 +23,7 @@ const { user } = _actions;
  */
 function useService(services) {
   const dispatch = useDispatch();
-
+ 
   const [requestStack, setRequestStack] = useState([]);
   const [lastRequestType, setLastRequestType] = useState("");
   const [isFetching, setIsFetching] = useState(false);
@@ -66,37 +67,70 @@ function useService(services) {
       setLastRequestType(type);
 
       switch (String(type)?.toLowerCase()) {
-        case "post":
-        case "create":
-          response = await services.post(payload);
+        // CREATE --------------------------------------------
+
+        case SERVICE?.CREATE:
+          response = await services[SERVICE?.CREATE](payload);
           handleResponse(response, false, true);
-          requestStack?.list && dispatchRequest(requestStack["list"]);
+
+          // Bulk Retrieve the list after request
+          requestStack[SERVICE?.BULK_RETRIEVE] &&
+            dispatchRequest(requestStack[SERVICE?.BULK_RETRIEVE]);
           break;
 
-        case "put":
-        case "update":
-          response = await services.put(payload);
+        case SERVICE?.BULK_CREATE: {
+          break;
+        }
+
+        // UPDATE --------------------------------------------
+
+        case SERVICE?.UPDATE:
+          response = await services[SERVICE?.UPDATE](payload);
           handleResponse(response, false, true);
-          requestStack?.list && dispatchRequest(requestStack["list"]);
+
+          // Bulk Retrieve the list after request
+          requestStack[SERVICE?.BULK_RETRIEVE] &&
+            dispatchRequest(requestStack[SERVICE?.BULK_RETRIEVE]);
 
           break;
 
-        case "drop":
-        case "delete":
-          response = await services.drop(payload);
+        case SERVICE?.BULK_UPDATE: {
+          return;
+        }
+
+        // DROP --------------------------------------------
+
+        case SERVICE?.DROP: {
+          response = await services[SERVICE?.DROP](payload);
           handleResponse(response, false, true);
-          requestStack?.list && dispatchRequest(requestStack["list"]);
+
+          // Bulk Retrieve the list after request
+          requestStack[SERVICE?.BULK_RETRIEVE] &&
+            dispatchRequest(requestStack[SERVICE?.BULK_RETRIEVE]);
+
+          break;
+        }
+
+        case SERVICE?.BULK_DROP:
+          response = await services[SERVICE?.BULK_DROP](payload);
+          handleResponse(response, false, true);
+
+          // Bulk Retrieve the list after request
+          requestStack[SERVICE?.BULK_RETRIEVE] &&
+            dispatchRequest(requestStack[SERVICE?.BULK_RETRIEVE]);
 
           break;
 
-        case "get":
-          response = await services?.list(payload);
+        // RETRIEVE --------------------------------------------
+
+        case SERVICE?.RETRIEVE:
+          response = await services[SERVICE?.RETRIEVE](payload);
           handleResponse(response, true);
           break;
 
-        case "list":
+        case SERVICE?.BULK_RETRIEVE:
         default: {
-          response = await services?.list(payload);
+          response = await services[SERVICE?.BULK_RETRIEVE](payload);
           handleResponse(response, true);
           break;
         }
@@ -114,6 +148,9 @@ function useService(services) {
   const dispatchRetry = (payload) =>
     requestStack ? dispatchRequest(requestStack[lastRequestType]) : null;
 
+  useEffect(() => {
+    console.log('Services registered', services)
+  })
   return {
     data,
     error,

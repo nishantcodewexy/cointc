@@ -13,14 +13,19 @@ import useToggler from "../../../_hooks/toggler.hook";
 import Moment from "react-moment";
 import moment from "moment";
 import { toast } from "react-toastify";
+import { Switch } from "@mui/material";
+import { Link } from "react-router-dom";
+
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
+
 // COMPONENTS
+import _components from "../components";
 import TableGenerator from "../components/TableGenerator.Component";
 import { ModalForm } from "../components/ModalForm.Component.jsx";
 import UserForm from "../forms/user.form";
-import _components from "../components";
-import { Switch } from "@mui/material";
-import { Link } from "react-router-dom";
 import avartar5 from "../../../../images/avatar/5.png";
+
 const { IdenticonAvatar } = _components;
 
 function UserSecessions(props) {
@@ -71,9 +76,10 @@ function SecessionRequestTable({ services, useService }) {
   const group = useGroupService();
 
   let service = useService({
-    list: group.bulkRetrieveUsers,
+    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
   });
   const { dispatchRequest } = service;
+
   function notifySuccess() {
     toast.success("Success !", {
       position: "top-right",
@@ -98,7 +104,7 @@ function SecessionRequestTable({ services, useService }) {
 
   useEffect(() => {
     dispatchRequest({
-      type: "list",
+      type: [SERVICE?.BULK_RETRIEVE],
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
@@ -126,7 +132,7 @@ function SecessionRequestTable({ services, useService }) {
           color="default"
           onChange={handleChange}
           name="permission"
-          checked={row?.permission}
+          value={row?.permission}
           size="small"
         />
         Accept

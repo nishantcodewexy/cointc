@@ -5,6 +5,8 @@ import styled from "styled-components";
 import { Card, Row, Col, Button, Dropdown, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
 
 // COMPONENTS
 import PageTitle from "../layouts/PageTitle";
@@ -39,7 +41,7 @@ function UserInformation(props) {
           <header className="mb-4">
             <h3>User membership information</h3>
           </header>
-          <Card >
+          <Card>
             <UsersMembershipTable {...props} />
           </Card>
         </Col>
@@ -54,7 +56,7 @@ function UsersPermissionTable({ services, useService }) {
   const group = useGroupService();
 
   let service = useService({
-    list: group.bulkRetrieveUsers,
+    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
   });
   const { dispatchRequest } = service;
   function notifySuccess() {
@@ -81,7 +83,7 @@ function UsersPermissionTable({ services, useService }) {
 
   useEffect(() => {
     dispatchRequest({
-      type: "list",
+      type: SERVICE?.BULK_RETRIEVE,
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
@@ -167,13 +169,13 @@ function UsersMembershipTable({ useService, services }) {
   const group = useGroupService();
 
   let service = useService({
-    list: group.bulkRetrieveUsers,
+    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
   });
 
   const { dispatchRequest } = service;
 
   useEffect(() => {
-    dispatchRequest({ type: "list" });
+    dispatchRequest({ type: SERVICE?.BULK_RETRIEVE });
   }, []);
 
   return (

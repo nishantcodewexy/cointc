@@ -1,6 +1,8 @@
 import { Card, Row, Col, Button, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
 
 function AuthKYCCertification() {
   return (
