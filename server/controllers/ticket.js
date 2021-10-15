@@ -93,11 +93,13 @@ module.exports = (server) => {
         const {
             pre:{
                 user,
-                data
+                data:{
+                    payload
+                }
             }
         } = req
         try {
-            const object =  await Ticket.create({...data,user_id:user.id})
+            const object =  await Ticket.create({...payload,user_id:user.id})
             return await filterFields({object:object.dataValues,exclude:[
                 "user_id",
                 "deleted_at",

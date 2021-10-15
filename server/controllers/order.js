@@ -20,14 +20,14 @@ module.exports = (server) => {
       const {
         pre:{
           user,
-          data
+          data:{payload}
         }
         
       } = req
       
       
       try {
-        return await user.createOrder(data)
+        return await user.createOrder(payload)
         
       } catch (error) {
         console.error(error)
@@ -160,7 +160,9 @@ module.exports = (server) => {
       const {
         pre:{
           user,
-          data
+          data:{
+            payload
+          }
         },
         params:{
           id
@@ -189,7 +191,7 @@ module.exports = (server) => {
             id,
             from_user_id:user.id
           }
-          return await  __update("Order",data,where,options)
+          return await  __update("Order",payload,where,options)
       } catch (error) {
         console.error(error)
         throw boom.boomify(error)

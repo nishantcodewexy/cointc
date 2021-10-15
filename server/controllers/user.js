@@ -2,15 +2,12 @@ const assert = require("assert");
 const searchBuilder = require("sequelize-search-builder");
 const Sequelize = require("sequelize");
 const Joi = require("joi");
-const { roles } = require("../consts");
+const { roles,types } = require("../consts");
 const boom = require("@hapi/boom")
-const {
-  types:{
-    KycStatusType
-  }
-} = require("../consts")
 const faker = require("faker");
 const {logHelper} = require('./_methods/log.helper')
+const schema = require("../validators")
+const helpers = require("../helpers")
 
 /**
  * @description - User controller
@@ -293,11 +290,13 @@ module.exports = (server) => {
           payload = {},
           params: { id },
         } = req;
+
+
         // user is an admin
         // let { email, role, permission, ...profileData } = payload;
         let target_user = await User.findOne({ where: { id } });
         //determine the targe user's allowed attributes
-        let attributes = isBasic(target_user)
+        let attributes = target_user.isBasic
           ? [
               "mode",
               "nickname",

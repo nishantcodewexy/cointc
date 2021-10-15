@@ -29,7 +29,7 @@ module.exports = (server) => {
         },
         {
           method: handleValidation(schema),
-          assign: "payload",
+          assign: "data",
         },
       ],
       handler: create,

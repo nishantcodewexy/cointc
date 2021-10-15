@@ -15,7 +15,9 @@ module.exports = (server) => {
 
   const walletController = {
     create: async (req) => {
-      const { user,payload:{currency} } = req.pre;
+      const { user,data:{
+        payload:{currency}
+      } } = req.pre;
       // const { currency } = req.params;
       
       const wallet = await user.createWallet({ asset: currency })

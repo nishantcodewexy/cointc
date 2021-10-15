@@ -12,12 +12,12 @@ module.exports = (server) => {
 
   const AdvertController = {
     async create(req) {
-      const { user,data } = req.pre;
+      const { user,data:{payload} } = req.pre;
       
       
 
       try {
-        return user.createAdvert(data)
+        return user.createAdvert(payload)
         
         
       } catch (error) {
@@ -59,8 +59,10 @@ module.exports = (server) => {
         pre:{
           user,
           dataset:{
-            soft,
-            data
+            payload:{
+              soft,
+              data
+            }
           }
         }
       } = req
@@ -107,7 +109,7 @@ module.exports = (server) => {
     async update(req) {
       const {
         pre:{
-          data,
+          data:{payload},
           user
         },
         params:{
@@ -122,7 +124,7 @@ module.exports = (server) => {
         
       }
       
-      return await __update("Advert",data,where,options)
+      return await __update("Advert",payload,where,options)
       
     },
     // bulkUdate
@@ -135,7 +137,7 @@ module.exports = (server) => {
       } = req
 
       return await sequelize.transaction(async (transaction)=>{
-        return await Promise.all(dataset.map(data=>{
+        return await Promise.all(dataset.payload.map(data=>{
           const where = {
             from_user_id:user.id,
             id:data.id
