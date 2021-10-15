@@ -339,7 +339,7 @@ function Messenger({ services, useService }) {
               {userService &&
                 userService?.data?.results?.map((contact, key) => {
                   return (
-                    <li
+                    <li key={key}
                       className="contact_single"
                       onClick={handleStartChart(contact?.id)}
                     >
