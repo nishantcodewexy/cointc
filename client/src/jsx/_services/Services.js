@@ -1,19 +1,25 @@
 import axios from "axios";
+import Qs from 'qs';
+import helpers from '../_helpers';
 
 export default class Services {
   constructor(init) {
-    this.headers = init?.headers;
+    this._name = "ROOT";
+    this.token = init?.token;
     this.baseURL = init?.baseURL;
     this.timeout = init?.timeout;
     this.source = axios.CancelToken.source();
     this._initializer = init;
-    this._name = "ROOT";
+    this.headers = this.token && helpers.headers(init?.token);
 
     this.setupAxios({
       headers: this?.headers,
       baseURL: this?.baseURL,
       timeout: this?.timeout,
       cancelToken: this.source.token,
+      paramsSerializer: function (params) {
+        return Qs.stringify(params, {arrayFormat: 'brackets'})
+      },
     });
 
     this.decoratorMessage = `${this._name}::SERVICE ERROR`;
@@ -26,6 +32,7 @@ export default class Services {
   }
 
   getHeaders = () => this.headers;
+  getToken = () => this.token;
 
   /**
    * @method

@@ -19,7 +19,7 @@ function TableGenerator({
   extras = [],
   omit = [],
 }) {
-  const { data, prevRequest, error, isFetching, dispatchRequest } = service;
+  const { data,  _fromStack, error, isFetching, dispatchRequest } = service;
 
   const uuid = nanoid(10);
   const [tableData, setTableData] = useState({
@@ -80,12 +80,12 @@ function TableGenerator({
   function onRowsPerPageChange(e, { props }) {
     setLimit(props.value);
     let payload = {
-      ...(() => prevRequest[SERVICE.BULK_RETRIEVE]?.payload || {})(),
+      ...(() => _fromStack[SERVICE.BULK_RETRIEVE]?.payload || {})(),
       limit: props.value,
       offset: page * limit || 0,
     };
     let toast = {
-      ...(() => prevRequest[SERVICE.BULK_RETRIEVE]?.toast || {})(),
+      ...(() => _fromStack[SERVICE.BULK_RETRIEVE]?.toast || {})(),
     };
     dispatchRequest({
       type: SERVICE.BULK_RETRIEVE,
@@ -103,12 +103,12 @@ function TableGenerator({
   function onPageChange(e, newPage) {
     setPage(newPage);
     let payload = {
-      ...(() => prevRequest[SERVICE.BULK_RETRIEVE]?.payload || {})(),
+      ...(() => _fromStack[SERVICE.BULK_RETRIEVE]?.payload || {})(),
       limit,
       offset: newPage * limit || 0,
     };
     let toast = {
-      ...(() => prevRequest[SERVICE.BULK_RETRIEVE]?.toast || {})(),
+      ...(() => _fromStack[SERVICE.BULK_RETRIEVE]?.toast || {})(),
     };
     dispatchRequest({
       type: SERVICE.BULK_RETRIEVE,
