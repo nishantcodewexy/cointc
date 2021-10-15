@@ -8,7 +8,8 @@ module.exports = (server) => {
     consts: { roles: _roles },
     helpers:{
       permissions:{
-        isUser
+        isUser,
+        isAdminOrError
       }
     }
   } = server.app;
@@ -18,16 +19,14 @@ module.exports = (server) => {
     path: "/bank-details/{id}",
     config: {
       pre: [
-        {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
+        
         {
           method:isUser,
           assign: "user",
+        },
+        {
+          method:isAdminOrError,
+          assign: "isAdmin",
         },
       ],
       handler: retrieve,

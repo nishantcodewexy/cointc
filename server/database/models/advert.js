@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const {types:{AdvertType}} = require("../../consts")
 module.exports = (sequelize, DataTypes) => {
   class Advert extends Model {
     /**
@@ -14,6 +15,10 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(Advert, {
         foreignKey: { name: "from_user_id", allowNull: false },
       });
+
+      Advert.belongsTo(User,{
+        foreignKey: { name: "from_user_id", allowNull: false },
+      })
       
       Advert.belongsTo(Asset, {
         foreignKey: "asset_type",
@@ -67,10 +72,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       advert_type: {
         type: DataTypes.ENUM,
-        values: ["maker", "taker"],
+        values: Object.values(AdvertType),
         allowNull: false,
         validate: {
-          contains: ["maker", "taker"],
+          contains: Object.values(AdvertType),
         },
       },
       payment_time_limit: {
@@ -122,7 +127,9 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Advert",
       underscored: true,
-      tableName: 'tbl_adverts'
+      tableName: 'tbl_adverts',
+      paranoid:true,
+      deletedAt:"archived_at"
     }
   );
   return Advert;

@@ -10,8 +10,9 @@ module.exports = (server) => {
     },
     helpers:{
       permissions:{
-        isAdmin
-      }
+        isUser
+      },
+     handleValidation
     }
   } = server.app;
 
@@ -25,23 +26,18 @@ module.exports = (server) => {
     path: "/tickets",
     config: {
       pre: [
+       
         {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
+          method:isUser,
+          assign: "user",
         },
         {
-          method:isAdmin,
-          assign: "isAdmin",
+          method:handleValidation(schema),
+          assign: "data",
         },
       ],
       handler: create,
-      auth: "jwt",
-      validate:{
-          payload:schema
-      }
+      auth: "jwt"
     },
     
   };

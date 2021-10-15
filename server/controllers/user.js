@@ -2,8 +2,12 @@ const assert = require("assert");
 const searchBuilder = require("sequelize-search-builder");
 const Sequelize = require("sequelize");
 const Joi = require("joi");
-const { roles } = require("../consts");
+const { roles,types } = require("../consts");
+const boom = require("@hapi/boom")
 const faker = require("faker");
+const {logHelper} = require('./_methods/log.helper')
+const schema = require("../validators")
+const helpers = require("../helpers")
 
 /**
  * @description - User controller
@@ -17,8 +21,10 @@ function UserController(server) {
   );
 
   const {
+    
+    
     db: { User, sequelize, Wallet, BasicProfile, AdminProfile, Upload },
-    boom,
+    
     config: { client_url },
     helpers: {
       decrypt,
@@ -248,7 +254,7 @@ function UserController(server) {
           "kyc_document",
         ];
         // Admin only allowed attributes
-        attributes = isAdmin(user) && [
+        attributes = user.isAdmin && [
           "suitability",
           "kyc_status",
           "kyc_document",
@@ -280,60 +286,51 @@ function UserController(server) {
     async update(req) {
       try {
         let {
-          pre: { user },
           payload = {},
           params: { id },
         } = req;
 
-        allowedUserAttrbs = ["permission"];
-        let userUpdates = {},
-          profileUpdates = {};
 
-        Object.keys(payload).forEach((key) => {
-          if (allowedUserAttrbs.includes(key)) {
-            userUpdates[key] = allowedUserAttrbs[key];
-          } else {
-            profileUpdates[key] = allowedUserAttrbs[key];
-          }
-        });
+        const {error,value} = schema.adminUpdateUserSchema.validate(payload)
+        if(error) throw boom.badRequest(error)
 
-        // user is an admin
+
         // let { email, role, permission, ...profileData } = payload;
         let target_user = await User.findOne({ where: { id } });
-        //determine the targe user's allowed attributes
-        let attributes = isBasic(target_user)
-          ? [
-              "mode",
-              "nickname",
-              "kyc",
+        // user is an basic
+        if(target_user&&target_user.isBasic){
+            if([true,false].includes(value.permission)){
+              target_user.permission = value.permission
+              await target_user.save()
+              delete value.permission
+            }
+            //determine the targe user's allowed attributes
+            let attributes =[
+                  
               "suitability",
-              "country",
-              "kyc_status",
-              "last_name",
-              "other_names",
-              "kyc_document",
+              "kyc_status"
             ]
-          : ["nickname", "kyc"];
+    
+            let target_profile = target_user?.profile;
+    
+            if (target_profile) {
+              let options = {
+                attributes,
+                where: {
+                  profile_id: target_profile?.profile_id,
+                },
+                returning: true,
+                logging: console.log,
+              };
+              let model = target_profile?.__proto__.constructor.name;
+              return await sequelize.transaction((transaction) => {
+                return __update(model, value, {...options,transaction})
+                
+              });
+            }
 
-        let target_profile = target_user?.profile;
-
-        if (target_profile) {
-          let options = {
-            attributes,
-            where: {
-              profile_id: target_profile?.profile_id,
-            },
-            returning: true,
-            logging: console.log,
-          };
-          let model = target_profile?.__proto__.constructor.name;
-          return await sequelize.transaction((t) => {
-            return Promise.all([
-              __update("User", userUpdates, { where: { id }, logging: true }),
-              __update(model, profileUpdates, options),
-            ]);
-          });
         }
+
         return boom.notFound("User profile does not exist");
       } catch (error) {
         console.error(error);
@@ -472,9 +469,10 @@ function UserController(server) {
      */
     async retrieve(req) {
       const {
-        query: { id },
+        params: { id },
       } = req;
       try {
+        
         // handle invalid query <id> 400
         if (!id) return boom.badRequest();
 
@@ -557,15 +555,13 @@ function UserController(server) {
           ],
 
           include:
-            _user.role === roles.admin
+            isAdmin
               ? {
                   model: AdminProfile,
-                  as: "admin_profile",
                   attributes: ["nickname", "kyc", "created_at", "updated_at"],
                 }
               : {
                   model: BasicProfile,
-                  as: "profile",
                   attributes: [
                     "mode",
                     "nickname",
@@ -658,6 +654,15 @@ function UserController(server) {
             account.login_at = new Date(Date.now());
             await account.save();
 
+            // log auth
+            await logHelper.authLog(
+              account,
+              {
+                login_at:account.login_at,
+                login_status:logHelper.types.LoginStatusType.LOGGED_IN,
+              }
+            )
+
             return {
               token: jwt.create(account),
               ...account.toPublic(),
@@ -667,6 +672,14 @@ function UserController(server) {
         return boom.notFound("User account not found");
       } catch (error) {
         console.error(error);
+        // log auth failed
+        await logHelper.authLog(
+          account,
+          {
+            login_at:new Date(Date.now()),
+            login_status:logHelper.types.LoginStatusType.FAILED,
+          }
+        )
         return boom.boomify(error);
       }
     },

@@ -1,6 +1,7 @@
 "use strict";
 const uuid = require("uuid");
 module.exports = (server) => {
+  const {__findAllWithPagination} = require("./_methods")(server)
   const {
     db: { Currency, sequelize },
     consts: { roles: _roles },
@@ -47,17 +48,12 @@ module.exports = (server) => {
     /**
      * @function bulkCreate - Bulk create currency (**Admin only**)
      * @param {Object} req - Request object
-     * @param {Object} req.payload
-     * @param {Array} req.payload.data
+     * @param {Object[]} req.payload
      * @returns
      */
     bulkCreate: async (req) => {
       const {
-        payload,
-
-        auth: {
-          credentials: { user },
-        },
+        payload
       } = req;
 
       Currency.beforeBulkCreate((currencies = [], options) => {

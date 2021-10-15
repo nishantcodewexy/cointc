@@ -18,10 +18,10 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       const {User,BankDetail} = models
 
-      User.hasMany(BankDetail,{
+      BankDetail.User = User.hasMany(BankDetail,{
         foreignKey:"user_id"
       })
-      BankDetail.belongsTo(User)
+      User.BankDetails = BankDetail.belongsTo(User)
     }
   }
   BankDetail.init(
@@ -58,10 +58,12 @@ module.exports = (sequelize, DataTypes) => {
       archive_at:DataTypes.DATE
     },
     {
+      paranoid:true,
       sequelize,
       modelName: "BankDetail",
       tableName: "tbl_bankdetails",
       underscored: true,
+      deletedAt:"archive_at"
     }
   );
   return BankDetail;

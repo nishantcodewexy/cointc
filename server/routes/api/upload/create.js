@@ -6,16 +6,11 @@ module.exports = (server) => {
     controllers: {
       upload: { create },
     },
-    consts: { 
-      roles: _roles,
-      types:{
-        country
-      }
-    },
     helpers:{
       permissions:{
-        isAdmin
+        isUser
       }
+      
     }
   } = server.app;
 
@@ -28,20 +23,9 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
+          method: isUser,
+          assign: "user",
         },
-        [
-          
-          {
-            method:isAdmin,
-            assign: "isAdmin",
-          },
-
-        ]
       ],
       handler: create,
       auth: "jwt",

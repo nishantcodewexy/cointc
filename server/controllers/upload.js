@@ -1,6 +1,5 @@
 "use strict";
 const {Op} = require('sequelize');
-
 const {filterFields} = require("../services/model")
 const {
     uploader,
@@ -8,6 +7,7 @@ const {
 } = require("../services/fileUpload")
 
 module.exports = (server) => {
+    const {__findAllWithPagination} = require("./_methods")(server)
   const {
     db: { Upload, sequelize },
     consts: { 
@@ -22,7 +22,7 @@ module.exports = (server) => {
   } = server.app;
   /* const queryInterface = sequelize.getQueryInterface();
       const table = Currency.getTableName(); */
-  const CurrencyController = {
+  const UploadController = {
     /**
      * @function get - Gets currency collection
      * @param {Object} req
@@ -33,20 +33,15 @@ module.exports = (server) => {
             params:{
                 id
             },
-            auth:{
-                credentials:{
-                    user
-                }
-            },
             pre:{
-                isAdmin
+                user
             }
         } = req
         
         const upload =  await Upload.findOne({
             where:{
                 id,
-                ...(isAdmin?{}:{user_id:user.id})
+                ...(user.isAdmin?{}:{user_id:user.id})
             },
             attributes: { exclude: ["deleted_at","user_id","UserId","updated_at","updatedAt"] }
         })
@@ -60,29 +55,18 @@ module.exports = (server) => {
         const {
             query,
             pre:{
-                isAdmin
-            },
-            auth:{
-                credentials:{
-                    user
-                }
+                user
             }
         } = req
 
         
         try {
             let extend = query.extend
-            const filterResults = await filters({
-                query,
-                extra:{
-                    ...(isAdmin&&!!extend?{}:{user_id:user.id})
-                }
-                
-            })
-            
-            
-            const queryset = Upload.findAndCountAll({
-                ...filterResults,
+            let where = {
+                ...(user.isAdmin&&!!extend?{}:{user_id:user.id})
+            }
+
+            let options = {
                 attributes:[
                     "id",
                     "mimetype",
@@ -91,8 +75,9 @@ module.exports = (server) => {
                     "description",
                     "created_at"
                 ]
-            })
-            return await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
+            }
+
+            return await __findAllWithPagination("Upload",query,where,[],{})
             
         } catch (error) {
             console.error(error)
@@ -107,13 +92,12 @@ module.exports = (server) => {
             payload:{
                 file
             },
-            auth:{
-                credentials:{
-                    user
-                }
+            pre:{
+                user
             }
         } = req
 
+        
         
         
         const fileOptions = {
@@ -218,11 +202,5 @@ module.exports = (server) => {
       
     // },
   };
-  const CurrencyGroupController = {}
-    
-  
-  return {
-    ...CurrencyController,
-    group: CurrencyGroupController,
-  };
+ return UploadController
 };

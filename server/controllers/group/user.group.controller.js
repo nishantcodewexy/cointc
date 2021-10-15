@@ -3,7 +3,6 @@ const uuid = require("uuid");
 const faker = require("faker");
 const { filterFields } = require("../../services/model");
 const Joi = require("joi");
-
 module.exports = (server) => {
   /*********************** HELPERS ***************************/
   const { __upsert, __destroy, __assertRole } = require("../_methods/index")(
@@ -12,7 +11,7 @@ module.exports = (server) => {
 
   const {
     db,
-    db: { User, sequelize, Wallet, AdminProfile, BasicProfile },
+    db: { User, sequelize, Wallet, AdminProfile, BasicProfile,Message },
     boom,
     helpers: { paginator, filters },
     consts: {
@@ -36,7 +35,7 @@ module.exports = (server) => {
      * @returns
      */
     remove: async (req, h) => {
-      const {
+      let {
         payload: { data, soft },
         params: { id },
       } = req;
@@ -231,25 +230,38 @@ module.exports = (server) => {
           // pre: { isAdmin },
           query,
         } = req;
-        const { paranoid = 1 } = query;
+        const { paranoid = 1,extend=0 } = query;
+        
         const queryFilters = await filters({ query, searchFields: ["email"] });
 
         const user = await User.findAndCountAll({
           // include: [AdminProfile, BasicProfile],
           attributes: { exclude: ["password"] },
+          // attributes: { 
+          //   include: [[Sequelize.fn("COUNT", Sequelize.col("messages.id")), "messagesCount"]] 
+          //  },
+          // include:[
+          //   {
+          //     model:Message,
+          //     attributes:[
+               
+          //     ]
+          //   }
+          // ],
           ...queryFilters,
           paranoid: Boolean(+paranoid),
         });
-
+        
         const { limit, offset } = queryFilters;
+        
         return paginator({
           queryset: user,
           limit,
           offset,
         });
       } catch (error) {
-        boom.boomify;
         console.error(error);
+        boom.boomify(error)
       }
     },
 

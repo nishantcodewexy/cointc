@@ -9,9 +9,12 @@ module.exports = (server) => {
       types: { banks, country, currencies },
     },
     boom,
-    helpers: {
-      permissions: { isUser },
-    },
+    helpers:{
+      permissions:{
+        isUser,
+        isAdminOrError
+      }
+    }
   } = server.app;
 
   const schema = Joi.object({
@@ -47,6 +50,10 @@ module.exports = (server) => {
         {
           method: isUser,
           assign: "user",
+        },
+        {
+          method:isAdminOrError,
+          assign: "isAdmin",
         },
       ],
       handler: create,

@@ -10,7 +10,7 @@ module.exports = (server) => {
       types: { banks, country, currencies },
     },
     helpers: {
-      permissions: { isUser },
+      permissions: { isUser,isAdminOrError },
     },
   } = server.app;
 
@@ -32,6 +32,10 @@ module.exports = (server) => {
         {
           method: isUser,
           assign: "user",
+        },
+        {
+          method: isAdminOrError,
+          assign: "isAdmin",
         },
       ],
       handler: update,

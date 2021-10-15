@@ -36,7 +36,7 @@ module.exports = (server) => {
         [
           {
             method: isAdminOrError,
-            assign: "user",
+            assign: "isAdmin",
           },
         ],
       ],

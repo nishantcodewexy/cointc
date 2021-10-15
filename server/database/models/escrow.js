@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       const { Escrow, Order } = models;
 
-      Order.hasOne(Escrow, {
+      Escrow.Order = Order.hasOne(Escrow, {
         foreignKey: {
           name: 'order_id'
         }
