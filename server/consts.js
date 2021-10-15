@@ -90,6 +90,13 @@ module.exports = {
     /**
      * @enum {String}
      */
+    UserModeType:{
+      BUYER:"BUYER",
+      SELLER:"SELLER"
+    },
+    /**
+     * @enum {String}
+     */
     AssetType:{
       BTC:"BTC",
       ETH:"ETH",

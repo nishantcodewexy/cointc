@@ -25,8 +25,8 @@ const adminUserKycSchema = Joi.object({
   
 })
 
-const basicUserUpdateSchema = Joi.object({
-    mode:Joi.string().optional(),
+const basicUserProfileUpdateSchema = Joi.object({
+    mode:Joi.string().valid(...Object.keys(types.UserModeType)).optional(),
     nickname:Joi.string().optional(),
     country:Joi.string().valid(...Object.keys(types.country)).optional(),
     last_name:Joi.string().optional(),
@@ -36,11 +36,13 @@ const basicUserUpdateSchema = Joi.object({
     kyc:basicUserKycSchema
 })
 
-
-const adminUserUpdateSchema = Joi.object({
+const adminUserProfileUpdateSchema = Joi.object({
     nickname:Joi.string().optional(),
     kyc:adminUserKycSchema
 })
+
+
+
 
 const adminUpdateUserSchema = Joi.object({
     permission:Joi.boolean().optional(),
@@ -48,11 +50,16 @@ const adminUpdateUserSchema = Joi.object({
     kyc_status:Joi.string().valid(...Object.keys(types.KycStatusType))
 })
 
+
+
+
+
+
 module.exports = {
     adminUserKycSchema,
     basicUserKycSchema,
-    basicUserUpdateSchema,
-    adminUserUpdateSchema,
-    adminUpdateUserSchema
+    basicUserProfileUpdateSchema,
+    adminUpdateUserSchema,
+    adminUserProfileUpdateSchema
     
 }

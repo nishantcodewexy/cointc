@@ -254,7 +254,7 @@ function UserController(server) {
           "kyc_document",
         ];
         // Admin only allowed attributes
-        attributes = isAdmin(user) && [
+        attributes = user.isAdmin && [
           "suitability",
           "kyc_status",
           "kyc_document",
@@ -298,7 +298,7 @@ function UserController(server) {
         // let { email, role, permission, ...profileData } = payload;
         let target_user = await User.findOne({ where: { id } });
         // user is an basic
-        if(target_user.isBasic){
+        if(target_user&&target_user.isBasic){
             if([true,false].includes(value.permission)){
               target_user.permission = value.permission
               await target_user.save()
