@@ -1,70 +1,32 @@
-import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
-import helpers from "../_helpers";
+import Services from "./Services";
 
 /**
  * Class of all Group services
  * @class
  */
 
-class GroupServices {
-  constructor({ headers, timeout = 30000, baseURL = "/account/group" }) {
-    this.source = axios.CancelToken.source();
-    this.headers = headers;
-    this.axios = axios.create({
-      baseURL,
-      timeout,
-      headers,
-      cancelToken: this.source.token,
-    });
+export default class GroupServices extends Services {
+  constructor(init) {
+    super(init);
+    this._name = "GROUP";
     return this;
   }
 
-  getHeaders = () => this.headers;
-  /**
-   * @method
-   * @param {String | "request has been canceled"} message
-   * @returns {String}
-   */
-  abort = (message = "request has been canceled") => {
-    this.source.cancel(message.toString());
-  };
-
-  /**
-   * @method - Request handler decorator
-   * @param {Function} request - Request Callback
-   * @returns
-   */
-  decorate = async (request) => {
-    let result = { success: null, statusCode: null, error: null };
-    try {
-      let { data, status } = await request();
-      return { ...result, success: data };
-    } catch (error) {
-      console.error("GROUP SERVICE ERROR::", { error });
-      this.abort();
-      return {
-        ...result,
-        statusCode: error?.response?.status,
-        error: error?.message,
-      };
-    }
-  };
-
-  /************************* CURRENCY ******************************/
+  //  CURRENCY ------------------------------------------------------------------------------
   /**
    * Currency payload type definition
    * @typedef {Object} currencyPayload
    * @property {String} id - Currency id
    * @property {String} name - Currency name
    * @property {String} type - Currency type
+   * @property {String} iso_code - Currency ISO Code
    */
   /**
    * @method getCurrency - Gets adverts (**Admin only**)
    * @param {Object} params
    * @param {Number} [params.limit] - Response limit
-   * @param {String} [params.name]- Specify the currency name
-   * @param {String} [params.type]- Specify the currency name
+   * @param {String} [params.name] - Specify the currency name
+   * @param {String} [params.type] - Specify the currency name
    * @returns
    */
 
@@ -78,7 +40,14 @@ class GroupServices {
     );
   };
 
-  getCurrency = async (id, params) => {
+  /**
+   * @function retrieveCurrency - Retrieve single currency record
+   * @param {Object} payload
+   * @param {String} payload.id
+   * @param {Object} payload.params
+   * @returns
+   */
+  retrieveCurrency = async ({ id, params }) => {
     return await this.decorate(
       async () =>
         await this.axios(`currency/${id}`, {
@@ -102,20 +71,50 @@ class GroupServices {
         })
     );
   };
-  updateCurrency = async (data) => {
+  /**
+   * @function bulkCreateCurrency - Creates a currency (**Admin only**)
+   * @param {currencyPayload} data
+   * @returns
+   */
+  bulkCreateCurrency = async (data) => {
     return await this.decorate(
       async () =>
-        await this.axios(`currency`, {
+        await this.axios(`currency/bulk`, {
+          method: "POST",
+          data,
+        })
+    );
+  };
+
+  //TODO: Bulk Currency create
+  /**
+   * @function updateCurrency - Update a single currency
+   * @param {Object} payload
+   * @param {String} payload.id
+   * @param {Object} payload.data
+   * @returns
+   */
+  updateCurrency = async ({ id, data }) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`currency/${id}`, {
           method: "PUT",
           data,
         })
     );
   };
 
-  dropCurrency = async (data) => {
+  /**
+   * @function dropCurrency - Delete a single currency record
+   * @param {Object} payload
+   * @param {Object} payload.id
+   * @param {Object} payload.data
+   * @returns
+   */
+  dropCurrency = async ({ id, data }) => {
     return await this.decorate(
       async () =>
-        await this.axios(`currency`, {
+        await this.axios(`currency/${id}`, {
           method: "DELETE",
           data,
         })
@@ -131,7 +130,7 @@ class GroupServices {
    * @returns
    */
   getWallet = async (params) => {
-    return await axios(`/wallet`, {
+    return await this?.axios(`/wallet`, {
       method: "GET",
       params,
     });
@@ -145,13 +144,13 @@ class GroupServices {
    * @returns
    */
   getWalletBalance = async (params) => {
-    return await axios(`/balance`, {
+    return await this?.axios(`/balance`, {
       method: "GET",
       params,
     });
   };
 
-  /************************** STATISTICS *************************/
+  //STATISTICS ---------------------------------------------------------------------
 
   /**
    * Statistics payload types definition
@@ -160,11 +159,11 @@ class GroupServices {
    */
 
   /**
-   *@function getStats - Gets account statistics (***Admins only**)
+   *@function bulkRetreieveStats - Gets account statistics (***Admins only**)
    * @param {statsPayload} params
    * @returns
    */
-  getStats = async (params) => {
+  bulkRetreieveStats = async (params) => {
     return await this.decorate(
       async () =>
         await this.axios(`stats`, {
@@ -174,28 +173,7 @@ class GroupServices {
     );
   };
 
-  /************************** KYC *************************/
-
-  listBankDetail = async (params) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`bank-details`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
-
-  getBankDetail = async (id, params) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`bank-details/${id}`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
-
+  //BANK DETAIL ---------------------------------------------------------------------
   createBankDetail = async (data) => {
     return await this.decorate(
       async () =>
@@ -205,6 +183,27 @@ class GroupServices {
         })
     );
   };
+
+  bulkRetrieveBankDetail = async (params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`bank-details`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  retrieveBankDetail = async ({ id, params }) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`bank-details/${id}`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
   updateBankDetail = async ({ id, ...data }) => {
     console.log({ data });
     return await this.decorate(
@@ -215,7 +214,8 @@ class GroupServices {
         })
     );
   };
-  dropBankDetail = async ({ id, ...data }) => {
+
+  removeBankDetail = async ({ id, ...data }) => {
     return await this.decorate(
       async () =>
         await this.axios(`bank-details/${id}`, {
@@ -224,7 +224,8 @@ class GroupServices {
         })
     );
   };
-  bulkDropBankDetail = async (data) => {
+
+  bulkRemoveBankDetail = async (data) => {
     return await this.decorate(
       async () =>
         await this.axios(`bank-details`, {
@@ -234,14 +235,29 @@ class GroupServices {
     );
   };
 
-  /************************* USER ******************************/
+  // USER --------------------------------------------------------------------------------
+
+  /**
+   * @function bulkCreateUser - Bulk create user - (**Admins only**)
+   * @param {Object} data
+   * @returns
+   */
+  bulkCreateUser = async (data) => {
+    return await this.decorate(async () =>
+      this.axios(`users`, {
+        method: "POST",
+        data,
+      })
+    );
+  };
+
   /**
    * @function bulkListUsers - Gets one or many users (**Admins only**)
    * @param {Object} params
    * @param {String} [params.id] - User ID
    * @returns
    */
-  bulkRetrieveUsers = async (params) => {
+  bulkRetrieveUser = async (params) => {
     return await this.decorate(
       async () =>
         await this.axios(`users`, {
@@ -250,7 +266,8 @@ class GroupServices {
         })
     );
   };
-  retrieveUser = async (id, params) => {
+
+  retrieveUser = async ({ id, ...params }) => {
     return await this.decorate(
       async () =>
         await this.axios(`users/${id}`, {
@@ -261,25 +278,11 @@ class GroupServices {
   };
 
   /**
-   * @function bulkCreateUser - Bulk create user - (**Admins only**)
-   * @param {Object} data
-   * @returns
-   */
-  bulkCreateUsers = async (data) => {
-    return await this.decorate(async () =>
-      this.axios(`users`, {
-        method: "POST",
-        data,
-      })
-    );
-  };
-
-  /**
    * @function bulkUpdateUsers - Bulk update users (**Admins only**)
    * @param {Object} data
    * @returns
    */
-  bulkUpdateUsers = async (data) => {
+  bulkUpdateUser = async (data) => {
     return await this.decorate(
       async () =>
         await this.axios(`users`, {
@@ -288,6 +291,7 @@ class GroupServices {
         })
     );
   };
+
   /**
    * @function updateUser -  update single users (**Admins only**)
    * @param {Object} payload
@@ -319,8 +323,9 @@ class GroupServices {
         })
     );
   };
+
   /**
-   * @function bulkDropUsers - Bulk delete users (**Admins only**)
+   * @function bulkRemoveUser - Bulk delete users (**Admins only**)
    * @param {String []} data - Array of IDs to delete from
    * @returns
    */
@@ -334,11 +339,12 @@ class GroupServices {
     );
   };
 
+  // CHAT --------------------------------------------------------------------------
   /**
-   * @function listChatHistory - list chat histories (**Admins only**)
+   * @function bulkRetrieveChatHistory - list chat histories (**Admins only**)
    * @returns
    */
-  listChatHistory = async (params) => {
+  bulkRetrieveChatHistory = async (params) => {
     return await this.decorate(
       async () =>
         await this.axios(`chat-history`, {
@@ -348,7 +354,8 @@ class GroupServices {
     );
   };
 
-  /************************* SUPPORT TICKETS ******************************/
+  // SUPPORT TICKET --------------------------------------------------------------------------
+  //
   /**
    * Support ticket payload types definition
    * @typedef {Object} ticketPayload
@@ -359,13 +366,13 @@ class GroupServices {
    */
 
   /**
-   * @function listSupportTickets - Gets adverts (**Admin only**)
+   * @function bulkRetrieveSupportTickets - Gets adverts (**Admin only**)
    * @param {Object} params
    * @param {Number} [params.limit] - Response limit
    * @param {String} [params.name] - Specify the currency name
    * @returns
    */
-  listSupportTickets = async function (params) {
+  bulkRetrieveSupportTickets = async function (params) {
     return await this.decorate(
       async () =>
         await this.axios(`tickets`, {
@@ -422,11 +429,11 @@ class GroupServices {
 }
 
 /* ****************************************** */
-export default function useGroupService() {
+/* function useGroupService() {
   const session = useSelector((state) => state?.session);
 
   return new GroupServices({
     headers: helpers.headers(session),
     baseURL: "/api",
   });
-}
+} */
