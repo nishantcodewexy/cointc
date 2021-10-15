@@ -14,7 +14,7 @@ const helpers = require("../helpers")
  * @param {Object} server  - Server instance
  * @returns
  */
-module.exports = (server) => {
+function UserController(server) {
   /*********************** HELPERS ***************************/
   const { __upsert, __update, __destroy, __assertRole } = require("./_methods")(
     server
@@ -41,7 +41,7 @@ module.exports = (server) => {
       types: { ProfileModeType, country },
     },
   } = server.app;
-  const UserController = {
+  return {
     // CREATE------------------------------------------------------------
     /**
      * @function create
@@ -286,43 +286,51 @@ module.exports = (server) => {
     async update(req) {
       try {
         let {
-          pre: { user },
           payload = {},
           params: { id },
         } = req;
 
 
-        // user is an admin
+        const {error,value} = schema.adminUpdateUserSchema.validate(payload)
+        if(error) throw boom.badRequest(error)
+
+
         // let { email, role, permission, ...profileData } = payload;
         let target_user = await User.findOne({ where: { id } });
-        //determine the targe user's allowed attributes
-        let attributes = target_user.isBasic
-          ? [
-              "mode",
-              "nickname",
-              "kyc",
+        // user is an basic
+        if(target_user.isBasic){
+            if([true,false].includes(value.permission)){
+              target_user.permission = value.permission
+              await target_user.save()
+              delete value.permission
+            }
+            //determine the targe user's allowed attributes
+            let attributes =[
+                  
               "suitability",
-              "country",
-              "kyc_status",
-              "last_name",
-              "other_names",
-              "kyc_document",
+              "kyc_status"
             ]
-          : ["nickname", "kyc"];
-        let target_profile = target_user?.profile;
+    
+            let target_profile = target_user?.profile;
+    
+            if (target_profile) {
+              let options = {
+                attributes,
+                where: {
+                  profile_id: target_profile?.profile_id,
+                },
+                returning: true,
+                logging: console.log,
+              };
+              let model = target_profile?.__proto__.constructor.name;
+              return await sequelize.transaction((transaction) => {
+                return __update(model, value, {...options,transaction})
+                
+              });
+            }
 
-        if (target_profile) {
-          let options = {
-            attributes,
-            where: {
-              profile_id: target_profile?.profile_id,
-            },
-            returning: true,
-            logging: console.log,
-          };
-          let model = target_profile?.__proto__.constructor.name;
-          return await __update(model, payload, options);
         }
+
         return boom.notFound("User profile does not exist");
       } catch (error) {
         console.error(error);
@@ -430,7 +438,7 @@ module.exports = (server) => {
      * @param {Object} req
      * @returns
      */
-    bulkList: async (req) => {
+    bulkRetrieve: async (req) => {
       try {
         const { query } = req;
         const queryFilters = await filters({ query, searchFields: ["email"] });
@@ -449,8 +457,8 @@ module.exports = (server) => {
           offset,
         });
       } catch (error) {
-        boom.boomify;
         console.error(error);
+        return boom.boomify(error);
       }
     },
 
@@ -459,7 +467,7 @@ module.exports = (server) => {
      * @param {Object} req
      * @returns
      */
-    async list(req) {
+    async retrieve(req) {
       const {
         params: { id },
       } = req;
@@ -739,8 +747,6 @@ module.exports = (server) => {
       return paginator({ queryset, limit, offset }).catch(boom.boomify);
     },
   };
+}
 
-  return {
-    ...UserController,
-  };
-};
+module.exports = UserController;

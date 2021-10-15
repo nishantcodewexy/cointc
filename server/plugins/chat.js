@@ -4,7 +4,7 @@ const { jwt } = require("../helpers");
 const { Op } = require("sequelize");
 
 function chat(server, options, next) {
-  var io = require("socket.io")(server.listener, { log: false });
+  var io = require("socket.io")(server.listener, { log: true });
 
   const { Chat, Message, User } = server.app.db;
 

@@ -1,153 +1,42 @@
 import Services from "./Services";
 
-/**
- * Class of all Group services
- * @class
- */
-
-export default class GroupServices extends Services {
+class AccountService extends Services {
   constructor(init) {
     super(init);
-    this._name = "GROUP";
+    this._name = "ACCOUNT";
     return this;
   }
 
-  //  CURRENCY ------------------------------------------------------------------------------
+  //LOGIN ----------------------------------------------------------------------
   /**
-   * Currency payload type definition
-   * @typedef {Object} currencyPayload
-   * @property {String} id - Currency id
-   * @property {String} name - Currency name
-   * @property {String} type - Currency type
-   * @property {String} iso_code - Currency ISO Code
-   */
-  /**
-   * @method getCurrency - Gets adverts (**Admin only**)
-   * @param {Object} params
-   * @param {Number} [params.limit] - Response limit
-   * @param {String} [params.name] - Specify the currency name
-   * @param {String} [params.type] - Specify the currency name
+   * @function login - log user to platform
+   * @param {Object} data
    * @returns
    */
-
-  bulkRetrieveCurrency = async (params) => {
+  login = async (data) => {
     return await this.decorate(
       async () =>
-        await this.axios(`currency`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
-
-  /**
-   * @function retrieveCurrency - Retrieve single currency record
-   * @param {Object} payload
-   * @param {String} payload.id
-   * @param {Object} payload.params
-   * @returns
-   */
-  retrieveCurrency = async ({ id, params }) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`currency/${id}`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
-
-  /**
-   * @function createCurrency - Creates a currency (**Admin only**)
-   * @param {currencyPayload} data
-   * @returns
-   */
-  createCurrency = async (data) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`currency`, {
-          method: "POST",
-          data,
-        })
-    );
-  };
-  /**
-   * @function bulkCreateCurrency - Creates a currency (**Admin only**)
-   * @param {currencyPayload} data
-   * @returns
-   */
-  bulkCreateCurrency = async (data) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`currency/bulk`, {
+        await this.axios("auth/authenticate", {
           method: "POST",
           data,
         })
     );
   };
 
-  //TODO: Bulk Currency create
+  //REGISTER ----------------------------------------------------------------------
   /**
-   * @function updateCurrency - Update a single currency
-   * @param {Object} payload
-   * @param {String} payload.id
-   * @param {Object} payload.data
+   * @function register - Register user into platform
+   * @param {Object} data
    * @returns
    */
-  updateCurrency = async ({ id, data }) => {
+  register = async (data) => {
     return await this.decorate(
       async () =>
-        await this.axios(`currency/${id}`, {
-          method: "PUT",
+        await this.axios(`auth/register`, {
+          method: "POST",
           data,
         })
     );
-  };
-
-  /**
-   * @function dropCurrency - Delete a single currency record
-   * @param {Object} payload
-   * @param {Object} payload.id
-   * @param {Object} payload.data
-   * @returns
-   */
-  dropCurrency = async ({ id, data }) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`currency/${id}`, {
-          method: "DELETE",
-          data,
-        })
-    );
-  };
-
-  /************************* WALLET ******************************/
-  /**
-   * @function getWallet - Gets wallets (**Admin only**)
-   * @param {Object} params
-   * @param {Number} [params.limit] - specify response limit
-   * @param {"all" | "withdrawal" | "deposits"} [params.type] - wallet type
-   * @returns
-   */
-  getWallet = async (params) => {
-    return await this?.axios(`/wallet`, {
-      method: "GET",
-      params,
-    });
-  };
-
-  /**
-   * @function getWalletBalance - Gets a wallet balances (**Admins only**)
-   * @param {Object} params
-   * @param {Object} [params.id] - Wallet ID
-   * @param {Object} [params.limit] - Response limit
-   * @returns
-   */
-  getWalletBalance = async (params) => {
-    return await this?.axios(`/balance`, {
-      method: "GET",
-      params,
-    });
   };
 
   //STATISTICS ---------------------------------------------------------------------
@@ -427,13 +316,4 @@ export default class GroupServices extends Services {
     );
   };
 }
-
-/* ****************************************** */
-/* function useGroupService() {
-  const session = useSelector((state) => state?.session);
-
-  return new GroupServices({
-    headers: helpers.headers(session),
-    baseURL: "/api",
-  });
-} */
+export default AccountService;

@@ -454,8 +454,8 @@ module.exports = {
     const q = query.q || "";
     const searchQuery = {};
     const paranoid = query?.paranoid
-    ? Boolean(JSON.parse(query?.paranoid))
-    : true;
+      ? Boolean(JSON.parse(query?.paranoid))
+      : true;
     q &&
       searchFields.forEach((key) => {
         searchQuery[key] = {
@@ -487,7 +487,7 @@ module.exports = {
       ...(orderQuery ? { order: orderQuery } : {}),
       limit: limitQuery || 10,
       offset: offsetQuery || 0,
-      paranoid
+      paranoid,
     };
   },
   /**
@@ -501,18 +501,18 @@ module.exports = {
 
     if (offset) {
       prev = {
-        offset: offset - limit,
+        offset : offset - limit,
       };
     } else {
       prev = null;
     }
 
-    if (count > limit) {
+    if (offset + limit < count) {
       next = {
         offset: offset + limit,
       };
     } else {
-      next = null;
+      next = { offset: count - offset };
     }
 
     return {

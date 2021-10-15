@@ -34,7 +34,7 @@ module.exports = (server) => {
         throw boom.boomify(error);
       }
     },
-    async list(req) {
+    async bulkRetrieve(req) {
       const {
         query,
         pre: { user },
@@ -121,10 +121,6 @@ module.exports = (server) => {
 
     // },
   };
-  const BankDetailGroupController = {};
 
-  return {
-    ...BankDetailController,
-    group: BankDetailGroupController,
-  };
+  return BankDetailController
 };

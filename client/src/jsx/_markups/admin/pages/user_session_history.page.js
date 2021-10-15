@@ -3,6 +3,8 @@ import { Card, Row, Col, Button, Dropdown, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import Moment from "react-moment";
 import moment from "moment";
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
 // COMPONENTS
 import PageTitle from "../layouts/PageTitle";
 import TableGenerator from "../components/TableGenerator.Component";
@@ -28,11 +30,11 @@ function UserSessionHistoryTable({ useService, services }) {
   const { useGroupService } = services;
   const group = useGroupService();
   let service = useService({
-    list: group.listUsers,
+    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
   });
   const { dispatchRequest } = service;
   useEffect(() => {
-    dispatchRequest({ type: "list" });
+    dispatchRequest({ type: SERVICE?.BULK_RETRIEVE});
   }, []);
 
   return (

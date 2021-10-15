@@ -3,11 +3,11 @@
 module.exports = (server) => {
   const {
     controllers: {
-        chathistory: { retrieve },
+        bankdetail: { bulkRetrieve },
     },
-    consts: { roles: _roles },
     helpers:{
       permissions:{
+        isUser,
         isAdminOrError
       }
     }
@@ -15,22 +15,19 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/chat-history/{id}",
+    path: "/bank-details",
     config: {
       pre: [
         {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
+          method:isAdminOrError,
+          assign: "user",
         },
         {
           method:isAdminOrError,
-          assign: "isAdminOrError",
-        }
+          assign: "isAdmin",
+        },
       ],
-      handler: retrieve,
+      handler: bulkRetrieve,
       auth: "jwt",
     },
     

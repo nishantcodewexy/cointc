@@ -2,17 +2,17 @@ import { Form, Button } from "react-bootstrap";
 import { Formik } from "formik";
 import Switch from "@mui/material/Switch";
 import Checkbox from "@mui/material/Checkbox";
-import services from "../../../_services";
 import useService from "../../../_hooks/service.hook";
 import { useEffect } from "react";
 import country_list from "country-list";
-// DELETE USER FORM
+import { SERVICE } from "../../../_constants";
+
 /**
- * @function Drop
- * @param {Object} param0 
- * @returns 
+ * @function Remove - Bank detail removal form
+ * @param {Object} params
+ * @returns
  */
-export function Drop({ action, callback, payload: initialData = {} }) {
+export function Remove({ action, callback, payload: initialData = {} }) {
   return (
     <Formik
       initialValues={{
@@ -21,8 +21,11 @@ export function Drop({ action, callback, payload: initialData = {} }) {
       }}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let response = await action({ id: values?.id, force: values?.force });
-          callback && callback(response);
+          let { success } = await action({
+            id: values?.id,
+            force: values?.force,
+          });
+          success && callback && callback();
         } catch (error) {
           console.error(error);
         } finally {
@@ -64,22 +67,20 @@ export function Drop({ action, callback, payload: initialData = {} }) {
   );
 }
 
-// MODIFY BANK DETAIL FORM
 /**
- * @function Update
- * @param {Object} param0 
- * @returns 
+ * @function Update - Bank detail modifier form
+ * @param {Object} param0
+ * @returns
  */
-export function Update({ action, callback, payload: initialData = {} }) {
-  const group = services.useGroupService();
+export function Update({ action, services, callback, payload: initialData = {} }) {
+  const { group } = services;
   const currencyService = useService({
-    list: group.listCurrency,
+    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveCurrency,
   });
 
   useEffect(() => {
-    currencyService.dispatchRequest({ type: "list" });
+    currencyService.dispatchRequest({ type: SERVICE?.BULK_RETRIEVE });
   }, []);
-
   return (
     <Formik
       initialValues={{
@@ -93,8 +94,8 @@ export function Update({ action, callback, payload: initialData = {} }) {
       validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          await action(values);
-          callback && callback();
+          let { success } = await action(values);
+          success && callback && callback();
         } catch (error) {
           console.error(error);
         } finally {
@@ -113,7 +114,6 @@ export function Update({ action, callback, payload: initialData = {} }) {
       }) =>
         values?.id ? (
           <Form onSubmit={handleSubmit}>
-            {console.log(values)}
             <Form.Group className="mb-4" controlId="formCurrencyCode">
               <Form.Label>Account number</Form.Label>
               <Form.Control
@@ -149,7 +149,7 @@ export function Update({ action, callback, payload: initialData = {} }) {
                 required
                 onChange={handleChange}
                 onBlur={handleBlur}
-                defaultValue={values.currency}
+                value={values.currency}
                 placeholder="Currency"
               >
                 <option>Select currency</option>
@@ -217,18 +217,18 @@ export function Update({ action, callback, payload: initialData = {} }) {
 }
 
 /**
- * @function Create
- * @param {Object} param0 
- * @returns 
+ * @function Create - Bank detail Creator form
+ * @param {Object} param0
+ * @returns
  */
-export function Create({ action, callback }) {
-  const group = services.useGroupService();
+export function Create({ action, services, callback }) {
+  const { group } = services;
   const currencyService = useService({
-    list: group.listCurrency,
+    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveCurrency,
   });
 
   useEffect(() => {
-    currencyService.dispatchRequest({ type: "list" });
+    currencyService.dispatchRequest({ type: SERVICE?.BULK_RETRIEVE });
   }, []);
 
   return (
@@ -243,10 +243,10 @@ export function Create({ action, callback }) {
       validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          await action(values);
-          callback && callback();
+          let { success } = await action(values);
+          if (success) callback && callback();
         } catch (error) {
-          console.error(error);
+          console.error( error);
         } finally {
           setSubmitting(false);
         }
@@ -262,7 +262,6 @@ export function Create({ action, callback }) {
         touched,
       }) => (
         <Form onSubmit={handleSubmit}>
-          {console.log(values)}
           <Form.Group className="mb-4" controlId="formCurrencyCode">
             <Form.Label>Account number</Form.Label>
             <Form.Control
@@ -358,7 +357,10 @@ export function Create({ action, callback }) {
 }
 
 export default Object.assign(Create, {
-  Delete: Drop,
-  Drop,
+  Remove,
+  Drop: Remove,
+  Delete: Remove,
   Update,
+  Modify: Update,
+  Add: Create,
 });

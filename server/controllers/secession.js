@@ -4,143 +4,133 @@ const assert = require("assert");
 const { Op } = require("sequelize");
 
 module.exports = (server) => {
-  const { 
-    db:{
-      Secession
-    },
+  const {
+    db: { Secession },
     boom,
-    helpers:{
-      filters,
-      paginator
-    },
-   } = server.app;
-  const secessionController = {
-    async create(req){
+    helpers: { filters, paginator },
+  } = server.app;
 
+  const secessionController = {
+    // CREATE ---------------------------------------------------------------
+
+    async create(req) {
       const {
         payload,
-        auth:{
-          credentials:{
-            user
-          }
+        auth: {
+          credentials: { user },
         },
-      } = req
+      } = req;
 
-      
-      const {id,level,status,description} =  await Secession.create({...payload,user_id:user.id})
-      return {id,level,status,description}
-      
+      const { id, level, status, description } = await Secession.create({
+        ...payload,
+        user_id: user.id,
+      });
+      return { id, level, status, description };
     },
-    async getAll(req){
+
+    // RETRIEVE ---------------------------------------------------------------
+
+    async bulkRetrieve(req) {
       const {
         query,
-        pre:{
-          isAdmin
+        pre: { isAdmin },
+        auth: {
+          credentials: { user },
         },
-        auth:{
-            credentials:{
-                user
-            }
-        }
-      } = req
-      
-    
+      } = req;
 
-      
+      if (isAdmin) {
+        const filterResults = await filters({
+          query,
+          searchFields: ["status", "description"],
+        });
 
-      if(isAdmin){
-        const filterResults = await filters({query,searchFields:[
-          "status",
-          "description"
-        ]})
+        const queryset = Secession.findAndCountAll(filterResults);
 
-        
-        const queryset = Secession.findAndCountAll(filterResults)
-        
-        
-        return await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
-        
-      }else{
-        const filterResults = await filters({query,extra:{
-          user_id:user.id,
-          archived_at:{
-            [Op.is]: null
-          }
-        }})
-        
-        const queryset = Secession.findAndCountAll(filterResults)
-  
-        return await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
-        
-        
-    }
+        return await paginator({
+          queryset,
+          limit: filterResults.limit,
+          offset: filterResults.offset,
+        });
+      } else {
+        const filterResults = await filters({
+          query,
+          extra: {
+            user_id: user.id,
+            archived_at: {
+              [Op.is]: null,
+            },
+          },
+        });
 
+        const queryset = Secession.findAndCountAll(filterResults);
+
+        return await paginator({
+          queryset,
+          limit: filterResults.limit,
+          offset: filterResults.offset,
+        });
+      }
     },
-    async get(req){
+    async retrieve(req) {
       const {
-        params:{id},
-        pre:{
-          isAdmin
-        }
-      } = req
-      
-      if(!isAdmin) throw boom.forbidden()
+        params: { id },
+        pre: { isAdmin },
+      } = req;
 
-      return await Secession.findByPk(id)
+      if (!isAdmin) throw boom.forbidden();
+
+      return await Secession.findByPk(id);
     },
-    async delete_(req){
+
+    // DELETE ---------------------------------------------------------------
+
+    async remove(req) {
       const {
-        params:{
-          id
-        },
-        pre:{
-          isAdmin
-        }
-      } = req
+        params: { id },
+        pre: { isAdmin },
+      } = req;
 
-
-      if(!isAdmin) throw boom.forbidden()
+      if (!isAdmin) throw boom.forbidden();
 
       return await Secession.destroy({
-        where:{id},
-      })
-
+        where: { id },
+      });
     },
-    async bulkDelete(req){
+    async bulkRemove(req) {
       const {
-        pre:{
-          isAdmin
-        },
-        payload
-      } = req
+        pre: { isAdmin },
+        payload,
+      } = req;
 
-
-      if(!isAdmin) throw boom.forbidden()
+      if (!isAdmin) throw boom.forbidden();
 
       return await Secession.destroy({
-        where:{
-          id:{
-            [Op.in]:payload
-          }
+        where: {
+          id: {
+            [Op.in]: payload,
+          },
         },
-      })
-
+      });
     },
-    async update(req){
+
+    // UPDATE ---------------------------------------------------------------
+    /**
+     * @function update - Update single secession record
+     * @param {Object} req
+     * @returns
+     */
+    async update(req) {
       const {
         payload,
-        params:{
-          id
-        }
-      } = req
+        params: { id },
+      } = req;
 
       return await Secession.update(payload, {
-        where: {id}
-      })
+        where: { id },
+      });
     },
   };
-  
-  const secessionGroupController = (req, h) => {};
 
-  return { ...secessionController, group: secessionGroupController };
+  return secessionController;
 };

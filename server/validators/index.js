@@ -1,6 +1,7 @@
 const Joi = require("joi")
 const {types} = require("../consts")
 
+
 const basicUserKycSchema = Joi.object({
     email:Joi.string().email().optional(),
     payment_methods:Joi.object().optional(),
@@ -25,6 +26,7 @@ const adminUserKycSchema = Joi.object({
 })
 
 const basicUserUpdateSchema = Joi.object({
+    mode:Joi.string().optional(),
     nickname:Joi.string().optional(),
     country:Joi.string().valid(...Object.keys(types.country)).optional(),
     last_name:Joi.string().optional(),
@@ -42,6 +44,7 @@ const adminUserUpdateSchema = Joi.object({
 
 const adminUpdateUserSchema = Joi.object({
     permission:Joi.boolean().optional(),
+    suitability:Joi.number().min(0).max(100).optional(),
     kyc_status:Joi.string().valid(...Object.keys(types.KycStatusType))
 })
 

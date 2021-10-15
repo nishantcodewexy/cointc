@@ -2,7 +2,7 @@ import Home from "./pages";
 import Setting from "./pages/setting.page";
 import UserInfo from "./pages/user_information.page";
 import UserMgmt from "./pages/user_management.page";
-import AdminBankDetailsTable from "./pages/admin_bank_detail.page";
+import AdminBankDetailsTable from "./pages/bankdetail.page";
 import UserSecession from "./pages/user_secession.page";
 import UserSessionHistory from "./pages/user_session_history.page";
 import UserBalance from "./pages/user_balance.page";

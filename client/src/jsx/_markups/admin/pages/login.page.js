@@ -2,24 +2,22 @@
 import { Formik } from "formik";
 import logo from "../../../../images/svg/logo.svg";
 import { useDispatch } from "react-redux";
-import { useLocation, Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import _actions from "../../../_actions";
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
 
 const { user: userAction } = _actions;
 
 const LoginPage = ({ services, useService }) => {
   const dispatch = useDispatch();
-  const location = useLocation();
+  // const location = useLocation();
   const { useUserService } = services;
 
   const account = useUserService();
-  const { isFetching, dispatchRequest } = useService(
-    {
-      post: account?.login,
-    },
-    {},
-    { getImmediate: false }
-  );
+  const { dispatchRequest } = useService({
+    [SERVICE?.LOGIN]: account?.login,
+  });
 
   return (
     <Formik
@@ -47,7 +45,7 @@ const LoginPage = ({ services, useService }) => {
           // const { from } = location.state || { from: { pathname: "/admin" } };
           let request = async () =>
             await dispatchRequest({
-              type: "post",
+              type: SERVICE?.LOGIN,
               payload: {
                 email,
                 password,

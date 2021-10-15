@@ -3,25 +3,24 @@
 module.exports = (server) => {
   const {
     controllers: {
-      secession: { getAll },
+      chathistory: { retrieve },
     },
-    consts: { roles: _roles },
     helpers: {
-      permissions: { isUser },
+      permissions: { isAdminOrError },
     },
   } = server.app;
 
   return {
     method: "GET",
-    path: "/account/u/secessions",
+    path: "/chat-history/{id}",
     config: {
       pre: [
         {
-          method: isUser,
+          method: isAdminOrError,
           assign: "user",
         },
       ],
-      handler: getAll,
+      handler: retrieve,
       auth: "jwt",
     },
   };

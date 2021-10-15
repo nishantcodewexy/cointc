@@ -3,30 +3,25 @@
 module.exports = (server) => {
   const {
     controllers: {
-        secession: { get },
+      secession: { retrieve },
     },
-    consts: { roles: _roles },
-    helpers:{
-      permissions:{
-         isUser
-      }
-    }
+    helpers: {
+      permissions: { isUser },
+    },
   } = server.app;
 
   return {
     method: "GET",
-    path: "/account/u/secessions/{id}",
+    path: "/secessions/{id}",
     config: {
       pre: [
-     
         {
-          method:isUser,
+          method: isUser,
           assign: "user",
         },
       ],
-      handler: get,
+      handler: retrieve,
       auth: "jwt",
     },
-    
   };
 };

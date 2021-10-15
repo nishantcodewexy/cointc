@@ -1,28 +1,32 @@
-import { Row, Col, Card, Button, Modal, Form } from "react-bootstrap";
+import { Row, Col, Card, Button } from "react-bootstrap";
 import useToggler from "../../../_hooks/toggler.hook";
 import PageTitle from "../layouts/PageTitle";
 import { useEffect } from "react";
-import { ToastContainer, toast } from "react-toastify";
+import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
+
 // COMPONENTS
 import TableGenerator from "../components/TableGenerator.Component";
 import { ModalForm } from "../components/ModalForm.Component.jsx";
-import AdminBankForm from "../forms/admin_bank.form";
+import BankDetailForm from "../forms/bankdetail.form";
 
 function AdminBankDetails({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();
   let service = useService({
-    list: group.listBankDetail,
-    get: group.getBankDetail,
-    post: group.createBankDetail,
-    put: group.updateBankDetail,
-    drop: group.dropBankDetail,
+    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveBankDetail,
+    [SERVICE?.RETRIEVE]: group.retrieveBankDetail,
+    [SERVICE?.CREATE]: group.createBankDetail,
+    [SERVICE?.UPDATE]: group.updateBankDetail,
+    [SERVICE?.DROP]: group.removeBankDetail,
   });
   const { dispatchRequest, isFetching } = service;
   useEffect(() => {
     dispatchRequest({
-      type: "list",
+      type: SERVICE?.BULK_RETRIEVE,
       toast: { success: notifySuccess, error: notifyError },
       payload: {},
     });
@@ -60,35 +64,46 @@ function AdminBankDetails({ services, useService }) {
     const [title, form] = (() => {
       try {
         switch (formData?.method) {
-          case "post":
+          case SERVICE?.CREATE:
             return [
               "Add new bank detail",
-              <AdminBankForm
+              <BankDetailForm
+                {...{ services }}
                 action={(requestPayload) =>
-                  dispatchRequest({ type: "post", payload: requestPayload })
+                  dispatchRequest({
+                    type: SERVICE?.CREATE,
+                    payload: requestPayload,
+                  })
                 }
                 payload={formData?.payload}
                 callback={onModalClose}
               />,
             ];
-          case "put":
+          case SERVICE?.UPDATE:
             return [
               "Update bank detail",
-              <AdminBankForm.Update
+              <BankDetailForm.Update
+                {...{ services }}
                 action={(requestPayload) =>
-                  dispatchRequest({ type: "put", payload: requestPayload })
+                  dispatchRequest({
+                    type: SERVICE?.UPDATE,
+                    payload: requestPayload,
+                  })
                 }
                 payload={formData?.payload}
                 callback={onModalClose}
               />,
             ];
-          case "drop":
-          case "delete":
+          case SERVICE?.DROP:
             return [
               "Delete Bank details",
-              <AdminBankForm.Delete
+              <BankDetailForm.Remove
+                {...{ services }}
                 action={(requestPayload) =>
-                  dispatchRequest({ type: "drop", payload: requestPayload })
+                  dispatchRequest({
+                    type: SERVICE?.DROP,
+                    payload: requestPayload,
+                  })
                 }
                 payload={formData?.payload}
                 callback={onModalClose}
@@ -123,7 +138,7 @@ function AdminBankDetails({ services, useService }) {
         <Row style={{ marginBottom: 20, width: "100%" }}>
           <Col></Col>
           <Col sm="auto" style={{ padding: 0 }}>
-            <Button onClick={() => onOpenModal({ method: "post" })}>
+            <Button onClick={() => onOpenModal({ method: SERVICE?.CREATE })}>
               <i className="fa fa-plus"></i> Add New
             </Button>
           </Col>
@@ -188,7 +203,10 @@ function AdminBankDetails({ services, useService }) {
                             background: "none",
                           }}
                           onClick={() =>
-                            onOpenModal({ method: "put", payload: row })
+                            onOpenModal({
+                              method: SERVICE?.UPDATE,
+                              payload: row,
+                            })
                           }
                         >
                           <span className="themify-glyph-29"></span> Edit
@@ -201,7 +219,7 @@ function AdminBankDetails({ services, useService }) {
                             background: "none",
                           }}
                           onClick={() =>
-                            onOpenModal({ method: "delete", payload: row })
+                            onOpenModal({ method: SERVICE?.DROP, payload: row })
                           }
                         >
                           <span className="themify-glyph-165"></span> Delete

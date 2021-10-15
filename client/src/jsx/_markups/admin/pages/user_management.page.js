@@ -10,16 +10,20 @@ import { ModalForm } from "../components/ModalForm.Component.jsx";
 import useToggler from "../../../_hooks/toggler.hook";
 import UserForm from "../forms/user.form";
 
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
+
 function UserManagement({ services, useService }) {
-  const { useGroupService } = services;
-  const group = useGroupService();
+  console.log(services)
+  const { group } = services;
+  // const group = useGroupService();
 
   let service = useService({
-    list: group.bulkRetrieveUsers,
-    post: group.bulkCreateUsers,
-    get: group.retrieveUser,
-    put: group.updateUser,
-    drop: group.removeUser,
+    [SERVICE?.RETRIEVE]: group.retrieveUser,
+    [SERVICE?.UPDATE]: group.updateUser,
+    [SERVICE?.DROP]: group.removeUser,
+    [SERVICE?.BULK_CREATE]: group.bulkCreateUser,
+    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
   });
 
   function notifySuccess() {
@@ -48,7 +52,7 @@ function UserManagement({ services, useService }) {
 
   useEffect(() => {
     dispatchRequest({
-      type: "list",
+      type: SERVICE?.BULK_RETRIEVE,
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
@@ -81,24 +85,24 @@ function UserManagement({ services, useService }) {
     const [title, form] = (() => {
       try {
         switch (formData?.method) {
-          case "post":
+          case SERVICE?.CREATE:
             return [
               "Create new User",
               <UserForm
                 action={(data) =>
-                  dispatchRequest({ type: "post", payload: data })
+                  dispatchRequest({ type: SERVICE?.CREATE, payload: data })
                 }
                 payload={formData?.payload}
                 callback={onModalClose}
               />,
             ];
-          case "put":
+          case SERVICE?.UPDATE:
             return [
               "Update User",
               <UserForm.Update
                 action={(data) =>
                   dispatchRequest({
-                    type: "put",
+                    type: SERVICE?.UPDATE,
                     payload: { id: formData?.payload.id, data },
                   })
                 }
@@ -106,14 +110,13 @@ function UserManagement({ services, useService }) {
                 callback={onModalClose}
               />,
             ];
-          case "drop":
-          case "delete":
+          case SERVICE?.DROP:
             return [
               "Delete User",
               <UserForm.Drop
                 action={(data) =>
                   dispatchRequest({
-                    type: "drop",
+                    type: SERVICE?.DROP,
                     payload: { id: formData?.payload.id, data },
                   })
                 }
@@ -226,7 +229,7 @@ function UserManagement({ services, useService }) {
                     }
                     return false;
                   };
-                  console.log(row?.kyc);
+
                   let status =
                     role == "admin" ? (
                       <small className="badge badge-success text-white">
@@ -249,7 +252,6 @@ function UserManagement({ services, useService }) {
                     isOpen,
                     onOpen: onPopoverOpen,
                     onClose: onPopoverClose,
-                    isOpen: isPopoverOpen,
                     toggledPayload: popOverTarget,
                   } = useToggler();
                   const handleClick = (event) => {
@@ -257,9 +259,9 @@ function UserManagement({ services, useService }) {
                     // onPopoverOpen(popOverTarget ? null : event.target);
                   };
 
-                  const handleClose = () => {
+                  /* const handleClose = () => {
                     onPopoverClose(null);
-                  };
+                  }; */
 
                   const open = Boolean(popOverTarget);
                   const id = open ? row?.id : undefined;
@@ -279,7 +281,7 @@ function UserManagement({ services, useService }) {
                           fontSize: 12,
                         }}
                         onClick={() =>
-                          onOpenModal({ method: "put", payload: row })
+                          onOpenModal({ method: SERVICE?.UPDATE, payload: row })
                         }
                       >
                         <span className="themify-glyph-29"></span> Edit
@@ -313,7 +315,7 @@ function UserManagement({ services, useService }) {
                                 href="#"
                                 onClick={() =>
                                   onOpenModal({
-                                    method: "delete",
+                                    method: SERVICE?.DROP,
                                     payload: { ...row, force: false },
                                   })
                                 }
@@ -326,7 +328,7 @@ function UserManagement({ services, useService }) {
                                 href="#"
                                 onClick={() =>
                                   onOpenModal({
-                                    method: "delete",
+                                    method: SERVICE?.DROP,
                                     payload: { ...row, force: true },
                                   })
                                 }

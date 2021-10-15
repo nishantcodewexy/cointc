@@ -5,7 +5,6 @@ module.exports = (server) => {
     controllers: {
       secession: { update },
     },
-    consts: { roles: _roles },
     helpers: {
       permissions: { isUser },
     },
@@ -18,9 +17,9 @@ module.exports = (server) => {
 
   return {
     method: ["PUT", "PATCH"],
-    path: "/account/u/secessions/{id}",
+    path: "/secessions/{id}",
     config: {
-      pre: [       
+      pre: [
         {
           method: isUser,
           assign: "user",

@@ -14,7 +14,39 @@ module.exports = (server) => {
   const CurrencyController = {
     // CREATE------------------------------------------------------------
     /**
-     * @function create - Creates currency (**Admin only**)
+     * @function create - Create single currency (**Admin only**)
+     * @param {Object} req - Request object
+     * @param {Object} req.payload
+     * @returns
+     */
+    create: async (req) => {
+      const {
+        payload,
+        pre: { user },
+      } = req;
+      /*  Currency.beforeCreate((currency, options) => {
+        currency.created_by = user.id;
+        currency.id = uuid.v4();
+        return currency;
+      });
+ */
+      try {
+        return await Currency.create(
+          { ...payload, created_by: user.id },
+          {
+            validate: true,
+            fields: ["id", "type", "iso_code", "name", "created_by"],
+            returning: ["id", "type", "iso_code", "name"],
+          }
+        );
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
+
+    /**
+     * @function bulkCreate - Bulk create currency (**Admin only**)
      * @param {Object} req - Request object
      * @param {Object[]} req.payload
      * @returns
@@ -57,7 +89,7 @@ module.exports = (server) => {
     async update(req) {
       const {
         payload,
-        param: { id },
+        params: { id },
         pre: { user },
       } = req;
 
@@ -82,16 +114,14 @@ module.exports = (server) => {
       }
     },
     /**
-     * @function update - Updates single currency
+     * @function bulkUpdate - Updates single currency
      * @param {Object} req
      * @returns
      */
     async bulkUpdate(req) {
       const {
         payload,
-        auth: {
-          credentials: { user },
-        },
+        pre: { user },
       } = req;
 
       try {
@@ -127,7 +157,31 @@ module.exports = (server) => {
 
     // DELETE------------------------------------------------------------
     /**
-     * @function destroy - Destroy single currency record
+     * @function remove - Destroy single currency record
+     * @param {Object} req
+     * @returns
+     */
+    async remove(req) {
+      const {
+        payload: { force = false },
+        pre: { user },
+        params: { id },
+      } = req;
+
+      try {
+        return {
+          deleted: await Currency.destroy({
+            where: { id, created_by: user.id },
+            force,
+          }).then((affectedRows) => affectedRows),
+        };
+      } catch (error) {
+        console.error(error);
+        return boom.forbidden(error);
+      }
+    },
+    /**
+     * @function bulkRemove - Remove Multiple currency record
      * @param {Object} req
      * @returns
      */

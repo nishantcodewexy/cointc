@@ -1,12 +1,13 @@
 import request from "./request.constant";
 import session from "./session.constant";
-// import alert from "./alerts.constant";
+import service from "./service.constant";
 import notice from "./notice.constant";
 
+export const SERVICE = service;
 const constants = {
   REQUEST: request,
   SESSION: session,
-  // alert,
+  SERVICE: service,
   NOTICE: notice,
 };
 

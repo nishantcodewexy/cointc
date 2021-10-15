@@ -3,25 +3,24 @@
 module.exports = (server) => {
   const {
     controllers: {
-      user: { retrieve },
+      secession: { bulkRetrieve },
     },
-    consts: { roles: _roles },
     helpers: {
-      permissions: { isUser },
+      permissions: { isAdminOrError },
     },
   } = server.app;
 
   return {
     method: "GET",
-    path: "/users/{id}",
+    path: "/secessions",
     config: {
       pre: [
         {
-          method: isUser,
+          method: isAdminOrError,
           assign: "user",
         },
       ],
-      handler: retrieve,
+      handler: bulkRetrieve,
       auth: "jwt",
     },
   };

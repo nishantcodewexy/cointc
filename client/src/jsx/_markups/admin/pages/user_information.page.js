@@ -5,6 +5,9 @@ import styled from "styled-components";
 import { Card, Row, Col, Button, Dropdown, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
+import { Switch } from "@mui/material";
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
 
 // COMPONENTS
 import PageTitle from "../layouts/PageTitle";
@@ -39,7 +42,7 @@ function UserInformation(props) {
           <header className="mb-4">
             <h3>User membership information</h3>
           </header>
-          <Card >
+          <Card>
             <UsersMembershipTable {...props} />
           </Card>
         </Col>
@@ -50,13 +53,23 @@ function UserInformation(props) {
 export default UserInformation;
 
 function UsersPermissionTable({ services, useService }) {
-  const { useGroupService } = services;
-  const group = useGroupService();
+  const { useAccountService } = services;
+  const account = useAccountService();
+
+  let bulkServicePayload = {
+    "order[updatedAt]": "DESC",
+    "order[createdAt]": "DESC",
+    "options[paranoid]": false,
+  };
 
   let service = useService({
-    list: group.bulkRetrieveUsers,
+    [SERVICE?.BULK_RETRIEVE]: (_p = bulkServicePayload) =>
+      account.bulkRetrieveUser(_p),
+    [SERVICE?.UPDATE]: account?.updateUser,
   });
-  const { dispatchRequest } = service;
+
+  const { dispatchRequest, addServiceHook } = service;
+
   function notifySuccess() {
     toast.success("Success !", {
       position: "top-right",
@@ -81,38 +94,59 @@ function UsersPermissionTable({ services, useService }) {
 
   useEffect(() => {
     dispatchRequest({
-      type: "list",
-      payload: {
-        "order[updatedAt]": "DESC",
-        "order[createdAt]": "DESC",
-        "options[paranoid]": false,
-      },
+      type: SERVICE?.BULK_RETRIEVE,
       toast: { success: notifySuccess, error: notifyError },
     });
   }, []);
 
-  const permit = ({ key, row }) => (
-    <div className="d-flex" style={{ gap: 10 }}>
-      <button
-        style={{
-          border: "none",
-          background: "transparent",
-        }}
-        className="text-success"
-      >
-        <span className="simple-check"></span> Allow
-      </button>
-      <button
-        style={{
-          border: "none",
-          background: "transparent",
-        }}
-        className="text-danger"
-      >
-        <span className="simple-close"></span> Block
-      </button>
-    </div>
-  );
+  function Permit({ key, row }) {
+    const [permission, setPermission] = useState(row?.permission);
+    const _account = useAccountService();
+
+    let { dispatchRequest: _d } = useService({
+      [SERVICE?.UPDATE]: _account?.updateUser,
+    });
+
+    useEffect(() => {
+      // setRequest(
+      //   addServiceHook(
+      //     "modify:account:permission",
+      //     useAccountService?.updateUser
+      //   )
+      // );
+    }, []);
+    function handleChange(e, value) {
+      // TODO: Make Permission change request
+      _d({
+        type: SERVICE?.UPDATE,
+        payload: { id: row?.id, data: { permission } },
+        reload: false,
+        toast: { success: notifySuccess, error: notifyError },
+      });
+      setPermission(value);
+    }
+    return (
+      <small className="d-flex" style={{ gap: 10, alignItems: "center" }}>
+        <strong
+          className="text-danger"
+          style={{ opacity: !permission ? 1 : 0.5 }}
+        >
+          Block
+        </strong>
+        <Switch
+          color={"default"}
+          name={row?.id}
+          onChange={handleChange}
+          checked={permission} />
+        <strong
+          className="text-success"
+          style={{ opacity: permission ? 1 : 0.5 }}
+        >
+          Allow
+        </strong>
+      </small>
+    );
+  }
 
   return (
     <>
@@ -138,7 +172,7 @@ function UsersPermissionTable({ services, useService }) {
           id: ({ row }) => {
             return <>{row?.id}</>;
           },
-          permission: permit,
+          permission: Permit,
           joined: ({ row }) => {
             return (
               <Moment format="YYYY/MM/DD" date={row?.profile?.createdAt} />
@@ -167,13 +201,13 @@ function UsersMembershipTable({ useService, services }) {
   const group = useGroupService();
 
   let service = useService({
-    list: group.bulkRetrieveUsers,
+    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
   });
 
   const { dispatchRequest } = service;
 
   useEffect(() => {
-    dispatchRequest({ type: "list" });
+    dispatchRequest({ type: SERVICE?.BULK_RETRIEVE });
   }, []);
 
   return (

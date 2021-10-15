@@ -4,24 +4,28 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      currency: { bulkCreate },
+      chathistory: { create },
+    },
+    consts: {
+      types: { country },
     },
     helpers: {
       permissions: { isAdminOrError },
     },
   } = server.app;
 
-  const schema = Joi.array().items(
-    Joi.object({
-      type: Joi.string().required(),
-      iso_code: Joi.string().required(),
-      name: Joi.string().required(),
-    })
-  );
+  const schema = Joi.object({
+    country: Joi.string()
+      .valid(...Object.keys(country))
+      .required(),
+    visitor_email: Joi.string()
+      .email()
+      .required(),
+  });
 
   return {
     method: "POST",
-    path: "/currency/bulk",
+    path: "/chat-history",
     config: {
       pre: [
         [
@@ -31,7 +35,7 @@ module.exports = (server) => {
           },
         ],
       ],
-      handler: bulkCreate,
+      handler: create,
       auth: "jwt",
       validate: {
         payload: schema,

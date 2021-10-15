@@ -4,6 +4,8 @@ import PageTitle from "../layouts/PageTitle";
 import useTableSelector from "../../../_hooks/table.select.hook";
 import { LinearProgress, TablePagination } from "@material-ui/core";
 import { useEffect } from "react";
+// CONSTANTS
+import { SERVICE } from "../../../_constants";
 
 import useToggler from "../../../_hooks/toggler.hook";
 import EmptyRecord from "../components/Empty.Component";

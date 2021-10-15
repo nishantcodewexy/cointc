@@ -1,6 +1,6 @@
-function headers(session) {
+function headers(token) {
   return {
-    Authorization: session?.user ? `Bearer ${session.user?.token}` : "",
+    Authorization: token ?`Bearer ${token}` : "",
   };
 }
 export default headers;
