@@ -8,26 +8,26 @@ import { SERVICE } from "../../../_constants";
 import TableGenerator from "../components/TableGenerator.Component";
 
 function UserBalance({ services, useService }) {
-  const { useGroupService } = services;
-  const group = useGroupService();
-  let { data, error, isFetching, dispatchRequest } = useService({
-    get: group.listUsers,
+  const { wallet } = services;
+  let service = useService({
+    [SERVICE?.BULK_RETRIEVE]: wallet.bulkRetrieveBalance,
   });
-
+  const { dispatchRequest } = service;
   useEffect(() => {
-    dispatchRequest({ type: "get" });
+    dispatchRequest({ type: SERVICE?.BULK_RETRIEVE });
   }, []);
+
   return (
     <>
       <PageTitle activeMenu="User Balance" motherMenu="User Management" />
       <Row style={{ marginBottom: 60 }}>
         <Col>
-        <header className="mb-4">
+          <header className="mb-4">
             <h3>User Balances</h3>
           </header>
           <Card>
             <TableGenerator
-              data={data?.results}
+              {...{ service }}
               mapping={{}}
               omit="*"
               transformers={{}}

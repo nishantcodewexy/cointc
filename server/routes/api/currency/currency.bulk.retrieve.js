@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-        currency: { bulkList },
+        currency: { bulkRetrieve },
     },
     consts: { roles: _roles },
     helpers:{
@@ -24,7 +24,7 @@ module.exports = (server) => {
         },
         
       ],
-      handler: bulkList,
+      handler: bulkRetrieve,
       auth: "jwt",
     },
     

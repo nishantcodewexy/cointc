@@ -179,7 +179,6 @@ function UserManagement({ services, useService }) {
 
       <Row>
         <Col>
-          <Card>
             <TableGenerator
               mapping={{
                 id: "user_id",
@@ -344,7 +343,6 @@ function UserManagement({ services, useService }) {
                 },
               }}
             />
-          </Card>
         </Col>
       </Row>
     </>

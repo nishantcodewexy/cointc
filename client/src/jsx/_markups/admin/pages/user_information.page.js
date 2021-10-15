@@ -30,9 +30,7 @@ function UserInformation(props) {
           <header className="mb-4">
             <h3>Permissions</h3>
           </header>
-          <Card>
-            <UsersPermissionTable {...props} />
-          </Card>
+          <UsersPermissionTable {...props} />
         </Col>
       </Row>
 
@@ -42,9 +40,7 @@ function UserInformation(props) {
           <header className="mb-4">
             <h3>User membership information</h3>
           </header>
-          <Card>
-            <UsersMembershipTable {...props} />
-          </Card>
+          <UsersMembershipTable {...props} />
         </Col>
       </Row>
     </>
@@ -137,7 +133,8 @@ function UsersPermissionTable({ services, useService }) {
           color={"default"}
           name={row?.id}
           onChange={handleChange}
-          checked={permission} />
+          checked={permission}
+        />
         <strong
           className="text-success"
           style={{ opacity: permission ? 1 : 0.5 }}

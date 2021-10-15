@@ -228,92 +228,108 @@ class AccountService extends Services {
     );
   };
 
-  // CHAT --------------------------------------------------------------------------
-  /**
-   * @function bulkRetrieveChatHistory - list chat histories (**Admins only**)
-   * @returns
-   */
-  bulkRetrieveChatHistory = async (params) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`chat-history`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
+  //SECESSION ---------------------------------------------------------------------
 
-  // SUPPORT TICKET --------------------------------------------------------------------------
-  //
-  /**
-   * Support ticket payload types definition
-   * @typedef {Object} ticketPayload
-   * @property {String} id - Support ticket id
-   * @property {String} [status] - Support ticket status
-   * @property {String} [subject] - Support ticket status
-   * @property {String} [ticket_no] - Support ticket status
-   */
-
-  /**
-   * @function bulkRetrieveSupportTickets - Gets adverts (**Admin only**)
-   * @param {Object} params
-   * @param {Number} [params.limit] - Response limit
-   * @param {String} [params.name] - Specify the currency name
-   * @returns
-   */
-  bulkRetrieveSupportTickets = async function (params) {
-    return await this.decorate(
-      async () =>
-        await this.axios(`tickets`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
-  /**
-   * @function getSupportTicket - Gets adverts (**Admin only**)
-   * @param {Object} params
-   * @param {Number} [params.limit] - Response limit
-   * @param {String} [params.name] - Specify the currency name
-   * @returns
-   */
-  getSupportTicket = async function (id, params) {
-    return await this.decorate(
-      async () =>
-        await this.axios(`tickets/${id}`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
-
-  /**
-   * @function updateSupportTicket - Update single support ticket (**Admin only**)
+   /**
+   * @function bulkCreateUser - Bulk create user - (**Admins only**)
    * @param {Object} data
    * @returns
    */
-  updateSupportTicket = async (id, data) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`tickets/${id}`, {
-          method: "PUT",
+    bulkCreateSecession = async (data) => {
+      return await this.decorate(async () =>
+        this.axios(`secession`, {
+          method: "POST",
           data,
         })
-    );
-  };
-  /**
-   * @function updateBulkSupportTicket - Bulk update support ticket (**Admin only**)
-   * @param {ticketPayload []} data
-   * @returns
-   */
-  updateSupportTicket = async (data) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`tickets`, {
-          method: "PUT",
-          data,
-        })
-    );
-  };
+      );
+    };
+  
+    /**
+     * @function bulkListUsers - Gets one or many users (**Admins only**)
+     * @param {Object} params
+     * @param {String} [params.id] - User ID
+     * @returns
+     */
+    bulkRetrieveSecession = async (params) => {
+      return await this.decorate(
+        async () =>
+          await this.axios(`secession`, {
+            method: "GET",
+            params,
+          })
+      );
+    };
+  
+    retrieveSecession = async ({ id, ...params }) => {
+      return await this.decorate(
+        async () =>
+          await this.axios(`secession/${id}`, {
+            method: "GET",
+            params,
+          })
+      );
+    };
+  
+    /**
+     * @function bulkUpdateUsers - Bulk update users (**Admins only**)
+     * @param {Object} data
+     * @returns
+     */
+    bulkUpdateSecession = async (data) => {
+      return await this.decorate(
+        async () =>
+          await this.axios(`secession`, {
+            method: "PUT",
+            data,
+          })
+      );
+    };
+  
+    /**
+     * @function updateUser -  update single users (**Admins only**)
+     * @param {Object} payload
+     * @param {String} payload.id
+     * @param {String} payload.data
+     * @returns
+     */
+    updateSecession = async ({ id, data }) => {
+      return await this.decorate(
+        async () =>
+          await this.axios(`secession/${id}`, {
+            method: "PUT",
+            data,
+          })
+      );
+    };
+  
+    /**
+     * @function removeUser - Bulk delete users (**Admins only**)
+     * @param {String} id
+     * @returns
+     */
+    removeSecession = async ({ id, data }) => {
+      return await this.decorate(
+        async () =>
+          await this.axios(`secession/${id}`, {
+            method: "DELETE",
+            data,
+          })
+      );
+    };
+  
+    /**
+     * @function bulkRemoveUser - Bulk delete users (**Admins only**)
+     * @param {String []} data - Array of IDs to delete from
+     * @returns
+     */
+    bulkRemoveSecession = async (data) => {
+      return await this.decorate(
+        async () =>
+          await this.axios(`secession`, {
+            method: "DELETE",
+            data,
+          })
+      );
+    };
 }
 export default AccountService;

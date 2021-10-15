@@ -220,7 +220,7 @@ module.exports = (server) => {
      * @param {Object} req
      * @returns
      */
-    async list(req) {
+    async retrieve(req) {
       try {
         let {
           query,
@@ -249,7 +249,7 @@ module.exports = (server) => {
      * @param {Object} req
      * @returns
      */
-    async bulkList(req) {
+    async bulkRetrieve(req) {
       try {
         let { query } = req;
         const queryFilters = await filters({
