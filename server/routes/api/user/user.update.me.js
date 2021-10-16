@@ -25,7 +25,7 @@ module.exports = (server) => {
         },
         {
           method: handleValidationWithRole({
-            admin:schema.adminUpdateUserSchema,
+            admin:schema.adminUserProfileUpdateSchema,
             basic:schema.basicUserProfileUpdateSchema
           },
           server.app.helpers

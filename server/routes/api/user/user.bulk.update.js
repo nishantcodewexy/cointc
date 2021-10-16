@@ -1,4 +1,5 @@
 "use strict";
+const {types} = require("../../../consts")
 const Joi = require("joi");
 module.exports = (server) => {
   const {
@@ -15,7 +16,7 @@ module.exports = (server) => {
     data: Joi.array().items(
       Joi.object({
         id: Joi.string().uuid(),
-        mode: Joi.string().optional(),
+        mode: Joi.string().valid(...Object.keys(types.UserModeType)).optional(),
         nickname: Joi.string().optional(),
         role: Joi.string()
           .valid(...Object.keys(_roles))

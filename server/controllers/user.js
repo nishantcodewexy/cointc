@@ -244,35 +244,34 @@ function UserController(server) {
         //determine the allowed attributes to modify per user role
 
         //  Generally allowed attrinutes
-        let attributes = [
-          "last_name",
-          "other_names",
+        let attributes = [];
+        // Admin only allowed attributes
+        attributes = user.isAdmin? [
           "nickname",
           "kyc",
+        ]:[
           "mode",
+          "nickname",
           "country",
+          "last_name",
+          "other_names",
+          "profile_pic",
           "kyc_document",
-        ];
-        // Admin only allowed attributes
-        attributes = user.isAdmin && [
-          "suitability",
-          "kyc_status",
-          "kyc_document",
-          "permission",
-          ...attributes,
+          "kyc"
         ];
 
         let options = {
           returning: true,
-          attributes,
           where: {
-            id: user?.id,
+            user_id: user?.id,
           },
+          attributes
         };
-        let model = user?.__proto__.constructor.name;
+        let model = user.isAdmin?"AdminProfile":"BasicProfile";
         return await __update(model, payload, options);
       } catch (error) {
         console.error(error);
+        throw boom.boomify(error)
       }
     },
 
