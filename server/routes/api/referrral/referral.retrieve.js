@@ -3,9 +3,9 @@
 module.exports = (server) => {
   const {
     controllers: {
-      referral: { list },
+      referral: { retrieve },
     },
-    consts: { roles: _roles },
+   
     helpers:{
       permissions:{
         isUser,
@@ -15,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/referrals",
+    path: "/referral/{id}",
     config: {
       pre: [
         {
@@ -23,7 +23,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: list,
+      handler: retrieve,
       auth: "jwt",
     },
     

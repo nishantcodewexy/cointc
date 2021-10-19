@@ -12,7 +12,7 @@ const assert = require("assert");
 const { nanoid } = require("nanoid");
 const glob = require("glob");
 const util = require("util");
-const { Op,QueryInterface } = require("sequelize");
+const { Op, QueryInterface } = require("sequelize");
 const permissions = require("../permissions");
 const {
   roles: { admin, basic },
@@ -37,19 +37,18 @@ const {
   // MAINNET_API_KEY,
 } = process.env;
 
-
 /****************************************************
  * declare all the jsdoc type def here and import in in another file to get autocomplete feature
  ****************************************************/
 /**
- * 
+ *
  * @typedef FiltersArgs
  * @property {Object} query
  * @property {String[]} searchFields
  * @property {Object} extras
  */
 /**
- * 
+ *
  * @typedef FiltersResponse
  * @property {Object} where
  * @property {String[]} [order]
@@ -58,14 +57,14 @@ const {
  */
 
 /**
- * 
+ *
  * @typedef PaginatorArgs
  * @property {QueryInterface} queryset
  * @property {Number} limit
  * @property {Number} offset
  */
 /**
- * 
+ *
  * @typedef PaginatorResponse
  * @property {Number} count
  * @property {Object} [next]
@@ -77,9 +76,8 @@ const {
  * @property {Object[]} results
  */
 
-
 /**
- * 
+ *
  * @typedef filterFieldsArgs
  * @property {Object} object
  * @property {String[]} include
@@ -89,7 +87,7 @@ const {
 
 /**
  * @typedef HandleValidationOptions
- * @property {import("joi").AnySchema} [payload] 
+ * @property {import("joi").AnySchema} [payload]
  * @property {import("joi").AnySchema} [query]
  * @property {import("joi").AnySchema} [params]
  */
@@ -334,32 +332,6 @@ module.exports = {
   jwt: JWTHelpers(),
   mailer: MailerHelpers(),
   // wallets: wallets,
-  /****************************************************
-   * Generates private/public key pair
-   ****************************************************/
-  async generateKeyPair(passphrase, cb) {
-    const { generateKeyPair } = require("crypto");
-
-    return util.promisify(() =>
-      generateKeyPair(
-        "rsa",
-        {
-          modulusLength: 4096,
-          publicKeyEncoding: {
-            type: "spki",
-            format: "pem",
-          },
-          privateKeyEncoding: {
-            type: "pkcs8",
-            format: "pem",
-            cipher: "aes-256-cbc",
-            passphrase,
-          },
-        },
-        cb
-      )
-    );
-  },
 
   /****************************************************
    * Generated referral code
@@ -401,6 +373,33 @@ module.exports = {
   },
 
   generator: {
+    /****************************************************
+     * Generates private/public key pair
+     ****************************************************/
+    async secretKeys(passphrase, cb) {
+      const { generateKeyPair } = require("crypto");
+
+      return util.promisify(() =>
+        generateKeyPair(
+          "rsa",
+          {
+            modulusLength: 4096,
+            publicKeyEncoding: {
+              type: "spki",
+              format: "pem",
+            },
+            privateKeyEncoding: {
+              type: "pkcs8",
+              format: "pem",
+              cipher: "aes-256-cbc",
+              passphrase,
+            },
+          },
+          cb
+        )
+      );
+    },
+    
     referralCode(email) {
       let username = email.split("@")[0];
       let uuid = "";
@@ -471,7 +470,7 @@ module.exports = {
 
     const search = new searchBuilder(Sequelize, query).setConfig({
         "default-limit": 10,
-        logging: true,
+      logging: console.log,
       }),
       whereQuery = search.getWhereQuery(),
       orderQuery = search.getOrderQuery(),
@@ -501,7 +500,7 @@ module.exports = {
 
     if (offset) {
       prev = {
-        offset : offset - limit,
+        offset: offset - limit,
       };
     } else {
       prev = null;
@@ -531,137 +530,137 @@ module.exports = {
   isAdmin(user) {
     return user?.role === admin;
   },
-  
 
   /**
-   * 
-   * @param {Object} options 
+   *
+   * @param {Object} options
    * @param {ref} helpers
    * @param {Object|HandleValidationOptions} [options.admin]
    * @param {Object|HandleValidationOptions} [options.basic]
-   * @returns 
+   * @returns
    */
-  handleValidationWithRole(options,ref=this){
-    
+  handleValidationWithRole(options, ref = this) {
     return async function(req) {
       const {
-        auth:{
-          credentials:{
-            user
-          }
-        }
-      } = req
+        auth: {
+          credentials: { user },
+        },
+      } = req;
 
-      const schema = options[user.role]
-      if(!schema) throw boom.forbidden("unauthorized")
-      
-      return ref.handleValidation(schema)(req)
+      const schema = options[user.role];
+      if (!schema) throw boom.forbidden("unauthorized");
 
-
-    }
+      return ref.handleValidation(schema)(req);
+    };
   },
-  
+
   /**
    * this function is created to help return informative message
    * when data validation in joi fails
    * @param {HandleValidationOptions|import("joi").AnySchema} options
    * @returns {Promise<Any>}
    */
-  handleValidation(options){
-    if(!options){
-      console.error("no schema was provided","use 'handleValidation(schema)'  where schema is Joi schema object")
-      throw boom.internal("error occured")
+  handleValidation(options) {
+    if (!options) {
+      console.error(
+        "no schema was provided",
+        "use 'handleValidation(schema)'  where schema is Joi schema object"
+      );
+      throw boom.internal("error occured");
     }
 
-    let payloadSchema = options?.payload
-    let querySchema = options?.query
-    let paramsSchema = options?.params
-    if([!payloadSchema,!querySchema,!paramsSchema].every(v=>!!v)){
-      payloadSchema = options
+    let payloadSchema = options?.payload;
+    let querySchema = options?.query;
+    let paramsSchema = options?.params;
+    if ([!payloadSchema, !querySchema, !paramsSchema].every((v) => !!v)) {
+      payloadSchema = options;
     }
 
-    
-    
     return async function(req) {
-      const result = {errors:{}}
-      if(payloadSchema){
-        if(!payloadSchema.validate){
-          console.error("no schema was provided","options.payload = schema'  where schema is Joi schema object")
-          throw boom.internal("error occured")
+      const result = { errors: {} };
+      if (payloadSchema) {
+        if (!payloadSchema.validate) {
+          console.error(
+            "no schema was provided",
+            "options.payload = schema'  where schema is Joi schema object"
+          );
+          throw boom.internal("error occured");
         }
-        const {error,value} = payloadSchema.validate(req.payload)
-        if(error) throw boom.badRequest(error)
-        result.payload = value
+        const { error, value } = payloadSchema.validate(req.payload);
+        if (error) throw boom.badRequest(error);
+        result.payload = value;
       }
 
-      if(querySchema){
-        if(!querySchema.validate){
-          console.error("no schema was provided","options.query = schema'  where schema is Joi schema object")
-          throw boom.internal("error occured")
+      if (querySchema) {
+        if (!querySchema.validate) {
+          console.error(
+            "no schema was provided",
+            "options.query = schema'  where schema is Joi schema object"
+          );
+          throw boom.internal("error occured");
         }
-        const {error,value} = querySchema.validate(req.payload)
-        if(error) throw boom.badRequest(error)
-        result.query = value
+        const { error, value } = querySchema.validate(req.payload);
+        if (error) throw boom.badRequest(error);
+        result.query = value;
       }
 
-      if(paramsSchema){
-        if(!params.validate){
-          console.error("no schema was provided","options.params = schema'  where schema is Joi schema object")
-          throw boom.internal("error occured")
+      if (paramsSchema) {
+        if (!params.validate) {
+          console.error(
+            "no schema was provided",
+            "options.params = schema'  where schema is Joi schema object"
+          );
+          throw boom.internal("error occured");
         }
-        const {error,value} = querySchema.validate(req.payload)
-        if(error) throw boom.badRequest(error)
-        result.params = value
+        const { error, value } = querySchema.validate(req.payload);
+        if (error) throw boom.badRequest(error);
+        result.params = value;
       }
 
-      return result
-      
-      
-    }
+      return result;
+    };
   },
 
   /**
-   * 
-   * @param {filterFieldsArgs}  
-   * @returns {Promise<Object>} 
+   *
+   * @param {filterFieldsArgs}
+   * @returns {Promise<Object>}
    */
-  filterFields:async ({object={},include=[],exclude=[],allowNull=false})=>{
-    let result = {}
-    
-    if(include.length&&exclude.length) throw new Error("you must provide one of include or exclude")
+  filterFields: async ({
+    object = {},
+    include = [],
+    exclude = [],
+    allowNull = false,
+  }) => {
+    let result = {};
 
-    if(include.length){
-        
-        Object.entries(object).forEach(data=>{
-            if(include.includes(data[0])){
-                if(data[1]||allowNull){
-                    result[data[0]] = data[1]
-                }
-            }
-        })
-        
-    }else if(exclude.length){
-        Object.entries(object).forEach(data=>{
-            if(!exclude.includes(data[0])){
-                if(data[1]||allowNull){
-                    result[data[0]] = data[1]
-                }
-            }
-        })
-        
-    }else{
-        Object.entries(object).forEach(data=>{
-            if(data[1]||allowNull){
-                result[data[0]] = data[1]
-            }
-            
-        })
+    if (include.length && exclude.length)
+      throw new Error("you must provide one of include or exclude");
 
+    if (include.length) {
+      Object.entries(object).forEach((data) => {
+        if (include.includes(data[0])) {
+          if (data[1] || allowNull) {
+            result[data[0]] = data[1];
+          }
+        }
+      });
+    } else if (exclude.length) {
+      Object.entries(object).forEach((data) => {
+        if (!exclude.includes(data[0])) {
+          if (data[1] || allowNull) {
+            result[data[0]] = data[1];
+          }
+        }
+      });
+    } else {
+      Object.entries(object).forEach((data) => {
+        if (data[1] || allowNull) {
+          result[data[0]] = data[1];
+        }
+      });
     }
 
-
-    return result
-    
-    
-}
+    return result;
+  },
 };

@@ -14,7 +14,8 @@ module.exports = (sequelize, DataTypes) => {
       User.AdminProfile = AdminProfile.belongsTo(User, {
         foreignKey: "user_id",
         allowNull: false,
-        as: 'user'
+        as: 'user',
+        constraints: false,
       });
     }
     toPublic() {

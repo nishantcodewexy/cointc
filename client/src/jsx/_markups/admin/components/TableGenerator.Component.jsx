@@ -15,8 +15,15 @@ import useTableSelector from "../../../_hooks/table.select.hook";
 const StyledPagination = styled(TablePagination)`
   p {
     margin: 0 auto;
-    color: #a3a3a3
+    color: #a3a3a3;
   }
+`;
+
+const BulkActionSelector = styled("div")`
+  padding: 10px 12px;
+  margin: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 0 2px 1px #5c5c5c33;
 `;
 
 function TableGenerator({
@@ -229,7 +236,18 @@ function TableGenerator({
               </tbody>
             </Table>
             {/* Pagination */}
-            <div style={{ borderTop: "1px solid #ededed" }}>
+            <div
+              style={{
+                borderTop: "1px solid #ededed",
+                display: "flex",
+                justifyContent: "space-between",
+              }}
+            >
+              <div>
+                {selected?.length > 1 ? (
+                  <BulkActionSelector>Bulk actions</BulkActionSelector>
+                ) : null}
+              </div>
               <StyledPagination
                 style={{ alignItems: "center" }}
                 component="div"

@@ -13,26 +13,29 @@ function UserSessionHistory(props) {
   return (
     <>
       <PageTitle activeMenu="Session History" motherMenu="User Management" />
-      <Row >
-        <Col>
-          <header className="mb-4">
-            <h3>User login and logout history list</h3>
-          </header>
-          <UserSessionHistoryTable {...props} />
-        </Col>
-      </Row>
+
+      <div>
+        <header className="mb-4">
+          <h3>User session history</h3>
+        </header>
+        <UserSessionHistoryTable {...props} />
+      </div>
     </>
   );
 }
 function UserSessionHistoryTable({ useService, services }) {
-  const { useGroupService } = services;
-  const group = useGroupService();
+  const { account } = services;
+
   let service = useService({
-    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
+    [SERVICE?.BULK_RETRIEVE]: account.bulkRetrieveUser,
   });
   const { dispatchRequest } = service;
   useEffect(() => {
-    dispatchRequest({ type: SERVICE?.BULK_RETRIEVE });
+    dispatchRequest({
+      type: SERVICE?.BULK_RETRIEVE, payload: {
+      "filter[role]": "basic"
+    } });
+    
   }, []);
 
   return (
@@ -46,7 +49,7 @@ function UserSessionHistoryTable({ useService, services }) {
             <Link to="/ecom-customers">
               <div className="media d-flex align-items-center">
                 <div className="media-body">
-                  <h5 className="mb-0 fs--1">{row?.nickname}</h5>
+                  <h5 className="mb-0 fs--1">{row?.nickname || row?.last_name || row?.other_name || row?.nickname || <div className="text-danger">Unnamed</div>}</h5>
                 </div>
               </div>
             </Link>

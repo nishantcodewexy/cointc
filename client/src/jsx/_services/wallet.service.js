@@ -19,24 +19,25 @@ export default class WalletServices extends Services {
    * @param {"all" | "withdrawal" | "deposits"} [params.type] - wallet type
    * @returns
    */
-   getWallet = async (params) => {
-    return await this?.axios(`/wallet`, {
+   getWallet = async ({id, params}) => {
+    return await this?.axios(`wallet/${id}`, {
       method: "GET",
       params,
     });
   };
 
   /**
-   * @function getWalletBalance - Gets a wallet balances (**Admins only**)
+   * @function bulkRetrieve - Gets a wallet balances (**Admins only**)
    * @param {Object} params
    * @param {Object} [params.id] - Wallet ID
    * @param {Object} [params.limit] - Response limit
    * @returns
    */
-  getWalletBalance = async (params) => {
-    return await this?.axios(`/balance`, {
+   bulkRetrieve = async (params) => {
+    return await this?.axios(`wallet`, {
       method: "GET",
       params,
     });
   };
+
 }

@@ -20,16 +20,16 @@ const { user } = _actions;
  * @param {Object | {getImmediate = false}} options - service hook options
  * @returns
  */
-function useService(services = {}) {
+function useService(config = {}, toast) {
   const dispatch = useDispatch();
 
-  // const [services, setServices] = useState(config);
+  const [services, setServices] = useState(config);
   const [_fromStack, _toStack] = useState([]);
   const [lastRequestType, setLastRequestType] = useState("");
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [_toast, setToast] = useState(null);
+  const [_toast, setToast] = useState(toast);
 
   /**
    * @function handleResponse
@@ -45,7 +45,7 @@ function useService(services = {}) {
     // debugger;
     if (error) {
       setError(error);
-      toast && _toast?.error && _toast?.error(error);
+      toast && _toast?.error(error) && _toast?.error(error);
       if (statusCode == 401) {
         dispatch(user.logout());
       }
@@ -102,19 +102,11 @@ function useService(services = {}) {
         }
 
         default: {
-          _fromStack[SERVICE?.BULK_RETRIEVE] &&
+          reload && _fromStack[SERVICE?.BULK_RETRIEVE] &&
             dispatchRequest(_fromStack[SERVICE?.BULK_RETRIEVE]);
           return handleResponse({ response, save: true, toast });
         }
       }
-
-      // if (
-      //   reload &&
-      //   lowercased !== (SERVICE?.RETRIEVE || SERVICE?.BULK_RETRIEVE)
-      // ) {
-      //   _fromStack[SERVICE?.BULK_RETRIEVE] &&
-      //     dispatchRequest(_fromStack[SERVICE?.BULK_RETRIEVE]);
-      // }
     } catch (error) {
       console.error(error);
     } finally {
@@ -141,7 +133,7 @@ function useService(services = {}) {
     try {      
       setServices((state) => ({
         ...state,
-        [type]: handler,
+        [type]: ()=>handler,
       }));
       return {
         type,
@@ -151,8 +143,8 @@ function useService(services = {}) {
       console.error(error);
       return null;
     }
-  }
- */
+  } */
+
   /**
    * @function dispatchRetry - Retry previous request using a new or the previous payload
    * @param {Object} payload

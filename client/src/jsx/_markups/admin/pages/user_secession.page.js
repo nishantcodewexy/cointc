@@ -56,32 +56,31 @@ function UserSecessions(props) {
           <header className="mb-4">
             <h3>Details of Secession Request</h3>
           </header>
-            <SecessionRequestTable
-              {...props}
-              {...{ notifySuccess, notifyError }}
-            />
+          <SecessionRequestTable
+            {...props}
+            {...{ notifySuccess, notifyError }}
+          />
         </Col>
       </Row>
 
       {/* Secession Upon Approval */}
-      <Row>
-        <Col style={{ marginBottom: 60 }}>
+      <div style={{ marginBottom: 60 }}>
           <header className="mb-4">
             <h3>Secession Upon Approval</h3>
           </header>
-            <ApprovedSecessionTable
-              {...props}
-              {...{ notifySuccess, notifyError }}
-            />
-        </Col>
-      </Row>
+          <ApprovedSecessionTable
+            {...props}
+            {...{ notifySuccess, notifyError }}
+          />
+      </div>
+      
       {/* List of Secession Members */}
       <Row>
         <Col style={{ marginBottom: 60 }}>
           <header className="mb-4">
             <h3>List of Secession Members</h3>
           </header>
-            <PastSecessionListTable {...props} />
+          <PastSecessionListTable {...props} />
         </Col>
       </Row>
     </>

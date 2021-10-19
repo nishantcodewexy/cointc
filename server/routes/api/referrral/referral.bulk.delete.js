@@ -6,7 +6,7 @@ const Joi = require("joi")
 module.exports = (server) => {
   const {
     controllers: {
-      referral: { bulkDestroy },
+      referral: { bulkRemove },
     },
     consts: { roles: _roles },
     helpers:{
@@ -26,7 +26,7 @@ module.exports = (server) => {
 
   return {
     method: "DELETE",
-    path: "/referrals",
+    path: "/referral",
     config: {
       pre: [
         {
@@ -34,7 +34,7 @@ module.exports = (server) => {
           assign: "isAdminOrError",
         },
       ],
-      handler: bulkDestroy,
+      handler: bulkRemove,
       auth: "jwt",
       validate:{
         payload:schema

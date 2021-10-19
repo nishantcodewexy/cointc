@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Moment from "react-moment";
 import "moment-timezone";
 import styled from "styled-components";
-import { Card, Row, Col, Button, Dropdown, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { Switch } from "@mui/material";
@@ -25,24 +24,20 @@ function UserInformation(props) {
   return (
     <>
       <PageTitle activeMenu="Users information" motherMenu="User Management" />
-      <Row>
-        <Col style={{ marginBottom: 60 }}>
-          <header className="mb-4">
-            <h3>Permissions</h3>
-          </header>
-          <UsersPermissionTable {...props} />
-        </Col>
-      </Row>
+      <div style={{ marginBottom: 60 }}>
+        <header className="mb-4">
+          <h3>Permissions</h3>
+        </header>
+        <UsersPermissionTable {...props} />
+      </div>
 
       {/* Permissions */}
-      <Row>
-        <Col style={{ marginBottom: 60 }}>
-          <header className="mb-4">
-            <h3>User membership information</h3>
-          </header>
-          <UsersMembershipTable {...props} />
-        </Col>
-      </Row>
+      <div style={{ marginBottom: 60 }}>
+        <header className="mb-4">
+          <h3>User membership information</h3>
+        </header>
+        <UsersMembershipTable {...props} />
+      </div>
     </>
   );
 }
@@ -55,7 +50,7 @@ function UsersPermissionTable({ services, useService }) {
   let bulkServicePayload = {
     "order[updatedAt]": "DESC",
     "order[createdAt]": "DESC",
-    "options[paranoid]": false,
+    "filter[role]": "basic",
   };
 
   let service = useService({
@@ -64,10 +59,10 @@ function UsersPermissionTable({ services, useService }) {
     [SERVICE?.UPDATE]: account?.updateUser,
   });
 
-  const { dispatchRequest, addServiceHook } = service;
+  const { dispatchRequest } = service;
 
   function notifySuccess() {
-    toast.success("Success !", {
+    toast.success("Done", {
       position: "top-right",
       autoClose: 3000,
       hideProgressBar: true,
@@ -77,8 +72,8 @@ function UsersPermissionTable({ services, useService }) {
     });
   }
 
-  function notifyError(error) {
-    toast.error(error || "Request Error!", {
+  function notifyError(message) {
+    toast.error(`${message}` || "Request Error!", {
       position: "top-right",
       autoClose: 5000,
       hideProgressBar: false,
@@ -91,36 +86,39 @@ function UsersPermissionTable({ services, useService }) {
   useEffect(() => {
     dispatchRequest({
       type: SERVICE?.BULK_RETRIEVE,
-      toast: { success: notifySuccess, error: notifyError },
     });
+    return () => {
+      account.abort();
+    };
   }, []);
 
   function Permit({ key, row }) {
     const [permission, setPermission] = useState(row?.permission);
     const _account = useAccountService();
 
-    let { dispatchRequest: _d } = useService({
-      [SERVICE?.UPDATE]: _account?.updateUser,
-    });
+    let { dispatchRequest: _d } = useService(
+      {
+        [SERVICE?.UPDATE]: _account?.updateUser,
+      },
+      { success: notifySuccess, error: notifyError }
+    );
 
     useEffect(() => {
-      // setRequest(
-      //   addServiceHook(
-      //     "modify:account:permission",
-      //     useAccountService?.updateUser
-      //   )
-      // );
+      return () => {
+        _account.abort();
+      };
     }, []);
+
     function handleChange(e, value) {
       // TODO: Make Permission change request
       _d({
         type: SERVICE?.UPDATE,
-        payload: { id: row?.id, data: { permission } },
-        reload: false,
-        toast: { success: notifySuccess, error: notifyError },
+        payload: { id: row?.id, data: { permission: value } },
+      }).then(() => {
+        setPermission(value);
       });
-      setPermission(value);
     }
+
     return (
       <small className="d-flex" style={{ gap: 10, alignItems: "center" }}>
         <strong
@@ -164,10 +162,35 @@ function UsersPermissionTable({ services, useService }) {
         ]}
         transformers={{
           name: ({ key, value, row }) => {
-            return <>{row?.nickname || "Untitled"}</>;
+            return (
+              <Link to="/to_user_information">
+                <div className=" d-flex align-items-center">
+                  <div
+                    className="avatar avatar-lg mr-4 rounded-circle"
+                    style={{ border: "1px solid #ededed" }}
+                  >
+                    <div
+                      className=" img-fluid overflow-hidden"
+                      style={{ maxWidth: 50, borderRadius: "100%" }}
+                    >
+                      <IdenticonAvatar size={30} alt="" id={row.id} />
+                    </div>
+                  </div>
+                  <div className="media-body">
+                    <h5 className="mb-0 fs--1">
+                      {row?.nickname || "Untitled"}
+                    </h5>
+                    {/* <span>
+                  Last contact:{" "}
+                  <Moment format="DD.MM.YYYY">{row?.updatedAt}</Moment>
+                </span> */}
+                  </div>
+                </div>
+              </Link>
+            );
           },
           id: ({ row }) => {
-            return <>{row?.id}</>;
+            return row?.id;
           },
           permission: Permit,
           joined: ({ row }) => {

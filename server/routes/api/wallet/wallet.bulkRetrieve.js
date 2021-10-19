@@ -4,7 +4,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      wallet: { list },
+      wallet: { bulkRetrieve },
     },
     helpers: {
       permissions:{
@@ -17,7 +17,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/wallets",
+    path: "/wallet",
     config: {
       pre: [
         {
@@ -25,7 +25,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: list,
+      handler: bulkRetrieve,
       auth: "jwt",
     },
   };

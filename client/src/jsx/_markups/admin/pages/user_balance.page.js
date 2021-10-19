@@ -10,7 +10,7 @@ import TableGenerator from "../components/TableGenerator.Component";
 function UserBalance({ services, useService }) {
   const { wallet } = services;
   let service = useService({
-    [SERVICE?.BULK_RETRIEVE]: wallet.bulkRetrieveBalance,
+    [SERVICE?.BULK_RETRIEVE]: wallet.bulkRetrieve,
   });
   const { dispatchRequest } = service;
   useEffect(() => {
@@ -20,21 +20,18 @@ function UserBalance({ services, useService }) {
   return (
     <>
       <PageTitle activeMenu="User Balance" motherMenu="User Management" />
-      <Row style={{ marginBottom: 60 }}>
-        <Col>
-          <header className="mb-4">
-            <h3>User Balances</h3>
-          </header>
-          <Card>
-            <TableGenerator
-              {...{ service }}
-              mapping={{}}
-              omit="*"
-              transformers={{}}
-            />
-          </Card>
-        </Col>
-      </Row>
+
+      <div>
+        <header className="mb-4">
+          <h3>User Balances</h3>
+        </header>
+        <TableGenerator
+          {...{ service }}
+          mapping={{}}
+          omit="*"
+          transformers={{}}
+        />
+      </div>
     </>
   );
 }
