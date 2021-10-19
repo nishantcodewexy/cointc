@@ -10,6 +10,7 @@ module.exports = {
         credentials: { user },
       },
     } = req;
+    
     return user;
   },
 

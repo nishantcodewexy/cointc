@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import qs from "qs";
 import { useDispatch } from "react-redux";
 import _actions from "../_actions";
 import { SERVICE } from "../_constants";
@@ -21,7 +20,7 @@ const { user } = _actions;
  * @param {Object | {getImmediate = false}} options - service hook options
  * @returns
  */
-function useService(config = {}) {
+function useService(config = {}, toast) {
   const dispatch = useDispatch();
 
   const [services, setServices] = useState(config);
@@ -30,7 +29,7 @@ function useService(config = {}) {
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [_toast, setToast] = useState(null);
+  const [_toast, setToast] = useState(toast);
 
   /**
    * @function handleResponse
@@ -46,7 +45,7 @@ function useService(config = {}) {
     // debugger;
     if (error) {
       setError(error);
-      toast && _toast?.error && _toast?.error(error);
+      toast && _toast?.error(error) && _toast?.error(error);
       if (statusCode == 401) {
         dispatch(user.logout());
       }
@@ -76,7 +75,6 @@ function useService(config = {}) {
         reload = true,
       } = request;
 
-
       setIsFetching(true);
       setLastRequestType(type);
 
@@ -94,19 +92,21 @@ function useService(config = {}) {
           ? async () => services[type](payload)
           : async () => services[type]();
       }
-
       response = await fn();
-
-      if (
-        reload &&
-        lowercased !== (SERVICE?.RETRIEVE || SERVICE?.BULK_RETRIEVE)
-      ) {
-        _fromStack[SERVICE?.BULK_RETRIEVE] &&
-          dispatchRequest(_fromStack[SERVICE?.BULK_RETRIEVE]);
-      }
-
       overwrite && _toStack((state) => ({ ...state, [type]: request }));
-      return handleResponse({ response, save: true, toast });
+
+      switch (lowercased) {
+        case SERVICE?.RETRIEVE:
+        case SERVICE?.BULK_RETRIEVE: {
+          return handleResponse({ response, save: true, toast: false });
+        }
+
+        default: {
+          reload && _fromStack[SERVICE?.BULK_RETRIEVE] &&
+            dispatchRequest(_fromStack[SERVICE?.BULK_RETRIEVE]);
+          return handleResponse({ response, save: true, toast });
+        }
+      }
     } catch (error) {
       console.error(error);
     } finally {
@@ -120,7 +120,7 @@ function useService(config = {}) {
    * @param {Function} handler
    * @param {*} initialPayload
    */
-  function addServiceHook(
+  /*   function addServiceHook(
     type,
     handler,
     config = {
@@ -133,7 +133,7 @@ function useService(config = {}) {
     try {      
       setServices((state) => ({
         ...state,
-        [type]: handler,
+        [type]: ()=>handler,
       }));
       return {
         type,
@@ -143,12 +143,12 @@ function useService(config = {}) {
       console.error(error);
       return null;
     }
-  }
+  } */
 
   /**
    * @function dispatchRetry - Retry previous request using a new or the previous payload
-   * @param {Object} payload 
-   * @returns 
+   * @param {Object} payload
+   * @returns
    */
   const dispatchRetry = (payload) =>
     _fromStack
@@ -165,7 +165,7 @@ function useService(config = {}) {
     isFetching,
     dispatchRetry,
     dispatchRequest,
-    addServiceHook,
+    /* addServiceHook, */
     _fromStack,
   };
 }

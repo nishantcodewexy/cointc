@@ -1,13 +1,15 @@
 "use strict";
 const Joi = require("joi");
+const schema = require("../../../validators");
+
 module.exports = (server) => {
   const {
     controllers: {
       user: { update },
     },
-    consts: { roles: _roles },
     helpers: {
       permissions: { isAdminOrError },
+      handleValidation,
     },
   } = server.app;
 
@@ -16,10 +18,16 @@ module.exports = (server) => {
     path: "/users/{id}",
     config: {
       pre: [
-        {
-          method: isAdminOrError,
-          assign: "user",
-        },
+        [
+          {
+            method: isAdminOrError,
+            assign: "user",
+          },
+          {
+            method: handleValidation(schema.adminUpdateUserSchema),
+            assign: "validator",
+          },
+        ],
       ],
       handler: update,
       auth: "jwt",

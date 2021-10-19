@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
+const { roles } = require("../../consts");
 const hooks = require("../hooks/user.hook");
 
 // debugger;
@@ -15,6 +16,11 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       const { BasicProfile, User, AdminProfile, Wallet /* Message */ } = models;
+      User.hasOne(AdminProfile, {
+        foreignKey: "user_id",
+        constraints: false,
+      });
+
       User.hasOne(BasicProfile, {
         foreignKey: "user_id",
         constraints: false,
@@ -23,20 +29,6 @@ module.exports = (sequelize, DataTypes) => {
         //   role: "basic",
         // },
         // as: "profile",
-      });
-      BasicProfile.belongsTo(User, {
-        foreignKey: "user_id",
-        constraints: false,
-      });
-
-      User.hasOne(AdminProfile, {
-        foreignKey: "user_id",
-        constraints: false,
-      });
-
-      AdminProfile.belongsTo(User, {
-        foreignKey: "user_id",
-        constraints: false,
       });
 
       User.hasMany(Wallet, {
@@ -97,6 +89,18 @@ module.exports = (sequelize, DataTypes) => {
           return this.get("updateAt") > Date.now() - 7 * 24 * 60 * 60 * 1000;
         },
       },
+      isAdmin: {
+        type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["role"]),
+        get: function() {
+          return this.get("role") == roles.admin;
+        },
+      },
+      isBasic: {
+        type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["role"]),
+        get: function() {
+          return this.get("role") == roles.basic;
+        },
+      },
     },
     {
       sequelize,
@@ -119,7 +123,7 @@ module.exports = (sequelize, DataTypes) => {
 
   User.addHook("afterFind", async (findResult) => {
     if (!Array.isArray(findResult)) findResult = [findResult];
-    for (const instance of findResult) {
+    for (let instance of findResult) {
       if (instance?.role === "admin") {
         instance.profile = await instance.getAdminProfile();
       } else if (instance?.role === "basic") {
@@ -130,12 +134,14 @@ module.exports = (sequelize, DataTypes) => {
           ...instance?.profile?.dataValues,
           ...instance?.dataValues,
         };
+      instance =  _.omit(instance.toJSON(), ["password"]);
       // To prevent mistakes:
       //    delete instance?.basic;
       // delete instance?.dataValues.basic;
       // delete instance?.admin;
       // delete instance?.dataValues.admin;
     }
+    return findResult
   });
   return User;
 };

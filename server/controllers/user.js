@@ -1,9 +1,10 @@
 const assert = require("assert");
 const searchBuilder = require("sequelize-search-builder");
-const Sequelize = require("sequelize");
 const Joi = require("joi");
-const { roles } = require("../consts");
+const boom = require("@hapi/boom");
 const faker = require("faker");
+const { logHelper } = require("./_methods/log.helper");
+const schema = require("../validators");
 
 /**
  * @description - User controller
@@ -17,16 +18,24 @@ function UserController(server) {
   );
 
   const {
-    db: { User, sequelize, Wallet, BasicProfile, AdminProfile, Upload },
-    boom,
+    db: {
+      User,
+      sequelize,
+      Sequelize,
+      Wallet,
+      BasicProfile,
+      AdminProfile,
+      Upload,
+    },
+
     config: { client_url },
     helpers: {
       decrypt,
       mailer,
       jwt,
       isAdmin,
-      isBasic,
-      generator,
+      /*  isBasic,
+      generator, */
       paginator,
       filters,
     },
@@ -156,7 +165,7 @@ function UserController(server) {
         return await sequelize.transaction(async (t) => {
           return await Promise.all(
             value.map(async (data) => {
-              let password = generator.secret();
+              let password = faker.internet.password();
               let savedProfile = null;
               // if (data.role == roles.admin) {
               if (isAdmin(data)) {
@@ -238,35 +247,33 @@ function UserController(server) {
         //determine the allowed attributes to modify per user role
 
         //  Generally allowed attrinutes
-        let attributes = [
-          "last_name",
-          "other_names",
-          "nickname",
-          "kyc",
-          "mode",
-          "country",
-          "kyc_document",
-        ];
+        let attributes = [];
         // Admin only allowed attributes
-        attributes = isAdmin(user) && [
-          "suitability",
-          "kyc_status",
-          "kyc_document",
-          "permission",
-          ...attributes,
-        ];
+        attributes = user.isAdmin
+          ? ["nickname", "kyc"]
+          : [
+              "mode",
+              "nickname",
+              "country",
+              "last_name",
+              "other_names",
+              "profile_pic",
+              "kyc_document",
+              "kyc",
+            ];
 
         let options = {
           returning: true,
-          attributes,
           where: {
-            id: user?.id,
+            user_id: user?.id,
           },
+          attributes,
         };
-        let model = user?.__proto__.constructor.name;
+        let model = user.isAdmin ? "AdminProfile" : "BasicProfile";
         return await __update(model, payload, options);
       } catch (error) {
         console.error(error);
+        throw boom.boomify(error);
       }
     },
 
@@ -280,59 +287,48 @@ function UserController(server) {
     async update(req) {
       try {
         let {
-          pre: { user },
-          payload = {},
           params: { id },
+          pre: {
+            validator: { payload },
+          },
         } = req;
 
-        allowedUserAttrbs = ["permission"];
-        let userUpdates = {},
-          profileUpdates = {};
+        // const { error, payload:v_payload } = validator;
+        // if (error) throw boom.badRequest(error);
 
-        Object.keys(payload).forEach((key) => {
-          if (allowedUserAttrbs.includes(key)) {
-            userUpdates[key] = allowedUserAttrbs[key];
-          } else {
-            profileUpdates[key] = allowedUserAttrbs[key];
-          }
-        });
-
-        // user is an admin
         // let { email, role, permission, ...profileData } = payload;
         let target_user = await User.findOne({ where: { id } });
-        //determine the targe user's allowed attributes
-        let attributes = isBasic(target_user)
-          ? [
-              "mode",
-              "nickname",
-              "kyc",
-              "suitability",
-              "country",
-              "kyc_status",
-              "last_name",
-              "other_names",
-              "kyc_document",
-            ]
-          : ["nickname", "kyc"];
 
-        let target_profile = target_user?.profile;
+        // Basic user
+        if (target_user && target_user.isBasic) {
+          let updated,
+            user_update,
+            target_profile = target_user?.profile;
 
-        if (target_profile) {
-          let options = {
-            attributes,
-            where: {
-              profile_id: target_profile?.profile_id,
-            },
-            returning: true,
-            logging: console.log,
-          };
-          let model = target_profile?.__proto__.constructor.name;
-          return await sequelize.transaction((t) => {
-            return Promise.all([
-              __update("User", userUpdates, { where: { id }, logging: true }),
-              __update(model, profileUpdates, options),
-            ]);
-          });
+          if ("permission" in payload) {
+            await target_user.set("permission", payload?.permission);
+            user_update = await target_user
+              .save()
+              .then((data) => data.toPublic());
+            delete payload.permission;
+          }
+          //determine the targe user's allowed attributes
+          let attributes = ["suitability", "kyc_status"];
+
+          if (target_profile && Object?.keys(payload)?.length) {
+            let options = {
+              attributes,
+              fields: attributes,
+              where: {
+                profile_id: target_profile?.profile_id,
+              },
+              returning: true,
+              logging: console.log,
+            };
+            let model = target_profile?.__proto__.constructor.name;
+            updated = await __upsert(model, payload, { ...options });
+          }
+          return { user: user_update, profile: updated };
         }
         return boom.notFound("User profile does not exist");
       } catch (error) {
@@ -444,13 +440,16 @@ function UserController(server) {
     bulkRetrieve: async (req) => {
       try {
         const { query } = req;
-        const queryFilters = await filters({ query, searchFields: ["email"] });
+        const queryFilters = await filters({
+          query,
+          searchFields: ["email", "role"],
+        });
 
         const options = {
           ...queryFilters,
           attributes: { exclude: ["password"] },
         };
-
+        
         let queryset = await User.findAndCountAll(options);
         const { limit, offset } = queryFilters;
 
@@ -472,7 +471,7 @@ function UserController(server) {
      */
     async retrieve(req) {
       const {
-        query: { id },
+        params: { id },
       } = req;
       try {
         // handle invalid query <id> 400
@@ -556,35 +555,32 @@ function UserController(server) {
             "updated_at",
           ],
 
-          include:
-            _user.role === roles.admin
-              ? {
-                  model: AdminProfile,
-                  as: "admin_profile",
-                  attributes: ["nickname", "kyc", "created_at", "updated_at"],
-                }
-              : {
-                  model: BasicProfile,
-                  as: "profile",
-                  attributes: [
-                    "mode",
-                    "nickname",
-                    "kyc",
-                    "referral_code",
-                    "created_at",
-                    "updated_at",
-                    "suitability",
-                    "country",
-                    "profile_pic",
-                    "kyc_status",
-                    "date_of_birth",
-                    "last_name",
-                    "other_names",
-                  ],
-                  include: {
-                    model: Upload,
-                  },
+          include: isAdmin
+            ? {
+                model: AdminProfile,
+                attributes: ["nickname", "kyc", "created_at", "updated_at"],
+              }
+            : {
+                model: BasicProfile,
+                attributes: [
+                  "mode",
+                  "nickname",
+                  "kyc",
+                  "referral_code",
+                  "created_at",
+                  "updated_at",
+                  "suitability",
+                  "country",
+                  "profile_pic",
+                  "kyc_status",
+                  "date_of_birth",
+                  "last_name",
+                  "other_names",
+                ],
+                include: {
+                  model: Upload,
                 },
+              },
         });
 
         if (!result) {
@@ -658,6 +654,12 @@ function UserController(server) {
             account.login_at = new Date(Date.now());
             await account.save();
 
+            // log auth
+            await logHelper.authLog(account, {
+              login_at: account.login_at,
+              login_status: logHelper.types.LoginStatusType.LOGGED_IN,
+            });
+
             return {
               token: jwt.create(account),
               ...account.toPublic(),
@@ -667,6 +669,11 @@ function UserController(server) {
         return boom.notFound("User account not found");
       } catch (error) {
         console.error(error);
+        // log auth failed
+        await logHelper.authLog(account, {
+          login_at: new Date(Date.now()),
+          login_status: logHelper.types.LoginStatusType.FAILED,
+        });
         return boom.boomify(error);
       }
     },

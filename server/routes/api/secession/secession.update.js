@@ -17,7 +17,7 @@ module.exports = (server) => {
 
   return {
     method: ["PUT", "PATCH"],
-    path: "/secessions/{id}",
+    path: "/secession/{id}",
     config: {
       pre: [
         {

@@ -11,15 +11,17 @@ module.exports = (server) => {
     consts: { roles: _roles },
     helpers:{
       permissions:{
-        isAdmin,
         isAdminOrError
       }
     }
   } = server.app;
 
-  const schema = Joi.array().items({
-    UserId:Joi.string().uuid().required(),
-    referrerId:Joi.string().uuid().required()
+  const schema = Joi.object({
+    data:Joi.array().items({
+      UserId:Joi.string().uuid().required(),
+      referrerId:Joi.string().uuid().required()
+    }),
+    force:Joi.boolean().default(false).optional()
   })
 
   return {
@@ -27,17 +29,6 @@ module.exports = (server) => {
     path: "/referrals",
     config: {
       pre: [
-        {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
-        {
-          method:isAdmin,
-          assign: "isAdmin",
-        },
         {
           method:isAdminOrError,
           assign: "isAdminOrError",

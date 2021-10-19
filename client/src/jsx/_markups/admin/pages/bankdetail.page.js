@@ -154,83 +154,81 @@ function AdminBankDetails({ services, useService }) {
 
       <Row>
         <Col>
-          <Card>
-            {isFetching ? (
-              <div>Loading...</div>
-            ) : (
-              <TableGenerator
-                {...{ service }}
-                mapping={{
-                  iso_code: "Symbol",
-                }}
-                omit="*"
-                extras={[
-                  "account_no",
-                  "bank_name",
-                  "currency",
-                  "country",
-                  "ifsc_code",
-                  "action",
-                ]}
-                transformers={{
-                  account_no: ({ row }) => {
-                    return <>{row?.account_no}</>;
-                  },
-                  bank_name: ({ row }) => {
-                    return <>{row?.bank_name}</>;
-                  },
-                  currency: ({ row }) => {
-                    return <>{row?.ifsc_code}</>;
-                  },
-                  country: ({ row }) => {
-                    return <>{row?.country}</>;
-                  },
-                  ifsc_code: ({ row }) => {
-                    return <>{row?.currency}</>;
-                  },
-                  action: ({ row }) => {
-                    return (
-                      <div
+          {isFetching ? (
+            <div>Loading...</div>
+          ) : (
+            <TableGenerator
+              {...{ service }}
+              mapping={{
+                iso_code: "Symbol",
+              }}
+              omit="*"
+              extras={[
+                "account_no",
+                "bank_name",
+                "currency",
+                "country",
+                "ifsc_code",
+                "action",
+              ]}
+              transformers={{
+                account_no: ({ row }) => {
+                  return <>{row?.account_no}</>;
+                },
+                bank_name: ({ row }) => {
+                  return <>{row?.bank_name}</>;
+                },
+                currency: ({ row }) => {
+                  return <>{row?.ifsc_code}</>;
+                },
+                country: ({ row }) => {
+                  return <>{row?.country}</>;
+                },
+                ifsc_code: ({ row }) => {
+                  return <>{row?.currency}</>;
+                },
+                action: ({ row }) => {
+                  return (
+                    <div
+                      style={{
+                        display: "flex",
+                        gap: 10,
+                      }}
+                    >
+                      <button
                         style={{
-                          display: "flex",
-                          gap: 10,
+                          appearance: "none",
+                          border: "none",
+                          background: "none",
                         }}
+                        onClick={() =>
+                          onOpenModal({
+                            method: SERVICE?.UPDATE,
+                            payload: row,
+                          })
+                        }
                       >
-                        <button
-                          style={{
-                            appearance: "none",
-                            border: "none",
-                            background: "none",
-                          }}
-                          onClick={() =>
-                            onOpenModal({
-                              method: SERVICE?.UPDATE,
-                              payload: row,
-                            })
-                          }
-                        >
-                          <span className="themify-glyph-29"></span> Edit
-                        </button>
-                        {/* TODO: Delete user */}
-                        <button
-                          style={{
-                            appearance: "none",
-                            border: "none",
-                            background: "none",
-                          }}
-                          onClick={() =>
-                            onOpenModal({ method: SERVICE?.DROP, payload: row })
-                          }
-                        >
-                          <span className="themify-glyph-165"></span> Delete
-                        </button>
-                      </div>
-                    );
-                  },
-                }}
-              />
-            )}
-          </Card>
+                        <span className="themify-glyph-29"></span> Edit
+                      </button>
+                      {/* TODO: Delete user */}
+                      <button
+                        style={{
+                          appearance: "none",
+                          border: "none",
+                          background: "none",
+                        }}
+                        onClick={() =>
+                          onOpenModal({ method: SERVICE?.DROP, payload: row })
+                        }
+                      >
+                        <span className="themify-glyph-165"></span> Delete
+                      </button>
+                    </div>
+                  );
+                },
+              }}
+            />
+          )}
         </Col>
       </Row>
     </>
