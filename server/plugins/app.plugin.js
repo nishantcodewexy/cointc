@@ -6,128 +6,58 @@ module.exports = {
     /**************************************
      * Serve static react app
      **************************************/
-     HapiServer.route({
-      method: "GET",
-      path: "/{param*}",
-      handler: {
-        directory: {
-          path: '.',
-          // listing: true,
-          redirectToSlash: true,
-          lookupCompressed: true
-        },  
-      },
-    });
-    HapiServer.route({
-      method: "GET",
-      path: "/admin/{params*}",
-      handler: {
-        directory: {
-          path: '.',
-          redirectToSlash: true,
-          lookupCompressed: true
-        }, 
-      },
-    });
-    HapiServer.route({
-      method: "GET",
-      path: "/admin/login/{params*}",
-      handler: {
-        directory: {
-          path: '.',
-          redirectToSlash: true,
-        }, 
-      },
-    });
-    HapiServer.route({
-      method: "GET",
-      path: "/trade/{params*}",
-      handler: {
-        directory: {
-          path: '.',
-          redirectToSlash: true,
-        }, 
-      },
-    });
-    HapiServer.route({
-      method: "GET",
-      path: "/orders/{params*}",
-      handler: {
-        directory: {
-          path: '.',
-          redirectToSlash: true,
-        }, 
-      },
-    });
-    HapiServer.route({
-      method: "GET",
-      path: "/wallet/{params*}",
-      handler: {
-        directory: {
-          path: '.',
-          redirectToSlash: true,
-        }, 
-      },
-    });
-    HapiServer.route({
-      method: "GET",
-      path: "/affiliate/{params*}",
-      handler: {
-        directory: {
-          path: '.',
-          redirectToSlash: true,
-        }, 
-      },
-    });
-    HapiServer.route({
-      method: "GET",
-      path: "/support/{params*}",
-      handler: {
-        directory: {
-          path: '.',
-          redirectToSlash: true,
-        }, 
-      },
-    });
-    HapiServer.route({
-      method: "GET",
-      path: "/ad_create/{params*}",
-      handler: {
-        directory: {
-          path: '.',
-          redirectToSlash: true,
-        }, 
-      },
-    });
-    HapiServer.route({
-      method: "GET",
-      path: "/ad_payment_method/{params*}",
-      handler: {
-        directory: {
-          path: ".",
-          redirectToSlash: true,
+    const urlPaths = [
+      "/",
+      "/admin",
+      "/admin/admin-bank-details",
+      "/admin/user-management",
+      "/admin/user-information",
+      "/admin/user-secession",
+      "/admin/user-session-history",
+      "/admin/user-balance",
+      "/admin/user-referral-management",
+      "/admin/user-kyc-management",
+      "/admin/wallet-deposits",
+      "/admin/wallet-withdrawals",
+      "/admin/wallet-withdrawals-application-management",
+      "/admin/wallet-withdrawals-fee-management",
+      "/admin/auth-security-management",
+      "/admin/auth-kyc-certification",
+      "/admin/currency-management",
+      "/admin/adverts",
+      "/admin/orders",
+      "/admin/p2p-trade-history",
+      "/admin/p2p-disputes",
+      "/admin/chat-messenger",
+      "/admin/chat-history",
+      "/admin/support",
+      "/admin/support-disputes",
+      "/admin/login",
+      "/trade",
+      "/wallet",
+      "/orders",
+      "/affiliate",
+      "/support",
+      "/ad_payment_method",
+      "/ad_create",
+      "/ad_contract",
+      "/my-page",
+      "/login",
+      "/signup",
+    ];
+
+    urlPaths.forEach((url) => {
+      HapiServer.route({
+        method: "GET",
+        path: path.normalize(`${url}/{param*}`),
+        handler: {
+          directory: {
+            path: ".",
+            redirectToSlash: true,
+            lookupCompressed: true,
+          },
         },
-      },
-    });
-    HapiServer.route({
-      method: "GET",
-      path: "/ad_contract/{params*}",
-      handler: {
-        directory: {
-          path: ".",
-          redirectToSlash: true,
-        },
-      },
-    });
-    HapiServer.route({
-      method: "GET",
-      path: "/my-page/{params*}",
-      handler: {
-        directory: {
-          path: ".",
-          redirectToSlash: true,
-        },
-      },
+      });
     });
   },
   name: "app",
