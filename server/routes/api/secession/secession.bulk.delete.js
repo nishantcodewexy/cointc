@@ -14,7 +14,7 @@ module.exports = (server) => {
 
   return {
     method: "DELETE",
-    path: "/secession",
+    path: "/secessions",
     config: {
       pre: [
         {

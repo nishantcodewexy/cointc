@@ -18,9 +18,7 @@ module.exports = (sequelize, DataTypes) => {
       const { BasicProfile, User, Upload } = models;
       BasicProfile.belongsTo(User, {
         foreignKey: "user_id",
-        constraints: false,
       });
-
       BasicProfile.belongsTo(Upload, {
         foreignKey: "profile_pic",
       });
@@ -70,9 +68,9 @@ module.exports = (sequelize, DataTypes) => {
       referral_code: {
         type: DataTypes.STRING,
       },
-      // referrerId: {
-      //   type: DataTypes.UUID,
-      // },
+      referrerId: {
+        type: DataTypes.INTEGER,
+      },
       otp: {
         type: DataTypes.STRING,
       },

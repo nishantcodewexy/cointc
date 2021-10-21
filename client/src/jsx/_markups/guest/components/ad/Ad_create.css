@@ -1,0 +1,88 @@
+.Ad_create #myProgress {
+  width: 100px;
+  background-color: grey;
+}
+
+.Ad_create #myBar {
+  width: 0%;
+  height: 5px;
+  background-color: green;
+}
+
+.Ad_create .sell-buy .nav-item {
+  width: 50%;
+}
+
+.Ad_create .text-black {
+  color: #000 !important;
+}
+
+.Ad_create .sell-buy {
+  background: #FFFFFF;
+  box-shadow: 0px 0px 3px 1px rgba(0, 0, 0, 0.55);
+}
+
+.Ad_create .sell-buy .nav-item .active {
+  background-color: #C4C4C4;
+}
+
+.Ad_create .px-15 {
+  padding-right: 15px !important;
+  padding-left: 15px !important;
+}
+
+.Ad_create .left-bn,.right-bn {
+  border: 1px solid #8B8B8B;
+  border-radius: 0 !important;
+  background-color: #FFF !important;
+}
+
+.Ad_create .dropdown-menu.show {
+  width: 100%;
+}
+
+.Ad_create .text-cny {
+  color: #005A9B;
+}
+
+.Ad_create .mpq .form-group {
+  margin-bottom: 10px !important;
+}
+
+.Ad_create .pmt .form-control {
+  border-right: none !important;
+}
+
+::-webkit-input-placeholder { 
+  color: #000 !important;
+  font-weight: 500 !important; 
+}
+
+:-moz-placeholder { 
+  color: #000 !important;
+  font-weight: 500 !important; 
+}
+
+::-moz-placeholder { 
+  color: #000 !important;
+  font-weight: 500 !important; 
+}
+
+:-ms-input-placeholder { 
+  color: #000 !important;
+  font-weight: 500 !important; 
+}
+
+.Ad_create .input-right .input-group-text {
+  background-color: transparent !important;
+  border-left: none !important;
+  font-weight: 500 !important;
+  color: #000 !important;
+}
+
+.Ad_create .next-bn {
+  background-color: #0059FF !important;
+  color: #FFF !important;
+  font-weight: bold;
+  border-radius: 0 !important;
+}

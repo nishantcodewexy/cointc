@@ -152,12 +152,11 @@ export function Update({ action, callback, payload: initialData = null }) {
   return (
     <Formik
       initialValues={{
-        // country: initialData?.country || "CN",
-        // nickname: initialData?.nickname || "",
+        country: initialData?.country || "CN",
+        nickname: initialData?.nickname || "",
         permission: initialData?.permission || false,
         other_names: initialData?.other_names || "",
         last_name: initialData?.last_name || "",
-        restore: false,
       }}
       // validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
@@ -214,60 +213,42 @@ export function Update({ action, callback, payload: initialData = null }) {
               </Col>
             </Row>
           </Form.Group>
+          {initialData && (
+            <>
+              <Form.Group className="mb-3" controlId="formCurrencyCode">
+                <Form.Label as="strong">Nickname</Form.Label>
+                <Form.Control
+                  type="text"
+                  name="nickname"
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  defaultValue={values?.nickname}
+                  placeholder="User's nickname"
+                />
+              </Form.Group>
 
-          {/*      <Form.Group className="mb-3" controlId="nickname">
-            <Form.Label as="strong">Nickname</Form.Label>
-            <Form.Control
-              type="text"
-              name="nickname"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              defaultValue={values?.nickname}
-              placeholder="User's nickname"
-            />
-          </Form.Group> */}
-
-          {/*           <Form.Group className="mb-4" controlId="country">
-            <Form.Label as="strong">Country</Form.Label>
-            <Form.Control
-              as="select"
-              type="text"
-              name="country"
-              required
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.country}
-              placeholder="Country"
-            >
-              {country_list.getNames().map((country, key) => {
-                return (
-                  <option key={key} value={country_list.getCode(country)}>
-                    {country}
-                  </option>
-                );
-              })}
-            </Form.Control>
-          </Form.Group> */}
-
-          {initialData?.archived_at && (
-            <Form.Label
-              style={{
-                marginBottom: 10,
-                display: "flex",
-                justifyContent: "space-between",
-                gap: 10,
-              }}
-            >
-              <Form.Text>This user is curently inactive. Activate?</Form.Text>
-              <Switch
-                size="small"
-                color="default"
-                onChange={handleChange}
-                name="restore"
-                checked={values?.restore}
-                label="Restore"
-              />
-            </Form.Label>
+              <Form.Group className="mb-4" controlId="formCurrencyCode">
+                <Form.Label as="strong">Country</Form.Label>
+                <Form.Control
+                  as="select"
+                  type="text"
+                  name="country"
+                  required
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                  value={values.country}
+                  placeholder="Country"
+                >
+                  {country_list.getNames().map((country, key) => {
+                    return (
+                      <option key={key} value={country_list.getCode(country)}>
+                        {country}
+                      </option>
+                    );
+                  })}
+                </Form.Control>
+              </Form.Group>
+            </>
           )}
 
           <Button variant="primary" disabled={isSubmitting} block type="submit">

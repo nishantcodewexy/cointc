@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Referral extends Model {
     /**
@@ -12,42 +10,45 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       const { User, Referral } = models;
       User.belongsToMany(User, {
-        through: Referral,       
+        through: Referral,
         as: "referee",
         constraint: false,
         onDelete: "CASCADE",
       });
 
       Referral.belongsTo(User, {
-        foreignKey: 'referee_id',
+        foreignKey: "referee_id",
         constraint: false,
       });
 
       Referral.belongsTo(User, {
-        foreignKey: 'user_id',
+        foreignKey: "user_id",
         constraint: false,
-      })
+      });
     }
-  };
-  Referral.init({
-    /* referrer_id: {
+  }
+  Referral.init(
+    {
+      /* referrer_id: {
       type: DataTypes.UUID,
       allowNull: true
     }, */
-    commission: {
-      type:DataTypes.DOUBLE,
-      validate:{
-        min:0,
-        max:100
+      commission: {
+        type: DataTypes.DOUBLE,
+        validate: {
+          min: 0,
+          max: 100,
+        },
+        defaultValue: process.env.REFERRAL_COMISSION || 20,
       },
-      defaultValue:process.env.REFERRAL_COMISSION||20      
     },
-  }, {
-    sequelize,
-    modelName: 'Referral',
-    underscored: true,
-    tableName: 'tbl_referrals',
-    timestamps: false
-  });
+    {
+      sequelize,
+      modelName: "Referral",
+      underscored: true,
+      tableName: "tbl_referrals",
+      timestamps: false,
+    }
+  );
   return Referral;
 };

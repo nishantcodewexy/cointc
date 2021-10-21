@@ -1,0 +1,167 @@
+.Mypage .text-black {
+	color: #000 !important;
+}
+
+.Mypage .my-border {
+	border-bottom: 2px solid #C4C4C4;
+}
+
+.Mypage .my-profile,.Mypage .authentication-settings,.Mypage .profile-security,
+.Mypage .sell-user {
+	box-shadow: 0px 0px 3px 1px #0000008C;
+	background-color: #FFFFFF;
+	border-radius: 6px;
+	padding: 30px;
+}
+
+.Mypage .email-switch .switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 25px;
+}
+
+.Mypage .email-switch .switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+.Mypage .email-switch .slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.Mypage .email-switch .slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.Mypage .email-switch input:checked + .slider {
+  background-color: #0059FF;
+}
+
+.Mypage .email-switch input:focus + .slider {
+  box-shadow: 0 0 1px #2196F3;
+}
+
+.Mypage .email-switch input:checked + .slider:before {
+  -webkit-transform: translateX(26px);
+  -ms-transform: translateX(26px);
+  transform: translateX(26px);
+}
+
+.Mypage .email-switch .slider.round {
+  border-radius: 34px;
+}
+
+.Mypage .email-switch .slider.round:before {
+  border-radius: 50%;
+}
+
+.Mypage .sms-switch input:checked + .slider {
+  background-color: #EAECEF;
+}
+
+.Mypage .otp-switch input:checked + .slider {
+  background-color: #EAECEF;
+}
+
+.Mypage .authentication-settings tr th, .Mypage .sell-user tr th{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #DCDCDC !important;
+}
+
+.Mypage .authentication-settings tr td, .Mypage .sell-user tr td{
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-bottom: 1px solid #DCDCDC !important;
+}
+
+.Mypage .btn-change-security{
+	background-color: #F1F1F1;
+}
+
+.Mypage .having-border {
+	border-bottom: 1px solid #0059FF;
+	color: #0059FF !important;
+}
+
+.Mypage .btn-p2p-payment {
+	background-color: #F1F1F1;
+	color: #484D55;
+}
+
+.Mypage .profile-security table tr td {
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+.Mypage .wechat {
+	border: 1px solid #A8A8A8;
+	border-radius: 6px;
+}
+
+.Mypage .main-wechat-header {
+	background-color: #F1F1F1;
+	padding: 15px;
+}
+
+.Mypage .wechat table thead tr th,.Mypage .wechat table tbody tr td {
+	padding: 15px;
+}
+
+.Mypage .wechat table tbody tr td input{
+	background-color: #C1C1C1;
+	border: 0;
+}
+
+.Mypage .btn-payment-save {
+	border: 1px solid #1E1E1E;
+	color: #1E1E1E;
+	padding-left: 30px;
+	border-radius: 8px;
+	padding-right: 30px;
+}
+
+.Mypage .payment-save {
+	padding: 15px;
+}
+
+.Mypage .btn-bank-transfer {
+	background-color: #FFE6C1;
+}
+
+.Mypage .info-profile {
+	position: relative;
+	width: 30px;
+	height: 30px;
+	border-radius: 50%;
+	border: 1px solid #888888;
+}
+
+.Mypage .info-profile p {
+	position: absolute;
+	left: 30%;
+}
+
+.Mypage input#custom-switch{
+	position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 25px;
+}

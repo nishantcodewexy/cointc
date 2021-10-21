@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       const { User, Currency } = models;
-      User.Currencies = Currency.belongsTo(User, {
+      Currency.belongsTo(User, {
         foreignKey: "created_by",
       });
     }

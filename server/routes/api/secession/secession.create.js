@@ -16,7 +16,7 @@ module.exports = (server) => {
 
   return {
     method: "POST",
-    path: "/secession",
+    path: "/secessions",
     config: {
       pre: [
         {

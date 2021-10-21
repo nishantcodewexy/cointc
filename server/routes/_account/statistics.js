@@ -8,7 +8,7 @@ module.exports = (server) => {
 
   return {
     method: ["GET"],
-    path: `/users/statistics`,
+    path: `/account/statistics`,
     config: {
       pre: [
         {

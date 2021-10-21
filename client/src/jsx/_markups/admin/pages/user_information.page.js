@@ -177,9 +177,9 @@ function UsersPermissionTable({ services, useService }) {
                     </div>
                   </div>
                   <div className="media-body">
-                    <h5 className="mb-0 fs--1">
+                    <span className="mb-0 fs--1">
                       {row?.nickname || "Untitled"}
-                    </h5>
+                    </span>
                     {/* <span>
                   Last contact:{" "}
                   <Moment format="DD.MM.YYYY">{row?.updatedAt}</Moment>
@@ -243,27 +243,27 @@ function UsersMembershipTable({ useService, services }) {
         transformers={{
           name: ({ row }) => {
             return (
-              <Link to="/to_user_information">
-                <div className="media d-flex align-items-center">
-                  <div className="avatar avatar-xl mr-4">
-                    <div
-                      className="rounded-circle img-fluid overflow-hidden"
-                      style={{ maxWidth: 50, height: 50 }}
-                    >
-                      <IdenticonAvatar size={50} alt="" id={row.id} />
-                    </div>
-                  </div>
-                  <div className="media-body">
-                    <h5 className="mb-0 fs--1">
-                      {row?.nickname || "Untitled"}
-                    </h5>
-                    <span>
-                      Last contact:{" "}
-                      <Moment format="DD.MM.YYYY">{row?.updatedAt}</Moment>
-                    </span>
+              <div className="media d-flex align-items-center">
+                <div className="avatar avatar-xl mr-4">
+                  <div
+                    className="rounded-circle img-fluid overflow-hidden"
+                    style={{ maxWidth: 50, height: 50 }}
+                  >
+                    <IdenticonAvatar size={50} alt="" id={row.id} />
                   </div>
                 </div>
-              </Link>
+                <div className="media-body">
+                  <div className="mb-0 fs--1">
+                    <Link to="/to_user_information">
+                      {row?.nickname || "Untitled"}
+                    </Link>
+                  </div>
+                  <small>
+                    Last contact:{" "}
+                    <Moment format="DD.MM.YYYY">{row?.updatedAt}</Moment>
+                  </small>
+                </div>
+              </div>
             );
           },
           role: ({ row }) => {

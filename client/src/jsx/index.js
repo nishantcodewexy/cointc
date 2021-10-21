@@ -1,5 +1,6 @@
-import Admin from "./_markups/admin";
-import Guest from "./_markups/guest";
+import { Suspense, lazy } from "react";
+// import Admin from "./_markups/admin";
+// import Guest from "./_markups/guest";
 import Error404 from "./Error404";
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import { Provider } from "react-redux";
@@ -8,6 +9,8 @@ import { CircularProgress } from "@material-ui/core";
 import _helpers from "./_helpers";
 import "react-toastify/dist/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
+/* import "../vendor/bootstrap-select/dist/css/bootstrap-select.min.css";
+import "../css/style.css"; */
 
 const {
   store: { store, persistor },
@@ -15,6 +18,9 @@ const {
 } = _helpers;
 
 // import { withResizeDetector } from "react-resize-detector";
+
+const AdminMarkup = lazy(() => import("./_markups/admin"));
+const GuestMarkup = lazy(() => import("./_markups/guest"));
 
 function Markup() {
   return (
@@ -52,12 +58,16 @@ function Markup() {
           <Switch>
             {/* Admin user page */}
             <Route path="/admin">
-              <Admin></Admin>
+              <Suspense fallback={<div>Loading...</div>}>
+                <AdminMarkup></AdminMarkup>
+              </Suspense>
             </Route>
 
             {/* Guest user pages */}
             <Route path="/">
-              <Guest></Guest>
+              <Suspense fallback={<div>Loading...</div>}>
+                <GuestMarkup></GuestMarkup>
+              </Suspense>
             </Route>
 
             {/* Error Page */}

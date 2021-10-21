@@ -1,109 +1,147 @@
 "use strict";
 const assert = require("assert");
-// const sequelize = require('sequelize')
+const {Op} = require("sequelize")
+
 module.exports = (server) => {
-  const { __findAllWithPagination, __destroy } = require("./_methods")(server);
   const {
-    db: { Referral, User, BasicProfile, Sequelize: {Op} },
+    db: { Referral,Profile,User },
     boom,
-    helpers: { filters, paginator },
+    helpers:{
+      filters,
+      paginator
+    },
+    
   } = server.app;
 
-  return {
-    // Delete Order
-    async bulkRemove(req) {
-      try {
-        const { data, force } = req.payload;
-        const where = {
-          [Op.or]: data,
-        };
-
-        return await __destroy("Referral", where, force, {});
-      } catch (error) {
-        console.error(error);
-        throw boom.boomify(error);
-      }
-    },
-
-    /**
-     * @function retrieve - Retrieves a single referrals
-     * @param {Object} req
-     * @returns
-     */
-    async retrieve(req) {
+  const orderController = {
+    async create(req) {
       const {
-        query,
-        params: { id },
-        pre: { user },
-      } = req;
-
-      try {
-        let where, options;
-        options = {};
-
-        where = { id };
-
-        return Referral.findOne(where, options);
-      } catch (error) {
-        console.error(error);
-        throw boom.boomify(error);
-      }
-    },
-
-    /**
-     * @function bulkRetrieve - Bulk retrieves referrals
-     * @param {Object} req
-     * @returns
-     */
-    async bulkRetrieve(req) {
-      const {
-        query,
-        pre: { user },
-      } = req;
-
-      try {
-        let extra, options, searchFields;
-        searchFields = [];
-        options = {
-          logging: console.log,
-          include: [
-            {
-              model: User,
-              attributes: ["createdAt"],
-              include: [
-                {
-                  model: BasicProfile,
-                  attributes: ["nickname", "last_name", "other_names", "email"],
-                },
-              ],
-            },
-          ],
-          right: true
-        };
-
-        if (user.isAdmin) {
-          extra = {
-            [Op.ne]: {
-              user_id: null
-            }
-          };
-        } else {
-          extra = {
-            referral_id: user.id,
-          };
+        auth:{
+          credentials:{
+            user
+          }
+        },
+        payload:{
+          referral_code
+        },
+        pre:{
+          isAdmin
         }
+        
+      } = req
 
-        return await __findAllWithPagination(
-          "Referral",
-          query,
-          extra,
-          searchFields,
-          options
-        );
+      
+      try {
+        
+          if(!isAdmin) throw boom.forbidden()
+          
+          const userProfile = await Profile.findOne({
+            where:{
+              referral_code
+            }
+          })
+    
+          
+    
+          if(!userProfile) throw boom.notFound()
+          
+          let referrer = await User.findByPk(userProfile.user_id,{
+            attributes:[
+              "id",
+              "email",
+            ]
+          });
+          user.addReferrer(referrer)
+          return referrer
       } catch (error) {
-        console.error(error);
-        throw boom.boomify(error);
+        console.error(error)
+        throw boom.boomify(error)
       }
+
+      
+      
+
+
+      
+    },
+
+    // Delete Order
+    async bulkDestroy(req) {
+
+      const {
+        pre:{
+          isAdmin
+        }
+      } = req
+
+      // only allow action if it admin
+      if(!isAdmin) throw boom.forbidden()
+
+      try {
+        const data = req.payload;
+  
+        return await Referral.destroy({
+          where: {
+            [Op.or]:data
+          },
+          force: true,
+        });
+        
+      } catch (error) {
+        console.error(error)
+        throw boom.boomify(error)
+      }
+    },
+
+    
+
+    
+
+    // fetch all Orders
+    async list(req) {
+      const {
+        query,
+        pre:{
+          isAdmin
+        },
+        auth:{
+            credentials:{
+                user
+            }
+        }
+      } = req
+      
+      
+      
+      try {
+        
+        if(isAdmin){
+            const filterResults = await filters({query,searchFields:[]})
+      
+            const queryset = Referral.findAndCountAll(filterResults)
+      
+            return await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
+            
+          }else{
+            const filterResults = await filters({query:{},extra:{
+              referrer_id:user.id
+            }})
+      
+            const queryset = Referral.findAndCountAll(filterResults)
+      
+            const {count} = await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
+            return count
+            
+        }
+      } catch (error) {
+        console.error(error)
+        throw boom.boomify(error)
+      }
+      
     },
   };
+  
+  const orderGroupController = (req, h) => { };
+  
+  return { ...orderController, group: orderGroupController };
 };

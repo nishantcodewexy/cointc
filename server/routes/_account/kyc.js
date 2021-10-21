@@ -17,7 +17,7 @@ module.exports = (server) => {
 
   return {
     method: ["POST", "PUT"],
-    path: "/auth/kyc/{type?}",
+    path: "/user/kyc/{type?}",
     config: {
       pre: [
         {

@@ -27,7 +27,6 @@ function login(request) {
   return async (dispatch) => {
     dispatch(log({ type: NOTICE.CLEAR }));
     dispatch(log({ type: REQUEST.SESSION_LOGIN }));
-
     try {
       let { data, error } = await request();
       if (error) throw new Error(error);

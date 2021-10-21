@@ -5,12 +5,12 @@ const { Op } = require("sequelize");
 
 module.exports = (server) => {
   const {
-    db: { Secession, sequelize, User, AdminProfile, BasicProfile },
+    db: { Secession },
     boom,
-    helpers: { filters, paginator, isAdmin },
+    helpers: { filters, paginator },
   } = server.app;
 
-  return {
+  const secessionController = {
     // CREATE ---------------------------------------------------------------
 
     async create(req) {
@@ -31,61 +31,47 @@ module.exports = (server) => {
     // RETRIEVE ---------------------------------------------------------------
 
     async bulkRetrieve(req) {
-      try {
-        const {
+      const {
+        query,
+        pre: { isAdmin },
+        auth: {
+          credentials: { user },
+        },
+      } = req;
+
+      if (isAdmin) {
+        const filterResults = await filters({
           query,
-          pre: { user },
-        } = req;
+          searchFields: ["status", "description"],
+        });
 
-        let filterResults, queryset;
+        const queryset = Secession.findAndCountAll(filterResults);
 
-        if (isAdmin(user)) {
-          filterResults = await filters({
-            query,
-            searchFields: ["status", "description"],
-          });
-
-          queryset = await Secession.findAndCountAll({
-            ...filterResults,
-            include: {
-              association: "User",
-              attributes: { exclude: ["password"] },
-              where: {
-                id: {
-                  [Op.ne]: user?.id,
-                },
-              },
-              /*  include: [
-                { model: BasicProfile, attributes: ["nickname"] },
-                { model: AdminProfile, attributes: ["nickname"] },
-              ], */
-            },
-          });
-        } else {
-          filterResults = await filters({
-            query,
-            extra: {
-              user_id: user.id,
-              archived_at: {
-                [Op.is]: null,
-              },
-            },
-          });
-
-          queryset = await Secession.findAndCountAll(filterResults);
-        }
-
-        return paginator({
+        return await paginator({
           queryset,
           limit: filterResults.limit,
           offset: filterResults.offset,
         });
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
+      } else {
+        const filterResults = await filters({
+          query,
+          extra: {
+            user_id: user.id,
+            archived_at: {
+              [Op.is]: null,
+            },
+          },
+        });
+
+        const queryset = Secession.findAndCountAll(filterResults);
+
+        return await paginator({
+          queryset,
+          limit: filterResults.limit,
+          offset: filterResults.offset,
+        });
       }
     },
-
     async retrieve(req) {
       const {
         params: { id },
@@ -145,4 +131,6 @@ module.exports = (server) => {
       });
     },
   };
+
+  return secessionController;
 };

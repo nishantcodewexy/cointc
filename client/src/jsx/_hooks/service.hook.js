@@ -156,8 +156,6 @@ function useService(config = {}, toast) {
       ? dispatchRequest({ ..._fromStack[_fromStack.length - 1], payload })
       : null;
 
-
-
   useEffect(() => {
     if (error) _toast?.error(error) && _toast?.error(error);
   }, [error]);

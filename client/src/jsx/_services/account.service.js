@@ -39,6 +39,91 @@ class AccountService extends Services {
     );
   };
 
+  //STATISTICS ---------------------------------------------------------------------
+
+  /**
+   * Statistics payload types definition
+   * @typedef {Object} statsPayload
+   * @property {"user_stats" | "withdrawal_stats" | "ticket_stats" | "admin_stats" | "security_stats" | "kyc_stats" | "deposit_stats"} type
+   */
+
+  /**
+   *@function bulkRetreieveStats - Gets account statistics (***Admins only**)
+   * @param {statsPayload} params
+   * @returns
+   */
+  bulkRetreieveStats = async (params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`stats`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  //BANK DETAIL ---------------------------------------------------------------------
+  createBankDetail = async (data) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`bank-details`, {
+          method: "POST",
+          data,
+        })
+    );
+  };
+
+  bulkRetrieveBankDetail = async (params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`bank-details`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  retrieveBankDetail = async ({ id, params }) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`bank-details/${id}`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  updateBankDetail = async ({ id, ...data }) => {
+    console.log({ data });
+    return await this.decorate(
+      async () =>
+        await this.axios(`bank-details/${id}`, {
+          method: "PUT",
+          data,
+        })
+    );
+  };
+
+  removeBankDetail = async ({ id, ...data }) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`bank-details/${id}`, {
+          method: "DELETE",
+          data,
+        })
+    );
+  };
+
+  bulkRemoveBankDetail = async (data) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`bank-details`, {
+          method: "DELETE",
+          data,
+        })
+    );
+  };
+
   // USER --------------------------------------------------------------------------------
 
   /**
@@ -143,127 +228,59 @@ class AccountService extends Services {
     );
   };
 
-  //STATISTICS ---------------------------------------------------------------------
-
+  // CHAT --------------------------------------------------------------------------
   /**
-   * Statistics payload types definition
-   * @typedef {Object} statsPayload
-   * @property {"user_stats" | "withdrawal_stats" | "ticket_stats" | "admin_stats" | "security_stats" | "kyc_stats" | "deposit_stats"} type
-   */
-
-  /**
-   *@function bulkRetreieveStats - Gets account statistics (***Admins only**)
-   * @param {statsPayload} params
+   * @function bulkRetrieveChatHistory - list chat histories (**Admins only**)
    * @returns
    */
-  bulkRetreieveStats = async (params) => {
+  bulkRetrieveChatHistory = async (params) => {
     return await this.decorate(
       async () =>
-        await this.axios(`stats`, {
+        await this.axios(`chat-history`, {
           method: "GET",
           params,
         })
     );
   };
 
-  //BANK DETAIL ---------------------------------------------------------------------
-  createBankDetail = async (data) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`bank-details`, {
-          method: "POST",
-          data,
-        })
-    );
-  };
-
-  bulkRetrieveBankDetail = async (params) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`bank-details`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
-
-  retrieveBankDetail = async ({ id, params }) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`bank-details/${id}`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
-
-  updateBankDetail = async ({ id, ...data }) => {
-    console.log({ data });
-    return await this.decorate(
-      async () =>
-        await this.axios(`bank-details/${id}`, {
-          method: "PUT",
-          data,
-        })
-    );
-  };
-
-  removeBankDetail = async ({ id, ...data }) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`bank-details/${id}`, {
-          method: "DELETE",
-          data,
-        })
-    );
-  };
-
-  bulkRemoveBankDetail = async (data) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`bank-details`, {
-          method: "DELETE",
-          data,
-        })
-    );
-  };
-
-  //SECESSION ---------------------------------------------------------------------
-
+  // SUPPORT TICKET --------------------------------------------------------------------------
+  //
   /**
-   * @function bulkCreateUser - Bulk create user - (**Admins only**)
-   * @param {Object} data
-   * @returns
+   * Support ticket payload types definition
+   * @typedef {Object} ticketPayload
+   * @property {String} id - Support ticket id
+   * @property {String} [status] - Support ticket status
+   * @property {String} [subject] - Support ticket status
+   * @property {String} [ticket_no] - Support ticket status
    */
-  bulkCreateSecession = async (data) => {
-    return await this.decorate(async () =>
-      this.axios(`secession`, {
-        method: "POST",
-        data,
-      })
-    );
-  };
 
   /**
-   * @function bulkListUsers - Gets one or many users (**Admins only**)
+   * @function bulkRetrieveSupportTickets - Gets adverts (**Admin only**)
    * @param {Object} params
-   * @param {String} [params.id] - User ID
+   * @param {Number} [params.limit] - Response limit
+   * @param {String} [params.name] - Specify the currency name
    * @returns
    */
-  bulkRetrieveSecession = async (params) => {
+  bulkRetrieveSupportTickets = async function (params) {
     return await this.decorate(
       async () =>
-        await this.axios(`secession`, {
+        await this.axios(`tickets`, {
           method: "GET",
           params,
         })
     );
   };
-
-  retrieveSecession = async ({ id, ...params }) => {
+  /**
+   * @function getSupportTicket - Gets adverts (**Admin only**)
+   * @param {Object} params
+   * @param {Number} [params.limit] - Response limit
+   * @param {String} [params.name] - Specify the currency name
+   * @returns
+   */
+  getSupportTicket = async function (id, params) {
     return await this.decorate(
       async () =>
-        await this.axios(`secession/${id}`, {
+        await this.axios(`tickets/${id}`, {
           method: "GET",
           params,
         })
@@ -271,101 +288,30 @@ class AccountService extends Services {
   };
 
   /**
-   * @function bulkUpdateUsers - Bulk update users (**Admins only**)
+   * @function updateSupportTicket - Update single support ticket (**Admin only**)
    * @param {Object} data
    * @returns
    */
-  bulkUpdateSecession = async (data) => {
+  updateSupportTicket = async (id, data) => {
     return await this.decorate(
       async () =>
-        await this.axios(`secession`, {
+        await this.axios(`tickets/${id}`, {
           method: "PUT",
           data,
         })
     );
   };
-
   /**
-   * @function updateUser -  update single users (**Admins only**)
-   * @param {Object} payload
-   * @param {String} payload.id
-   * @param {String} payload.data
+   * @function updateBulkSupportTicket - Bulk update support ticket (**Admin only**)
+   * @param {ticketPayload []} data
    * @returns
    */
-  updateSecession = async ({ id, data }) => {
+  updateSupportTicket = async (data) => {
     return await this.decorate(
       async () =>
-        await this.axios(`secession/${id}`, {
+        await this.axios(`tickets`, {
           method: "PUT",
           data,
-        })
-    );
-  };
-
-  /**
-   * @function removeUser - Bulk delete users (**Admins only**)
-   * @param {String} id
-   * @returns
-   */
-  removeSecession = async ({ id, data }) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`secession/${id}`, {
-          method: "DELETE",
-          data,
-        })
-    );
-  };
-
-  /**
-   * @function bulkRemoveUser - Bulk delete users (**Admins only**)
-   * @param {String []} data - Array of IDs to delete from
-   * @returns
-   */
-  bulkRemoveSecession = async (data) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`secession`, {
-          method: "DELETE",
-          data,
-        })
-    );
-  };
-
-  // REFERRAL ----------------------------------------------------
-  bulkRetrieveReferral = async (params) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`referral`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
-  bulkRemoveReferral = async (data) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`referral`, {
-          method: "DELETE",
-          data,
-        })
-    );
-  };
-  retrieveReferral = async ({ id, params }) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`referral/{id}`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
-  removeReferral = async ({ id, params }) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`referral/{id}`, {
-          method: "DELETE",
-          params,
         })
     );
   };

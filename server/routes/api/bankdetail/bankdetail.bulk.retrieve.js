@@ -7,8 +7,7 @@ module.exports = (server) => {
     },
     helpers:{
       permissions:{
-        isUser,
-        isAdminOrError
+        isAdminOrError,
       }
     }
   } = server.app;
@@ -21,10 +20,6 @@ module.exports = (server) => {
         {
           method:isAdminOrError,
           assign: "user",
-        },
-        {
-          method:isAdminOrError,
-          assign: "isAdmin",
         },
       ],
       handler: bulkRetrieve,

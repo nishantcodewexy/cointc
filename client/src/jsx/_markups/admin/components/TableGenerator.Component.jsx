@@ -83,6 +83,8 @@ function TableGenerator({
         fullCols,
       ];
     }
+
+    console.log(data)
     if (data?.results?.length) {
       const [rows, cols, fullRows, fullCols] = getMapping(data?.results);
       setTableData({ rows, cols, fullRows, fullCols });

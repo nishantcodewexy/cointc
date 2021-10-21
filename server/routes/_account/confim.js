@@ -15,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: `/auth/confirm`,
+    path: `/account/confirm`,
     config: {
       handler: confirmByEmail,
       validate: {
