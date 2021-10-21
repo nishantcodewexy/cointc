@@ -1,0 +1,60 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+a,a:hover {
+	text-decoration: none;
+}
+
+body {
+	font-family: 'DM Sans', sans-serif !important;
+}
+
+.py-60 {
+	padding-top: 60px !important;
+	padding-bottom: 60px !important;
+}
+
+.img-fluid {
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+}
+
+.page-footer {
+    background-color: #F8F8F9;
+}
+
+.page-footer ul li a {
+    color: #79818F !important;
+}
+
+.page-footer h5 {
+    color: #484D55 !important;
+    font-weight: 700;
+}
+
+.py-15 {
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
+
+.overflow-x-auto {
+    overflow-x: auto;
+}
+
+.join-nav-bg {
+	background-image: url("../../app-assets/images/nav/join-01.png");
+	width: 100%;
+	height: 100%;
+}
+
+.join-nav-bg ul li a {
+	color: #FFF !important;
+	font-weight: 700;
+
+	background-color: transparent;
+    border-color: transparent;
+}

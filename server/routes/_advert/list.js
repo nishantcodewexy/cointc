@@ -3,11 +3,8 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      advert: { list },
+      advert: { getAll },
     },
-    helpers:{
-      isAdmin
-    }
   } = server.app;
 
   
@@ -16,7 +13,7 @@ module.exports = (server) => {
     method: "GET",
     path: "/adverts",
     config: {
-      handler: list,
+      handler: getAll,
       auth: 'jwt'
     },
   };

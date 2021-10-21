@@ -1,17 +1,16 @@
 "use strict";
-const {
-  permissions:{
-    isUser
-  },
-} = require("../../../helpers")
-
 
 module.exports = (server) => {
   const {
     controllers: {
       order: { list },
     },
-    consts: { roles: _roles }
+    consts: { roles: _roles },
+    helpers:{
+      permissions:{
+        isAdmin
+      }
+    }
   } = server.app;
 
   return {
@@ -20,8 +19,15 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method:isUser,
-          assign: "user",
+          method: (req) =>{
+            
+            return _roles.admin
+          },
+          assign: "role",
+        },
+        {
+          method:isAdmin,
+          assign: "isAdmin",
         },
       ],
       handler: list,

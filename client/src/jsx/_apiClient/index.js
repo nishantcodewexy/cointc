@@ -25,7 +25,7 @@ class Client {
     }
 
     this.axios = axios.create({
-      // baseURL: 'https://some-domain.com/api/',
+      baseURL: 'http://localhost:8000/',
       timeout: 30000,
       headers,
       cancelToken: this.source.token,

@@ -12,7 +12,7 @@ module.exports = (server) => {
   });
   return {
     method: "POST",
-    path: "/auth/request_password_reset",
+    path: "/user/request_password_reset",
     config: {
       handler: requestPasswordReset,
       validate: {

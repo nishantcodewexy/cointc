@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       const { Chat, Message } = models;
-      Message.Chat = Chat.hasMany(Message, {});
+      Chat.hasMany(Message, {});
     }
     static makeHash(to, from) {
       console.log({ to, from });

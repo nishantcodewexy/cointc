@@ -169,6 +169,7 @@ function CurrencyMgmt({ services, useService }) {
 
       <Row style={{ marginBottom: 60 }}>
         <Col>
+          <Card>
             <TableGenerator
               {...{ service }}
               mapping={{
@@ -228,6 +229,7 @@ function CurrencyMgmt({ services, useService }) {
                 },
               }}
             />
+          </Card>
         </Col>
       </Row>
     </>

@@ -1,4 +1,3 @@
-
 const sharedStyles = {
   padding: 20,
   width: "100%",
@@ -15,10 +14,10 @@ const HeadlineStyle = {
   fontSize: 20,
   fontWeight: 600,
 };
-function Empty({note = 'No records found!'}) {
+function Empty() {
   return (
     <div style={sharedStyles}>
-      <h3 style={HeadlineStyle}>{note}</h3>
+      <h3 style={HeadlineStyle}>No records found!</h3>
     </div>
   );
 }

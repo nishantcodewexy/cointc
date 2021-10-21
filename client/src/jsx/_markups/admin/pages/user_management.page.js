@@ -56,7 +56,6 @@ function UserManagement({ services, useService }) {
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
-        "filter[role]": "basic",
         paranoid: false,
       },
       toast: { success: notifySuccess, error: notifyError },
@@ -180,6 +179,7 @@ function UserManagement({ services, useService }) {
 
       <Row>
         <Col>
+          <Card>
             <TableGenerator
               mapping={{
                 id: "user_id",
@@ -344,6 +344,7 @@ function UserManagement({ services, useService }) {
                 },
               }}
             />
+          </Card>
         </Col>
       </Row>
     </>

@@ -3,7 +3,6 @@ const { Op } = require("sequelize");
 const bank_detail = require("../database/models/bank_detail");
 const boom = require("@hapi/boom");
 module.exports = (server) => {
-  const {__findAllWithPagination,__update,__destroy} = require("./_methods")(server)
   const {
     db: { BankDetail, sequelize },
     consts: { roles: _roles },
@@ -19,6 +18,11 @@ module.exports = (server) => {
      */
     async retrieve(req) {
       const {
+        query,
+        pre: { isAdmin },
+        auth: {
+          credentials: { user },
+        },
         params: { id },
       } = req;
 
@@ -26,8 +30,10 @@ module.exports = (server) => {
         return await BankDetail.findOne({
           where: {
             id,
+            archive_at: null,
+            ...(!isAdmin ? { user_id: user.id } : {}),
           },
-          attributes: { exclude: ["archive_at", "UserId"] }
+          attributes: { exclude: ["user_id", "archive_at", "UserId"] },
         });
       } catch (error) {
         console.error(error);
@@ -40,26 +46,31 @@ module.exports = (server) => {
         pre: { user },
       } = req;
 
-      
-
-      let paranoid = Boolean(query.paranoid) || false
-      delete query.paranoid
-
-      let where,searchFields,options
-      where = {}
-      searchFields = ["bank_name", "currency", "country"]
-      options = user.isAdmin?{paranoid}:{}
-
       try {
+        const filterResults = await filters({
+          query,
+          searchFields: ["bank_name", "currency", "country"],
+          extra: {
+            ...(!user
+              ? {
+                  user_id: user.id,
+                }
+              : {}),
+            archive_at: null,
+          },
+        });
 
-        return await __findAllWithPagination("BankDetail",query,where,searchFields,options)
-        
+        const queryset = await BankDetail.findAndCountAll(filterResults);
+        return paginator({
+          queryset,
+          limit: filterResults.limit,
+          offset: filterResults.offset,
+        });
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);
       }
     },
-
     async update(req) {
       const {
         pre: { user },
@@ -68,10 +79,13 @@ module.exports = (server) => {
       } = req;
 
       try {
-        let where = {
-          id
-        }
-        return await __update("BankDetail",payload,where,{})
+        return await BankDetail.update(payload, {
+          where: {
+            user_id: user?.id,
+            archive_at: null,
+            id,
+          },
+        });
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);
@@ -81,9 +95,9 @@ module.exports = (server) => {
     async create(req) {
       const {
         payload,
-        pre:{
-          user
-        }
+        auth: {
+          credentials: { user },
+        },
       } = req;
       try {
         return await BankDetail.create({ ...payload, user_id: user.id });
@@ -101,11 +115,15 @@ module.exports = (server) => {
 
       try {
         return {
-          deleted: await sequelize.transaction(async (transaction) => {
-            let where = {id}
-            let options = {transaction}
-            return await __destroy("BankDetail",where,false,options)
-            
+          deleted: await sequelize.transaction(async (t) => {
+            return await BankDetail.destroy({
+              where: {
+                user_id: user.id,
+                archive_at: null,
+                id,
+              },
+              transaction: t,
+            }).then((affectedRows) => affectedRows);
           }),
         };
       } catch (error) {

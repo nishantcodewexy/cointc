@@ -11,11 +11,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       const { AdminProfile, User } = models;
       
-      User.AdminProfile = AdminProfile.belongsTo(User, {
+      AdminProfile.belongsTo(User, {
         foreignKey: "user_id",
         allowNull: false,
-        as: 'user',
-        constraints: false,
+        as: 'user'
       });
     }
     toPublic() {

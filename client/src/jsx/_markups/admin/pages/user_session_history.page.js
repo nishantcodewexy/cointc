@@ -13,29 +13,28 @@ function UserSessionHistory(props) {
   return (
     <>
       <PageTitle activeMenu="Session History" motherMenu="User Management" />
-
-      <div>
-        <header className="mb-4">
-          <h3>User session history</h3>
-        </header>
-        <UserSessionHistoryTable {...props} />
-      </div>
+      <Row style={{ marginBottom: 60 }}>
+        <Col>
+          <header className="mb-4">
+            <h3>User login and logout history list</h3>
+          </header>
+          <Card>
+            <UserSessionHistoryTable {...props} />
+          </Card>
+        </Col>
+      </Row>
     </>
   );
 }
 function UserSessionHistoryTable({ useService, services }) {
-  const { account } = services;
-
+  const { useGroupService } = services;
+  const group = useGroupService();
   let service = useService({
-    [SERVICE?.BULK_RETRIEVE]: account.bulkRetrieveUser,
+    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
   });
   const { dispatchRequest } = service;
   useEffect(() => {
-    dispatchRequest({
-      type: SERVICE?.BULK_RETRIEVE, payload: {
-      "filter[role]": "basic"
-    } });
-    
+    dispatchRequest({ type: SERVICE?.BULK_RETRIEVE});
   }, []);
 
   return (
@@ -43,13 +42,19 @@ function UserSessionHistoryTable({ useService, services }) {
       <TableGenerator
         {...{ service }}
         omit="*"
-        extras={["username", "duration", "last_seen", "login", "login_status"]}
+        extras={[
+          "username",
+          "duration",
+          "last_seen",
+          "login",
+          "login_status",
+        ]}
         transformers={{
           username: ({ row }) => (
             <Link to="/ecom-customers">
               <div className="media d-flex align-items-center">
                 <div className="media-body">
-                  <h5 className="mb-0 fs--1">{row?.nickname || row?.last_name || row?.other_name || row?.nickname || <div className="text-danger">Unnamed</div>}</h5>
+                  <h5 className="mb-0 fs--1">{row?.nickname}</h5>
                 </div>
               </div>
             </Link>
@@ -82,7 +87,7 @@ function UserSessionHistoryTable({ useService, services }) {
               </small>
             );
           },
-
+         
           login_status: ({ row }) => {
             let now = moment();
             let login_at = moment(row?.login_at);

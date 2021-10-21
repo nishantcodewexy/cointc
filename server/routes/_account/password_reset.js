@@ -12,14 +12,13 @@ module.exports = (server) => {
   } = server.app;
 
   const schema = Joi.object({
-    token: Joi.string().required(),
     password: Joi.string().pattern(patterns.password).required(),
     repeat_password: Joi.ref("password"),
   }).with("password", "repeat_password");
 
   return {
     method: "POST",
-    path: "/auth/password_reset",
+    path: "/user/password_reset",
     config: {
       pre: [
         {

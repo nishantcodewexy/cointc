@@ -425,7 +425,7 @@ function Messenger({ services, useService }) {
                       );
                     })
                   ) : (
-                    <Empty note="No message found"></Empty>
+                    <Empty></Empty>
                   )}
                 </PerfectScrollbar>
               </ChatMessages>

@@ -4,13 +4,12 @@ import Services from "./Services";
  * Class of all Group services
  * @class
  */
-class SupportTicketServices extends Services {
+export default class SupportTicketServices extends Services {
   constructor(init) {
     super(init);
     this._name = "SUPPORT_TICKET";
     return this;
   }
-  
   // SUPPORT TICKET --------------------------------------------------------------------------
   /**
    * Support ticket payload types definition
@@ -22,13 +21,13 @@ class SupportTicketServices extends Services {
    */
 
   /**
-   * @function bulkRetrieveSupportTicket - Gets adverts (**Admin only**)
+   * @function bulkRetrieveSupportTickets - Gets adverts (**Admin only**)
    * @param {Object} params
    * @param {Number} [params.limit] - Response limit
    * @param {String} [params.name] - Specify the currency name
    * @returns
    */
-  bulkRetrieveSupportTicket = async function (params) {
+   bulkRetrieveSupportTickets = async function (params) {
     return await this.decorate(
       async () =>
         await this.axios(`tickets`, {
@@ -44,7 +43,7 @@ class SupportTicketServices extends Services {
    * @param {String} [params.name] - Specify the currency name
    * @returns
    */
-  retrieveSupportTicket = async function ({ id, params }) {
+  retrieveSupportTicket = async function ({id, params}) {
     return await this.decorate(
       async () =>
         await this.axios(`tickets/${id}`, {
@@ -59,7 +58,7 @@ class SupportTicketServices extends Services {
    * @param {Object} data
    * @returns
    */
-  updateSupportTicket = async ({ id, data }) => {
+  updateSupportTicket = async ({id, data}) => {
     return await this.decorate(
       async () =>
         await this.axios(`tickets/${id}`, {
@@ -83,5 +82,3 @@ class SupportTicketServices extends Services {
     );
   };
 }
-
-export default SupportTicketServices;

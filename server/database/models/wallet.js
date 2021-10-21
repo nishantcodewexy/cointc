@@ -2,7 +2,7 @@
 const { Model } = require("sequelize");
 const Tatum = require("@tatumio/tatum");
 const _ = require("underscore");
-const {types:{AssetType}} = require("../../consts")
+
 module.exports = (sequelize, DataTypes) => {
   class Wallet extends Model {
     /**
@@ -37,9 +37,9 @@ module.exports = (sequelize, DataTypes) => {
       private_key: DataTypes.STRING,
       address: DataTypes.STRING,
       asset: {
-        type: DataTypes.ENUM(...Object.values(AssetType)),
+        type: DataTypes.ENUM("BTC", "ETH", "BNB", "XRP", "USDT"),
         allowNull: false,
-        defaultValue: AssetType.BTC,
+        defaultValue: "BTC",
       },
     },
     {
