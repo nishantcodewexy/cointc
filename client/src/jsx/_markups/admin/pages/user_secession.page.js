@@ -88,28 +88,6 @@ function SecessionRequestTable({
   });
   const { dispatchRequest } = service;
 
-  function notifySuccess() {
-    toast.success("Success !", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
-
-  function notifyError(error) {
-    toast.error(error || "Request Error!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
-
   useEffect(() => {
     dispatchRequest({
       type: [SERVICE?.BULK_RETRIEVE],
@@ -447,4 +425,26 @@ function PastSecessionListTable({ notifySuccess, notifyError }) {
       </Table>
     </>
   );
+}
+
+function notifySuccess() {
+  toast.success("Success !", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}
+
+function notifyError(error) {
+  toast.error(error || "Request Error!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
 }

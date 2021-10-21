@@ -338,7 +338,6 @@ export function Remove({ action, callback, payload: initialValues = {} }) {
 }
 
 export default Object.assign(Create, {
-  Create,
   Remove,
   Update,
 });

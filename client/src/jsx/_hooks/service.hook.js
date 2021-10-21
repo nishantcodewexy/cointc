@@ -45,13 +45,8 @@ function useService(config = {}) {
     let { message, data, error, statusCode } = response;
     // debugger;
     if (error) {
-<<<<<<< HEAD
-      setError(error);
-      toast && _toast?.error && _toast?.error(error);
-=======
       setError(message);
       // console.log('Service error Handler:',{response}, toast)
->>>>>>> 3d1c2d5edf4a6a537e5af6df360c2de615d5f053
       if (statusCode == 401) {
         dispatch(user.logout());
       }
@@ -102,14 +97,6 @@ function useService(config = {}) {
 
       response = await fn();
 
-<<<<<<< HEAD
-      if (
-        reload &&
-        lowercased !== (SERVICE?.RETRIEVE || SERVICE?.BULK_RETRIEVE)
-      ) {
-        _fromStack[SERVICE?.BULK_RETRIEVE] &&
-          dispatchRequest(_fromStack[SERVICE?.BULK_RETRIEVE]);
-=======
       switch (lowercased) {
         case SERVICE?.RETRIEVE:
         case SERVICE?.BULK_RETRIEVE: {
@@ -122,7 +109,6 @@ function useService(config = {}) {
             dispatchRequest(_fromStack[SERVICE?.BULK_RETRIEVE]);
           return handleResponse({ response, save: true, toast });
         }
->>>>>>> 3d1c2d5edf4a6a537e5af6df360c2de615d5f053
       }
 
       overwrite && _toStack((state) => ({ ...state, [type]: request }));
