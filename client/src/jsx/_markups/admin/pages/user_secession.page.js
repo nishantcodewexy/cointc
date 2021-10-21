@@ -29,50 +29,32 @@ import avartar5 from "../../../../images/avatar/5.png";
 const { IdenticonAvatar } = _components;
 
 function UserSecessions(props) {
-  function notifySuccess() {
-    toast.success("Success !", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
-
-  function notifyError(error) {
-    toast.error(error || "Request Error!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
   return (
     <>
       <PageTitle activeMenu="Users secession" motherMenu="User Management" />
       {/* Details of Secession Request */}
-
-      <div style={{ marginBottom: 60 }}>
-        <header className="mb-4">
-          <h3>Details of Secession Request</h3>
-        </header>
-        <SecessionRequestTable {...props} {...{ notifySuccess, notifyError }} />
-      </div>
+      <Row>
+        <Col style={{ marginBottom: 60 }}>
+          <header className="mb-4">
+            <h3>Details of Secession Request</h3>
+          </header>
+          <Card>
+            <SecessionRequestTable {...props} />
+          </Card>
+        </Col>
+      </Row>
 
       {/* Secession Upon Approval */}
-      <div style={{ marginBottom: 60 }}>
-        <header className="mb-4">
-          <h3>Secession Upon Approval</h3>
-        </header>
-        <ApprovedSecessionTable
-          {...props}
-          {...{ notifySuccess, notifyError }}
-        />
-      </div>
-
+      <Row>
+        <Col style={{ marginBottom: 60 }}>
+          <header className="mb-4">
+            <h3>Secession Upon Approval</h3>
+          </header>
+          <Card>
+            <ApprovedSecessionTable {...props} />
+          </Card>
+        </Col>
+      </Row>
       {/* List of Secession Members */}
       <Row>
         <Col style={{ marginBottom: 60 }}>
@@ -105,6 +87,28 @@ function SecessionRequestTable({
     [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
   });
   const { dispatchRequest } = service;
+
+  function notifySuccess() {
+    toast.success("Success !", {
+      position: "top-right",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
+
+  function notifyError(error) {
+    toast.error(error || "Request Error!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
 
   useEffect(() => {
     dispatchRequest({

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import qs from "qs";
 import { useDispatch } from "react-redux";
 import _actions from "../_actions";
 import { SERVICE } from "../_constants";
@@ -20,7 +21,7 @@ const { user } = _actions;
  * @param {Object | {getImmediate = false}} options - service hook options
  * @returns
  */
-function useService(config = {}, toast) {
+function useService(config = {}) {
   const dispatch = useDispatch();
 
   const [services, setServices] = useState(config);
@@ -29,7 +30,7 @@ function useService(config = {}, toast) {
   const [isFetching, setIsFetching] = useState(false);
   const [data, setData] = useState(null);
   const [error, setError] = useState(null);
-  const [_toast, setToast] = useState(toast);
+  const [_toast, setToast] = useState(null);
 
   /**
    * @function handleResponse
@@ -44,8 +45,13 @@ function useService(config = {}, toast) {
     let { message, data, error, statusCode } = response;
     // debugger;
     if (error) {
+<<<<<<< HEAD
+      setError(error);
+      toast && _toast?.error && _toast?.error(error);
+=======
       setError(message);
       // console.log('Service error Handler:',{response}, toast)
+>>>>>>> 3d1c2d5edf4a6a537e5af6df360c2de615d5f053
       if (statusCode == 401) {
         dispatch(user.logout());
       }
@@ -75,6 +81,7 @@ function useService(config = {}, toast) {
         reload = true,
       } = request;
 
+
       setIsFetching(true);
       setLastRequestType(type);
 
@@ -92,9 +99,17 @@ function useService(config = {}, toast) {
           ? async () => services[type](payload)
           : async () => services[type]();
       }
-      response = await fn();
-      overwrite && _toStack((state) => ({ ...state, [type]: request }));
 
+      response = await fn();
+
+<<<<<<< HEAD
+      if (
+        reload &&
+        lowercased !== (SERVICE?.RETRIEVE || SERVICE?.BULK_RETRIEVE)
+      ) {
+        _fromStack[SERVICE?.BULK_RETRIEVE] &&
+          dispatchRequest(_fromStack[SERVICE?.BULK_RETRIEVE]);
+=======
       switch (lowercased) {
         case SERVICE?.RETRIEVE:
         case SERVICE?.BULK_RETRIEVE: {
@@ -107,7 +122,11 @@ function useService(config = {}, toast) {
             dispatchRequest(_fromStack[SERVICE?.BULK_RETRIEVE]);
           return handleResponse({ response, save: true, toast });
         }
+>>>>>>> 3d1c2d5edf4a6a537e5af6df360c2de615d5f053
       }
+
+      overwrite && _toStack((state) => ({ ...state, [type]: request }));
+      return handleResponse({ response, save: true, toast });
     } catch (error) {
       console.error(error);
     } finally {
@@ -121,7 +140,7 @@ function useService(config = {}, toast) {
    * @param {Function} handler
    * @param {*} initialPayload
    */
-  /*   function addServiceHook(
+  function addServiceHook(
     type,
     handler,
     config = {
@@ -134,7 +153,7 @@ function useService(config = {}, toast) {
     try {      
       setServices((state) => ({
         ...state,
-        [type]: ()=>handler,
+        [type]: handler,
       }));
       return {
         type,
@@ -144,12 +163,12 @@ function useService(config = {}, toast) {
       console.error(error);
       return null;
     }
-  } */
+  }
 
   /**
    * @function dispatchRetry - Retry previous request using a new or the previous payload
-   * @param {Object} payload
-   * @returns
+   * @param {Object} payload 
+   * @returns 
    */
   const dispatchRetry = (payload) =>
     _fromStack
@@ -165,7 +184,7 @@ function useService(config = {}, toast) {
     isFetching,
     dispatchRetry,
     dispatchRequest,
-    /* addServiceHook, */
+    addServiceHook,
     _fromStack,
   };
 }

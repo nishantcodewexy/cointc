@@ -54,7 +54,6 @@ function UserManagement({ services, useService }) {
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
-        "filter[role]": "basic",
         paranoid: false,
       },
       toast: { success: notifySuccess, error: notifyError },
@@ -179,6 +178,33 @@ function UserManagement({ services, useService }) {
 
       <Row>
         <Col>
+<<<<<<< HEAD
+          <Card>
+            <TableGenerator
+              mapping={{
+                id: "user_id",
+              }}
+              {...{ service }}
+              omit="*"
+              extras={[
+                "user_id",
+                "created_at",
+                "email",
+                "kyc_status",
+                "status",
+                "action",
+              ]}
+              transformers={{
+                user_id: ({ row }) => row?.id,
+                created_at: ({ row }) => {
+                  let time = moment(row?.created_at);
+                  return time.isValid() ? (
+                    <Moment format="MMM Do, Y, hh:mm A">{time}</Moment>
+                  ) : (
+                    "unknown"
+                  );
+                },
+=======
           <TableGenerator
             mapping={{
               id: "user_id",
@@ -203,6 +229,7 @@ function UserManagement({ services, useService }) {
                   "unknown"
                 );
               },
+>>>>>>> 3d1c2d5edf4a6a537e5af6df360c2de615d5f053
 
               email: ({ row }) => row?.email,
               status: ({ row }) => {
@@ -301,6 +328,51 @@ function UserManagement({ services, useService }) {
                       <span className="themify-glyph-165"></span> Delete
                     </button>
 
+<<<<<<< HEAD
+                      {id && (
+                        <Popper id={id} open={isOpen} anchorEl={popOverTarget}>
+                          <ul
+                            className="bg-white shadow"
+                            style={{
+                              padding: 10,
+                            }}
+                          >
+                            <li>
+                              <a
+                                href="#"
+                                onClick={() =>
+                                  onOpenModal({
+                                    method: SERVICE?.DROP,
+                                    payload: { ...row, force: false },
+                                  })
+                                }
+                              >
+                                <small>Delete</small>
+                              </a>
+                            </li>
+                            <li>
+                              <a
+                                href="#"
+                                onClick={() =>
+                                  onOpenModal({
+                                    method: SERVICE?.DROP,
+                                    payload: { ...row, force: true },
+                                  })
+                                }
+                              >
+                                <small>Permanently delete</small>
+                              </a>
+                            </li>
+                          </ul>
+                        </Popper>
+                      )}
+                    </div>
+                  );
+                },
+              }}
+            />
+          </Card>
+=======
                     {id && (
                       <Popper id={id} open={isOpen} anchorEl={popOverTarget}>
                         <ul
@@ -343,6 +415,7 @@ function UserManagement({ services, useService }) {
               },
             }}
           />
+>>>>>>> 3d1c2d5edf4a6a537e5af6df360c2de615d5f053
         </Col>
       </Row>
     </>
