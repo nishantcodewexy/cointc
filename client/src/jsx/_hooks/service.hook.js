@@ -41,19 +41,19 @@ function useService(config = {}, toast) {
    * @returns
    */
   async function handleResponse({ response, save = true, toast = false }) {
-    let { success, error, statusCode } = response;
+    let { message, data, error, statusCode } = response;
     // debugger;
     if (error) {
-      setError(error);
-      toast && _toast?.error(error) && _toast?.error(error);
+      setError(message);
+      // console.log('Service error Handler:',{response}, toast)
       if (statusCode == 401) {
         dispatch(user.logout());
       }
     } else {
       if (save) {
-        setData(success);
+        setData(data);
       }
-      toast && _toast?.success && _toast?.success(success);
+      toast && _toast?.success && _toast?.success(message);
     }
     return response;
   }
@@ -102,7 +102,8 @@ function useService(config = {}, toast) {
         }
 
         default: {
-          reload && _fromStack[SERVICE?.BULK_RETRIEVE] &&
+          reload &&
+            _fromStack[SERVICE?.BULK_RETRIEVE] &&
             dispatchRequest(_fromStack[SERVICE?.BULK_RETRIEVE]);
           return handleResponse({ response, save: true, toast });
         }
@@ -155,10 +156,11 @@ function useService(config = {}, toast) {
       ? dispatchRequest({ ..._fromStack[_fromStack.length - 1], payload })
       : null;
 
-  useEffect(() => {
-    console.log("Services registered", services);
-  }, []);
 
+
+  useEffect(() => {
+    if (error) _toast?.error(error) && _toast?.error(error);
+  }, [error]);
   return {
     data,
     error,

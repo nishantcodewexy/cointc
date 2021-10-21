@@ -14,9 +14,7 @@ import UserForm from "../forms/user.form";
 import { SERVICE } from "../../../_constants";
 
 function UserManagement({ services, useService }) {
-  console.log(services)
   const { group } = services;
-  // const group = useGroupService();
 
   let service = useService({
     [SERVICE?.RETRIEVE]: group.retrieveUser,
@@ -111,10 +109,11 @@ function UserManagement({ services, useService }) {
                 callback={onModalClose}
               />,
             ];
-          case SERVICE?.DROP:
+
+          case SERVICE?.REMOVE:
             return [
               "Delete User",
-              <UserForm.Drop
+              <UserForm.Remove
                 action={(data) =>
                   dispatchRequest({
                     type: SERVICE?.DROP,
@@ -165,7 +164,7 @@ function UserManagement({ services, useService }) {
           </div>
         </Col>
         <Col sm="auto">
-          <Button onClick={() => onOpenModal({ method: "post" })}>
+          <Button onClick={() => onOpenModal({ method: SERVICE?.CREATE })}>
             <i className="fa fa-plus"></i> Add User
           </Button>
         </Col>
@@ -180,170 +179,170 @@ function UserManagement({ services, useService }) {
 
       <Row>
         <Col>
-            <TableGenerator
-              mapping={{
-                id: "user_id",
-              }}
-              {...{ service }}
-              omit="*"
-              extras={[
-                "user_id",
-                "created_at",
-                "email",
-                "kyc_status",
-                "status",
-                "action",
-              ]}
-              transformers={{
-                user_id: ({ row }) => row?.id,
-                created_at: ({ row }) => {
-                  let time = moment(row?.created_at);
-                  return time.isValid() ? (
-                    <Moment format="MMM Do, Y, hh:mm A">{time}</Moment>
+          <TableGenerator
+            mapping={{
+              id: "user_id",
+            }}
+            {...{ service }}
+            omit="*"
+            extras={[
+              "user_id",
+              "created_at",
+              "email",
+              "kyc_status",
+              "status",
+              "action",
+            ]}
+            transformers={{
+              user_id: ({ row }) => row?.id,
+              created_at: ({ row }) => {
+                let time = moment(row?.created_at);
+                return time.isValid() ? (
+                  <Moment format="MMM Do, Y, hh:mm A">{time}</Moment>
+                ) : (
+                  "unknown"
+                );
+              },
+
+              email: ({ row }) => row?.email,
+              status: ({ row }) => {
+                return row?.archived_at ? (
+                  <span className="badge light badge-danger">
+                    <i className="fa fa-circle text-danger mr-1" />
+                    archived
+                  </span>
+                ) : (
+                  <span className="badge light badge-success">
+                    <i className="fa fa-circle text-success mr-1" />
+                    Active
+                  </span>
+                );
+              },
+              kyc_status: ({ row }) => {
+                let role = row?.role;
+                const checkKYC = (kyc) => {
+                  if (kyc) {
+                    return Object.keys(kyc).some((item) => kyc[item] == null)
+                      ? false
+                      : true;
+                  }
+                  return false;
+                };
+
+                let status =
+                  role == "admin" ? (
+                    <small className="badge badge-success text-white">
+                      <i className="fa fa-check-circle text-white mr-2" />
+                      completed
+                    </small>
+                  ) : checkKYC(row?.kyc) ? (
+                    <small className="badge badge-success">completed</small>
                   ) : (
-                    "unknown"
+                    <small className="badge badge-default text-white">
+                      pending
+                    </small>
                   );
-                },
 
-                email: ({ row }) => row?.email,
-                status: ({ row }) => {
-                  return row?.archived_at ? (
-                    <span className="badge light badge-danger">
-                      <i className="fa fa-circle text-danger mr-1" />
-                      archived
-                    </span>
-                  ) : (
-                    <span className="badge light badge-success">
-                      <i className="fa fa-circle text-success mr-1" />
-                      Active
-                    </span>
-                  );
-                },
-                kyc_status: ({ row }) => {
-                  let role = row?.role;
-                  const checkKYC = (kyc) => {
-                    if (kyc) {
-                      return Object.keys(kyc).some((item) => kyc[item] == null)
-                        ? false
-                        : true;
-                    }
-                    return false;
-                  };
+                return status;
+              },
 
-                  let status =
-                    role == "admin" ? (
-                      <small className="badge badge-success text-white">
-                        <i className="fa fa-check-circle text-white mr-2" />
-                        completed
-                      </small>
-                    ) : checkKYC(row?.kyc) ? (
-                      <small className="badge badge-success">completed</small>
-                    ) : (
-                      <small className="badge badge-default text-white">
-                        pending
-                      </small>
-                    );
+              action: function Action({ row }) {
+                const {
+                  isOpen,
+                  onOpen: onPopoverOpen,
+                  onClose: onPopoverClose,
+                  toggledPayload: popOverTarget,
+                } = useToggler();
+                const handleClick = (event) => {
+                  onPopoverOpen(popOverTarget ? null : event.currentTarget);
+                  // onPopoverOpen(popOverTarget ? null : event.target);
+                };
 
-                  return status;
-                },
-
-                action: function Action({ row }) {
-                  const {
-                    isOpen,
-                    onOpen: onPopoverOpen,
-                    onClose: onPopoverClose,
-                    toggledPayload: popOverTarget,
-                  } = useToggler();
-                  const handleClick = (event) => {
-                    onPopoverOpen(popOverTarget ? null : event.currentTarget);
-                    // onPopoverOpen(popOverTarget ? null : event.target);
-                  };
-
-                  /* const handleClose = () => {
+                /* const handleClose = () => {
                     onPopoverClose(null);
                   }; */
 
-                  const open = Boolean(popOverTarget);
-                  const id = open ? row?.id : undefined;
+                const open = Boolean(popOverTarget);
+                const id = open ? row?.id : undefined;
 
-                  return (
-                    <div
+                return (
+                  <div
+                    style={{
+                      display: "flex",
+                      gap: 10,
+                    }}
+                  >
+                    <button
                       style={{
-                        display: "flex",
-                        gap: 10,
+                        appearance: "none",
+                        border: "none",
+                        background: "none",
+                        fontSize: 12,
                       }}
+                      onClick={() =>
+                        onOpenModal({ method: SERVICE?.UPDATE, payload: row })
+                      }
                     >
-                      <button
-                        style={{
-                          appearance: "none",
-                          border: "none",
-                          background: "none",
-                          fontSize: 12,
-                        }}
-                        onClick={() =>
-                          onOpenModal({ method: SERVICE?.UPDATE, payload: row })
-                        }
-                      >
-                        <span className="themify-glyph-29"></span> Edit
-                      </button>
-                      {/* TODO: Delete user */}
-                      <button
-                        style={{
-                          appearance: "none",
-                          border: "none",
-                          background: "none",
-                          position: "relative",
-                          fontSize: 12,
-                        }}
-                        aria-describedby={id}
-                        variant="contained"
-                        onClick={handleClick}
-                      >
-                        <span className="themify-glyph-165"></span> Delete
-                      </button>
+                      <span className="themify-glyph-29"></span> Edit
+                    </button>
+                    {/* TODO: Delete user */}
+                    <button
+                      style={{
+                        appearance: "none",
+                        border: "none",
+                        background: "none",
+                        position: "relative",
+                        fontSize: 12,
+                      }}
+                      aria-describedby={id}
+                      variant="contained"
+                      onClick={handleClick}
+                    >
+                      <span className="themify-glyph-165"></span> Delete
+                    </button>
 
-                      {id && (
-                        <Popper id={id} open={isOpen} anchorEl={popOverTarget}>
-                          <ul
-                            className="bg-white shadow"
-                            style={{
-                              padding: 10,
-                            }}
-                          >
-                            <li>
-                              <a
-                                href="#"
-                                onClick={() =>
-                                  onOpenModal({
-                                    method: SERVICE?.DROP,
-                                    payload: { ...row, force: false },
-                                  })
-                                }
-                              >
-                                <small>Delete</small>
-                              </a>
-                            </li>
-                            <li>
-                              <a
-                                href="#"
-                                onClick={() =>
-                                  onOpenModal({
-                                    method: SERVICE?.DROP,
-                                    payload: { ...row, force: true },
-                                  })
-                                }
-                              >
-                                <small>Permanently delete</small>
-                              </a>
-                            </li>
-                          </ul>
-                        </Popper>
-                      )}
-                    </div>
-                  );
-                },
-              }}
-            />
+                    {id && (
+                      <Popper id={id} open={isOpen} anchorEl={popOverTarget}>
+                        <ul
+                          className="bg-white shadow"
+                          style={{
+                            padding: 10,
+                          }}
+                        >
+                          <li>
+                            <a
+                              href="#"
+                              onClick={() =>
+                                onOpenModal({
+                                  method: SERVICE?.REMOVE,
+                                  payload: { ...row, force: false },
+                                })
+                              }
+                            >
+                              <small>Delete</small>
+                            </a>
+                          </li>
+                          <li>
+                            <a
+                              href="#"
+                              onClick={() =>
+                                onOpenModal({
+                                  method: SERVICE?.REMOVE,
+                                  payload: { ...row, force: true },
+                                })
+                              }
+                            >
+                              <small>Permanently delete</small>
+                            </a>
+                          </li>
+                        </ul>
+                      </Popper>
+                    )}
+                  </div>
+                );
+              },
+            }}
+          />
         </Col>
       </Row>
     </>

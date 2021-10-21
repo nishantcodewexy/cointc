@@ -26,7 +26,7 @@ export default AdminMarkup;
 
 function AdminMarkup() {
   const session = useSelector((state) => state?.session);
-  const notice = useSelector((state) => state?.notice);
+  // const notice = useSelector((state) => state?.notice);
   const [services, setServices] = useState(null);
 
   useEffect(() => {
@@ -36,7 +36,6 @@ function AdminMarkup() {
         baseURL: "/api",
       })
     );
-
   }, [session]);
 
   return services ? (

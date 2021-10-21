@@ -72,7 +72,12 @@ export function Remove({ action, callback, payload: initialData = {} }) {
  * @param {Object} param0
  * @returns
  */
-export function Update({ action, services, callback, payload: initialData = {} }) {
+export function Update({
+  action,
+  services,
+  callback,
+  payload: initialData = {},
+}) {
   const { group } = services;
   const currencyService = useService({
     [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveCurrency,
@@ -237,16 +242,33 @@ export function Create({ action, services, callback }) {
         account_no: "",
         bank_name: "",
         currency: "",
-        country: "",
+        country: "CN",
         ifsc_code: "",
       }}
-      validate={(values) => {}}
+      validate={(values) => {
+        const errors = {};
+
+        if (!values?.account_no) {
+          errors.account_no = "Account number is required";
+        }
+        if (!values?.bank_name) {
+          errors.bank_name = "Bank name is required";
+        }
+        if (!values?.currency) {
+          errors.currency = "Currency is required";
+        }
+        if (!values?.country) {
+          errors.country = "Country is required";
+        }
+        if (!values?.ifsc_code) {
+          errors.ifsc_code = "IFSC code is required";
+        }
+        return errors;
+      }}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let { success } = await action(values);
-          if (success) callback && callback();
-        } catch (error) {
-          console.error( error);
+          let { error } = await action(values);
+          if (!error) callback && callback();
         } finally {
           setSubmitting(false);
         }
@@ -262,33 +284,44 @@ export function Create({ action, services, callback }) {
         touched,
       }) => (
         <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-4" controlId="formCurrencyCode">
+          <Form.Group className="mb-4" controlId="account_number">
             <Form.Label>Account number</Form.Label>
             <Form.Control
               type="text"
               name="account_no"
               required
+              pattern="^[0-9]{9,15}$"
+              minLength="9"
+              maxLength="15"
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.account_no}
               placeholder="Account Number"
             />
+            <small className="text-danger">
+              {errors.account_no && touched.account_no && errors.account_no}
+            </small>
           </Form.Group>
 
-          <Form.Group className="mb-4" controlId="formCurrencyCode">
+          <Form.Group className="mb-4" controlId="bank_name">
             <Form.Label>Bank name</Form.Label>
             <Form.Control
               type="text"
               name="bank_name"
               required
+              minLength="3"
               onChange={handleChange}
               onBlur={handleBlur}
+              pattern="[A-Za-z0-9]+"
               value={values.bank_name}
               placeholder="Bank Name"
             />
+            <small className="text-danger">
+              {errors.bank_name && touched.bank_name && errors.bank_name}
+            </small>
           </Form.Group>
 
-          <Form.Group className="mb-4" controlId="formCurrencyCode">
+          <Form.Group className="mb-4" controlId="currency">
             <Form.Label>Currency</Form.Label>
             <Form.Control
               as="select"
@@ -310,9 +343,12 @@ export function Create({ action, services, callback }) {
                   );
                 })}
             </Form.Control>
+            <small className="text-danger">
+              {errors.currency && touched.currency && errors.currency}
+            </small>
           </Form.Group>
 
-          <Form.Group className="mb-4" controlId="formCurrencyCode">
+          <Form.Group className="mb-4" controlId="country">
             <Form.Label>Country</Form.Label>
             <Form.Control
               as="select"
@@ -332,19 +368,27 @@ export function Create({ action, services, callback }) {
                 );
               })}
             </Form.Control>
+            <small className="text-danger">
+              {errors.country && touched.country && errors.country}
+            </small>
           </Form.Group>
 
-          <Form.Group className="mb-4" controlId="formCurrencyCode">
+          <Form.Group className="mb-4" controlId="ifsc_code">
             <Form.Label>IFSC Code</Form.Label>
             <Form.Control
               type="text"
               name="ifsc_code"
               required
+              minLength="5"
+              maxLength="8"
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.ifsc_code}
               placeholder="IFSC Code"
             />
+            <small className="text-danger">
+              {errors.ifsc_code && touched.ifsc_code && errors.ifsc_code}
+            </small>
           </Form.Group>
 
           <Button variant="primary" disabled={isSubmitting} block type="submit">

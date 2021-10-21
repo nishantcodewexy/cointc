@@ -11,7 +11,7 @@ import TableGenerator from "../components/TableGenerator.Component";
 function Support({ services, useService }) {
   const { support_ticket } = services;
 
-  console.log({ support_ticket });
+  // console.log({ support_ticket });
   let service = useService({
     [SERVICE?.BULK_RETRIEVE]: () => support_ticket.bulkRetrieveSupportTicket(),
   });

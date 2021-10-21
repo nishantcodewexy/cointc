@@ -10,16 +10,18 @@ export function Create({ action, callback }) {
     <Formik
       initialValues={{
         email: "",
-        country: "CN",
-        nickname: "",
         admin: false,
-        other_names: "",
-        last_name: "",
+        profile: {
+          country: "",
+          nickname: "",
+          other_names: "",
+          last_name: "",
+        },
       }}
       // validate={(values) => {}}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let { admin, email, ...profile } = values;
+          let { admin, email, profile } = values;
           let role = admin ? "admin" : "basic";
           let payload = [{ email, role, profile }];
           // Send request
@@ -66,7 +68,7 @@ export function Create({ action, callback }) {
                   name="last_name"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  defaultValue={values?.last_name}
+                  defaultValue={values?.profile?.last_name}
                   placeholder="Last name"
                 />
               </Col>
@@ -77,7 +79,7 @@ export function Create({ action, callback }) {
                   name="other_names"
                   onChange={handleChange}
                   onBlur={handleBlur}
-                  defaultValue={values?.other_names}
+                  defaultValue={values?.profile?.other_names}
                   placeholder="Other names"
                 />
               </Col>
@@ -90,7 +92,7 @@ export function Create({ action, callback }) {
               name="nickname"
               onChange={handleChange}
               onBlur={handleBlur}
-              defaultValue={values?.nickname}
+              defaultValue={values?.profile?.nickname}
               placeholder="User's nickname"
             />
           </Form.Group>
@@ -104,7 +106,7 @@ export function Create({ action, callback }) {
               required
               onChange={handleChange}
               onBlur={handleBlur}
-              value={values.country}
+              value={values?.profile?.country}
               placeholder="Country"
             >
               {country_list.getNames().map((country, key) => {
@@ -213,7 +215,7 @@ export function Update({ action, callback, payload: initialData = null }) {
             </Row>
           </Form.Group>
 
-     {/*      <Form.Group className="mb-3" controlId="nickname">
+          {/*      <Form.Group className="mb-3" controlId="nickname">
             <Form.Label as="strong">Nickname</Form.Label>
             <Form.Control
               type="text"
@@ -225,7 +227,7 @@ export function Update({ action, callback, payload: initialData = null }) {
             />
           </Form.Group> */}
 
-{/*           <Form.Group className="mb-4" controlId="country">
+          {/*           <Form.Group className="mb-4" controlId="country">
             <Form.Label as="strong">Country</Form.Label>
             <Form.Control
               as="select"
@@ -248,9 +250,18 @@ export function Update({ action, callback, payload: initialData = null }) {
           </Form.Group> */}
 
           {initialData?.archived_at && (
-            <Form.Label style={{  marginBottom: 10, display: 'flex', justifyContent: 'space-between', gap: 10}} >
+            <Form.Label
+              style={{
+                marginBottom: 10,
+                display: "flex",
+                justifyContent: "space-between",
+                gap: 10,
+              }}
+            >
               <Form.Text>This user is curently inactive. Activate?</Form.Text>
-              <Switch size="small" color="default"
+              <Switch
+                size="small"
+                color="default"
                 onChange={handleChange}
                 name="restore"
                 checked={values?.restore}
@@ -346,10 +357,7 @@ export function Remove({ action, callback, payload: initialValues = {} }) {
 }
 
 export default Object.assign(Create, {
+  Create,
   Remove,
-  Drop: Remove,
-  Delete: Remove,
   Update,
-  Modify: Update,
-  Add: Create,
 });
