@@ -33,6 +33,7 @@ function UserSecessions(props) {
     <>
       <PageTitle activeMenu="Users secession" motherMenu="User Management" />
       {/* Details of Secession Request */}
+<<<<<<< HEAD
       <Row>
         <Col style={{ marginBottom: 60 }}>
           <header className="mb-4">
@@ -55,6 +56,27 @@ function UserSecessions(props) {
           </Card>
         </Col>
       </Row>
+=======
+
+      <div style={{ marginBottom: 60 }}>
+        <header className="mb-4">
+          <h3>Details of Secession Request</h3>
+        </header>
+        <SecessionRequestTable {...props} {...{ notifySuccess, notifyError }} />
+      </div>
+      
+      {/* Secession Upon Approval */}
+      <div style={{ marginBottom: 60 }}>
+        <header className="mb-4">
+          <h3>Secession Upon Approval</h3>
+        </header>
+        <ApprovedSecessionTable
+          {...props}
+          {...{ notifySuccess, notifyError }}
+        />
+      </div>
+
+>>>>>>> 3d1c2d5edf4a6a537e5af6df360c2de615d5f053
       {/* List of Secession Members */}
       <Row>
         <Col style={{ marginBottom: 60 }}>

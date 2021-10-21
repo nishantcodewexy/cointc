@@ -1,9 +1,11 @@
 // import React, { useEffect } from "react";
 import { Formik } from "formik";
 import logo from "../../../../images/svg/logo.svg";
+import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import _actions from "../../../_actions";
+
 // CONSTANTS
 import { SERVICE } from "../../../_constants";
 
@@ -12,12 +14,22 @@ const { user: userAction } = _actions;
 const LoginPage = ({ services, useService }) => {
   const dispatch = useDispatch();
   // const location = useLocation();
-  const { useUserService } = services;
+  const { account } = services;
 
-  const account = useUserService();
   const { dispatchRequest } = useService({
     [SERVICE?.LOGIN]: account?.login,
   });
+
+  function notifyError(error) {
+    toast.error(error || "Request Error!", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+    });
+  }
 
   return (
     <Formik
@@ -42,7 +54,6 @@ const LoginPage = ({ services, useService }) => {
         const { email, password } = values;
         setSubmitting(true);
         try {
-          // const { from } = location.state || { from: { pathname: "/admin" } };
           let request = async () =>
             await dispatchRequest({
               type: SERVICE?.LOGIN,
@@ -51,6 +62,7 @@ const LoginPage = ({ services, useService }) => {
                 password,
                 role: "admin",
               },
+              toast: { error: notifyError },
             });
           dispatch(userAction.login(request));
         } catch (error) {

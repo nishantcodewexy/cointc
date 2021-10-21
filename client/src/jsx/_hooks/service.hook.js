@@ -42,19 +42,24 @@ function useService(config = {}) {
    * @returns
    */
   async function handleResponse({ response, save = true, toast = false }) {
-    let { success, error, statusCode } = response;
+    let { message, data, error, statusCode } = response;
     // debugger;
     if (error) {
+<<<<<<< HEAD
       setError(error);
       toast && _toast?.error && _toast?.error(error);
+=======
+      setError(message);
+      // console.log('Service error Handler:',{response}, toast)
+>>>>>>> 3d1c2d5edf4a6a537e5af6df360c2de615d5f053
       if (statusCode == 401) {
         dispatch(user.logout());
       }
     } else {
       if (save) {
-        setData(success);
+        setData(data);
       }
-      toast && _toast?.success && _toast?.success(success);
+      toast && _toast?.success && _toast?.success(message);
     }
     return response;
   }
@@ -97,12 +102,27 @@ function useService(config = {}) {
 
       response = await fn();
 
+<<<<<<< HEAD
       if (
         reload &&
         lowercased !== (SERVICE?.RETRIEVE || SERVICE?.BULK_RETRIEVE)
       ) {
         _fromStack[SERVICE?.BULK_RETRIEVE] &&
           dispatchRequest(_fromStack[SERVICE?.BULK_RETRIEVE]);
+=======
+      switch (lowercased) {
+        case SERVICE?.RETRIEVE:
+        case SERVICE?.BULK_RETRIEVE: {
+          return handleResponse({ response, save: true, toast: false });
+        }
+
+        default: {
+          reload &&
+            _fromStack[SERVICE?.BULK_RETRIEVE] &&
+            dispatchRequest(_fromStack[SERVICE?.BULK_RETRIEVE]);
+          return handleResponse({ response, save: true, toast });
+        }
+>>>>>>> 3d1c2d5edf4a6a537e5af6df360c2de615d5f053
       }
 
       overwrite && _toStack((state) => ({ ...state, [type]: request }));
@@ -155,10 +175,11 @@ function useService(config = {}) {
       ? dispatchRequest({ ..._fromStack[_fromStack.length - 1], payload })
       : null;
 
-  useEffect(() => {
-    console.log("Services registered", services);
-  }, []);
 
+
+  useEffect(() => {
+    if (error) _toast?.error(error) && _toast?.error(error);
+  }, [error]);
   return {
     data,
     error,

@@ -12,6 +12,10 @@ function Support({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();
 
+<<<<<<< HEAD
+=======
+  // console.log({ support_ticket });
+>>>>>>> 3d1c2d5edf4a6a537e5af6df360c2de615d5f053
   let service = useService({
     get: group.listSupportTickets,
   });

@@ -39,7 +39,7 @@ export default class Services {
    * @param {String | "request has been canceled"} message
    * @returns {String}
    */
-  abort = (message = "request has been canceled") => {
+  abort = (message = "Reload page") => {
     this.source.cancel(message.toString());
   };
 
@@ -53,18 +53,31 @@ export default class Services {
    * @returns
    */
   decorate = async (request) => {
-    let result = { success: null, statusCode: null, error: null };
+    let result = { message: "", data: null, statusCode: null, error: null };
     try {
-      let { data, status } = await request();
-      return { ...result, success: data };
+      let { data } = await request();
+      return { ...result, data };
     } catch (error) {
-      console.error(this.decoratorMessage, { error });
-      this.abort();
-      return {
-        ...result,
-        statusCode: error?.response?.status,
-        error: error?.message,
-      };
+      let resp = {};
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        // console.log(error.response.data);
+        resp = { ...error.response.data };
+      } else if (error.request) {
+        // The request was made but no response was received
+        // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
+        // http.ClientRequest in node.js
+        // console.log(error.request);
+        resp = { ...error.request };
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        // console.log("Error", error.message);
+        resp = { error, message: error.message, statusCode: 500 };
+      }
+      return { ...resp, config: error.config };
+      // console.log(error.config);
+      // console.log(error.toJSON());
     }
   };
 }

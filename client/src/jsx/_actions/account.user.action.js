@@ -28,10 +28,10 @@ function login(request) {
     dispatch(log({ type: NOTICE.CLEAR }));
     dispatch(log({ type: REQUEST.SESSION_LOGIN }));
     try {
-      let { success, error } = await request();
+      let { data, error } = await request();
       if (error) throw new Error(error);
 
-      dispatch(log({ type: SESSION.LOGIN, data: success }));
+      dispatch(log({ type: SESSION.LOGIN, data }));
     } catch (error) {
       console.error(error);
       dispatch(

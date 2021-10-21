@@ -47,7 +47,7 @@ function AdminBankDetails({ services, useService }) {
     toast.error(error || "Request Error!", {
       position: "top-right",
       autoClose: 5000,
-      hideProgressBar: false,
+      hideProgressBar: true,
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,

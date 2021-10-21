@@ -247,7 +247,7 @@ export function Remove({ action, callback, payload: initialData = {} }) {
             </Form.Text>
 
             <Button
-              variant="primary"
+              variant="danger"
               disabled={isSubmitting || !values?.confirm}
               block
               type="submit"
