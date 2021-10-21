@@ -1,10 +1,11 @@
+
 module.exports = {
   apps: [
 /*    {
       name: "cointc_client",
       autorestart: false,
-      // script: "yarn client-build",
-      script: "yarn client-dev",
+      script: "yarn client-build",
+      //script: "yarn client-dev",
       watch: "./client",
       out_file: ".logs/client.log",
       error_file: ".logs/client.error.log",
