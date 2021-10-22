@@ -14,7 +14,13 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { BasicProfile, User, AdminProfile, Wallet /* Message */ } = models;
+      const {
+        BasicProfile,
+        Profile,
+        User,
+        AdminProfile,
+        Wallet /* Message */,
+      } = models;
       User.hasOne(BasicProfile, {
         foreignKey: "user_id",
         constraints: false,
@@ -26,9 +32,19 @@ module.exports = (sequelize, DataTypes) => {
       });
       BasicProfile.belongsTo(User, {
         foreignKey: "user_id",
-        constraints: false,
+        allowNull: false,
       });
 
+      User.hasOne(Profile, {
+        foreignKey: "user_id",
+        allowNull: false,
+      });
+
+      User.hasMany(Wallet, {
+        foreignKey: "owner_id",
+
+        // as: "wallet",
+      });
       User.hasOne(AdminProfile, {
         foreignKey: "user_id",
         constraints: false,
@@ -39,21 +55,17 @@ module.exports = (sequelize, DataTypes) => {
         constraints: false,
       });
 
-      User.hasMany(Wallet, {
-        foreignKey: "owner_id",
-
-        // as: "wallet",
-      });
       // User.hasMany(Message, {})
     }
     toPublic() {
       return _.omit(this.toJSON(), ["password"]);
     }
-    getProfile(options) {
-      if (!this.role) return Promise.resolve(null);
-      const mixinMethodName = `get${uppercaseFirst(this.role)}Profile`;
-      return this[mixinMethodName](options);
-    }
+
+    // getProfile(options) {
+    //   if (!this.role) return Promise.resolve(null);
+    //   const mixinMethodName = `get${uppercaseFirst(this.role)}Profile`;
+    //   return this[mixinMethodName](options);
+    // }
     // setProfile(options) {
     //   debugger;
     //   if (!this.role) return Promise.resolve(null);
@@ -92,9 +104,8 @@ module.exports = (sequelize, DataTypes) => {
       login_at: DataTypes.DATE,
       access_level: {
         type: DataTypes.INTEGER,
-        allowNull: false,
         validate: {
-          min: 1,
+          min: 0,
           isInt: true,
           max: 3,
         },
@@ -127,24 +138,25 @@ module.exports = (sequelize, DataTypes) => {
   );
 
   User.addHook("afterFind", async (findResult) => {
+    if (!findResult) return;
+
     if (!Array.isArray(findResult)) findResult = [findResult];
     for (const instance of findResult) {
-      if (instance?.role === "admin") {
+
+      instance.profile = await instance.getProfile();
+      /*  if (instance?.role === "admin") {
         instance.profile = await instance.getAdminProfile();
       } else if (instance?.role === "basic") {
         instance.profile = await instance.getBasicProfile();
-      }
+      } */
       if (instance)
         instance.dataValues = {
           ...instance?.profile?.dataValues,
           ...instance?.dataValues,
         };
-      // To prevent mistakes:
-      //    delete instance?.basic;
-      // delete instance?.dataValues.basic;
-      // delete instance?.admin;
-      // delete instance?.dataValues.admin;
+      
     }
+    
   });
   return User;
 };

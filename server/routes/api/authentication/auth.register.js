@@ -25,7 +25,12 @@ module.exports = (server) => {
     referrer: Joi.string()
       .min(21)
       .optional(),
-      // role: Joi.string().min(21).required(),
+    access_level: Joi.number()
+      .max(3)
+      .default(1)
+      .optional(),
+
+    // role: Joi.string().min(21).required(),
     // user should not be able to set his role only admin should be able to set anothers users role
   }).with("password", "repeat_password");
 

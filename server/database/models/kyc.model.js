@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { Upload } = models;
+      const { Upload, Profile } = models;
 
       KYC.belongsTo(Upload, {
         foreignKey: "upload_id",
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         as: "upload",
       });
 
-      
+    
     }
     toPublic() {
       return _.omit(this.toJSON(), []);
@@ -40,6 +40,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM(Object.keys(KycStatusType)),
         allowNull: false,
         defaultValue: KycStatusType.PENDING,
+      },
+      profile_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
       },
       archived_at: DataTypes.DATE,
       document_id: DataTypes.UUID,

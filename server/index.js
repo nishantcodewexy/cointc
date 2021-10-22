@@ -20,7 +20,7 @@ module.exports = (async () => {
   await database.sequelize.authenticate();
   await database.sequelize.sync({
     alter: false,
-    force: !false,
+    force: false,
   });
   const { start } = await server;
   const app = await start();

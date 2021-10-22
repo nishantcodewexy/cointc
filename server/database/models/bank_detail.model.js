@@ -14,11 +14,9 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       const { Profile, BankDetail } = models;
 
-      Profile.hasMany(BankDetail, {
-        foreignKey: "profile_id",
-      });
-      BankDetail.belongsTo(Profile, {
-        foreignKey: "profile_id",
+      BankDetail.hasOne(Profile, {
+        foreignKey: "bank_detail_id",
+        as: "bank_detail",
       });
     }
   }
@@ -31,6 +29,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       account_no: {
         type: DataTypes.STRING,
+        allowNull: false,
+      },
+      profile_id: {
+        type: DataTypes.UUID,
         allowNull: false,
       },
       bank_name: {

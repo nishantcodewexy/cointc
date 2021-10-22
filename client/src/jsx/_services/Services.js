@@ -1,6 +1,6 @@
 import axios from "axios";
-import Qs from 'qs';
-import helpers from '../_helpers';
+import Qs from "qs";
+import helpers from "../_helpers";
 
 export default class Services {
   constructor(init) {
@@ -18,7 +18,7 @@ export default class Services {
       timeout: this?.timeout,
       cancelToken: this.source.token,
       paramsSerializer: function (params) {
-        return Qs.stringify(params, {arrayFormat: 'brackets'})
+        return Qs.stringify(params, { arrayFormat: "brackets" });
       },
     });
 

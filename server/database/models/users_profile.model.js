@@ -4,37 +4,37 @@ const _ = require("underscore");
 const hooks = require("../hooks/user.profile.hook");
 
 module.exports = (sequelize, DataTypes) => {
-  class Profile extends Model {
+  class UserProfile extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { Profile, KYC, Upload, User } = models;
+      const { Profile, KYC, Upload, User, Address } = models;
 
       Profile.belongsTo(User, {
         foreignKey: "user_id",
+      });
+
+      Profile.belongsTo(KYC, {
+        foreignKey: "kyc_id",
       });
 
       Profile.belongsTo(Upload, {
         foreignKey: "profile_pic",
       });
 
-      Profile.hasOne(KYC, {
-        foreignKey: "profile_id",
+      Profile.belongsTo(Address, {
+        foreignKey: "address_id",
       });
-      // Profile.belongsTo(KYC, {
-      //   foreignKey: "kyc_id",
-      //   allowNull: false,
-      // });
     }
     toPublic() {
       return _.omit(this.toJSON(), []);
     }
   }
 
-  Profile.init(
+  UserProfile.init(
     {
       profile_id: {
         type: DataTypes.UUID,
@@ -44,11 +44,11 @@ module.exports = (sequelize, DataTypes) => {
       mode: {
         type: DataTypes.ENUM,
         values: ["standard"],
+        comment: "User mode state: [standard, merchant]",
       },
       referral_code: {
         type: DataTypes.STRING,
       },
-      nickname: DataTypes.STRING,
       email: {
         type: DataTypes.STRING,
         allowNull: false,
@@ -63,8 +63,13 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 0,
       },
       payment_methods: DataTypes.JSON,
-      lname: DataTypes.STRING,
-      oname: DataTypes.STRING,
+      pname: { type: DataTypes.STRING, comment: "public name" },
+      lname: { type: DataTypes.STRING, comment: "last name", allowNull: false },
+      oname: {
+        type: DataTypes.STRING,
+        comment: "other names",
+        allowNull: false,
+      },
       archived_at: DataTypes.DATE,
     },
     {
@@ -78,5 +83,24 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  return Profile;
+  UserProfile.addHook("afterFind", async (foundResult) => {
+    if (!foundResult) return;
+
+    // let consolidated = {};
+    if (!Array.isArray(foundResult)) foundResult = [foundResult];
+    for (const instance of foundResult) {
+      // Get address
+      instance.address = await instance.getAddress();
+      instance.kyc = await instance.getKYC();
+
+      if (instance)
+        instance.dataValues = {
+          kyc: instance.kyc?.dataValues,
+          address: instance?.address?.dataValues,
+          ...instance?.dataValues,
+        };
+    }
+  });
+
+  return UserProfile;
 };

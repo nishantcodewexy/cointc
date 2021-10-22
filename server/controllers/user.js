@@ -636,26 +636,23 @@ function UserController(server) {
     async authenticate(req) {
       try {
         const {
-          payload: { email, role = _roles.basic, password },
+          payload: { email, role = _roles.basic, access_level = 1, password },
         } = req;
-
+        let where = { email, access_level };
         // const { getter } = __assertRole(role);
 
         // fetch user record from DB that matches the email
         let account = await User.findOne({
-          where: { email, role },
+          where,
           // include: [AdminProfile, BasicProfile],
           logger: console.log,
         });
 
         if (account) {
-          // lazy load profile attached to account
-          // let account_profile = await account.getProfilable();
           // Check if password matches
           if (await decrypt(password, account.password)) {
-            // Update the last_login attribute of the user model
-
-            account.login_at = new Date(Date.now());
+            // Update the last_login
+            account.login_at = new Date();
             await account.save();
 
             return {
@@ -664,6 +661,7 @@ function UserController(server) {
             };
           } else return boom.notFound("Incorrect password!");
         }
+
         return boom.notFound("User account not found");
       } catch (error) {
         console.error(error);

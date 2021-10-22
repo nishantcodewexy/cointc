@@ -147,7 +147,7 @@ function SecessionRequestTable({
                 <div className="media-body">
                   <div className="mb-0 fs--1">
                     <Link to="/to_user_information">
-                      {row?.nickname || "Untitled"}
+                      {row?.pname || row?.lname  || "Untitled"}
                     </Link>
                   </div>
                   <div

@@ -13,16 +13,12 @@ function UserSessionHistory(props) {
   return (
     <>
       <PageTitle activeMenu="Session History" motherMenu="User Management" />
-      <Row style={{ marginBottom: 60 }}>
-        <Col>
-          <header className="mb-4">
-            <h3>User login and logout history list</h3>
-          </header>
-          <Card>
-            <UserSessionHistoryTable {...props} />
-          </Card>
-        </Col>
-      </Row>
+      <div style={{ marginBottom: 60 }}>
+        <header className="mb-4">
+          <h3>User login and logout history list</h3>
+        </header>
+        <UserSessionHistoryTable {...props} />
+      </div>
     </>
   );
 }
@@ -42,18 +38,12 @@ function UserSessionHistoryTable({ useService, services }) {
       <TableGenerator
         {...{ service }}
         omit="*"
-        extras={[
-          "username",
-          "duration",
-          "last_seen",
-          "login",
-          "login_status",
-        ]}
+        extras={["username", "duration", "last_seen", "login", "login_status"]}
         transformers={{
           username: ({ row }) => (
             <div className="media d-flex align-items-center">
               <div className="media-body">
-                <div className="mb-0 fs--1">{row?.nickname}</div>
+                <div className="mb-0 fs--1">{row?.pname || row?.lname || 'Untitled'}</div>
               </div>
             </div>
           ),
@@ -85,7 +75,7 @@ function UserSessionHistoryTable({ useService, services }) {
               </small>
             );
           },
-         
+
           login_status: ({ row }) => {
             let now = moment();
             let login_at = moment(row?.login_at);

@@ -21,6 +21,7 @@ module.exports = {
      * await queryInterface.bulkDelete('People', null, {});
      */
     await queryInterface.bulkDelete("tbl_users", null, {});
+    await queryInterface.bulkDelete("tbl_users_profile", null, {});
     await queryInterface.bulkDelete("tbl_basic_users_profile", null, {});
     await queryInterface.bulkDelete("tbl_admin_users_profile", null, {});
   },
@@ -37,16 +38,17 @@ async function seedAdminUser() {
 
     // Add a general superadmin user as the first query
     if (i === 0) {
+      email = "superadmin@mail.com";
       const superadmin = {
         id,
-        email: "superadmin@mail.com",
+        email,
         //password - p@55w0rd
         password:
           "$2a$10$IvL78DSLxzFjDjtwba5hcuZog4kc5XsooEBtmt0gZaWTmvwc7gO4u",
         created_at: faker.date.recent(),
         updated_at: faker.date.recent(),
         role: "admin",
-        access_level: 3
+        access_level: 3,
         // profile_id
       };
       userTableRecords.push(superadmin);
@@ -54,11 +56,12 @@ async function seedAdminUser() {
 
     profileTableRecords.push({
       profile_id,
-      nickname: faker.name.firstName(),
+      oname: faker.name.firstName(),
+      lname: faker.name.lastName(),
       user_id: id,
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
-      // country: faker.address.countryCode(),
+      email,
     });
 
     if (i == 0) continue;
@@ -71,13 +74,13 @@ async function seedAdminUser() {
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
       role: "admin",
-      // profile_id
+      access_level: 2,
     });
   }
   await this.queryInterface.bulkInsert("tbl_users", userTableRecords);
 
   await this.queryInterface.bulkInsert(
-    "tbl_admin_users_profile",
+    "tbl_users_profile",
     profileTableRecords
   );
 }
@@ -95,25 +98,24 @@ async function seedUser() {
           id: id,
           email,
           password: faker.internet.password(),
-          // referral_code: 'seet7pcH'
+          access_level: 1,
           created_at: faker.date.recent(),
           updated_at: faker.date.recent(),
           role: "basic",
-          // profile_id
         },
       ],
       {}
     );
 
-    await this.queryInterface.bulkInsert("tbl_basic_users_profile", [
+    await this.queryInterface.bulkInsert("tbl_users_profile", [
       {
         profile_id,
         referral_code: nanoid(10),
-        nickname: faker.name.firstName(),
+        oname: faker.name.firstName(),
+        lname: faker.name.lastName(),
         email,
         user_id: id,
         created_at: faker.date.recent(),
-        country: faker.address.countryCode(),
         updated_at: faker.date.recent(),
       },
     ]);

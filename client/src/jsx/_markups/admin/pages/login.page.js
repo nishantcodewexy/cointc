@@ -60,7 +60,7 @@ const LoginPage = ({ services, useService }) => {
               payload: {
                 email,
                 password,
-                role: "admin",
+                access_level: 3,
               },
               toast: { error: notifyError },
             });

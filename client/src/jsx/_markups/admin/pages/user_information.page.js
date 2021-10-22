@@ -25,28 +25,20 @@ function UserInformation(props) {
   return (
     <>
       <PageTitle activeMenu="Users information" motherMenu="User Management" />
-      <Row>
-        <Col style={{ marginBottom: 60 }}>
-          <header className="mb-4">
-            <h3>Permissions</h3>
-          </header>
-          <Card>
-            <UsersPermissionTable {...props} />
-          </Card>
-        </Col>
-      </Row>
+      <div style={{ marginBottom: 60 }}>
+        <header className="mb-4">
+          <h3>Permissions</h3>
+        </header>
+        <UsersPermissionTable {...props} />
+      </div>
 
       {/* Permissions */}
-      <Row>
-        <Col style={{ marginBottom: 60 }}>
-          <header className="mb-4">
-            <h3>User membership information</h3>
-          </header>
-          <Card>
-            <UsersMembershipTable {...props} />
-          </Card>
-        </Col>
-      </Row>
+      <div style={{ marginBottom: 60 }}>
+        <header className="mb-4">
+          <h3>User membership information</h3>
+        </header>
+        <UsersMembershipTable {...props} />
+      </div>
     </>
   );
 }
@@ -137,7 +129,8 @@ function UsersPermissionTable({ services, useService }) {
           color={"default"}
           name={row?.id}
           onChange={handleChange}
-          checked={permission} />
+          checked={permission}
+        />
         <strong
           className="text-success"
           style={{ opacity: permission ? 1 : 0.5 }}
@@ -183,7 +176,7 @@ function UsersPermissionTable({ services, useService }) {
                   </div>
                   <div className="media-body">
                     <span className="mb-0 fs--1">
-                      {row?.nickname || "Untitled"}
+                      {row?.pname || row?.lname || "Untitled"}
                     </span>
                     {/* <span>
                   Last contact:{" "}
@@ -213,7 +206,7 @@ function UsersPermissionTable({ services, useService }) {
             );
           },
           country: ({ row }) => {
-            return <>{row?.profile?.country || "Not specified"}</>;
+            return <>{row?.address?.country || "Not specified"}</>;
           },
         }}
       />
@@ -260,13 +253,13 @@ function UsersMembershipTable({ useService, services }) {
                 <div className="media-body">
                   <div className="mb-0 fs--1">
                     <Link to="/to_user_information">
-                      {row?.nickname || "Untitled"}
+                      {row?.lname || "Untitled"}
                     </Link>
                   </div>
-                  <small>
+                  {/* <small>
                     Last contact:{" "}
                     <Moment format="DD.MM.YYYY">{row?.updatedAt}</Moment>
-                  </small>
+                  </small> */}
                 </div>
               </div>
             );

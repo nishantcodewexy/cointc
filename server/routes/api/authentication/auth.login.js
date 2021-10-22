@@ -12,7 +12,7 @@ module.exports = (server) => {
   const schema = Joi.object({
     email: Joi.string().email({ minDomainSegments: 2 }).required().error(new Error('Invalid email address')),
     password: Joi.string().pattern(patterns.password).required().error(new Error('Invalid password pattern')  ),
-    role: Joi.string().optional(),
+    access_level: Joi.number().max(3).default(1).required(),
   }).with("email", "password");
 
   return {

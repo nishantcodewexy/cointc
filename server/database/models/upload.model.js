@@ -43,12 +43,13 @@ module.exports = (sequelize, DataTypes) => {
       const { User, Upload } = models;
 
       User.hasMany(Upload, {
-        foreignKey: "user_id",
+        foreignKey: { name: "user_id", allowNull: false },
       });
+
       Upload.belongsTo(User);
     }
   }
-  
+
   Upload.init(
     {
       id: {

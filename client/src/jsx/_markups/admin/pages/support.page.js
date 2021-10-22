@@ -38,46 +38,38 @@ function Support({ services, useService }) {
       <header className="mb-4">
         <h3>Support Tickets</h3>
       </header>
-      <Row style={{ marginBottom: 60 }}>
-        <Col>
-          <Card
-            style={{
-              padding: 10,
-            }}
-          >
-            <TableGenerator
-              {...{ service }}
-              mapping={{}}
-              omit="*"
-              extras={["user_id", "email", "subject", "status", "action"]}
-              transformers={{
-                user_id: ({ key, value }) => (
-                  <>{value ? "permitted" : "Not permitted"}</>
-                ),
-                email: ({ key, value }) => (
-                  <>{value ? "permitted" : "Not permitted"}</>
-                ),
-                subject: ({ key, value }) => (
-                  <>{value ? "permitted" : "Not permitted"}</>
-                ),
-                status: ({ key, value }) => (
-                  <>{value ? "permitted" : "Not permitted"}</>
-                ),
-                action: ({ key, value }) => (
-                  <div className="d-flex" style={{ gap: 20 }}>
-                    <a href="">
-                      <span className="themify-glyph-29"></span> Edit
-                    </a>
-                    <a href="">
-                      <span className="themify-glyph-165"></span> Delete
-                    </a>
-                  </div>
-                ),
-              }}
-            />
-          </Card>
-        </Col>
-      </Row>
+      <div style={{ marginBottom: 60 }}>
+        <TableGenerator
+          {...{ service }}
+          mapping={{}}
+          omit="*"
+          extras={["user_id", "email", "subject", "status", "action"]}
+          transformers={{
+            user_id: ({ key, value }) => (
+              <>{value ? "permitted" : "Not permitted"}</>
+            ),
+            email: ({ key, value }) => (
+              <>{value ? "permitted" : "Not permitted"}</>
+            ),
+            subject: ({ key, value }) => (
+              <>{value ? "permitted" : "Not permitted"}</>
+            ),
+            status: ({ key, value }) => (
+              <>{value ? "permitted" : "Not permitted"}</>
+            ),
+            action: ({ key, value }) => (
+              <div className="d-flex" style={{ gap: 20 }}>
+                <a href="">
+                  <span className="themify-glyph-29"></span> Edit
+                </a>
+                <a href="">
+                  <span className="themify-glyph-165"></span> Delete
+                </a>
+              </div>
+            ),
+          }}
+        />
+      </div>
     </>
   );
 }

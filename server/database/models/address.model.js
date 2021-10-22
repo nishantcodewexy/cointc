@@ -12,9 +12,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       const { Address, Profile } = models;
 
-      Address.belongsTo(Profile, {
-        foreignKey: "profile_id",
-        allowNull: false,
+      Address.hasOne(Profile, {
+        foreignKey: "address_id",
+        as: 'address'
       });
     }
     toPublic() {
@@ -36,6 +36,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       region: {
         type: DataTypes.STRING,
+      },
+      profile_id: {
+        type: DataTypes.UUID,
+        allowNull: false,
       },
     },
     {

@@ -135,30 +135,35 @@ function CurrencyMgmt({ services, useService }) {
       <header className="mb-4">
         <h3>Currency List</h3>
       </header>
-      <Row style={{ marginBottom: 20, width: "100%" }}>
-        <Col>
-          <div className="input-group search-area right d-lg-inline-flex d-none">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Filter in record"
-            />
-            <div className="input-group-append">
-              <span className="input-group-text">
-                <Link to={"#"}>
-                  <i className="themify-glyph-162"></i>
-                </Link>
-              </span>
-            </div>
+      <div
+        style={{
+          marginBottom: 20,
+          width: "100%",
+          display: "flex",
+          justifyContent: "flex-between",
+        }}
+      >
+        <div className="input-group search-area mr-auto right d-lg-inline-flex d-none">
+          <input
+            type="text"
+            className="form-control"
+            placeholder="Filter in record"
+          />
+          <div className="input-group-append">
+            <span className="input-group-text">
+              <Link to={"#"}>
+                <i className="themify-glyph-162"></i>
+              </Link>
+            </span>
           </div>
-        </Col>
+        </div>
 
-        <Col sm="auto" style={{ padding: 0 }}>
+        <div sm="auto" style={{ padding: 0 }}>
           <Button onClick={() => onOpenModal({ method: SERVICE?.CREATE })}>
             <i className="fa fa-plus"></i> Add Currency
           </Button>
-        </Col>
-      </Row>
+        </div>
+      </div>
 
       <ModalForm
         useFormRenderer={useFormRenderer}
@@ -167,71 +172,67 @@ function CurrencyMgmt({ services, useService }) {
         onClose={onModalClose}
       ></ModalForm>
 
-      <Row style={{ marginBottom: 60 }}>
-        <Col>
-          <Card>
-            <TableGenerator
-              {...{ service }}
-              mapping={{
-                id: "Currency ID",
-                iso_code: "symbol",
-              }}
-              omit="*"
-              extras={["symbol", "full_name", "type", "status", "action"]}
-              transformers={{
-                symbol: ({ row }) => row?.iso_code || "unknown",
-                full_name: ({ row }) => row?.name || "unknown",
-                type: ({ row }) => row?.type || "unknown",
-                action: ({ row }) => (
-                  <div className="d-flex" style={{ gap: 20 }}>
-                    <button
-                      style={{
-                        appearance: "none",
-                        border: "none",
-                        background: "none",
-                      }}
-                      onClick={() =>
-                        onOpenModal({ method: SERVICE?.UPDATE, payload: row })
-                      }
-                    >
-                      <span className="themify-glyph-29"></span> Edit
-                    </button>
+      <div style={{ marginBottom: 60 }}>
+        <TableGenerator
+          {...{ service }}
+          mapping={{
+            id: "Currency ID",
+            iso_code: "symbol",
+          }}
+          omit="*"
+          extras={["symbol", "full_name", "type", "status", "action"]}
+          transformers={{
+            symbol: ({ row }) => row?.iso_code || "unknown",
+            full_name: ({ row }) => row?.name || "unknown",
+            type: ({ row }) => row?.type || "unknown",
+            action: ({ row }) => (
+              <div className="d-flex" style={{ gap: 20 }}>
+                <button
+                  style={{
+                    appearance: "none",
+                    border: "none",
+                    background: "none",
+                  }}
+                  onClick={() =>
+                    onOpenModal({ method: SERVICE?.UPDATE, payload: row })
+                  }
+                >
+                  <span className="themify-glyph-29"></span> Edit
+                </button>
 
-                    <button
-                      style={{
-                        appearance: "none",
-                        border: "none",
-                        background: "none",
-                      }}
-                      onClick={() =>
-                        onOpenModal({
-                          method: SERVICE?.DROP,
-                          payload: { id: row?.id },
-                        })
-                      }
-                    >
-                      <span className="themify-glyph-165"></span> Delete
-                    </button>
-                  </div>
-                ),
-                status: ({ row }) => {
-                  return row?.archived_at ? (
-                    <span className="badge light badge-danger">
-                      <i className="fa fa-circle text-danger mr-1" />
-                      archived
-                    </span>
-                  ) : (
-                    <span className="badge light badge-success">
-                      <i className="fa fa-circle text-success mr-1" />
-                      Active
-                    </span>
-                  );
-                },
-              }}
-            />
-          </Card>
-        </Col>
-      </Row>
+                <button
+                  style={{
+                    appearance: "none",
+                    border: "none",
+                    background: "none",
+                  }}
+                  onClick={() =>
+                    onOpenModal({
+                      method: SERVICE?.DROP,
+                      payload: { id: row?.id },
+                    })
+                  }
+                >
+                  <span className="themify-glyph-165"></span> Delete
+                </button>
+              </div>
+            ),
+            status: ({ row }) => {
+              return row?.archived_at ? (
+                <span className="badge light badge-danger">
+                  <i className="fa fa-circle text-danger mr-1" />
+                  archived
+                </span>
+              ) : (
+                <span className="badge light badge-success">
+                  <i className="fa fa-circle text-success mr-1" />
+                  Active
+                </span>
+              );
+            },
+          }}
+        />
+      </div>
     </>
   );
 }
