@@ -26,17 +26,18 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      level: {
+      access_level: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
           min: 1,
           isInt: true,
+          max: 3
         },
         defaultValue:1
       },
       status: {
-        type: DataTypes.ENUM(["accept","deny","pending"]),
+        type: DataTypes.ENUM(["accepted","denied","pending"]),
         allowNull: false,
         defaultValue:"pending"
       },

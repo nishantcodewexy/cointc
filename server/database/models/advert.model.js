@@ -9,17 +9,16 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      const { User, Advert, Asset } = models;
+      const { User, Advert, Currency } = models;
 
       User.hasMany(Advert, {
         foreignKey: { name: "from_user_id", allowNull: false },
       });
-      
-      Advert.belongsTo(Asset, {
-        foreignKey: "asset_type",
+
+      Advert.belongsTo(Currency, {
+        foreignKey: "currency_id",
       });
     }
-
   }
   Advert.init(
     {
@@ -95,11 +94,7 @@ module.exports = (sequelize, DataTypes) => {
           isInt: true,
         },
       },
-      fiat_currency: {
-        type: DataTypes.STRING,
-        allowNull: false,
-      },
-      asset_type: DataTypes.INTEGER,
+      
       remarks: DataTypes.STRING,
       auto_reply: DataTypes.STRING,
       trade_conditions: DataTypes.STRING,
@@ -109,20 +104,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
       },
       archived_at: DataTypes.DATE,
-      profile: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return {
-            
-          };
-        },
-      },
+     
     },
     {
       sequelize,
       modelName: "Advert",
       underscored: true,
-      tableName: 'tbl_adverts'
+      tableName: "tbl_adverts",
     }
   );
   return Advert;

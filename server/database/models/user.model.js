@@ -90,7 +90,16 @@ module.exports = (sequelize, DataTypes) => {
       archived_at: DataTypes.DATE,
       last_seen: DataTypes.DATE,
       login_at: DataTypes.DATE,
-
+      access_level: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        validate: {
+          min: 1,
+          isInt: true,
+          max: 3,
+        },
+        defaultValue: 1,
+      },
       online: {
         type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["createdAt"]),
         get: function() {

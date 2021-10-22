@@ -46,6 +46,7 @@ async function seedAdminUser() {
         created_at: faker.date.recent(),
         updated_at: faker.date.recent(),
         role: "admin",
+        access_level: 3
         // profile_id
       };
       userTableRecords.push(superadmin);

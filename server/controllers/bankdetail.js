@@ -1,7 +1,7 @@
 "use strict";
 const { Op } = require("sequelize");
-const bank_detail = require("../database/models/bank_detail");
 const boom = require("@hapi/boom");
+
 module.exports = (server) => {
   const {
     db: { BankDetail, sequelize },
