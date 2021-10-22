@@ -116,7 +116,7 @@ function KYCCertificationListTable() {
             <td className="user_permission_single">{check(1)}</td>
             <td className="py-2">K4547</td>
             <td className="py-2">Ralph Edwards</td>
-            <td className="py-3 ">India</td>
+            <td className="py-3 ">KOREA</td>
             <td className="py-3 ">22 Mar,2020 02:34 pm</td>
             <td>$2300.00 $3455.00</td>
             <td>{status(false)}</td>
