@@ -374,7 +374,7 @@ export function Create({ action, services, callback }) {
           </Form.Group>
 
           <Form.Group className="mb-4" controlId="ifsc_code">
-            <Form.Label>IFSC Code</Form.Label>
+            <Form.Label>SWIFT Code</Form.Label>
             <Form.Control
               type="text"
               name="ifsc_code"
@@ -384,7 +384,7 @@ export function Create({ action, services, callback }) {
               onChange={handleChange}
               onBlur={handleBlur}
               value={values.ifsc_code}
-              placeholder="IFSC Code"
+              placeholder="SWIFT Code"
             />
             <small className="text-danger">
               {errors.ifsc_code && touched.ifsc_code && errors.ifsc_code}
