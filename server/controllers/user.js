@@ -20,21 +20,13 @@ function UserController(server) {
     db: { User, sequelize, Wallet, BasicProfile, AdminProfile, Upload },
     boom,
     config: { client_url },
-    helpers: {
-      decrypt,
-      mailer,
-      jwt,
-      isAdmin,
-      isBasic,
-      generator,
-      paginator,
-      filters,
-    },
+    helpers: { decrypt, mailer, jwt, generator, paginator, filters },
     consts: {
       roles: _roles,
       types: { ProfileModeType, country },
     },
   } = server.app;
+
   return {
     // CREATE------------------------------------------------------------
     /**
@@ -119,7 +111,7 @@ function UserController(server) {
      * @param {Object[]} req.payload.data
      * @returns
      */
-    bulkCreate: async (req) => {
+    async bulkCreate(req) {
       const { payload = [] } = req;
 
       const payloadSchema = Joi.array().items(
@@ -155,13 +147,13 @@ function UserController(server) {
       try {
         return await sequelize.transaction(async (t) => {
           return await Promise.all(
-            value.map(async (data) => {
+            value.map(async (user) => {
               let password = generator.secret();
               let savedProfile = null;
               // if (data.role == roles.admin) {
-              if (isAdmin(data)) {
+              if (user?.isAdmin) {
                 let { error, value } = adminProfileSchema.validate(
-                  data?.profile || {}
+                  user?.profile || {}
                 );
                 if (error)
                   throw boom.badData(
@@ -170,11 +162,11 @@ function UserController(server) {
                   );
 
                 let profileData = value || {};
-                delete data?.profile;
+                delete user?.profile;
 
                 let newUser = await User.create(
                   {
-                    ...data,
+                    ...user,
                     password,
                     AdminProfile: profileData,
                     include: AdminProfile,
@@ -187,7 +179,7 @@ function UserController(server) {
                 savedProfile = { ...profile, ...rest };
               } else {
                 let { error, value } = basicProfileSchema.validate(
-                  data.profile
+                  user.profile
                 );
                 if (error)
                   throw boom.badData(
@@ -196,13 +188,13 @@ function UserController(server) {
                   );
                 // if (error) return { error };
 
-                delete data?.profile;
+                delete user?.profile;
 
                 let newUser = await User.create(
                   {
-                    ...data,
+                    ...user,
                     password,
-                    BasicProfile: { email: data?.email, ...value },
+                    BasicProfile: { email: user?.email, ...value },
                   },
                   {
                     transaction: t,
@@ -248,7 +240,7 @@ function UserController(server) {
           "kyc_document",
         ];
         // Admin only allowed attributes
-        attributes = isAdmin(user) && [
+        attributes = user?.isAdmin && [
           "suitability",
           "kyc_status",
           "kyc_document",
@@ -301,7 +293,7 @@ function UserController(server) {
         // let { email, role, permission, ...profileData } = payload;
         let target_user = await User.findOne({ where: { id } });
         //determine the targe user's allowed attributes
-        let attributes = isBasic(target_user)
+        let attributes = target_user?.isBasic
           ? [
               "mode",
               "nickname",
@@ -394,7 +386,6 @@ function UserController(server) {
     },
 
     // DELETE------------------------------------------------------------
-
     /**
      * @function remove - remove mulitple User records
      * @param {Object} req  - request object
@@ -402,7 +393,7 @@ function UserController(server) {
      * @param {Array} req.payload.data  - array of ids
      * @returns
      */
-    bulkRemove: async (req, h) => {
+    async bulkRemove(req, h) {
       const {
         payload: { data, force = false },
       } = req;
@@ -425,7 +416,7 @@ function UserController(server) {
      * @param {Object} req
      * @returns
      */
-    remove: async (req) => {
+    async remove(req) {
       let {
         payload: { force = false },
         params: { id },
@@ -441,7 +432,7 @@ function UserController(server) {
      * @param {Object} req
      * @returns
      */
-    bulkRetrieve: async (req) => {
+    async bulkRetrieve(req) {
       try {
         const { query } = req;
         const queryFilters = await filters({ query, searchFields: ["email"] });
@@ -498,7 +489,7 @@ function UserController(server) {
      * @param {Object} req.pre.user - User model
      * @returns
      */
-    profile: async (req) => {
+    async profile(req) {
       try {
         // get user ID from preHandler
         let {
@@ -527,24 +518,21 @@ function UserController(server) {
         // get user ID from preHandler
         let {
           params: { id },
-          pre: { isAdmin },
-          auth: {
-            credentials: { user },
-          },
+          pre: { user },
         } = req;
 
         // handle invalid params <id> 400
         if (!id) return boom.badRequest();
         const _user = await User.findOne({
           where: {
-            ...(isAdmin && id !== "me" ? { id: id } : { id: user.id }),
+            ...(user && id !== "me" ? { id: id } : { id: user.id }),
           },
         });
         if (!_user) throw boom.notFound();
 
         const result = await User.findOne({
           where: {
-            ...(isAdmin && id !== "me" ? { id: id } : { id: user.id }),
+            ...(user && id !== "me" ? { id: id } : { id: user.id }),
           },
           attributes: [
             "id",
@@ -611,6 +599,7 @@ function UserController(server) {
         return boom.boomify(error);
       }
     },
+
     async listBalance(req, h) {
       try {
         // Find target user
@@ -624,6 +613,7 @@ function UserController(server) {
         return boom.boomify(error);
       }
     },
+
     /**
      * @function - Authenticates user
      * @param {Object} req - Request object
@@ -669,7 +659,7 @@ function UserController(server) {
       }
     },
 
-    confirmByEmail: async (req) => {
+    async confirmByEmail(req) {
       let { email, token } = req.query;
       assert(email, boom.badRequest("Missing credential to confirm email"));
       assert(token, boom.badRequest("Missing credential to confirm email"));
@@ -684,7 +674,7 @@ function UserController(server) {
         : boom.unauthorized(`Cannot confirm user account!: ${decoded.error}`);
     },
 
-    resetPassword: async function(req) {
+    async resetPassword(req) {
       let { password, token } = req.payload;
       // decrypt jwt token
       return (
@@ -693,7 +683,7 @@ function UserController(server) {
       );
     },
 
-    requestPasswordReset: async function(req) {
+    async requestPasswordReset(req) {
       const { email } = req.payload;
 
       try {
@@ -725,6 +715,7 @@ function UserController(server) {
         return boom.boomify(err);
       }
     },
+
     async listReferrals() {
       const filterRespond = await filters({ query, searchFields: ["email"] });
       const queryset = User.getUsers();

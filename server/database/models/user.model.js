@@ -111,10 +111,33 @@ module.exports = (sequelize, DataTypes) => {
         },
         defaultValue: 1,
       },
+
+      // VIRTUALS
       online: {
         type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["createdAt"]),
         get: function() {
           return this.get("updateAt") > Date.now() - 7 * 24 * 60 * 60 * 1000;
+        },
+      },
+
+      isBasic: {
+        type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["access_level"]),
+        get() {
+          return this.get("access_level") === 1;
+        },
+      },
+
+      isAdmin: {
+        type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["access_level"]),
+        get() {
+          return this.get("access_level") === 2;
+        },
+      },
+
+      isSuperAdmin: {
+        type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["access_level"]),
+        get() {
+          return this.get("access_level") === 3;
         },
       },
     },
@@ -142,7 +165,6 @@ module.exports = (sequelize, DataTypes) => {
 
     if (!Array.isArray(findResult)) findResult = [findResult];
     for (const instance of findResult) {
-
       instance.profile = await instance.getProfile();
       /*  if (instance?.role === "admin") {
         instance.profile = await instance.getAdminProfile();
@@ -154,9 +176,7 @@ module.exports = (sequelize, DataTypes) => {
           ...instance?.profile?.dataValues,
           ...instance?.dataValues,
         };
-      
     }
-    
   });
   return User;
 };

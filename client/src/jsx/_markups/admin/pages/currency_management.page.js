@@ -200,7 +200,7 @@ function CurrencyMgmt({ services, useService }) {
                   <span className="themify-glyph-29"></span> Edit
                 </button>
 
-                <button
+                <button hidden={row?.archived_at}
                   style={{
                     appearance: "none",
                     border: "none",

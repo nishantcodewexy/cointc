@@ -3,14 +3,12 @@
 module.exports = (server) => {
   const {
     controllers: {
-        currency: { bulkList },
+      currency: { bulkRetrieve },
     },
     consts: { roles: _roles },
-    helpers:{
-      permissions:{
-        isUser
-      }
-    }
+    helpers: {
+      permissions: { isUser },
+    },
   } = server.app;
 
   return {
@@ -19,14 +17,12 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method:isUser,
+          method: isUser,
           assign: "user",
         },
-        
       ],
-      handler: bulkList,
+      handler: bulkRetrieve,
       auth: "jwt",
     },
-    
   };
 };

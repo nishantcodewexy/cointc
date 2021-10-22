@@ -34,6 +34,11 @@ module.exports = {
     },
     ProfileModeType:{
       standard:"standard"
+    },
+    access_level: {
+      superadmin: 3,
+      admin: 2,
+      basic: 1
     }
   },
   FILE_UPLOAD_PATH:process.env.MEDIA_FILE_DIR||'mediafiles'

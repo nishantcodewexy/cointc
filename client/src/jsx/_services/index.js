@@ -7,6 +7,7 @@ export default class InitService {
       user: require("./user.service").default,
       group: require("./group.service").default,
       account: require("./account.service").default,
+      bank_detail: require("./bank.detail.service").default,
       currency: require("./currency.service").default,
       chat: require("./chat.service").default,
       wallet: require("./wallet.service").default,

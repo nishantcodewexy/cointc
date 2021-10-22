@@ -19,7 +19,7 @@ module.exports = {
         credentials: { user },
       },
     } = req;
-    if (user?.role === basic) return user;
+    if (user?.access_level >= 1) return user;
     throw boom.forbidden("Unauthorized! User is not basic");
   },
 
@@ -35,7 +35,18 @@ module.exports = {
       },
     } = req;
     // if (!user) return false;
-    if (user?.role === admin) return user;
+    if (user?.access_level >= 2) return user;
+    throw boom.forbidden("Unauthorized! User is not an administrator");
+  },
+
+  isSuperAdminOrError: async (req) => {
+    const {
+      auth: {
+        credentials: { user },
+      },
+    } = req;
+    // if (!user) return false;
+    if (user?.access_level >= 3) return user;
     throw boom.forbidden("Unauthorized! User is not an administrator");
   },
 };

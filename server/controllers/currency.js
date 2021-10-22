@@ -1,6 +1,7 @@
 "use strict";
 const uuid = require("uuid");
-module.exports = (server) => {
+
+function CurrencyController(server) {
   const {
     db: { Currency, sequelize },
     consts: { roles: _roles },
@@ -10,7 +11,7 @@ module.exports = (server) => {
   /* const queryInterface = sequelize.getQueryInterface();
       const table = Currency.getTableName(); */
 
-  const CurrencyController = {
+  return {
     // CREATE------------------------------------------------------------
     /**
      * @function create - Create single currency (**Admin only**)
@@ -23,12 +24,7 @@ module.exports = (server) => {
         payload,
         pre: { user },
       } = req;
-      /*  Currency.beforeCreate((currency, options) => {
-        currency.created_by = user.id;
-        currency.id = uuid.v4();
-        return currency;
-      });
- */
+
       try {
         return await Currency.create(
           { ...payload, created_by: user.id },
@@ -99,19 +95,22 @@ module.exports = (server) => {
 
       try {
         const { restore, ...data } = payload;
-        return await Currency.update(data, {
+        let updated = await Currency.update(data, {
           where: { id, created_by: user.id },
           validate: true,
           returning: ["id", "name", "iso_code", "type", "created_by"],
           fields: ["name", "iso_code", "type"],
           // logging: console.log,
-        }).then(async ([count, affectedRows]) => {
+        }).then(async (data) => {
+          const [count, affectedRows] = data;
           restore &&
             (await Currency.restore({
               where: { id, created_by: user.id },
             }));
-          return affectedRows[0];
+          return { count, affectedRows };
         });
+
+        return updated;
       } catch (error) {
         console.error(error);
         return boom.forbidden(error);
@@ -220,7 +219,7 @@ module.exports = (server) => {
      * @param {Object} req
      * @returns
      */
-    async list(req) {
+    async retrieve(req) {
       try {
         let {
           query,
@@ -249,7 +248,7 @@ module.exports = (server) => {
      * @param {Object} req
      * @returns
      */
-    async bulkList(req) {
+    async bulkRetrieve(req) {
       try {
         let { query } = req;
         const queryFilters = await filters({
@@ -269,7 +268,8 @@ module.exports = (server) => {
             "archived_at",
           ],
         };
-        let queryset = await Currency.findAndCountAll({});
+
+        let queryset = await Currency.findAndCountAll(options);
         const { limit, offset } = queryFilters;
 
         return paginator({
@@ -283,6 +283,6 @@ module.exports = (server) => {
       }
     },
   };
+}
 
-  return CurrencyController;
-};
+module.exports = CurrencyController;

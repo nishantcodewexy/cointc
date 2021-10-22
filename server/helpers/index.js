@@ -470,11 +470,14 @@ module.exports = {
       results: rows,
     };
   },
-
+/* 
   isBasic(user) {
-    return user?.role === basic;
+    return user?.access_level === 1;
   },
   isAdmin(user) {
-    return user?.role === admin;
+    return user?.access_level === 2;
   },
+  isSuperAdmin() {
+    return user?.access_level === 3;    
+  } */
 };

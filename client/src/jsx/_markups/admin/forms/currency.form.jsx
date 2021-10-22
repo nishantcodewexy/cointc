@@ -22,8 +22,8 @@ function Create({ action, callback }) {
       onSubmit={async (values, { setSubmitting }) => {
         try {
           values = { ...values, iso_code: values?.iso_code?.toUpperCase() };
-          let { success } = await action(values);
-          if (success) {
+          let { data } = await action(values);
+          if (data) {
             callback && callback();
           }
         } catch (error) {
@@ -113,10 +113,8 @@ function Update({ action, callback, payload: initialData = {} }) {
       }}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let { success } = await action(values);
-          success && callback && callback();
-        } catch (error) {
-          console.error(error);
+          let { data } = await action(values);
+          data && callback && callback();
         } finally {
           setSubmitting(false);
         }
@@ -211,10 +209,8 @@ export function Remove({ action, callback, payload: initialData = {} }) {
       onSubmit={async (values, { setSubmitting }) => {
         try {
           let { force } = values;
-          let { success } = await action({ force });
-          success && callback && callback();
-        } catch (error) {
-          console.error(error);
+          let { data } = await action({ force });
+          data && callback && callback();
         } finally {
           setSubmitting(false);
         }

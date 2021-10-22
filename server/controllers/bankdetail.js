@@ -10,7 +10,7 @@ module.exports = (server) => {
   } = server.app;
   /* const queryInterface = sequelize.getQueryInterface();
       const table = Currency.getTableName(); */
-  const BankDetailController = {
+  return {
     /**
      * @function get - Gets currency collection
      * @param {Object} req
@@ -95,9 +95,7 @@ module.exports = (server) => {
     async create(req) {
       const {
         payload,
-        auth: {
-          credentials: { user },
-        },
+       pre: {user}
       } = req;
       try {
         return await BankDetail.create({ ...payload, user_id: user.id });
@@ -139,6 +137,4 @@ module.exports = (server) => {
 
     // },
   };
-
-  return BankDetailController
 };

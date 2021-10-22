@@ -100,10 +100,11 @@ function useService(config = {}, toast) {
         }
 
         default: {
+          // reload only if the bulk retrieve service exist
           reload &&
             _fromStack[SERVICE?.BULK_RETRIEVE] &&
             dispatchRequest(_fromStack[SERVICE?.BULK_RETRIEVE]);
-          return handleResponse({ response, save: true, toast });
+          return handleResponse({ response, save: false, toast });
         }
       }
     } catch (error) {

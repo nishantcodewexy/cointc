@@ -14,45 +14,25 @@ import { ModalForm } from "../components/ModalForm.Component.jsx";
 import BankDetailForm from "../forms/bankdetail.form";
 
 function AdminBankDetails({ services, useService }) {
-  const { useGroupService } = services;
-  const group = useGroupService();
+  const { bank_detail } = services;
+
   let service = useService({
-    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveBankDetail,
-    [SERVICE?.RETRIEVE]: group.retrieveBankDetail,
-    [SERVICE?.CREATE]: group.createBankDetail,
-    [SERVICE?.UPDATE]: group.updateBankDetail,
-    [SERVICE?.DROP]: group.removeBankDetail,
+    [SERVICE?.BULK_RETRIEVE]: bank_detail.bulkRetrieve,
+    [SERVICE?.RETRIEVE]: bank_detail.retrieve,
+    [SERVICE?.CREATE]: bank_detail.create,
+    [SERVICE?.UPDATE]: bank_detail.update,
+    [SERVICE?.DROP]: bank_detail.remove,
   });
+
   const { dispatchRequest, isFetching } = service;
   useEffect(() => {
     dispatchRequest({
       type: SERVICE?.BULK_RETRIEVE,
       toast: { success: notifySuccess, error: notifyError },
-      payload: {},
+      /* payload: {}, */
     });
   }, []);
 
-  function notifySuccess() {
-    toast.success("Success !", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
-
-  function notifyError(error) {
-    toast.error(error || "Request Error!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
   const {
     isOpen: isModalOpen,
     onOpen: onOpenModal,
@@ -236,3 +216,25 @@ function AdminBankDetails({ services, useService }) {
 }
 
 export default AdminBankDetails;
+
+function notifySuccess() {
+  toast.success("Success !", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}
+
+function notifyError(error) {
+  toast.error(error || "Request Error!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}
