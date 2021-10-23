@@ -10,13 +10,13 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { Address, Profile } = models;
+      const { Address, User } = models;
 
-      Address.hasOne(Profile, {
-        foreignKey: "address_id",
-        as: 'address'
+      Address.belongsTo(User, {
+        foreignKey: "user_id",
       });
     }
+
     toPublic() {
       return _.omit(this.toJSON(), []);
     }
@@ -37,10 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       region: {
         type: DataTypes.STRING,
       },
-      profile_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-      },
+    
     },
     {
       sequelize,

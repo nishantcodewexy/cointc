@@ -467,7 +467,7 @@ module.exports = {
       prev,
       offset,
       limit,
-      results: rows,
+      result: rows,
     };
   },
 /* 

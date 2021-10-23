@@ -1,9 +1,10 @@
 "use strict";
 const uuid = require("uuid");
+const { H } = require("../../client/node_modules/jest-haste-map/build");
 
 function CurrencyController(server) {
   const {
-    db: { Currency, sequelize },
+    db: { Currency, sequelize, User },
     consts: { roles: _roles },
     helpers: { filters, paginator },
     boom,
@@ -26,14 +27,20 @@ function CurrencyController(server) {
       } = req;
 
       try {
-        return await Currency.create(
-          { ...payload, created_by: user.id },
-          {
-            validate: true,
-            fields: ["id", "type", "iso_code", "name", "created_by"],
-            returning: ["id", "type", "iso_code", "name"],
-          }
-        );
+        return {
+          result: await user
+            .createCurrency(
+              { ...payload },
+              {
+                validate: true,
+                fields: ["id", "type", "iso_code", "name", "created_by"],
+                returning: ["id", "type", "iso_code", "name"],
+              }
+            )
+            .catch((err) => {
+              throw boom.badData(err.message, err);
+            }),
+        };
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -47,36 +54,37 @@ function CurrencyController(server) {
      * @param {Array} req.payload.data
      * @returns
      */
-    bulkCreate: async (req) => {
+    async bulkCreate(req) {
       const {
-        payload,
-
-        auth: {
-          credentials: { user },
-        },
+        payload: { data = [] },
+        pre: { user },
       } = req;
 
-      Currency.beforeBulkCreate((currencies = [], options) => {
-        for (const currency of currencies) {
-          currency.created_by = user.id;
-          currency.id = uuid.v4();
-        }
-        return currencies;
-      });
-
       try {
-        return await sequelize.transaction(
-          async (t) =>
-            await Currency.bulkCreate(payload, {
-              transaction: t,
-              validate: true,
-              fields: ["id", "type", "iso_code", "name", "created_by"],
-              returning: ["id", "type", "iso_code", "name"],
+        return {
+          result: await sequelize
+            .transaction(async (t) => {
+              return await Promise.all(
+                data.map(async (currency_data) => {
+                  const queryOptions = {
+                    transaction: t,
+                    validate: true,
+                    fields: ["id", "type", "iso_code", "name"],
+                    returning: ["id", "type", "iso_code", "name"],
+                  };
+
+                  return await user.createCurrency(currency_data, queryOptions);
+                })
+              );
             })
-        );
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
+            .catch((err) => {
+              throw boom.badData(err.message, err);
+            }),
+        };
+      } catch (thrown) {
+        console.error(thrown.message, thrown);
+        if (boom.isBoom) return thrown;
+        return boom.internal(thrown.message, thrown);
       }
     },
 
@@ -94,23 +102,22 @@ function CurrencyController(server) {
       } = req;
 
       try {
-        const { restore, ...data } = payload;
-        let updated = await Currency.update(data, {
-          where: { id, created_by: user.id },
-          validate: true,
-          returning: ["id", "name", "iso_code", "type", "created_by"],
-          fields: ["name", "iso_code", "type"],
-          // logging: console.log,
-        }).then(async (data) => {
-          const [count, affectedRows] = data;
-          restore &&
-            (await Currency.restore({
-              where: { id, created_by: user.id },
-            }));
-          return { count, affectedRows };
-        });
-
-        return updated;
+        return {
+          result: await user
+            .updateCurrency(payload, {
+              where: {
+                id,
+                ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+              },
+              validate: true,
+              returning: ["id", "name", "iso_code", "type", "user_id"],
+              fields: ["name", "iso_code", "type"],
+              // logging: console.log,
+            })
+            .catch((err) => {
+              throw boom.badData(err.message, err);
+            }),
+        };
       } catch (error) {
         console.error(error);
         return boom.forbidden(error);
@@ -123,64 +130,90 @@ function CurrencyController(server) {
      */
     async bulkUpdate(req) {
       const {
-        payload,
+        payload: { data = [], paranoid = true },
         pre: { user },
-      } = req;
-
-      try {
-        return await sequelize.transaction(async (t) => {
-          return Promise.all(
-            payload.map(
-              async ({ id, restore, ...row }) =>
-                await Currency.update(
-                  { ...row },
-                  {
-                    where: { id, created_by: user.id },
-                    transaction: t,
-                    validate: true,
-                    returning: ["id", "name", "iso_code", "type", "created_by"],
-                    fields: ["name", "iso_code", "type"],
-                    // logging: console.log,
-                  }
-                ).then(async ([count, affectedRows]) => {
-                  restore &&
-                    (await Currency.restore({
-                      where: { id, created_by: user.id },
-                    }));
-                  return affectedRows[0];
-                })
-            )
-          );
-        });
-      } catch (error) {
-        console.error(error);
-        return boom.forbidden(error);
-      }
-    },
-
-    // DELETE------------------------------------------------------------
-    /**
-     * @function remove - Destroy single currency record
-     * @param {Object} req
-     * @returns
-     */
-    async remove(req) {
-      const {
-        payload: { force = false },
-        pre: { user },
-        params: { id },
       } = req;
 
       try {
         return {
-          deleted: await Currency.destroy({
-            where: { id, created_by: user.id },
-            force,
-          }).then((affectedRows) => affectedRows),
+          result: await sequelize.transaction(
+            async (t) =>
+              await Promise.all(
+                data?.map(async ({ id, ...newData }) => {
+                  let queryOptions = {
+                    where: {
+                      id,
+                      ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+                    },
+                    validate: true,
+                    /* returning: ["id", "name", "iso_code", "type", "user_id"], */
+                    fields: ["name", "iso_code", "type"],
+                    paranoid,
+                    // logging: console.log,
+                  };
+                  return await Currency.update(newData, queryOptions)
+                    .then(([count]) => ({
+                      [id]: Boolean(count),
+                      ...(() =>
+                        !count
+                          ? { extra: `Record might have been deleted` }
+                          : null)(),
+                    }))
+                    .catch((err) => {
+                      throw boom.badData(err.message, err);
+                    });
+                })
+              )
+          ),
+        };
+      } catch (thrown) {
+        console.error(thrown.message, thrown);
+        if (boom.isBoom) return thrown;
+        return boom.internal(thrown.message, thrown);
+      }
+    },
+
+    // REMOVE------------------------------------------------------------
+    /**
+     * @function remove - Removes a single currency record
+     * @param {Object} req
+     * @returns
+     */
+    async remove(req) {
+      try {
+        const {
+          payload: { force = false },
+          pre: { user },
+          params: { id },
+        } = req;
+
+        const queryOptions = {
+          where: {
+            id,
+            ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+          },
+          force,
+        };
+
+        return {
+          result: await Currency.destroy(queryOptions)
+            .then((count) => ({
+              [id]: Boolean(count),
+              ...(() =>
+                !count
+                  ? {
+                      info:
+                        "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
+                    }
+                  : null)(),
+            }))
+            .catch((err) => {
+              throw boom.badData(err.message, err);
+            }),
         };
       } catch (error) {
         console.error(error);
-        return boom.forbidden(error);
+        return boom.boomify(error);
       }
     },
     /**
@@ -190,29 +223,50 @@ function CurrencyController(server) {
      */
     async bulkRemove(req) {
       const {
-        payload: { data, force = false },
-        auth: {
-          credentials: { user },
-        },
+        payload: { data = [], force = false },
+        pre: { user },
       } = req;
+      let total = 0;
+      // user.removeCurrencies
+      let result = await sequelize.transaction(async (t) =>
+        Promise.all(
+          data?.map(async (id) => {
+            let queryOptions = {
+              where: {
+                id,
+                ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+              },
+              transaction: t,
+              force,
+            };
+            return await Currency.destroy(queryOptions).then((count) => ({
+              [id]: ((total += count), Boolean(count)),
+              ...(() =>
+                !count
+                  ? {
+                      info:
+                        "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
+                    }
+                  : null)(),
+            }));
+          })
+        ).catch((err) => {
+          throw boom.badData(err.message, err);
+        })
+      );
 
       try {
         return {
-          deleted: await sequelize.transaction(async (t) => {
-            return await Currency.destroy({
-              where: { id: data, created_by: user.id },
-              transaction: t,
-              force,
-            }).then((affectedRows) => affectedRows);
-          }),
+          total,
+          result,
         };
       } catch (error) {
         console.error(error);
-        return boom.forbidden(error);
+        return boom.internal(error.message, error);
       }
     },
 
-    // LIST------------------------------------------------------------
+    // RETRIEVE------------------------------------------------------------
 
     /**
      * @function get - Gets single currency
@@ -221,22 +275,24 @@ function CurrencyController(server) {
      */
     async retrieve(req) {
       try {
-        let {
+        const {
           query,
           pre: { user },
+          params: { id },
         } = req;
         // let where = id ? { id } : null;
         //TODO: Only admins are allowed to see who created the currency
-        const filterResult = await filters({
-          query,
-          searchFields: ["name", "iso_code", "type"],
+        const queryOptions = {
+          where: {
+            user_id: user.id,
+            id,
+          },
+        };
+        let result = await Currency.findOne(queryOptions).catch((err) => {
+          throw boom.badData(err.message, err);
         });
-        let queryset = Currency.findAndCountAll(filterResult);
-        return paginator({
-          queryset,
-          limit: filterResult,
-          offset: filterResult.offset,
-        });
+
+        return result ? { result } : boom.notFound("Record not found");
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -263,6 +319,7 @@ function CurrencyController(server) {
             "name",
             "iso_code",
             "type",
+            "user_id",
             "created_at",
             "updated_at",
             "archived_at",
@@ -280,6 +337,69 @@ function CurrencyController(server) {
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
+      }
+    },
+
+    async restore(req) {
+      const {
+        params: { id },
+        pre: { user },
+      } = req;
+
+      try {
+        return {
+          result: await Currency.restore({
+            where: {
+              id,
+              ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+            },
+          })
+            .then((count) => ({
+              [id]: Boolean(count),
+            }))
+            .catch((err) => {
+              throw boom.badData(err.message, err);
+            }),
+        };
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
+      }
+    },
+
+    /**
+     * @function bulkRestore - bulk restore currency records
+     * @param {Object} req
+     */
+    async bulkRestore(req) {
+      const {
+        payload: { data = [] },
+        pre: { user },
+      } = req;
+
+      try {
+        return {
+          result: await sequelize.transaction(async (t) =>
+            Promise.all(
+              data?.map(
+                async (id) =>
+                  await Currency.restore({
+                    where: {
+                      id,
+                      ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+                    },
+                  }).then((count) => ({
+                    [id]: Boolean(count),
+                  }))
+              )
+            ).catch((err) => {
+              throw boom.badData(err.message, err);
+            })
+          ),
+        };
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
       }
     },
   };

@@ -1,11 +1,8 @@
-import { Card, Row, Col, Button, Table, Modal, Form } from "react-bootstrap";
+import { Row, Col, Button} from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
 import { useEffect } from "react";
 import useToggler from "../../../_hooks/toggler.hook";
-/* import EmptyRecord from "../components/Empty.Component";
-import useTableSelector from "../../../_hooks/table.select.hook";
-import { LinearProgress, TablePagination } from "@material-ui/core"; */
 import { toast } from "react-toastify";
 
 // CONSTANTS
@@ -17,14 +14,14 @@ import CurrencyForm from "../forms/currency.form";
 import { ModalForm } from "../components/ModalForm.Component.jsx";
 
 function CurrencyMgmt({ services, useService }) {
-  const { useGroupService } = services;
-  const group = useGroupService();
+  const { currency } = services;
+
   let service = useService({
-    [SERVICE?.RETRIEVE]: group.retrieveCurrency,
-    [SERVICE?.CREATE]: group.createCurrency,
-    [SERVICE?.UPDATE]: group.updateCurrency,
-    [SERVICE?.DROP]: group.dropCurrency,
-    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveCurrency,
+    [SERVICE?.RETRIEVE]: currency.retrieve,
+    [SERVICE?.CREATE]: currency.create,
+    [SERVICE?.UPDATE]: currency.update,
+    [SERVICE?.REMOVE]: currency.remove,
+    [SERVICE?.BULK_RETRIEVE]: currency.bulkRetrieveCurrency,
   });
   const { dispatchRequest } = service;
 
@@ -47,27 +44,7 @@ function CurrencyMgmt({ services, useService }) {
     });
   }, []);
 
-  function notifySuccess() {
-    toast.success("Success !", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
-
-  function notifyError(error) {
-    toast.error(error || "Request Error!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
+  
 
   function useFormRenderer(formData = { method: null, payload: null }) {
     const [title, form] = (() => {
@@ -98,13 +75,13 @@ function CurrencyMgmt({ services, useService }) {
                 callback={onModalClose}
               />,
             ];
-          case SERVICE?.DROP:
+          case SERVICE?.REMOVE:
             return [
               "Confirm Delete",
-              <CurrencyForm.Drop
+              <CurrencyForm.Remove
                 action={(data) =>
                   dispatchRequest({
-                    type: SERVICE?.DROP,
+                    type: SERVICE?.REMOVE,
                     payload: { id: formData?.payload?.id, data },
                   })
                 }
@@ -238,3 +215,25 @@ function CurrencyMgmt({ services, useService }) {
 }
 
 export default CurrencyMgmt;
+
+function notifySuccess() {
+  toast.success("Success !", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}
+
+function notifyError(error) {
+  toast.error(error || "Request Error!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}

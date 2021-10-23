@@ -5,7 +5,6 @@ module.exports = (server) => {
     controllers: {
         bankdetail: { retrieve },
     },
-    consts: { roles: _roles },
     helpers:{
       permissions:{
         isUser

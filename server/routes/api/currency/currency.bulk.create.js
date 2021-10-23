@@ -1,7 +1,9 @@
 "use strict";
-const Joi = require("joi");
 
 module.exports = (server) => {
+  const Schema = require("../../_schema/currency.schema");
+  const { payload: payloadSchema } = Schema.bulkCreate(server);
+
   const {
     controllers: {
       currency: { bulkCreate },
@@ -10,14 +12,6 @@ module.exports = (server) => {
       permissions: { isAdminOrError },
     },
   } = server.app;
-
-  const schema = Joi.array().items(
-    Joi.object({
-      type: Joi.string().required(),
-      iso_code: Joi.string().required(),
-      name: Joi.string().required(),
-    })
-  );
 
   return {
     method: "POST",
@@ -34,7 +28,7 @@ module.exports = (server) => {
       handler: bulkCreate,
       auth: "jwt",
       validate: {
-        payload: schema,
+        payload: payloadSchema,
       },
     },
   };

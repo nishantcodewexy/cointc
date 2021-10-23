@@ -147,8 +147,7 @@ function AdminBankDetails({ services, useService }) {
                 "account_no",
                 "bank_name",
                 "currency",
-                "country",
-                "ifsc_code",
+                "swift_code",
                 "action",
               ]}
               transformers={{
@@ -159,13 +158,10 @@ function AdminBankDetails({ services, useService }) {
                   return <>{row?.bank_name}</>;
                 },
                 currency: ({ row }) => {
-                  return <>{row?.ifsc_code}</>;
-                },
-                country: ({ row }) => {
-                  return <>{row?.country}</>;
-                },
-                ifsc_code: ({ row }) => {
                   return <>{row?.currency}</>;
+                },
+                swift_code: ({ row }) => {
+                  return <>{row?.swift_code}</>;
                 },
                 action: ({ row }) => {
                   return (

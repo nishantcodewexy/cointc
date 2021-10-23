@@ -281,9 +281,5 @@ export function Remove({ action, callback, payload: initialData = {} }) {
 
 export default Object.assign(Create, {
   Remove,
-  Drop: Remove,
-  Delete: Remove,
   Update,
-  Modify: Update,
-  Add: Create,
 });

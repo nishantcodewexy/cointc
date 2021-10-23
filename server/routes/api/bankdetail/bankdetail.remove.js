@@ -1,11 +1,13 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
+  const Schema = require("../../_schema/bankdetail.schema");
+  const {params} = Schema?.remove(server);
+
   const {
     controllers: {
-      bankdetail: { destroy },
+      bankdetail: { remove },
     },
-    consts: { roles: _roles },
     helpers: {
       permissions: { isUser },
     },
@@ -21,8 +23,11 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: destroy,
+      handler: remove,
       auth: "jwt",
+      validate: {
+        params
+      },
     },
   };
 };

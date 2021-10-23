@@ -6,7 +6,7 @@ module.exports = (server) => {
  */
   const {
     controllers: {
-      currency: { bulkRetrieve },
+      currency: { retrieve },
     },
     helpers: {
       permissions: { isUser },
@@ -15,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/currency/bulk",
+    path: "/currency/{id}",
     config: {
       pre: [
         {
@@ -23,7 +23,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: bulkRetrieve,
+      handler: retrieve,
       auth: "jwt",
     },
   };

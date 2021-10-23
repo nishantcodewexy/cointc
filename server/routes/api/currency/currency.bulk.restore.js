@@ -1,22 +1,20 @@
 "use strict";
-const Joi = require("joi");
 
 module.exports = (server) => {
   const Schema = require("../../_schema/currency.schema");
-  const { payload: payloadSchema } = Schema.bulkUpdate(server);
-  
+  const { payload: payloadSchema } = Schema.bulkRestore(server);
+
   const {
     controllers: {
-      currency: { bulkUpdate },
+      currency: { bulkRestore },
     },
-
     helpers: {
       permissions: { isAdminOrError },
     },
   } = server.app;
 
   return {
-    method: "PUT",
+    method: "PATCH",
     path: "/currency/bulk",
     config: {
       pre: [
@@ -27,7 +25,7 @@ module.exports = (server) => {
           },
         ],
       ],
-      handler: bulkUpdate,
+      handler: bulkRestore,
       auth: "jwt",
       validate: {
         payload: payloadSchema,

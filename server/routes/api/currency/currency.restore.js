@@ -1,26 +1,23 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
+  const Schema = require("../../_schema/currency.schema");
+  const { params: paramsSchema } = Schema.restore(
+    server
+  );
+
   const {
     controllers: {
-      currency: { bulkRemove },
+      currency: { restore },
     },
-    consts: { roles: _roles },
     helpers: {
       permissions: { isAdminOrError },
     },
   } = server.app;
 
-  const schema = Joi.object({
-    data: Joi.array().items(Joi.string().uuid()),
-    force: Joi.boolean()
-      .default(false)
-      .optional(),
-  });
-
   return {
-    method: "DELETE",
-    path: "/currency",
+    method: "PATCH",
+    path: "/currency/{id}",
     config: {
       pre: [
         [
@@ -30,10 +27,10 @@ module.exports = (server) => {
           },
         ],
       ],
-      handler: bulkRemove,
+      handler: restore,
       auth: "jwt",
       validate: {
-        payload: schema,
+        params: paramsSchema,
       },
     },
   };

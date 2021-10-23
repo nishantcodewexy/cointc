@@ -84,7 +84,6 @@ function AdminMarkup() {
 }
 
 function AdminLayout({ children }) {
-  console.log("IN ADMIN LAYOUT::RENDERED");
   const { menuToggle } = useContext(ThemeContext);
 
   let path = history.location.pathname;

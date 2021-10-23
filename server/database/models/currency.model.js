@@ -12,13 +12,12 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       const { User, Currency } = models;
-      Currency.belongsTo(User, {
-        foreignKey: "created_by",
-      });
+
+      Currency.belongsTo(User);
     }
 
     toPublic() {
-      return _.omit(this.toJSON(), ["created_by"]);
+      return _.omit(this.toJSON(), ["user_id"]);
     }
   }
   Currency.init(
@@ -28,17 +27,14 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      created_by: {
-        allowNull: false,
-        type: DataTypes.UUID,
-      },
+      
       name: {
         type: DataTypes.STRING,
-        unique: "currency_idx",
+        unique: true,
       },
       iso_code: {
         type: DataTypes.STRING,
-        unique: "currency_idx",
+        unique: true,
       },
       type: {
         type: DataTypes.ENUM("fiat", "crypto"),
@@ -53,13 +49,13 @@ module.exports = (sequelize, DataTypes) => {
       tableName: "tbl_currencies",
       paranoid: true,
       deletedAt: "archived_at",
-      indexes: [
+      /* indexes: [
         {
           name: "currency_idx",
           unique: true,
           fields: ["iso_code"],
         },
-      ],
+      ], */
     }
   );
   return Currency;

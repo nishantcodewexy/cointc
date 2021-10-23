@@ -16,7 +16,6 @@ export default class InitService {
     this.options = options;
 
     this._provision(providers);
-    console.log(this);
     // this.user = new UserService(options);
     // this.group = new GroupService(options);
     return this;
@@ -46,7 +45,7 @@ export default class InitService {
     } catch (error) {
       console.error(error);
     } finally {
-      console.log("Available providers", this._providers);
+      // console.log("Available providers", this._providers);
     }
   };
 

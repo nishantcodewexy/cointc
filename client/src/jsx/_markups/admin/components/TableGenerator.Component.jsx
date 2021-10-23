@@ -1,4 +1,4 @@
-import { Table, Row, Col, Card } from "react-bootstrap";
+import { Table, Card } from "react-bootstrap";
 import pt from "prop-types";
 import React, { useState, useEffect } from "react";
 import { nanoid } from "@reduxjs/toolkit";
@@ -33,7 +33,7 @@ function TableGenerator({
   extras = [],
   omit = [],
 }) {
-  const { data, _fromStack, error, isFetching, dispatchRequest } = service;
+  const { data, _fromStack, /* error, */ isFetching, dispatchRequest } = service;
 
   const uuid = nanoid(10);
   const [tableData, setTableData] = useState({
@@ -84,14 +84,13 @@ function TableGenerator({
       ];
     }
 
-    console.log(data);
-    if (data?.results?.length) {
+    if (data?.result?.length) {
       const [rows, cols, fullRows, fullCols] = getMapping(data?.results);
       setTableData({ rows, cols, fullRows, fullCols });
     }
     setCount(data?.count);
     setLimit(data?.limit);
-  }, [data]);
+  }, [data, setTableData, setCount, setLimit, omit, mapping]);
 
   function onRowsPerPageChange(e, { props }) {
     setLimit(props.value);

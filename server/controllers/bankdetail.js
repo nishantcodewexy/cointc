@@ -4,7 +4,7 @@ const boom = require("@hapi/boom");
 
 module.exports = (server) => {
   const {
-    db: { BankDetail, sequelize },
+    db: { BankDetail, sequelize, Profile },
     consts: { roles: _roles },
     helpers: { filters, paginator },
   } = server.app;
@@ -18,28 +18,25 @@ module.exports = (server) => {
      */
     async retrieve(req) {
       const {
-        query,
-        pre: { isAdmin },
-        auth: {
-          credentials: { user },
-        },
+        pre: { user },
         params: { id },
       } = req;
 
+      const queryOptions = {
+        where: {
+          user_id: user.id,
+          attributes: { exclude: ["user_id", "UserId"] },
+        },
+      };
+
       try {
-        return await BankDetail.findOne({
-          where: {
-            id,
-            archive_at: null,
-            ...(!isAdmin ? { user_id: user.id } : {}),
-          },
-          attributes: { exclude: ["user_id", "archive_at", "UserId"] },
-        });
+        return await BankDetail.findByPk(id, queryOptions);
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);
       }
     },
+
     async bulkRetrieve(req) {
       const {
         query,
@@ -50,14 +47,6 @@ module.exports = (server) => {
         const filterResults = await filters({
           query,
           searchFields: ["bank_name", "currency", "country"],
-          extra: {
-            ...(!user
-              ? {
-                  user_id: user.id,
-                }
-              : {}),
-            archive_at: null,
-          },
         });
 
         const queryset = await BankDetail.findAndCountAll(filterResults);
@@ -71,6 +60,7 @@ module.exports = (server) => {
         throw boom.boomify(error);
       }
     },
+
     async update(req) {
       const {
         pre: { user },
@@ -78,14 +68,15 @@ module.exports = (server) => {
         params: { id },
       } = req;
 
+      const queryOptions = {
+        where: {
+          user_id: user.id,
+          id,
+        },
+      };
+
       try {
-        return await BankDetail.update(payload, {
-          where: {
-            user_id: user?.id,
-            archive_at: null,
-            id,
-          },
-        });
+        return { updated: await BankDetail.update(payload, queryOptions) };
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);
@@ -95,17 +86,43 @@ module.exports = (server) => {
     async create(req) {
       const {
         payload,
-       pre: {user}
+        pre: { user },
       } = req;
+
+      const data = { ...payload };
+
       try {
-        return await BankDetail.create({ ...payload, user_id: user.id });
+        return await user.createBankDetail(data);
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);
       }
     },
 
-    async destroy(req) {
+    async remove(req) {
+      try {
+        const {
+          pre: { user },
+          params: { id },
+        } = req;
+
+        const queryOptions = {
+          where: {
+            user_id: user.id,
+            id,
+          },
+        };
+
+        return {
+          deleted: await BankDetail.destroy(queryOptions),
+        };
+      } catch (error) {
+        console.error(error);
+        return boom.forbidden(error);
+      }
+    },
+
+    async bulkRemove(req) {
       const {
         pre: { user },
         params: { id },
@@ -117,7 +134,6 @@ module.exports = (server) => {
             return await BankDetail.destroy({
               where: {
                 user_id: user.id,
-                archive_at: null,
                 id,
               },
               transaction: t,
@@ -129,12 +145,5 @@ module.exports = (server) => {
         return boom.forbidden(error);
       }
     },
-
-    // async bulkDelete(req) {
-
-    // },
-    // async bulkCreate(req) {
-
-    // },
   };
 };

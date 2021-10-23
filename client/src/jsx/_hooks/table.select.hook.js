@@ -8,10 +8,10 @@ function useTableSelector(data = []) {
     // console.log(id)
 
     if (id) {
-      let index = selected.findIndex((_s) => _s == id);
+      let index = selected.findIndex((_s) => _s === id);
       index === -1
         ? setSelected([...selected, id])
-        : setSelected(selected.filter((_s) => _s != id));
+        : setSelected(selected.filter((_s) => _s !== id));
     }
   }
 
@@ -22,10 +22,9 @@ function useTableSelector(data = []) {
 
   useEffect(() => {
     selected.length
-      ? setIsAllSelected(selected.length == data?.length)
+      ? setIsAllSelected(selected.length === data?.length)
       : setIsAllSelected(false);
-    // console.log({selected})
-  }, [selected]);
+  }, [selected, setIsAllSelected, data]);
 
   return {
     toggleSelect: singleSelect,

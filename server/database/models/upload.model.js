@@ -42,10 +42,6 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       const { User, Upload } = models;
 
-      User.hasMany(Upload, {
-        foreignKey: { name: "user_id", allowNull: false },
-      });
-
       Upload.belongsTo(User);
     }
   }

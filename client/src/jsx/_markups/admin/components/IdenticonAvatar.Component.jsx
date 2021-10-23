@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 const identicon = require("identicon");
 
 function IdenticonAvatar({ id = "stranger", size }) {
-  const [buffer, setBuffer] = useState(null);
+  const [buffer /* , setBuffer */] = useState(null);
   const imgRef = useRef(null);
 
   useEffect(() => {

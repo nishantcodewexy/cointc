@@ -19,8 +19,18 @@ module.exports = (sequelize, DataTypes) => {
         Profile,
         User,
         AdminProfile,
-        Wallet /* Message */,
+        BankDetail,
+        Wallet /*, Message */,
+        Address,
+        KYC,
+        OTP,
+        Secession,
+        Upload,
+        Currency
       } = models;
+
+      // *********** DELETE ***********
+
       User.hasOne(BasicProfile, {
         foreignKey: "user_id",
         constraints: false,
@@ -35,16 +45,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
       });
 
-      User.hasOne(Profile, {
-        foreignKey: "user_id",
-        allowNull: false,
-      });
-
-      User.hasMany(Wallet, {
-        foreignKey: "owner_id",
-
-        // as: "wallet",
-      });
       User.hasOne(AdminProfile, {
         foreignKey: "user_id",
         constraints: false,
@@ -54,7 +54,46 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
         constraints: false,
       });
+      // *********** DELETE ***********
 
+      User.hasMany(Wallet, {
+        foreignKey: "owner_id",
+      });
+
+      User.hasOne(Profile, {
+        foreignKey: {
+          name: "user_id",
+          allowNull: false,
+        },
+      });
+
+      User.hasOne(BankDetail, {
+        foreignKey: "user_id",
+      });
+
+      User.hasOne(Address, {
+        foreignKey: "user_id",
+      });
+
+      User.hasOne(KYC, {
+        foreignKey: "user_id",
+      });
+
+      User.hasOne(OTP, {
+        foreignKey: "user_id",
+      });
+
+       User.hasMany(Secession, {
+         foreignKey: { name: "user_id", allowNull: false },
+       });
+      
+      User.hasMany(Upload, {
+        foreignKey: { name: "user_id", allowNull: false },
+      });
+
+      User.hasMany(Currency, {
+        foreignKey: 'user_id'
+      })
       // User.hasMany(Message, {})
     }
     toPublic() {

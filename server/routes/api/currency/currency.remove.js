@@ -1,23 +1,20 @@
 "use strict";
-const Joi = require("joi");
-
 module.exports = (server) => {
   const Schema = require("../../_schema/currency.schema");
-  const { payload: payloadSchema } = Schema.bulkUpdate(server);
-  
+  const {payload: payloadSchema, params: paramsSchema} = Schema.remove(server);
+
   const {
     controllers: {
-      currency: { bulkUpdate },
+      currency: { remove },
     },
-
     helpers: {
       permissions: { isAdminOrError },
     },
   } = server.app;
 
   return {
-    method: "PUT",
-    path: "/currency/bulk",
+    method: "DELETE",
+    path: "/currency/{id}",
     config: {
       pre: [
         [
@@ -27,10 +24,11 @@ module.exports = (server) => {
           },
         ],
       ],
-      handler: bulkUpdate,
+      handler: remove,
       auth: "jwt",
       validate: {
         payload: payloadSchema,
+        params: paramsSchema,
       },
     },
   };

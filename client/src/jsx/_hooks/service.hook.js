@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState,/*  useEffect */ } from "react";
 import { useDispatch } from "react-redux";
 import _actions from "../_actions";
 import { SERVICE } from "../_constants";
@@ -45,7 +45,7 @@ function useService(config = {}, toast) {
     if (error) {
       setError(error);
       toast && message && _toast?.error(message) && _toast?.error(message);
-      if (statusCode == 401) {
+      if (statusCode === 401) {
         dispatch(user.logout());
       }
     } else {
@@ -82,16 +82,20 @@ function useService(config = {}, toast) {
       let response = { error: new Error("Response has error") };
 
       let fn = () => {
-        throw new Error(`${lowercased} service does not exist!`);
+        throw new Error(
+          `< ${lowercased} > service does not exist!\nThe value of < ${lowercased} > is < ${services[lowercased]} >`
+        );
       };
 
       if (lowercased in services) {
-        fn = payload
-          ? async () => services[type](payload)
-          : async () => services[type]();
+        fn = services[lowercased]
+          ? payload
+            ? async () => services[lowercased](payload)
+            : async () => services[lowercased]()
+          : fn();
       }
       response = await fn();
-      overwrite && _toStack((state) => ({ ...state, [type]: request }));
+      overwrite && _toStack((state) => ({ ...state, [lowercased]: request }));
 
       switch (lowercased) {
         case SERVICE?.RETRIEVE:
@@ -155,9 +159,9 @@ function useService(config = {}, toast) {
       ? dispatchRequest({ ..._fromStack[_fromStack.length - 1], payload })
       : null;
 
-  useEffect(() => {
+  /* useEffect(() => {
     console.log("Services registered", services);
-  });
+  }); */
 
   return {
     data,

@@ -12,11 +12,10 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      const { Profile, BankDetail } = models;
+      const { User, BankDetail } = models;
 
-      BankDetail.hasOne(Profile, {
-        foreignKey: "bank_detail_id",
-        as: "bank_detail",
+      BankDetail.belongsTo(User, {
+        foreignKey: "user_id",
       });
     }
   }
@@ -31,35 +30,28 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      profile_id: {
-        type: DataTypes.UUID,
-        allowNull: false,
-      },
+    
       bank_name: {
-        type: DataTypes.ENUM(...Object.keys(banks)),
-        allowNull: false,
+        type: DataTypes.STRING,
       },
-      ifsc_code: {
+      swift_code: {
         type: DataTypes.STRING,
         validate: {
-          len: 10,
+          min: 8,
+          max: 11
         },
-      },
-      country: {
-        type: DataTypes.ENUM(...Object.keys(country)),
-        allowNull: false,
-      },
+        allowNull: false
+      },      
       currency: {
         type: DataTypes.ENUM(...Object.keys(currencies)),
         defaultValue: "USD",
         allowNull: false,
       },
-      archive_at: DataTypes.DATE,
     },
     {
       sequelize,
       modelName: "BankDetail",
-      tableName: "tbl_bankdetails",
+      tableName: "tbl_bank_details",
       underscored: true,
     }
   );

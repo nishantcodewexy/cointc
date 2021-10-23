@@ -1,11 +1,6 @@
-import { Row, Col, Modal } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 
-export function ModalForm({
-  useFormRenderer,
-  formData,  
-  isOpen,
-  onClose,
-}) {
+export function ModalForm({ useFormRenderer, formData, isOpen, onClose }) {
   const [title, form] = useFormRenderer(formData);
 
   return (
@@ -21,5 +16,3 @@ export function ModalForm({
     </>
   );
 }
-
-

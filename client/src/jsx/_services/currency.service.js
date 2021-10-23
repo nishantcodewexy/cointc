@@ -28,7 +28,7 @@ export default class CurrencyServices extends Services {
    * @returns
    */
 
-  bulkRetrieveCurrency = async (params) => {
+  bulkRetrieve = async (params) => {
     return await this.decorate(
       async () =>
         await this.axios(`currency`, {
@@ -45,7 +45,7 @@ export default class CurrencyServices extends Services {
    * @param {Object} payload.params
    * @returns
    */
-  retrieveCurrency = async ({ id, params }) => {
+  retrieve = async ({ id, params }) => {
     return await this.decorate(
       async () =>
         await this.axios(`currency/${id}`, {
@@ -60,7 +60,7 @@ export default class CurrencyServices extends Services {
    * @param {currencyPayload} data
    * @returns
    */
-  createCurrency = async (data) => {
+  create = async (data) => {
     return await this.decorate(
       async () =>
         await this.axios(`currency`, {
@@ -74,7 +74,7 @@ export default class CurrencyServices extends Services {
    * @param {currencyPayload} data
    * @returns
    */
-  bulkCreateCurrency = async (data) => {
+  bulkCreate = async (data) => {
     return await this.decorate(
       async () =>
         await this.axios(`currency/bulk`, {
@@ -92,7 +92,7 @@ export default class CurrencyServices extends Services {
    * @param {Object} payload.data
    * @returns
    */
-  updateCurrency = async ({ id, data }) => {
+  update = async ({ id, data }) => {
     return await this.decorate(
       async () =>
         await this.axios(`currency/${id}`, {
@@ -109,7 +109,7 @@ export default class CurrencyServices extends Services {
    * @param {Object} payload.data
    * @returns
    */
-  dropCurrency = async ({ id, data }) => {
+  remove = async ({ id, data }) => {
     return await this.decorate(
       async () =>
         await this.axios(`currency/${id}`, {

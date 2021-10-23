@@ -1,22 +1,17 @@
 "use strict";
-const Joi = require("joi");
 
 module.exports = (server) => {
+  const Schema = require("../../_schema/currency.schema");
+  const { payload: payloadSchema } = Schema.create(server);
+
   const {
     controllers: {
       currency: { create },
     },
-    boom,
     helpers: {
       permissions: { isAdminOrError },
     },
   } = server.app;
-
-  const schema = Joi.object({
-    iso_code: Joi.string().required().error(boom.badRequest('Bad currency symbol input')),
-    name: Joi.string().required().error(boom.badRequest('Bad currency full name input')),
-    type: Joi.string().required().error(boom.badRequest('Bad currecny type input')),
-  }).error(boom.badRequest('Invalid input. Currency payload object expected'));
 
   return {
     method: "POST",
@@ -33,7 +28,7 @@ module.exports = (server) => {
       handler: create,
       auth: "jwt",
       validate: {
-        payload: schema,
+        payload: payloadSchema,
       },
     },
   };

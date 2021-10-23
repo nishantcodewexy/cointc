@@ -1,6 +1,6 @@
 import { Form, Button } from "react-bootstrap";
 import { Formik } from "formik";
-import Switch from "@mui/material/Switch";
+import { useSelector } from "react-redux";
 import Checkbox from "@mui/material/Checkbox";
 import useService from "../../../_hooks/service.hook";
 import { useEffect } from "react";
@@ -67,6 +67,25 @@ export function Remove({ action, callback, payload: initialData = {} }) {
   );
 }
 
+function validateInput(values) {
+  const errors = {};
+
+  if (!values?.account_no) {
+    errors.account_no = "Account number is required";
+  }
+  if (!values?.bank_name) {
+    errors.bank_name = "Bank name is required";
+  }
+  if (!values?.currency) {
+    errors.currency = "Currency is required";
+  }
+
+  if (!values?.swift_code) {
+    errors.swift_code = "SWIFT code is required";
+  }
+  return errors;
+}
+
 /**
  * @function Update - Bank detail modifier form
  * @param {Object} param0
@@ -78,14 +97,15 @@ export function Update({
   callback,
   payload: initialData = {},
 }) {
-  const { group } = services;
+  const { currency } = services;
   const currencyService = useService({
-    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveCurrency,
+    [SERVICE?.BULK_RETRIEVE]: currency.bulkRetrieve,
   });
 
   useEffect(() => {
     currencyService.dispatchRequest({ type: SERVICE?.BULK_RETRIEVE });
   }, []);
+  
   return (
     <Formik
       initialValues={{
@@ -93,14 +113,13 @@ export function Update({
         account_no: initialData?.account_no || "",
         bank_name: initialData?.bank_name || "",
         currency: initialData?.currency || "",
-        country: initialData?.country || "",
-        ifsc_code: initialData?.ifsc_code || "",
+        swift_code: initialData?.currency,
       }}
-      validate={(values) => {}}
+      validate={validateInput}
       onSubmit={async (values, { setSubmitting }) => {
         try {
-          let { success } = await action(values);
-          success && callback && callback();
+          let { error } = await action(values);
+          !error && callback && callback();
         } catch (error) {
           console.error(error);
         } finally {
@@ -119,33 +138,42 @@ export function Update({
       }) =>
         values?.id ? (
           <Form onSubmit={handleSubmit}>
-            <Form.Group className="mb-4" controlId="formCurrencyCode">
+            <Form.Group className="mb-4" controlId="account_number">
               <Form.Label>Account number</Form.Label>
               <Form.Control
                 type="text"
                 name="account_no"
                 required
+                pattern="^\w{1,17}$"
+                maxLength="17"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.account_no}
                 placeholder="Account Number"
               />
+              <small className="text-danger">
+                {errors.account_no && touched.account_no && errors.account_no}
+              </small>
             </Form.Group>
 
-            <Form.Group className="mb-4" controlId="formCurrencyCode">
+            <Form.Group className="mb-4" controlId="bank_name">
               <Form.Label>Bank name</Form.Label>
               <Form.Control
                 type="text"
                 name="bank_name"
                 required
+                minLength="3"
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.bank_name}
                 placeholder="Bank Name"
               />
+              <small className="text-danger">
+                {errors.bank_name && touched.bank_name && errors.bank_name}
+              </small>
             </Form.Group>
 
-            <Form.Group className="mb-4" controlId="formCurrencyCode">
+            <Form.Group className="mb-4" controlId="currency">
               <Form.Label>Currency</Form.Label>
               <Form.Control
                 as="select"
@@ -154,7 +182,7 @@ export function Update({
                 required
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.currency}
+                defaultValue={values.currency}
                 placeholder="Currency"
               >
                 <option>Select currency</option>
@@ -167,41 +195,26 @@ export function Update({
                     );
                   })}
               </Form.Control>
+              <small className="text-danger">
+                {errors.currency && touched.currency && errors.currency}
+              </small>
             </Form.Group>
 
-            <Form.Group className="mb-4" controlId="formCurrencyCode">
-              <Form.Label>Country</Form.Label>
-              <Form.Control
-                as="select"
-                type="text"
-                name="country"
-                required
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.country}
-                placeholder="Country"
-              >
-                {country_list.getNames().map((country, key) => {
-                  return (
-                    <option key={key} value={country_list.getCode(country)}>
-                      {country}
-                    </option>
-                  );
-                })}
-              </Form.Control>
-            </Form.Group>
-
-            <Form.Group className="mb-4" controlId="formCurrencyCode">
-              <Form.Label>IFSC Code</Form.Label>
+            <Form.Group className="mb-4" controlId="swift_code">
+              <Form.Label>SWIFT Code</Form.Label>
               <Form.Control
                 type="text"
-                name="ifsc_code"
+                name="swift_code"
                 required
+                pattern="^[A-Za-z0-9]{8,11}$"
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.ifsc_code}
-                placeholder="IFSC Code"
+                value={values.swift_code}
+                placeholder="SWIFT Code"
               />
+              <small className="text-danger">
+                {errors.swift_code && touched.swift_code && errors.swift_code}
+              </small>
             </Form.Group>
 
             <Button
@@ -214,7 +227,7 @@ export function Update({
             </Button>
           </Form>
         ) : (
-          "ID not provided"
+          "Detail ID not provided"
         )
       }
     </Formik>
@@ -227,9 +240,10 @@ export function Update({
  * @returns
  */
 export function Create({ action, services, callback }) {
-  const { group } = services;
+  const session = useSelector((state) => state?.session);
+  const { currency } = services;
   const currencyService = useService({
-    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveCurrency,
+    [SERVICE?.BULK_RETRIEVE]: currency.bulkRetrieve,
   });
 
   useEffect(() => {
@@ -242,29 +256,10 @@ export function Create({ action, services, callback }) {
         account_no: "",
         bank_name: "",
         currency: "",
-        country: "CN",
-        ifsc_code: "",
+        swift_code: "",
+        profile_id: session?.user?.profile_id,
       }}
-      validate={(values) => {
-        const errors = {};
-
-        if (!values?.account_no) {
-          errors.account_no = "Account number is required";
-        }
-        if (!values?.bank_name) {
-          errors.bank_name = "Bank name is required";
-        }
-        if (!values?.currency) {
-          errors.currency = "Currency is required";
-        }
-        if (!values?.country) {
-          errors.country = "Country is required";
-        }
-        if (!values?.ifsc_code) {
-          errors.ifsc_code = "IFSC code is required";
-        }
-        return errors;
-      }}
+      validate={validateInput}
       onSubmit={async (values, { setSubmitting }) => {
         try {
           let { error } = await action(values);
@@ -282,129 +277,106 @@ export function Create({ action, services, callback }) {
         handleChange,
         handleBlur,
         touched,
-      }) => (
-        <Form onSubmit={handleSubmit}>
-          <Form.Group className="mb-4" controlId="account_number">
-            <Form.Label>Account number</Form.Label>
-            <Form.Control
-              type="text"
-              name="account_no"
-              required
-              pattern="^[0-9]{9,15}$"
-              minLength="9"
-              maxLength="15"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.account_no}
-              placeholder="Account Number"
-            />
-            <small className="text-danger">
-              {errors.account_no && touched.account_no && errors.account_no}
-            </small>
-          </Form.Group>
+      }) =>
+        values?.profile_id ? (
+          <Form onSubmit={handleSubmit}>
+            <Form.Group className="mb-4" controlId="account_number">
+              <Form.Label>Account number</Form.Label>
+              <Form.Control
+                type="text"
+                name="account_no"
+                required
+                pattern="^\w{1,17}$"
+                maxLength="17"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.account_no}
+                placeholder="Account Number"
+              />
+              <small className="text-danger">
+                {errors.account_no && touched.account_no && errors.account_no}
+              </small>
+            </Form.Group>
 
-          <Form.Group className="mb-4" controlId="bank_name">
-            <Form.Label>Bank name</Form.Label>
-            <Form.Control
-              type="text"
-              name="bank_name"
-              required
-              minLength="3"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              pattern="[A-Za-z0-9]+"
-              value={values.bank_name}
-              placeholder="Bank Name"
-            />
-            <small className="text-danger">
-              {errors.bank_name && touched.bank_name && errors.bank_name}
-            </small>
-          </Form.Group>
+            <Form.Group className="mb-4" controlId="bank_name">
+              <Form.Label>Bank name</Form.Label>
+              <Form.Control
+                type="text"
+                name="bank_name"
+                required
+                minLength="3"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.bank_name}
+                placeholder="Bank Name"
+              />
+              <small className="text-danger">
+                {errors.bank_name && touched.bank_name && errors.bank_name}
+              </small>
+            </Form.Group>
 
-          <Form.Group className="mb-4" controlId="currency">
-            <Form.Label>Currency</Form.Label>
-            <Form.Control
-              as="select"
-              type="text"
-              name="currency"
-              required
-              onChange={handleChange}
-              onBlur={handleBlur}
-              defaultValue={values.currency}
-              placeholder="Currency"
+            <Form.Group className="mb-4" controlId="currency">
+              <Form.Label>Currency</Form.Label>
+              <Form.Control
+                as="select"
+                type="text"
+                name="currency"
+                required
+                onChange={handleChange}
+                onBlur={handleBlur}
+                defaultValue={values.currency}
+                placeholder="Currency"
+              >
+                <option>Select currency</option>
+                {currencyService &&
+                  currencyService?.data?.results.map((data, key) => {
+                    return (
+                      <option value={data?.iso_code} key={key}>
+                        {data?.name} ({data?.iso_code?.toUpperCase()})
+                      </option>
+                    );
+                  })}
+              </Form.Control>
+              <small className="text-danger">
+                {errors.currency && touched.currency && errors.currency}
+              </small>
+            </Form.Group>
+
+            <Form.Group className="mb-4" controlId="swift_code">
+              <Form.Label>SWIFT Code</Form.Label>
+              <Form.Control
+                type="text"
+                name="swift_code"
+                required
+                pattern="^[A-Za-z0-9]{8,11}$"
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.swift_code}
+                placeholder="SWIFT Code"
+              />
+              <small className="text-danger">
+                {errors.swift_code && touched.swift_code && errors.swift_code}
+              </small>
+            </Form.Group>
+
+            <Button
+              variant="primary"
+              disabled={isSubmitting}
+              block
+              type="submit"
             >
-              <option>Select currency</option>
-              {currencyService &&
-                currencyService?.data?.results.map((data, key) => {
-                  return (
-                    <option value={data?.iso_code} key={key}>
-                      {data?.name} ({data?.iso_code?.toUpperCase()})
-                    </option>
-                  );
-                })}
-            </Form.Control>
-            <small className="text-danger">
-              {errors.currency && touched.currency && errors.currency}
-            </small>
-          </Form.Group>
-
-          <Form.Group className="mb-4" controlId="country">
-            <Form.Label>Country</Form.Label>
-            <Form.Control
-              as="select"
-              type="text"
-              name="country"
-              required
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.country}
-              placeholder="Country"
-            >
-              {country_list.getNames().map((country, key) => {
-                return (
-                  <option key={key} value={country_list.getCode(country)}>
-                    {country}
-                  </option>
-                );
-              })}
-            </Form.Control>
-            <small className="text-danger">
-              {errors.country && touched.country && errors.country}
-            </small>
-          </Form.Group>
-
-          <Form.Group className="mb-4" controlId="ifsc_code">
-            <Form.Label>SWIFT Code</Form.Label>
-            <Form.Control
-              type="text"
-              name="ifsc_code"
-              required
-              minLength="5"
-              maxLength="8"
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.ifsc_code}
-              placeholder="SWIFT Code"
-            />
-            <small className="text-danger">
-              {errors.ifsc_code && touched.ifsc_code && errors.ifsc_code}
-            </small>
-          </Form.Group>
-
-          <Button variant="primary" disabled={isSubmitting} block type="submit">
-            {isSubmitting ? "Saving..." : "Save"}
-          </Button>
-        </Form>
-      )}
+              {isSubmitting ? "Saving..." : "Save"}
+            </Button>
+          </Form>
+        ) : (
+          "Profile unknown"
+        )
+      }
     </Formik>
   );
 }
 
 export default Object.assign(Create, {
   Remove,
-  Drop: Remove,
-  Delete: Remove,
   Update,
-  Modify: Update,
-  Add: Create,
 });

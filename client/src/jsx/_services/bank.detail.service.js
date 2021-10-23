@@ -11,7 +11,7 @@ export default class BankDetailServices extends Services {
     return this;
   }
   //BANK DETAIL ---------------------------------------------------------------------
-  createBankDetail = async (data) => {
+  create = async (data) => {
     return await this.decorate(
       async () =>
         await this.axios(`bank-details`, {

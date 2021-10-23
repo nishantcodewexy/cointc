@@ -11,13 +11,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       const { User, Secession } = models;
 
-      User.hasMany(Secession,{
-        foreignKey: { name: "user_id", allowNull: false },
-      });
       Secession.belongsTo(User);
-      
     }
-
   }
   Secession.init(
     {
@@ -32,14 +27,14 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           min: 1,
           isInt: true,
-          max: 3
+          max: 3,
         },
-        defaultValue:1
+        defaultValue: 1,
       },
       status: {
-        type: DataTypes.ENUM(["accepted","denied","pending"]),
+        type: DataTypes.ENUM(["accepted", "denied", "pending"]),
         allowNull: false,
-        defaultValue:"pending"
+        defaultValue: "pending",
       },
       description: {
         type: DataTypes.TEXT,
@@ -47,13 +42,12 @@ module.exports = (sequelize, DataTypes) => {
       },
       approval_date: DataTypes.DATE,
       archived_at: DataTypes.DATE,
-      
     },
     {
       sequelize,
       modelName: "Secession",
       underscored: true,
-      tableName: 'tbl_secessions'
+      tableName: "tbl_secessions",
     }
   );
   return Secession;

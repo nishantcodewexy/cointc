@@ -1,32 +1,25 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
+  const Schema = require("../../_schema/currency.schema");
+  const { payload: payloadSchema } = Schema.bulkRemove(server);
+
   const {
     controllers: {
-      currency: { remove },
+      currency: { bulkRemove },
     },
-    consts: { roles: _roles },
     helpers: {
       permissions: { isAdminOrError },
     },
   } = server.app;
 
-  const payloadSchema = Joi.object({
-    force: Joi.boolean()
-      .default(false)
-      .optional(),
-  });
-  const paramSchema = Joi.object({
-    id: Joi.string()
-      .uuid()
-      .required()
-      .error(new Error("Invalid ID provided")),
-  });
-
   return {
     method: "DELETE",
-    path: "/currency/{id}",
+    path: "/currency/bulk",
     config: {
+      response: {
+        emptyStatusCode: 204
+      },
       pre: [
         [
           {
@@ -35,11 +28,10 @@ module.exports = (server) => {
           },
         ],
       ],
-      handler: remove,
+      handler: bulkRemove,
       auth: "jwt",
       validate: {
         payload: payloadSchema,
-        params: paramSchema,
       },
     },
   };
