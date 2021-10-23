@@ -3,13 +3,11 @@
 module.exports = (server) => {
   const {
     controllers: {
-        bankdetail: { retrieve },
+      bankdetail: { retrieve },
     },
-    helpers:{
-      permissions:{
-        isUser
-      }
-    }
+    helpers: {
+      permissions: { isUser },
+    },
   } = server.app;
 
   return {
@@ -18,20 +16,12 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
-        {
-          method:isUser,
+          method: isUser,
           assign: "user",
         },
       ],
       handler: retrieve,
       auth: "jwt",
     },
-    
   };
 };

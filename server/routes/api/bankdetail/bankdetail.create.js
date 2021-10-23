@@ -2,8 +2,8 @@
 const Joi = require("joi");
 
 module.exports = (server) => {
-  const Schema = require("../../_schema/bankdetail.schema");
-  const schema = Schema?.create(server);
+  const Schema = require("../../../schema/bankdetail.schema");
+  const {payload: payloadSchema} = Schema?.create(server);
 
   const {
     controllers: {
@@ -27,7 +27,7 @@ module.exports = (server) => {
       handler: create,
       auth: "jwt",
       validate: {
-        payload: schema,
+        payload: payloadSchema,
       },
     },
   };

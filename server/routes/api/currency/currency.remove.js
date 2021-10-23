@@ -1,6 +1,6 @@
 "use strict";
 module.exports = (server) => {
-  const Schema = require("../../_schema/currency.schema");
+  const Schema = require("../../../schema/currency.schema");
   const {payload: payloadSchema, params: paramsSchema} = Schema.remove(server);
 
   const {

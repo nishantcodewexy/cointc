@@ -1,8 +1,10 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../_schema/bankdetail.schema");
-  const schema = Schema?.update(server);
+  const Schema = require("../../../schema/bankdetail.schema");
+  const { params: paramsSchema, payload: payloadSchema } = Schema?.update(
+    server
+  );
 
   const {
     controllers: {
@@ -14,7 +16,7 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: ["PUT", "PATCH"],
+    method: "PUT",
     path: "/bank-details/{id}",
     config: {
       pre: [
@@ -26,7 +28,8 @@ module.exports = (server) => {
       handler: update,
       auth: "jwt",
       validate: {
-        payload: schema,
+        params: paramsSchema,
+        payload: payloadSchema,
       },
     },
   };

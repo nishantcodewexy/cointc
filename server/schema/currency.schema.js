@@ -1,5 +1,7 @@
 const Joi = require("joi");
 
+// CREATE ------------------------------------------------
+
 /**
  * @function create - Schema validator for creating a single currency entity
  * @param {Object} server - Hapi server instance
@@ -22,6 +24,21 @@ function create(server) {
     }),
   };
 }
+
+/**
+ * @function bulkCreate - Schema validator for creating bulk currency entities
+ * @param {Object} server - Hapi server instance
+ * @returns
+ */
+function bulkCreate(server) {
+  return {
+    payload: Joi.object({
+      data: Joi.array().items(create(server)?.payload),
+    }),
+  };
+}
+
+// UPDATE ------------------------------------------------
 
 /**
  * @function update - Schema validator for updating a single currency entity
@@ -52,6 +69,24 @@ function update(server) {
   };
 }
 
+/**
+ * @function bulkUpdate - Schema validator for creating bulk currency entities
+ * @param {Object} server - Hapi server instance
+ * @returns
+ */
+function bulkUpdate(server) {
+  const { boom } = server.app;
+  return {
+    payload: Joi.object({
+      data: Joi.array().items(update(server)?.payload),
+      paranoid: Joi.boolean()
+        .optional()
+        .error(boom.badRequest(`Optional input <paranoid::bool> is invalid`)),
+    }),
+  };
+}
+// REMOVE ------------------------------------------------
+
 function remove(server) {
   return {
     payload: Joi.object({
@@ -62,62 +97,6 @@ function remove(server) {
     }),
 
     params: update(server)?.params,
-  };
-}
-
-function restore(server) {
-  return {
-    params: update(server)?.params,
-  };
-}
-/**
- * @function bulkCreate - Schema validator for creating bulk currency entities
- * @param {Object} server - Hapi server instance
- * @returns
- */
-function bulkCreate(server) {
-  return {
-    payload: Joi.object({
-      data: Joi.array().items(create(server)?.payload),
-    }),
-  };
-}
-
-/**
- * @function bulkUpdate - Schema validator for creating bulk currency entities
- * @param {Object} server - Hapi server instance
- * @returns
- */
-function bulkUpdate(server) {
-  const { boom } = server.app;
-  return {
-    payload: Joi.object({
-      data: Joi.array().items(
-        Joi.object({
-          id: Joi.string()
-            .uuid()
-            .required()
-            .error(boom.badRequest("Required input <id::uuid> is invalid")),
-
-          iso_code: Joi.string()
-            .optional()
-            .error(
-              boom.badRequest("Optional input <iso_code::string> is invalid")
-            ),
-
-          name: Joi.string()
-            .optional()
-            .error(boom.badRequest("Optional input <name::string> is invalid")),
-
-          type: Joi.string()
-            .optional()
-            .error(boom.badRequest("Optional input <type::string> is invalid")),
-        })
-      ),
-      paranoid: Joi.boolean()
-        .optional()
-        .error(boom.badRequest(`Optional input <paranoid::bool> is invalid`)),
-    }),
   };
 }
 
@@ -137,6 +116,14 @@ function bulkRemove(server) {
         .optional()
         .error(new Error("Optional input <force::boolean> is invalid")),
     }).error(boom.badRequest(`Required input <payload::Object> is invalid`)),
+  };
+}
+
+// RESTORE ------------------------------------------------
+
+function restore(server) {
+  return {
+    params: update(server)?.params,
   };
 }
 

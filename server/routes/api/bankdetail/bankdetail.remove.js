@@ -1,9 +1,10 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../_schema/bankdetail.schema");
-  const {params} = Schema?.remove(server);
-
+  const Schema = require("../../../schema/bankdetail.schema");
+  const { params: paramsSchema, payload: payloadSchema } = Schema?.remove(
+    server
+  );
   const {
     controllers: {
       bankdetail: { remove },
@@ -26,7 +27,8 @@ module.exports = (server) => {
       handler: remove,
       auth: "jwt",
       validate: {
-        params
+        params: paramsSchema,
+        payload: payloadSchema,
       },
     },
   };

@@ -20,23 +20,22 @@ function CurrencyController(server) {
      * @param {Object} req.payload
      * @returns
      */
-    create: async (req) => {
+    async create(req) {
       const {
         payload,
         pre: { user },
       } = req;
 
+      const queryOptions = {
+        validate: true,
+        fields: ["id", "type", "iso_code", "name", "created_by"],
+        returning: ["id", "type", "iso_code", "name"],
+      };
+
       try {
         return {
           result: await user
-            .createCurrency(
-              { ...payload },
-              {
-                validate: true,
-                fields: ["id", "type", "iso_code", "name", "created_by"],
-                returning: ["id", "type", "iso_code", "name"],
-              }
-            )
+            .createCurrency(payload, queryOptions)
             .catch((err) => {
               throw boom.badData(err.message, err);
             }),
@@ -102,18 +101,24 @@ function CurrencyController(server) {
       } = req;
 
       try {
+        const queryOptions = {
+          where: {
+            id,
+            ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+          },
+          validate: true,
+          returning: true,
+          fields: ["name", "iso_code", "type"],
+          // logging: console.log,
+        };
+
         return {
           result: await user
-            .updateCurrency(payload, {
-              where: {
-                id,
-                ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
-              },
-              validate: true,
-              returning: ["id", "name", "iso_code", "type", "user_id"],
-              fields: ["name", "iso_code", "type"],
-              // logging: console.log,
-            })
+            .updateCurrency(payload, queryOptions)
+            .then(([count, [updated]]) => ({
+              updated,
+              [id]: Boolean(count),
+            }))
             .catch((err) => {
               throw boom.badData(err.message, err);
             }),
@@ -228,34 +233,34 @@ function CurrencyController(server) {
       } = req;
       let total = 0;
       // user.removeCurrencies
-      let result = await sequelize.transaction(async (t) =>
-        Promise.all(
-          data?.map(async (id) => {
-            let queryOptions = {
-              where: {
-                id,
-                ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
-              },
-              transaction: t,
-              force,
-            };
-            return await Currency.destroy(queryOptions).then((count) => ({
-              [id]: ((total += count), Boolean(count)),
-              ...(() =>
-                !count
-                  ? {
-                      info:
-                        "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
-                    }
-                  : null)(),
-            }));
-          })
-        ).catch((err) => {
-          throw boom.badData(err.message, err);
-        })
-      );
 
       try {
+        let result = await sequelize.transaction(async (t) =>
+          Promise.all(
+            data?.map(async (id) => {
+              let queryOptions = {
+                where: {
+                  id,
+                  ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+                },
+                transaction: t,
+                force,
+              };
+              return await Currency.destroy(queryOptions).then((count) => ({
+                [id]: ((total += count), Boolean(count)),
+                ...(() =>
+                  !count
+                    ? {
+                        info:
+                          "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
+                      }
+                    : null)(),
+              }));
+            })
+          ).catch((err) => {
+            throw boom.badData(err.message, err);
+          })
+        );
         return {
           total,
           result,
@@ -305,14 +310,15 @@ function CurrencyController(server) {
      * @returns
      */
     async bulkRetrieve(req) {
+      let { query } = req;
+
       try {
-        let { query } = req;
         const queryFilters = await filters({
           query,
           searchFields: ["name", "iso_code", "type"],
         });
 
-        const options = {
+        const queryOptions = {
           ...queryFilters,
           attributes: [
             "id",
@@ -326,7 +332,7 @@ function CurrencyController(server) {
           ],
         };
 
-        let queryset = await Currency.findAndCountAll(options);
+        let queryset = await Currency.findAndCountAll(queryOptions);
         const { limit, offset } = queryFilters;
 
         return paginator({
@@ -339,6 +345,8 @@ function CurrencyController(server) {
         return boom.boomify(error);
       }
     },
+
+    // RESTORE------------------------------------------------------------
 
     async restore(req) {
       const {
