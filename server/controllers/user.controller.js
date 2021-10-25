@@ -101,6 +101,21 @@ module.exports = function UserController(server) {
     }
   }
 
+  function filterAssociations(list = []) {
+    let valid = [];
+    list.forEach((item) => {
+      for (let assc in User.associations) {
+        let isSame = assc?.toLowerCase() === item?.toLowerCase();
+
+        if (isSame) {
+          valid.push(assc);
+          break;
+        }
+      }
+    });
+    return valid?.length ? valid : null;
+  }
+
   return {
     // CREATE------------------------------------------------------------
     /**
@@ -357,6 +372,7 @@ module.exports = function UserController(server) {
     },
 
     // RETRIEVE------------------------------------------------------------
+
     /**
      * @function bulkList - Fetched multiple User
      * @param {Object} req
@@ -367,9 +383,12 @@ module.exports = function UserController(server) {
         const { query } = req;
         const queryFilters = await filters({ query, searchFields: ["email"] });
 
+        const include = filterAssociations(query?.include);
+
         const options = {
           ...queryFilters,
           attributes: { exclude: ["password"] },
+          include,
         };
 
         let queryset = await User.findAndCountAll(options);
@@ -435,7 +454,7 @@ module.exports = function UserController(server) {
         // await user.setSecurity(data);
 
         // TODO: Send via email or SMS
-        return h.response({sent: true}).code(200);
+        return h.response({ sent: true }).code(200);
       } catch (err) {
         console.error(err);
         return boom.internal(err.message, err);
@@ -577,3 +596,16 @@ module.exports = function UserController(server) {
     },
   };
 };
+
+function renameKey(Obj, from = [], to = []) {
+  from.forEach((key, idx) => {
+    if (key in Obj) {
+      let temp = Obj[key];
+      delete Obj[key];
+      Obj[to[idx]] = temp;
+    }
+  });
+  return Obj;
+}
+
+

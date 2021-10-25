@@ -1,4 +1,4 @@
-import { Row, Col, Card, Button } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 import useToggler from "../../../_hooks/toggler.hook";
 import PageTitle from "../layouts/PageTitle";
 import { useEffect } from "react";

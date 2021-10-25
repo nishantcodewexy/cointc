@@ -6,7 +6,7 @@ const mimetypes = require("./mimetypes.json")
 module.exports = {
   patterns: {
     password: new RegExp("^[a-zA-Z0-9_@$#!~]{6,30}$"),
-    ads_kind: new RegExp("^(buy|sell)$", 'i')
+    ad_type: new RegExp("^(buy|sell)$", 'i')
   },
   roles: {
     admin: 'admin',

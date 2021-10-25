@@ -1,4 +1,5 @@
 "use strict";
+const { tooManyRequests } = require("boom");
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Advert extends Model {
@@ -9,17 +10,14 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      const { User, Advert, Currency } = models;
-
-      User.hasMany(Advert, {
-        foreignKey: { name: "from_user_id", allowNull: false },
-      });
-
+      const { Advert, Currency } = models;
       Advert.belongsTo(Currency, {
         foreignKey: "currency_id",
+        allowNull: false,
       });
     }
   }
+
   Advert.init(
     {
       id: {
@@ -27,8 +25,8 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      from_user_id: DataTypes.UUID,
-      min_order_quantity: {
+      user_id: DataTypes.UUID,
+      min_order_qty: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
@@ -36,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
           isInt: true,
         },
       },
-      max_order_quantity: {
+      max_order_qty: {
         type: DataTypes.INTEGER,
         allowNull: false,
         validate: {
@@ -51,6 +49,7 @@ module.exports = (sequelize, DataTypes) => {
           min: 0,
           isInt: true,
         },
+        comment: "Best price for a sell ad",
       },
       max_order_price: {
         type: DataTypes.DOUBLE,
@@ -59,18 +58,21 @@ module.exports = (sequelize, DataTypes) => {
           min: 0,
           isInt: true,
         },
+        comment: "Best price for buy ad",
       },
       payment_methods: {
         type: DataTypes.JSON,
         allowNull: false,
       },
-      advert_type: {
+      type: {
         type: DataTypes.ENUM,
-        values: ["maker", "taker"],
+        values: ["buy", "sell"],
         allowNull: false,
         validate: {
-          contains: ["maker", "taker"],
+          contains: ["buy", "sell"],
         },
+        comment:
+          "Advert type where a buyer ad requires a seller to initiate an order. A seller ad requires a buyer to inititate an order",
       },
       payment_time_limit: {
         type: DataTypes.INTEGER,
@@ -78,6 +80,7 @@ module.exports = (sequelize, DataTypes) => {
         validate: {
           isInt: true,
         },
+        comment: "Time limit within which buyer should complete trade",
       },
       price: {
         validate: {
@@ -85,8 +88,11 @@ module.exports = (sequelize, DataTypes) => {
         },
         type: DataTypes.DOUBLE,
       },
-      floating_price: DataTypes.DOUBLE,
-      asset_quantity: {
+      floating_price: {
+        type: DataTypes.DOUBLE,
+        comment: "(80 - 200%) Price = market_price * currency * floating_price",
+      },
+      qty: {
         allowNull: false,
         type: DataTypes.INTEGER,
         defaultValue: 1,
@@ -94,17 +100,33 @@ module.exports = (sequelize, DataTypes) => {
           isInt: true,
         },
       },
-      
-      remarks: DataTypes.STRING,
-      auto_reply: DataTypes.STRING,
-      trade_conditions: DataTypes.STRING,
+      crypto_currency: {
+        type: DataTypes.STRING,
+        comment: "Kind of crypto currency",
+      },
+      fiat_currency: {
+        type: DataTypes.STRING,
+        comment: "Kind of fiat currency",
+      },
+      remark: DataTypes.STRING,
+      auto_reply_message: {
+        type: DataTypes.STRING,
+        comment: "Message to be sent after order is placed",
+      },
+      trade_conditions: {
+        type: DataTypes.STRING,
+        comment: "Trade conditions",
+      },
       published: {
         allowNull: false,
         defaultValue: false,
         type: DataTypes.BOOLEAN,
+        comment: "Indicates whether advert is published or not",
       },
-      archived_at: DataTypes.DATE,
-     
+      archived_at: {
+        type: DataTypes.DATE,
+        comment: "Indicates whether a record is soft deleted or not",
+      },
     },
     {
       sequelize,

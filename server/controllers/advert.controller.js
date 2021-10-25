@@ -10,8 +10,8 @@ const AdvertController = (server) => {
       return db.Advert.create({ ...req.payload, owner: user.id });
     },
 
-    // Delete advert
-    async destroy(req) {
+    // REMOVE ---------------------------------------
+    async remove(req) {
       const { id } = req.params;
 
       return await db.Advert.destroy({
@@ -19,20 +19,17 @@ const AdvertController = (server) => {
       });
     },
 
-    // retrieve advert
-    async get(req) {
+    // RETRIEVE ------------------------------------------------
+    async retrieve(req) {
       const { id } = req.params;
 
       return db.Advert.findByPk(id);
     },
 
     // fetch all adverts
-    async getAll(req) {
+    async bulkRetrieve(req) {
       return await db.Advert.findAll();
     },
-  };
-  const AdvertGroupController = (req, h) => {
-    console.log("User group controller called!");
   };
 };
 

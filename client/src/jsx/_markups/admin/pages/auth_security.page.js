@@ -1,13 +1,40 @@
-import { Card, Row, Col, Button, Table } from "react-bootstrap";
+import { Row, Col, Table } from "react-bootstrap";
+import { toast } from "react-toastify";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
-import PageTitle from "../layouts/PageTitle";
 // CONSTANTS
 import { SERVICE } from "../../../_constants";
 
-function AuthSecurityMgmt() {
+// COMPONENTS
+import TableGenerator from "../components/TableGenerator.Component";
+import PageTitle from "../layouts/PageTitle";
+
+function AuthSecurityMgmt({ services, useService }) {
+  const { account } = services;
+
+  let service = useService({
+    [SERVICE?.BULK_RETRIEVE]: account.bulkRetrieveUser,
+  });
+
+  const { dispatchRequest } = service;
+  useEffect(() => {
+    dispatchRequest({
+      type: SERVICE?.BULK_RETRIEVE,
+      toast: { success: notifySuccess, error: notifyError },
+      payload: {
+        "order[updatedAt]": "DESC",
+        "order[createdAt]": "DESC",
+        include: ["security"],
+      },
+    });
+  }, []);
+
   return (
     <>
-      <PageTitle activeMenu="Security List" motherMenu="Authentication Management" />
+      <PageTitle
+        activeMenu="Security List"
+        motherMenu="Authentication Management"
+      />
       <header className="mb-4">
         <h3>List of Security </h3>
       </header>
@@ -30,13 +57,47 @@ function AuthSecurityMgmt() {
         </Col>
       </Row>
 
-      <Row style={{ marginBottom: 60 }}>
-        <Col>
-          <Card>
-            <SecurityListTable />
-          </Card>
-        </Col>
-      </Row>
+      <div style={{ marginBottom: 60 }}>
+        <TableGenerator
+          {...{ service }}
+          mapping={{
+            iso_code: "Symbol",
+          }}
+          omit="*"
+          extras={["user_name", "email", "mobile_number", "otp"]}
+          transformers={{
+            user_name: ({ row }) => {
+              return (
+                <>
+                  {row?.lname}, {row?.oname}
+                </>
+              );
+            },
+            email: ({ row }) => {
+              return <>{row?.email}</>;
+            },
+            mobile_number: ({ row }) => {
+              return (
+                <>
+                  {row?.phone || (
+                    <small className="badge badge-default text-white">No mobile number</small>
+                  )}
+                </>
+              );
+            },
+            otp: ({ row }) => {
+              return (
+                <>
+                  {console.log({otp:row?.security?.otp})}
+                  {row?.security?.otp || (
+                    <small className="badge badge-danger">2fa disabled</small>
+                  )}
+                </>
+              );
+            },
+          }}
+        />
+      </div>
     </>
   );
 }
@@ -144,6 +205,28 @@ function SecurityListTable() {
       </Table>
     </>
   );
+}
+
+function notifySuccess() {
+  toast.success("Success !", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}
+
+function notifyError(error) {
+  toast.error(error || "Request Error!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
 }
 
 export default AuthSecurityMgmt;

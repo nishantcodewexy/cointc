@@ -15,49 +15,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       const {
-        BasicProfile,
         Profile,
         User,
-        AdminProfile,
         BankDetail,
-        Wallet /*, Message */,
+        Wallet,
         Address,
         KYC,
         Security,
         Secession,
         Upload,
-        Currency
+        Currency,
+        Advert,
       } = models;
 
-      // *********** DELETE ***********
-
-      User.hasOne(BasicProfile, {
-        foreignKey: "user_id",
-        constraints: false,
-        onDelete: "cascade",
-        // scope: {
-        //   role: "basic",
-        // },
-        // as: "profile",
-      });
-      BasicProfile.belongsTo(User, {
-        foreignKey: "user_id",
-        allowNull: false,
-      });
-
-      User.hasOne(AdminProfile, {
-        foreignKey: "user_id",
-        constraints: false,
-      });
-
-      AdminProfile.belongsTo(User, {
-        foreignKey: "user_id",
-        constraints: false,
-      });
-      // *********** DELETE ***********
-
       User.hasMany(Wallet, {
-        foreignKey: "owner_id",
+        foreignKey: { name: "user_id", allowNull: false },
       });
 
       User.hasOne(Profile, {
@@ -67,33 +39,38 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
 
-      User.hasOne(BankDetail, {
-        foreignKey: "user_id",
+      User.hasMany(BankDetail, {
+        foreignKey: { name: "user_id", as: "bankdetails", allowNull: false },
       });
 
-      User.hasOne(Address, {
-        foreignKey: "user_id",
+      User.hasMany(Address, {
+        foreignKey: { name: "user_id", as: "addresses", allowNull: false },
       });
 
       User.hasOne(KYC, {
-        foreignKey: "user_id",
+        foreignKey: { name: "user_id", as: "kyc", allowNull: false },
       });
 
       User.hasOne(Security, {
-        foreignKey: "user_id",
+        foreignKey: { name: "user_id", as: "security", allowNull: false },
       });
 
-       User.hasMany(Secession, {
-         foreignKey: { name: "user_id", allowNull: false },
-       });
-      
+      User.hasMany(Secession, {
+        foreignKey: { name: "user_id", as: "secessions", allowNull: false },
+      });
+
       User.hasMany(Upload, {
-        foreignKey: { name: "user_id", allowNull: false },
+        foreignKey: { name: "user_id", as: "uploads", allowNull: false },
       });
 
       User.hasMany(Currency, {
-        foreignKey: 'user_id'
-      })
+        foreignKey: { name: "user_id", as: "currencies", allowNull: false },
+      });
+
+      User.hasMany(Advert, {
+        foreignKey: { name: "user_id", as: "adverts", allowNull: false },
+      });
+
       // User.hasMany(Message, {})
     }
     toPublic() {

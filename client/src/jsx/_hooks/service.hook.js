@@ -82,8 +82,9 @@ function useService(config = {}, toast) {
       let response = { error: new Error("Response has error") };
 
       let fn = () => {
+        // console.log(lowercased, services)
         throw new Error(
-          `< ${lowercased} > service does not exist!\nThe value of < ${lowercased} > is < ${services[lowercased]} >`
+          `<${lowercased}> service does not exist!\nThe value of < ${lowercased} > is < ${services[lowercased]} >`
         );
       };
 

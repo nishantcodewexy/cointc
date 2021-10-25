@@ -52,7 +52,7 @@ class AccountService extends Services {
    * @param {statsPayload} params
    * @returns
    */
-  bulkRetreieveStats = async (params) => {
+  bulkRetreieveStat = async (params) => {
     return await this.decorate(
       async () =>
         await this.axios(`stats`, {
@@ -61,8 +61,6 @@ class AccountService extends Services {
         })
     );
   };
-
-  
 
   // USER --------------------------------------------------------------------------------
 
@@ -158,7 +156,7 @@ class AccountService extends Services {
    * @param {String []} data - Array of IDs to delete from
    * @returns
    */
-  bulkRemoveUsers = async (data) => {
+  bulkRemoveUser = async (data) => {
     return await this.decorate(
       async () =>
         await this.axios(`users`, {
@@ -168,90 +166,12 @@ class AccountService extends Services {
     );
   };
 
-  // CHAT --------------------------------------------------------------------------
-  /**
-   * @function bulkRetrieveChatHistory - list chat histories (**Admins only**)
-   * @returns
-   */
-  bulkRetrieveChatHistory = async (params) => {
+  bulkRetrieveSecurities = async (params) => {
     return await this.decorate(
       async () =>
-        await this.axios(`chat-history`, {
+        await this.axios(`users/security`, {
           method: "GET",
           params,
-        })
-    );
-  };
-
-  // SUPPORT TICKET --------------------------------------------------------------------------
-  //
-  /**
-   * Support ticket payload types definition
-   * @typedef {Object} ticketPayload
-   * @property {String} id - Support ticket id
-   * @property {String} [status] - Support ticket status
-   * @property {String} [subject] - Support ticket status
-   * @property {String} [ticket_no] - Support ticket status
-   */
-
-  /**
-   * @function bulkRetrieveSupportTickets - Gets adverts (**Admin only**)
-   * @param {Object} params
-   * @param {Number} [params.limit] - Response limit
-   * @param {String} [params.name] - Specify the currency name
-   * @returns
-   */
-  bulkRetrieveSupportTickets = async function (params) {
-    return await this.decorate(
-      async () =>
-        await this.axios(`tickets`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
-  /**
-   * @function getSupportTicket - Gets adverts (**Admin only**)
-   * @param {Object} params
-   * @param {Number} [params.limit] - Response limit
-   * @param {String} [params.name] - Specify the currency name
-   * @returns
-   */
-  getSupportTicket = async function (id, params) {
-    return await this.decorate(
-      async () =>
-        await this.axios(`tickets/${id}`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
-
-  /**
-   * @function updateSupportTicket - Update single support ticket (**Admin only**)
-   * @param {Object} data
-   * @returns
-   */
-  updateSupportTicket = async (id, data) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`tickets/${id}`, {
-          method: "PUT",
-          data,
-        })
-    );
-  };
-  /**
-   * @function updateBulkSupportTicket - Bulk update support ticket (**Admin only**)
-   * @param {ticketPayload []} data
-   * @returns
-   */
-  updateSupportTicket = async (data) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`tickets`, {
-          method: "PUT",
-          data,
         })
     );
   };

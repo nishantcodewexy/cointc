@@ -4,9 +4,11 @@ import React, { useState, useEffect } from "react";
 import { nanoid } from "@reduxjs/toolkit";
 import { TablePagination, Skeleton } from "@mui/material";
 import styled from "styled-components";
+
+// HELPERS
+import { keysToLowerCase } from "../../../_helpers/utils.helper";
 // COMPONENTS
 import Empty from "./Empty.Component";
-
 // CONSTANTS
 import { SERVICE } from "../../../_constants";
 // HOOKS
@@ -33,7 +35,8 @@ function TableGenerator({
   extras = [],
   omit = [],
 }) {
-  const { data, _fromStack, /* error, */ isFetching, dispatchRequest } = service;
+  const { data, _fromStack, /* error, */ isFetching, dispatchRequest } =
+    service;
 
   const uuid = nanoid(10);
   const [tableData, setTableData] = useState({
@@ -52,19 +55,21 @@ function TableGenerator({
      * @function getMapping - Returns a row/col mapping of the table data
      * @returns {[]}
      */
-    function getMapping(data = []) {
-      let fullRows = data?.map((obj) => {
+    function getMapping(result = []) {
+      let allRows = result?.map((obj) => {
         let _obj = {};
-        Object.entries(obj).forEach((entry) => (_obj[entry[0]] = entry[1]));
+        Object.entries(keysToLowerCase(obj)).forEach(
+          (entry) => (_obj[entry[0]] = entry[1])
+        );
         return _obj;
       });
 
-      let fullCols = Object.keys(data[0]).map((key) =>
+      let allCols = Object.keys(result?.length && result[0]).map((key) =>
         key in mapping ? mapping[key] : key
       );
 
       return [
-        data?.map((obj) => {
+        result?.map((obj) => {
           let _obj = {};
           let valid_entries = Object.entries(obj).filter(
             ([key, value]) => !omit.includes(key)
@@ -73,19 +78,19 @@ function TableGenerator({
           valid_entries.forEach((entry) => (_obj[entry[0]] = entry[1]));
           return _obj;
         }),
-        Object.keys(data[0])
+        Object.keys(result[0])
           .filter((itm) => !omit.includes(itm))
           .map((key) =>
             // console.log(key in mapping, { key, mapping }, mapping[key]),
             key in mapping ? mapping[key] : key
           ),
-        fullRows,
-        fullCols,
+        allRows,
+        allCols,
       ];
     }
 
     if (data?.result?.length) {
-      const [rows, cols, fullRows, fullCols] = getMapping(data?.results);
+      const [rows, cols, fullRows, fullCols] = getMapping(data?.result);
       setTableData({ rows, cols, fullRows, fullCols });
     }
     setCount(data?.count);
