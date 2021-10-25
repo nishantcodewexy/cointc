@@ -5,7 +5,6 @@ module.exports = (server) => {
     controllers: {
       user: { bulkRetrieve },
     },
-    consts: { roles: _roles },
     helpers: {
       permissions: { isAdminOrError },
     },

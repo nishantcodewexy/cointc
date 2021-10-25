@@ -1,28 +1,30 @@
 const assert = require("assert");
 
-module.exports = (server) => {
+module.exports = function WalletController(server) {
   const {
     db: { Wallet, User },
     boom,
     helpers: {},
   } = server.app;
 
-  const walletExist = async (user, address) => {
+  const walletExist = async (address, user) => {
     // Search wallet by address
-    return await Wallet.findOne({ where: { owner_id: user, address: {} } });
+    return await Wallet.findOne({
+      where: { address, ...(() => (user ? { owner_id: user } : null))() },
+    });
   };
 
-  const walletController = {
+  return {
     create: async (req) => {
-      const { user } = req.pre;
+      const { pre: user } = req;
       const { currency } = req.params;
       return await User.findByPk(user)
         .createWallet({ asset: currency })
         .toPublic();
     },
-
+    // RETrIEVE ----------------------------------------
     // Fetch all user wallets
-    getAll: async (req) => {
+    bulkRetrieve: async (req) => {
       let {
         pre: { user },
       } = req;
@@ -36,7 +38,7 @@ module.exports = (server) => {
     },
 
     // Fetch specific user wallet
-    getByAddress: async () => {
+    async retrieve() {
       let {
         pre: { user },
         params: { address },
@@ -44,7 +46,6 @@ module.exports = (server) => {
       //`Requesting for wallet id:${id}`
       return await Wallet.findOne({
         where: {
-          owner_id: user,
           address,
         },
       }).toPublic();
@@ -65,7 +66,4 @@ module.exports = (server) => {
       } = req;
     },
   };
-
-  const walletGroupController = (req, h) => {};
-  return { ...walletController, group: walletGroupController };
 };

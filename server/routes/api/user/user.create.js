@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      user: { bulkCreate },
+      user: { create },
     },
     consts: { roles: _roles },
     helpers: {
@@ -26,7 +26,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: bulkCreate,
+      handler: create,
       auth: "jwt",
       // validate:{
       //     payload:schema

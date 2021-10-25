@@ -1,9 +1,11 @@
 const Joi = require("joi");
 
 module.exports = (server) => {
+  const Schema = require("../../../schema/user.schema");
+  const {payload: payloadSchema} = Schema?.create(server)
   const {
     controllers: {
-      user: { createMe },
+      user: { create },
     },
     consts: { patterns, roles: _roles },
     helpers:{
@@ -38,9 +40,9 @@ module.exports = (server) => {
     method: "POST",
     path: `/auth/register`,
     config: {
-      handler: createMe,
+      handler: create,
       validate: {
-        payload: schema,
+        payload: payloadSchema,
       },
     },
   };

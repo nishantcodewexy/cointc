@@ -2,7 +2,7 @@
 const { Op } = require("sequelize");
 const boom = require("@hapi/boom");
 
-module.exports = (server) => {
+const BankDetailController = (server) => {
   const {
     db: { BankDetail, sequelize, Profile },
 
@@ -282,3 +282,5 @@ module.exports = (server) => {
     },
   };
 };
+
+module.exports = BankDetailController;

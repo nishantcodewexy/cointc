@@ -4,22 +4,16 @@ const faker = require("faker");
 const { nanoid } = require("nanoid");
 const len = 10;
 
-module.exports = {
+const UsersSeeder = {
   up: async (queryInterface, Sequelize) => {
     this.queryInterface = queryInterface;
     this.Sequelize = Sequelize;
 
-    await seedUser.call(this);
-    await seedAdminUser.call(this);
+    await seedUsers.call(this);
+    await seedAdminUsers.call(this);
   },
 
   down: async (queryInterface, Sequelize) => {
-    /**
-     * Add commands to revert seed here.
-     *
-     * Example:
-     * await queryInterface.bulkDelete('People', null, {});
-     */
     await queryInterface.bulkDelete("tbl_users", null, {});
     await queryInterface.bulkDelete("tbl_users_profile", null, {});
     await queryInterface.bulkDelete("tbl_basic_users_profile", null, {});
@@ -27,9 +21,13 @@ module.exports = {
   },
 };
 
-async function seedAdminUser() {
+/**
+ * @function seedAdminUsers - Seeds adminsitrator users
+ */
+async function seedAdminUsers() {
   const userTableRecords = [];
   const profileTableRecords = [];
+  const securityTableRecords = [];
 
   for (let i = 0; i < len; ++i) {
     let id = faker.datatype.uuid();
@@ -64,6 +62,13 @@ async function seedAdminUser() {
       email,
     });
 
+    securityTableRecords.push({
+      id: faker.datatype.uuid(),
+      user_id: id,
+      created_at: faker.date.recent(),
+      updated_at: faker.date.recent(),
+    });
+
     if (i == 0) continue;
 
     userTableRecords.push({
@@ -77,47 +82,86 @@ async function seedAdminUser() {
       access_level: 2,
     });
   }
-  await this.queryInterface.bulkInsert("tbl_users", userTableRecords);
-
-  await this.queryInterface.bulkInsert(
-    "tbl_users_profile",
-    profileTableRecords
+  await this.queryInterface.sequelize.transaction(
+    async (t) =>
+      await Promise.all([
+        this.queryInterface.bulkInsert("tbl_users", userTableRecords, {
+          transaction: t,
+        }),
+        this.queryInterface.bulkInsert(
+          "tbl_users_profile",
+          profileTableRecords,
+          { transaction: t }
+        ),
+        this.queryInterface.bulkInsert(
+          "tbl_users_security",
+          securityTableRecords,
+          { transaction: t }
+        ),
+      ])
   );
 }
 
-async function seedUser() {
+/**
+ * @function seedUser - seeds basic users
+ */
+async function seedUsers() {
+  const userTableRecords = [];
+  const profileTableRecords = [];
+  const securityTableRecords = [];
+
   for (let i = 0; i < len; ++i) {
     const id = faker.datatype.uuid();
     const email = faker.internet.email();
     let profile_id = faker.datatype.uuid();
 
-    await this.queryInterface.bulkInsert(
-      "tbl_users",
-      [
-        {
-          id: id,
-          email,
-          password: faker.internet.password(),
-          access_level: 1,
-          created_at: faker.date.recent(),
-          updated_at: faker.date.recent(),
-          role: "basic",
-        },
-      ],
-      {}
-    );
+    userTableRecords.push({
+      id: id,
+      email,
+      password: faker.internet.password(),
+      access_level: 1,
+      created_at: faker.date.recent(),
+      updated_at: faker.date.recent(),
+      role: "basic",
+    });
 
-    await this.queryInterface.bulkInsert("tbl_users_profile", [
-      {
-        profile_id,
-        referral_code: nanoid(10),
-        oname: faker.name.firstName(),
-        lname: faker.name.lastName(),
-        email,
-        user_id: id,
-        created_at: faker.date.recent(),
-        updated_at: faker.date.recent(),
-      },
-    ]);
+    profileTableRecords.push({
+      profile_id,
+      invite_code: nanoid(10),
+      oname: faker.name.firstName(),
+      lname: faker.name.lastName(),
+      email,
+      user_id: id,
+      created_at: faker.date.recent(),
+      updated_at: faker.date.recent(),
+    });
+
+    securityTableRecords.push({
+      id: faker.datatype.uuid(),
+      user_id: id,
+      created_at: faker.date.recent(),
+      updated_at: faker.date.recent(),
+    });
   }
+
+  await this.queryInterface.sequelize.transaction(
+    async (t) =>
+      await Promise.all([
+        this.queryInterface.bulkInsert("tbl_users", userTableRecords, {
+          transaction: t,
+        }),
+        this.queryInterface.bulkInsert(
+          "tbl_users_profile",
+          profileTableRecords,
+          { transaction: t }
+        ),
+        this.queryInterface.bulkInsert(
+          "tbl_users_security",
+          securityTableRecords,
+          { transaction: t }
+        ),
+      ])
+  );
 }
+
+module.exports = UsersSeeder;

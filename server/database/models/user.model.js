@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         Wallet /*, Message */,
         Address,
         KYC,
-        OTP,
+        Security,
         Secession,
         Upload,
         Currency
@@ -79,7 +79,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
       });
 
-      User.hasOne(OTP, {
+      User.hasOne(Security, {
         foreignKey: "user_id",
       });
 

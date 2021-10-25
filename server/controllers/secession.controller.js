@@ -3,14 +3,14 @@ const assert = require("assert");
 
 const { Op } = require("sequelize");
 
-module.exports = (server) => {
+module.exports = function SecessionController(server) {
   const {
     db: { Secession },
     boom,
     helpers: { filters, paginator },
   } = server.app;
 
-  const secessionController = {
+  return {
     // CREATE ---------------------------------------------------------------
 
     async create(req) {
@@ -29,7 +29,11 @@ module.exports = (server) => {
     },
 
     // RETRIEVE ---------------------------------------------------------------
-
+    /**
+     * @function bulkRetrieve - retrieves multiple currency record
+     * @param {Object} req
+     * @returns
+     */
     async bulkRetrieve(req) {
       const {
         query,
@@ -72,6 +76,12 @@ module.exports = (server) => {
         });
       }
     },
+    
+    /**
+     * @function retrieve - retrieves a single currency record
+     * @param {Object} req
+     * @returns
+     */
     async retrieve(req) {
       const {
         params: { id },
@@ -131,6 +141,4 @@ module.exports = (server) => {
       });
     },
   };
-
-  return secessionController;
 };

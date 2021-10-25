@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
         values: ["standard"],
         comment: "User mode state: [standard, merchant]",
       },
-      referral_code: {
+      invite_code: {
         type: DataTypes.STRING,
       },
       email: {

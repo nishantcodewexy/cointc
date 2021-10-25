@@ -1,10 +1,10 @@
 "use strict";
 const assert = require("assert");
 
-module.exports = (server) => {
+const AdvertController = (server) => {
   const { db } = server.app;
 
-  const AdvertController = {
+  return {
     async create(req) {
       const { user } = req.pre.user;
       return db.Advert.create({ ...req.payload, owner: user.id });
@@ -34,6 +34,6 @@ module.exports = (server) => {
   const AdvertGroupController = (req, h) => {
     console.log("User group controller called!");
   };
-  
-  return { ...AdvertController, group: AdvertGroupController };
 };
+
+module.exports = AdvertController;

@@ -11,8 +11,8 @@ module.exports = {
 
     description = await queryInterface.describeTable(table_name);
     if (description) {
-      return queryInterface.sequelize.transaction((t) => {
-        return Promise.all([
+      return await queryInterface.sequelize.transaction(async (t) => {
+        return await Promise.all([
           !("suitability" in description) &&
             queryInterface.addColumn(
               "tbl_basic_users_profile",

@@ -103,11 +103,11 @@ HapiServer.app["controllers"] = {};
 /**************************************
  * dynamically register controllers
  **************************************/
-let controllers = glob.sync("/controllers/*.js", {
+let controllers = glob.sync("/controllers/*controller.js", {
   root: cwd,
 });
 controllers.forEach((file) => {
-  let routeBase = path.basename(file, ".js");
+  let routeBase = path.basename(file, ".controller.js");
   // console.log("controller base name",routeBase)
   let filePath = require(file);
   

@@ -271,6 +271,59 @@ const MailerHelpers = () => {
   };
 };
 
+const generator = {
+  referralCode(email) {
+    let username = email.split("@")[0];
+    let uuid = "";
+
+    for (let i = 0; i < 4; ++i) {
+      uuid += username[Math.floor(Math.random() * username.length)];
+    }
+    return uuid + nanoid(4);
+  },
+  otp(max = 5) {
+    var digits = "0123456789";
+    let otp = "";
+
+    for (let i = 0; i < max; i++) {
+      otp += digits[Math.floor(Math.random() * 10)];
+    }
+    return otp;
+  },
+  password(len = 8) {
+    var chars =
+      "ABCDEFGHIJKLMNOPGRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_@$#!~";
+    let secret = "";
+    for (let i = 0; i < len; i++) {
+      secret += chars[Math.floor(Math.random() * chars.length)];
+    }
+    return secret;
+  },
+  keypair(passphrase, cb) {
+    const { generateKeyPair } = require("crypto");
+
+    return util.promisify(() =>
+      generateKeyPair(
+        "rsa",
+        {
+          modulusLength: 4096,
+          publicKeyEncoding: {
+            type: "spki",
+            format: "pem",
+          },
+          privateKeyEncoding: {
+            type: "pkcs8",
+            format: "pem",
+            cipher: "aes-256-cbc",
+            passphrase,
+          },
+        },
+        cb
+      )
+    );
+  },
+};
+
 module.exports = {
   config,
   jwt: JWTHelpers(),
@@ -304,19 +357,6 @@ module.exports = {
   },
 
   /****************************************************
-   * Generated referral code
-   ****************************************************/
-  /*  generateReferralCode(email) {
-    let username = email.split("@")[0];
-    let uuid = "";
-
-    for (let i = 0; i < 4; ++i) {
-      uuid += username[Math.floor(Math.random() * username.length)];
-    }
-    return uuid + nanoid(4);
-  },
- */
-  /****************************************************
    * Text encryption
    ****************************************************/
   encrypt: async (text) => {
@@ -342,35 +382,7 @@ module.exports = {
     }
   },
 
-  generator: {
-    referralCode(email) {
-      let username = email.split("@")[0];
-      let uuid = "";
-
-      for (let i = 0; i < 4; ++i) {
-        uuid += username[Math.floor(Math.random() * username.length)];
-      }
-      return uuid + nanoid(4);
-    },
-    otp(max = 4) {
-      var digits = "0123456789";
-      let otp = "";
-
-      for (let i = 0; i < max; i++) {
-        otp += digits[Math.floor(Math.random() * 10)];
-      }
-      return otp;
-    },
-    secret(len = 8) {
-      var chars =
-        "ABCDEFGHIJKLMNOPGRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_@$#!~";
-      let secret = "";
-      for (let i = 0; i < len; i++) {
-        secret += chars[Math.floor(Math.random() * chars.length)];
-      }
-      return secret;
-    },
-  },
+  generator,
   permissions,
   // objectToHex(obj) {
   //   return Buffer.from(JSON.stringify(obj)).toString("hex");
@@ -447,7 +459,7 @@ module.exports = {
 
     if (offset) {
       prev = {
-        offset : offset - limit,
+        offset: offset - limit,
       };
     } else {
       prev = null;
@@ -470,7 +482,7 @@ module.exports = {
       result: rows,
     };
   },
-/* 
+  /* 
   isBasic(user) {
     return user?.access_level === 1;
   },

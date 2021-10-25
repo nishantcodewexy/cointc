@@ -3,22 +3,22 @@ const { Model } = require("sequelize");
 const _ = require("underscore");
 
 module.exports = (sequelize, DataTypes) => {
-  class OTP extends Model {
+  class Security extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { User, OTP } = models;
+      const { User, Security } = models;
 
-      OTP.belongsTo(User, {
+      Security.belongsTo(User, {
         foreignKey: "user_id",
       });
     }
   }
 
-  OTP.init(
+  Security.init(
     {
       id: {
         type: DataTypes.UUID,
@@ -29,16 +29,20 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
       },
       otp_ttl: DataTypes.DATE,
+      two_factor: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       verify_token: DataTypes.STRING,
       verify_token_ttl: { type: DataTypes.DATE },
     },
     {
       sequelize,
-      modelName: "OTP",
+      modelName: "Security",
       underscored: true,
-      tableName: "tbl_otp"
+      tableName: "tbl_users_security",
     }
   );
 
-  return OTP;
+  return Security;
 };

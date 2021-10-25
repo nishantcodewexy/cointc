@@ -1,19 +1,21 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
+  const Schema = require('../../../schema/wallet.schema');
+  const { params: paramsSchema } = Schema.bulkRetrieve(server)
   const {
     controllers: {
-      user: { updateMe },
+      wallet: { retrieve },
     },
-    consts: { roles: _roles },
     helpers: {
       permissions: { isUser },
     },
   } = server.app;
 
+
   return {
-    method: "PUT",
-    path: "/users/me",
+    method: "GET",
+    path: "/wallet/{address}",
     config: {
       pre: [
         {
@@ -21,7 +23,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: updateMe,
+      handler: retrieve,
       auth: "jwt",
     },
   };

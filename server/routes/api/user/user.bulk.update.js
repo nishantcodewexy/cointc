@@ -5,7 +5,6 @@ module.exports = (server) => {
     controllers: {
       user: { bulkUpdate },
     },
-    consts: { roles: _roles },
     helpers: {
       permissions: { isAdminOrError },
     },
@@ -16,10 +15,7 @@ module.exports = (server) => {
       Joi.object({
         id: Joi.string().uuid(),
         mode: Joi.string().optional(),
-        nickname: Joi.string().optional(),
-        role: Joi.string()
-          .valid(...Object.keys(_roles))
-          .optional(),
+        nickname: Joi.string().optional(),      
       })
     ),
     suspend: Joi.boolean().optional(),

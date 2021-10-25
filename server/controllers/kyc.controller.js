@@ -6,17 +6,17 @@ const assert = require("assert");
  * @param {Object} server  - Hapi Server Instance
  * @returns
  */
-module.exports = (server) => {
+function KYCController(server) {
   const {
     db: { User },
     boom,
   } = server.app;
-  const kycController = {
+  return {
     async fetch(req, h) {
       try {
         const { type } = req.params;
 
-        const UserController = require("./user")(server);
+        const UserController = require("./user.controller")(server);
 
         let profile = await UserController.profile(req);
         let kyc = profile.kyc;
@@ -27,8 +27,6 @@ module.exports = (server) => {
       }
     },
   };
+}
 
-  const kycGroupController = (req, h) => {};
-
-  return { ...kycController, group: kycGroupController };
-};
+module.exports = KYCController;

@@ -12,7 +12,7 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: ["PUT", "PATCH"],
+    method: "PUT",
     path: "/users/{id}",
     config: {
       pre: [

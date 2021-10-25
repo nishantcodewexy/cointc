@@ -3,14 +3,14 @@
 const boom = require("@hapi/boom");
 const { filterFields } = require("../services/model");
 
-module.exports = (server) => {
+const ChatHistoryController = (server) => {
   const {
     db: { ChatHistory },
     consts: { roles: _roles },
     helpers: { filters, paginator },
   } = server.app;
 
-  const ChatHistoryController = {
+  return {
     // CREATE ------------------------------------------------------------
 
     /**
@@ -144,6 +144,6 @@ module.exports = (server) => {
       }
     },
   };
-
-  return ChatHistoryController;
 };
+
+module.exports = ChatHistoryController;

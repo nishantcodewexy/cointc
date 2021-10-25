@@ -8,7 +8,6 @@ module.exports = (server) => {
     helpers: {
       permissions: { isAdminOrError },
     },
-    consts: { roles: _roles },
   } = server.app;
 
   // define Joi schema

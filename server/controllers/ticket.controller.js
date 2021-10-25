@@ -3,7 +3,7 @@ const {Op} = require('sequelize');
 
 const {filterFields} = require("../services/model")
 
-module.exports = (server) => {
+module.exports = function SupportTicketController (server) {
   const {
     db: { Ticket, sequelize },
     consts: { roles: _roles },
@@ -15,7 +15,7 @@ module.exports = (server) => {
   } = server.app;
   /* const queryInterface = sequelize.getQueryInterface();
       const table = Currency.getTableName(); */
-  const CurrencyController = {
+  return  {
     /**
      * @function get - Gets currency collection
      * @param {Object} req
@@ -165,12 +165,5 @@ module.exports = (server) => {
     // async bulkCreate(req) {
       
     // },
-  };
-  const CurrencyGroupController = {}
-    
-  
-  return {
-    ...CurrencyController,
-    group: CurrencyGroupController,
   };
 };
