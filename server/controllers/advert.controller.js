@@ -1,8 +1,11 @@
 "use strict";
-const assert = require("assert");
 
 const AdvertController = (server) => {
   const { db } = server.app;
+
+  async function completionRate(total_orders, total_completed_orders) {
+    return (total_completed_orders / total_orders) * 100;
+  }
 
   return {
     async create(req) {
