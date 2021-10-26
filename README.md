@@ -4,7 +4,6 @@
 git remote set-url origin git@github.com:cointc-team/p2p-react-node-app.git
 ```
 
-
 # **COINTC WEB APP**
 **COINTC** is a cryptocurrency **Wallet, Exchange, Chat and P2P Trading** platform. It supports transactions between five (_5_) kinds of cryptocurrencies (`ETH, BTC, EOS, Ripple, Tether, XRP`).
 
