@@ -1,4 +1,4 @@
-> This project has been moved from [lil-armstrong's](https://github.com/lil-armstrong/p2p-react-node-app) repository to [cointc-team]([git@github.com:cointc-team/p2p-react-node-app.git](https://github.com/cointc-team/p2p-react-node-app)) repository. Use the following commands to set the remote url to point to this repository.
+> This project has been moved from [lil-armstrong's](https://github.com/lil-armstrong/p2p-react-node-app) repository to [cointc-team](https://github.com/cointc-team/p2p-react-node-app) repository. Use the following commands to set the remote url to point to this repository.
 
 ```git
 git remote set-url origin git@github.com:cointc-team/p2p-react-node-app.git
