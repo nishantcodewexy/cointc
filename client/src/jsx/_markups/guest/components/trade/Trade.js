@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react';
 import './Trade.css'
-import {  Button,Modal,Nav,ProgressBar,Tabs,Tab,Dropdown } from 'react-bootstrap';
+import {  Button,Modal,Nav,ProgressBar,Tabs,Tab,Dropdown,Overlay,Tooltip,OverlayTrigger,Image } from 'react-bootstrap';
 
 
 import usdt_icon from '../../app-assets/images/icon/usdt.png';
@@ -9,2295 +9,468 @@ import bank_icon from '../../app-assets/images/icon/bank-icon.png';
 import money_icon from '../../app-assets/images/icon/money.png';
 import chat_icon from '../../app-assets/images/icon/chat-icon.png';
 
+
+ 
+
 export const Trade = () => {
+    const [activeTab, setActiveTab] = useState("buy-tab");
+    const [activeBuyTab, setActiveBuyTab] = useState("buy-btc-tab");
+    const [activeSellTab, setActiveSellTab] = useState("sell-btc-tab");
+    const handleTab = (tab) => {
+        // console.log(tab)
+        // update the state to tab1
+        setActiveTab(tab);
+    };
+    const handleBuyTab = (tab) => {
+        // console.log(tab);
+        // console.log('g')
+        // update the state to tab1
+        setActiveBuyTab(tab);
+    };
+    const handleSellTab = (tab) => {
+        // console.log(tab);
+        // console.log('g')
+        // update the state to tab1
+        setActiveSellTab(tab);
+    };
+    
     return (     
-        <div className="Trade Orders"> 
-            <section>
-                <div class="container-fluid">
+        <div class="content">
+                <section id="mainTop">
                     <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-md-10">
-                                
-                                <Tabs defaultActiveKey="buy-tab" id="buy-sell-tabs" className="buy-sell-tab mr-3">
-                                    <Tab eventKey="buy-tab" title="BUY" >
-                                        
-                                        <Tabs defaultActiveKey="btc-tab" id="crypto-tabs">
-                                            <Tab eventKey="btc-tab" title="BTC" >
-                                                <div class="container overflow-x-auto">
-                                                    <div class="row align-items-center justify-content-center py-3">
-                                                        <div class="col-md-12 py-3">
-                                                            <div class="row">
-                                                                <div class="col-md-6 d-flex justify-content-around">
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Money</p>
-                                                                        </div>
-                                                                        <Dropdown>
-                                                                            <Dropdown.Toggle variant="" id="dropdown-basic">
-                                                                            <img src={usdt_icon}/> USDT
-                                                                            </Dropdown.Toggle>
-                                                                            <Dropdown.Menu>
-                                                                                <Dropdown.Item href="#"><img src={usdt_icon}/> USDT</Dropdown.Item>
-                                                                                <Dropdown.Item href="#"><img src={usdt_icon}/> USDT</Dropdown.Item>
-                                                                                <Dropdown.Item href="#"><img src={usdt_icon}/> USDT</Dropdown.Item>
-                                                                            </Dropdown.Menu>
-                                                                        </Dropdown>
-                                                                    </div>
-
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Payment Method</p>
-                                                                        </div>
-                                                                        <Dropdown>
-                                                                            <Dropdown.Toggle variant="" id="dropdown-basic">
-                                                                                All Payment
-                                                                            </Dropdown.Toggle>
-                                                                            <Dropdown.Menu>
-                                                                                <Dropdown.Item href="#">All Payment</Dropdown.Item>
-                                                                                <Dropdown.Item href="#">All Payment</Dropdown.Item>
-                                                                                <Dropdown.Item href="#">All Payment</Dropdown.Item>
-                                                                            </Dropdown.Menu>
-                                                                        </Dropdown>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 d-flex justify-content-end align-items-end">
-                                                                    <div class="ad-bn">
-                                                                        <a class="btn btn-ref font-weight-bold mr-2"><img src={refresh_icon} width="20" class="mr-2"/>Refresh</a>
-                                                                        <a href="#" class="btn btn-outline-primary">+  Creat an AD</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th class="th-sm">User</th>
-                                                                        <th class="th-sm">Available/Limited</th>
-                                                                        <th class="th-sm">Payment</th>
-                                                                        <th class="th-sm">Price</th>
-                                                                        <th class="th-sm">Transaction</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-outline-secondary">Limited</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                            <nav aria-label="Page navigation example">
-                                                                <ul class="pagination d-flex justify-content-end">
-                                                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                                                </ul>
-                                                            </nav>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Tab>
-                                            <Tab eventKey="eth-tab" title="ETH">
-                                                <div class="container overflow-x-auto">
-                                                    <div class="row align-items-center justify-content-center py-3">
-                                                        <div class="col-md-12 py-3">
-                                                            <div class="row">
-                                                                <div class="col-md-6 d-flex justify-content-around">
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Money</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                <img src={usdt_icon}/> USDT
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Payment Method</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> All Payment
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 d-flex justify-content-end align-items-end">
-                                                                    <div class="ad-bn">
-                                                                        <a class="btn btn-ref font-weight-bold mr-2"><img src={refresh_icon} width="20" class="mr-2"/>Refresh</a>
-                                                                        <a href="#" class="btn btn-outline-primary">+  Creat an AD</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th class="th-sm">User</th>
-                                                                        <th class="th-sm">Available/Limited</th>
-                                                                        <th class="th-sm">Payment</th>
-                                                                        <th class="th-sm">Price</th>
-                                                                        <th class="th-sm">Transaction</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-outline-secondary">Limited</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-
-                                                            <nav aria-label="Page navigation example">
-                                                                <ul class="pagination d-flex justify-content-end">
-                                                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                                                </ul>
-                                                            </nav>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Tab>
-                                            <Tab eventKey="usdt-tab" title="USDT">
-                                                <div class="container overflow-x-auto">
-                                                    <div class="row align-items-center justify-content-center py-3">
-                                                        <div class="col-md-12 py-3">
-                                                            <div class="row">
-                                                                <div class="col-md-6 d-flex justify-content-around">
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Money</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                <img src={usdt_icon}/> USDT
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Payment Method</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> All Payment
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 d-flex justify-content-end align-items-end">
-                                                                    <div class="ad-bn">
-                                                                        <a class="btn btn-ref font-weight-bold mr-2"><img src={refresh_icon} width="20" class="mr-2"/>Refresh</a>
-                                                                        <a href="#" class="btn btn-outline-primary">+  Creat an AD</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th class="th-sm">User</th>
-                                                                        <th class="th-sm">Available/Limited</th>
-                                                                        <th class="th-sm">Payment</th>
-                                                                        <th class="th-sm">Price</th>
-                                                                        <th class="th-sm">Transaction</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-outline-secondary">Limited</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                            <nav aria-label="Page navigation example">
-                                                                <ul class="pagination d-flex justify-content-end">
-                                                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                                                </ul>
-                                                            </nav>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Tab>
-                                            <Tab eventKey="xrp-tab" title="XRP">
-                                                <div class="container overflow-x-auto">
-                                                    <div class="row align-items-center justify-content-center py-3">
-                                                        <div class="col-md-12 py-3">
-                                                            <div class="row">
-                                                                <div class="col-md-6 d-flex justify-content-around">
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Money</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                <img src={usdt_icon}/> USDT
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Payment Method</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> All Payment
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 d-flex justify-content-end align-items-end">
-                                                                    <div class="ad-bn">
-                                                                        <a class="btn btn-ref font-weight-bold mr-2"><img src={refresh_icon} width="20" class="mr-2"/>Refresh</a>
-                                                                        <a href="#" class="btn btn-outline-primary">+  Creat an AD</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th class="th-sm">User</th>
-                                                                        <th class="th-sm">Available/Limited</th>
-                                                                        <th class="th-sm">Payment</th>
-                                                                        <th class="th-sm">Price</th>
-                                                                        <th class="th-sm">Transaction</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-outline-secondary">Limited</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-
-                                                            <nav aria-label="Page navigation example">
-                                                                <ul class="pagination d-flex justify-content-end">
-                                                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                                                </ul>
-                                                            </nav>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Tab>
-                                            <Tab eventKey="eos-tab" title="EOS">
-                                                <div class="container overflow-x-auto">
-                                                    <div class="row align-items-center justify-content-center py-3">
-                                                        <div class="col-md-12 py-3">
-                                                            <div class="row">
-                                                                <div class="col-md-6 d-flex justify-content-around">
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Money</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                <img src={usdt_icon}/> USDT
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Payment Method</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> All Payment
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 d-flex justify-content-end align-items-end">
-                                                                    <div class="ad-bn">
-                                                                        <a class="btn btn-ref font-weight-bold mr-2"><img src={refresh_icon} width="20" class="mr-2"/>Refresh</a>
-                                                                        <a href="#" class="btn btn-outline-primary">+  Creat an AD</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th class="th-sm">User</th>
-                                                                        <th class="th-sm">Available/Limited</th>
-                                                                        <th class="th-sm">Payment</th>
-                                                                        <th class="th-sm">Price</th>
-                                                                        <th class="th-sm">Transaction</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-outline-secondary">Limited</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                            <nav aria-label="Page navigation example">
-                                                                <ul class="pagination d-flex justify-content-end">
-                                                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                                                </ul>
-                                                            </nav>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Tab>
-                                        </Tabs>
-                                    </Tab>
-                                    <Tab eventKey="sell-tab" title="SELL">
-                                    <Tabs defaultActiveKey="sell-btc-tab" id="crypto-tabs">
-                                            <Tab eventKey="sell-btc-tab" title="BTC" >
-                                                <div class="container overflow-x-auto">
-                                                    <div class="row align-items-center justify-content-center py-3">
-                                                        <div class="col-md-12 py-3">
-                                                            <div class="row">
-                                                                <div class="col-md-6 d-flex justify-content-around">
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Money</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                <img src={usdt_icon}/> USDT
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Payment Method</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> All Payment
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 d-flex justify-content-end align-items-end">
-                                                                    <div class="ad-bn">
-                                                                        <a class="btn btn-ref font-weight-bold mr-2"><img src={refresh_icon} width="20" class="mr-2"/>Refresh</a>
-                                                                        <a href="#" class="btn btn-outline-primary">+  Creat an AD</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th class="th-sm">User</th>
-                                                                        <th class="th-sm">Available/Limited</th>
-                                                                        <th class="th-sm">Payment</th>
-                                                                        <th class="th-sm">Price</th>
-                                                                        <th class="th-sm">Transaction</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-outline-secondary">Limited</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                            <nav aria-label="Page navigation example">
-                                                                <ul class="pagination d-flex justify-content-end">
-                                                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                                                </ul>
-                                                            </nav>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Tab>
-                                            <Tab eventKey="sell-eth-tab" title="ETH">
-                                                <div class="container overflow-x-auto">
-                                                    <div class="row align-items-center justify-content-center py-3">
-                                                        <div class="col-md-12 py-3">
-                                                            <div class="row">
-                                                                <div class="col-md-6 d-flex justify-content-around">
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Money</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                <img src={usdt_icon}/> USDT
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Payment Method</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> All Payment
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 d-flex justify-content-end align-items-end">
-                                                                    <div class="ad-bn">
-                                                                        <a class="btn btn-ref font-weight-bold mr-2"><img src={refresh_icon} width="20" class="mr-2"/>Refresh</a>
-                                                                        <a href="#" class="btn btn-outline-primary">+  Creat an AD</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th class="th-sm">User</th>
-                                                                        <th class="th-sm">Available/Limited</th>
-                                                                        <th class="th-sm">Payment</th>
-                                                                        <th class="th-sm">Price</th>
-                                                                        <th class="th-sm">Transaction</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-outline-secondary">Limited</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-
-                                                            <nav aria-label="Page navigation example">
-                                                                <ul class="pagination d-flex justify-content-end">
-                                                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                                                </ul>
-                                                            </nav>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Tab>
-                                            <Tab eventKey="sell-usdt-tab" title="USDT">
-                                                <div class="container overflow-x-auto">
-                                                    <div class="row align-items-center justify-content-center py-3">
-                                                        <div class="col-md-12 py-3">
-                                                            <div class="row">
-                                                                <div class="col-md-6 d-flex justify-content-around">
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Money</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                <img src={usdt_icon}/> USDT
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Payment Method</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> All Payment
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 d-flex justify-content-end align-items-end">
-                                                                    <div class="ad-bn">
-                                                                        <a class="btn btn-ref font-weight-bold mr-2"><img src={refresh_icon} width="20" class="mr-2"/>Refresh</a>
-                                                                        <a href="#" class="btn btn-outline-primary">+  Creat an AD</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th class="th-sm">User</th>
-                                                                        <th class="th-sm">Available/Limited</th>
-                                                                        <th class="th-sm">Payment</th>
-                                                                        <th class="th-sm">Price</th>
-                                                                        <th class="th-sm">Transaction</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-outline-secondary">Limited</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                            <nav aria-label="Page navigation example">
-                                                                <ul class="pagination d-flex justify-content-end">
-                                                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                                                </ul>
-                                                            </nav>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Tab>
-                                            <Tab eventKey="sell-xrp-tab" title="XRP">
-                                                <div class="container overflow-x-auto">
-                                                    <div class="row align-items-center justify-content-center py-3">
-                                                        <div class="col-md-12 py-3">
-                                                            <div class="row">
-                                                                <div class="col-md-6 d-flex justify-content-around">
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Money</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                <img src={usdt_icon}/> USDT
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Payment Method</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> All Payment
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 d-flex justify-content-end align-items-end">
-                                                                    <div class="ad-bn">
-                                                                        <a class="btn btn-ref font-weight-bold mr-2"><img src={refresh_icon} width="20" class="mr-2"/>Refresh</a>
-                                                                        <a href="#" class="btn btn-outline-primary">+  Creat an AD</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th class="th-sm">User</th>
-                                                                        <th class="th-sm">Available/Limited</th>
-                                                                        <th class="th-sm">Payment</th>
-                                                                        <th class="th-sm">Price</th>
-                                                                        <th class="th-sm">Transaction</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-outline-secondary">Limited</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-
-                                                            <nav aria-label="Page navigation example">
-                                                                <ul class="pagination d-flex justify-content-end">
-                                                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                                                </ul>
-                                                            </nav>
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Tab>
-                                            <Tab eventKey="sell-eos-tab" title="EOS">
-                                                <div class="container overflow-x-auto">
-                                                    <div class="row align-items-center justify-content-center py-3">
-                                                        <div class="col-md-12 py-3">
-                                                            <div class="row">
-                                                                <div class="col-md-6 d-flex justify-content-around">
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Money</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                                <img src={usdt_icon}/> USDT
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                                <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-
-                                                                    <div class="coin">
-                                                                        <div class="coin-title">
-                                                                            <p>Payment Method</p>
-                                                                        </div>
-                                                                        <div class="dropdown">
-                                                                            <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> All Payment
-                                                                            </button>
-
-                                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                                <a class="dropdown-item" href="#">All Payment</a>
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-6 d-flex justify-content-end align-items-end">
-                                                                    <div class="ad-bn">
-                                                                        <a class="btn btn-ref font-weight-bold mr-2"><img src={refresh_icon} width="20" class="mr-2"/>Refresh</a>
-                                                                        <a href="#" class="btn btn-outline-primary">+  Creat an AD</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                                <thead>
-                                                                    <tr>
-                                                                        <th class="th-sm">User</th>
-                                                                        <th class="th-sm">Available/Limited</th>
-                                                                        <th class="th-sm">Payment</th>
-                                                                        <th class="th-sm">Price</th>
-                                                                        <th class="th-sm">Transaction</th>
-                                                                    </tr>
-                                                                </thead>
-                                                                <tbody>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-outline-secondary">Limited</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                    <tr>
-                                                                        <td>
-                                                                            <p class="text-primary mb-0">Xuhai8888</p>
-                                                                            <p class="text-gray mb-0">106 order  |  98.1% Completion</p>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="ass-ty d-flex align-items-center">
-                                                                                <div class="ass-ty-img pr-3">
-                                                                                    <p class="mb-0">Available Limit</p>
-                                                                                </div>
-                                                                                <div class="ass-ty-content">
-                                                                                    <p class="mb-0">1.65908675 BTC 50,000- 300,000 CNY</p>
-                                                                                </div>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>
-                                                                            <div class="price-icon">
-                                                                                <a href="#"><img src={bank_icon} width="20"/></a>
-                                                                                <a href="#"><img src={money_icon} width="20"/></a>
-                                                                                <a href="#"><img src={chat_icon} width="20"/></a>
-                                                                            </div>
-                                                                        </td>
-                                                                        <td>270,042.63 CNY</td>
-                                                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
-                                                                    </tr>
-                                                                </tbody>
-                                                            </table>
-                                                            <nav aria-label="Page navigation example">
-                                                                <ul class="pagination d-flex justify-content-end">
-                                                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
-                                                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                                                                </ul>
-                                                            </nav>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </Tab>
-                                        </Tabs>
-                                    </Tab>
-                                </Tabs>
-
-                                {/* <Tab.Content>
-        <Tab.Pane eventKey="buy-tab">
-          AAA
-        </Tab.Pane>
-        <Tab.Pane eventKey="sell-tab">
-         BBB
-        </Tab.Pane>
-      </Tab.Content> */}
-                                
-                                {/* <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active font-weight-bold" id="btc-tab" data-toggle="tab" href="#btc" role="tab" aria-controls="btc" aria-selected="true">BTC</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link font-weight-bold" id="eth-tab" data-toggle="tab" href="#eth" role="tab" aria-controls="eth" aria-selected="false">ETH</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link font-weight-bold" id="usdt-tab" data-toggle="tab" href="#usdt" role="tab" aria-controls="usdt" aria-selected="false">USDT</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link font-weight-bold" id="xrp-tab" data-toggle="tab" href="#xrp" role="tab" aria-controls="xrp" aria-selected="false">XRP</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link font-weight-bold" id="eos-tab" data-toggle="tab" href="#eos" role="tab" aria-controls="eos" aria-selected="false">EOS</a>
-                                    </li>
-                                </ul> */}
+                        <div class="row">
+                            <div class="col-12">
+                                <h3 class="wow fadeInDown" data-wow-delay="0.3s">P2P Trade</h3>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-        </div> 
+                </section>
+                
+                <section id="lnb">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <ul class="buy_sell clear">
+                                    <li class="on"><a href="#">Buy</a></li>
+                                    <li><a href="#">Sell</a></li>
+                                </ul>
+                                <ul class="coin_name clear">
+                                    <li class="on"><a href="#">BTC</a></li>
+                                    <li><a href="#">ETH</a></li>
+                                    <li><a href="#">USDT</a></li>
+                                    <li><a href="#">XRP</a></li>
+                                    <li><a href="#">EOS</a></li>
+                                </ul>
+                            </div>
+                            
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="setting">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <dl class="money">
+                                    <dt>화폐</dt>
+                                    <dd>
+                                        <select name="" id="">
+                                            <option value="CNY">CNY</option>
+                                            <option value="AED">AED</option>
+                                            <option value="AMD">AMD</option>
+                                            <option value="ARS">ARS</option>
+                                            <option value="AUD">AUD</option>
+                                            <option value="BDT">BDT</option>
+                                            <option value="BHD">BHD</option>
+                                        </select>
+                                    </dd>
+                                </dl>
+                                <dl class="method">
+                                    <dt>결제 방법</dt>
+                                    <dd>
+                                        <select name="" id="">
+                                            <option value="all_payment">All payments</option>
+                                            <option value="bank_transfer">Bank Transfer</option>
+                                            <option value="wechat">WeChat</option>
+                                            <option value="alipay">Alipay</option>
+                                            <option value="cash_deposit">Cash Deposit to Bank</option>
+                                        </select>
+                                    </dd>
+                                </dl>
+                                <a href="#" class="btn_creat"><i class="fas fa-plus-square"></i>Creat an AD</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                
+                <section id="trade">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>유저</th>
+                                                <th>사용가능/한도</th>
+                                                <th>결제</th>
+                                                <th>가격</th>
+                                                <th>거래</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="user">
+                                                    <p><span>A</span>Auhai8888<i class="fas fa-check-circle"></i></p>
+                                                    <ul class="clear">
+                                                        <li><span>106</span>주문</li>
+                                                        <li><span>98.1</span>% 완료</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="available_limit">
+                                                    <dl class="available clear">
+                                                        <dt>사용가능</dt>
+                                                        <dd>1.65908675 BTC</dd>
+                                                    </dl>
+                                                    <dl class="limit clear">
+                                                        <dt>한도</dt>
+                                                        <dd>50,000 - 300,000 CNY</dd>
+                                                    </dl>
+                                                </td>
+                                                <td class="payment">
+                                                    <span class="icon_method01"></span>
+                                                    <span class="icon_method02"></span>
+                                                    <span class="icon_method03"></span>
+                                                </td>
+                                                <td class="price">270,042.63 CNY</td>
+                                                <td class="transaction"><a href="#" class="btn_buy">Buy BTC</a></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="user">
+                                                    <p><span>B</span>Buhai8888<i class="fas fa-check-circle"></i></p>
+                                                    <ul class="clear">
+                                                        <li><span>106</span>주문</li>
+                                                        <li><span>98.1</span>% 완료</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="available_limit">
+                                                    <dl class="available clear">
+                                                        <dt>사용가능</dt>
+                                                        <dd>1.65908675 BTC</dd>
+                                                    </dl>
+                                                    <dl class="limit clear">
+                                                        <dt>한도</dt>
+                                                        <dd>50,000 - 300,000 CNY</dd>
+                                                    </dl>
+                                                </td>
+                                                <td class="payment">
+                                                    <span class="icon_method01"></span>
+                                                    <span class="icon_method02"></span>
+                                                </td>
+                                                <td class="price">270,042.63 CNY</td>
+                                                <td class="transaction"><a href="#" class="btn_limited">Limited</a></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="user">
+                                                    <p><span>C</span>Cuhai8888</p>
+                                                    <ul class="clear">
+                                                        <li><span>106</span>주문</li>
+                                                        <li><span>98.1</span>% 완료</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="available_limit">
+                                                    <dl class="available clear">
+                                                        <dt>사용가능</dt>
+                                                        <dd>1.65908675 BTC</dd>
+                                                    </dl>
+                                                    <dl class="limit clear">
+                                                        <dt>한도</dt>
+                                                        <dd>50,000 - 300,000 CNY</dd>
+                                                    </dl>
+                                                </td>
+                                                <td class="payment">
+                                                    <span class="icon_method01"></span>
+                                                    <span class="icon_method03"></span>
+                                                </td>
+                                                <td class="price">270,042.63 CNY</td>
+                                                <td class="transaction"><a href="#" class="btn_buy">Buy BTC</a></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="user">
+                                                    <p><span>D</span>Duhai8888<i class="fas fa-check-circle"></i></p>
+                                                    <ul class="clear">
+                                                        <li><span>106</span>주문</li>
+                                                        <li><span>98.1</span>% 완료</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="available_limit">
+                                                    <dl class="available clear">
+                                                        <dt>사용가능</dt>
+                                                        <dd>1.65908675 BTC</dd>
+                                                    </dl>
+                                                    <dl class="limit clear">
+                                                        <dt>한도</dt>
+                                                        <dd>50,000 - 300,000 CNY</dd>
+                                                    </dl>
+                                                </td>
+                                                <td class="payment">
+                                                    <span class="icon_method02"></span>
+                                                    <span class="icon_method03"></span>
+                                                </td>
+                                                <td class="price">270,042.63 CNY</td>
+                                                <td class="transaction"><a href="#" class="btn_buy">Buy BTC</a></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="user">
+                                                    <p><span>E</span>Euhai8888</p>
+                                                    <ul class="clear">
+                                                        <li><span>106</span>주문</li>
+                                                        <li><span>98.1</span>% 완료</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="available_limit">
+                                                    <dl class="available clear">
+                                                        <dt>사용가능</dt>
+                                                        <dd>1.65908675 BTC</dd>
+                                                    </dl>
+                                                    <dl class="limit clear">
+                                                        <dt>한도</dt>
+                                                        <dd>50,000 - 300,000 CNY</dd>
+                                                    </dl>
+                                                </td>
+                                                <td class="payment">
+                                                    <span class="icon_method01"></span>
+                                                </td>
+                                                <td class="price">270,042.63 CNY</td>
+                                                <td class="transaction"><a href="#" class="btn_buy">Buy BTC</a></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="user">
+                                                    <p><span>F</span>Fuhai8888</p>
+                                                    <ul class="clear">
+                                                        <li><span>106</span>주문</li>
+                                                        <li><span>98.1</span>% 완료</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="available_limit">
+                                                    <dl class="available clear">
+                                                        <dt>사용가능</dt>
+                                                        <dd>1.65908675 BTC</dd>
+                                                    </dl>
+                                                    <dl class="limit clear">
+                                                        <dt>한도</dt>
+                                                        <dd>50,000 - 300,000 CNY</dd>
+                                                    </dl>
+                                                </td>
+                                                <td class="payment">
+                                                    <span class="icon_method01"></span>
+                                                    <span class="icon_method03"></span>
+                                                </td>
+                                                <td class="price">270,042.63 CNY</td>
+                                                <td class="transaction"><a href="#" class="btn_buy">Buy BTC</a></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="user">
+                                                    <p><span>G</span>Guhai8888</p>
+                                                    <ul class="clear">
+                                                        <li><span>106</span>주문</li>
+                                                        <li><span>98.1</span>% 완료</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="available_limit">
+                                                    <dl class="available clear">
+                                                        <dt>사용가능</dt>
+                                                        <dd>1.65908675 BTC</dd>
+                                                    </dl>
+                                                    <dl class="limit clear">
+                                                        <dt>한도</dt>
+                                                        <dd>50,000 - 300,000 CNY</dd>
+                                                    </dl>
+                                                </td>
+                                                <td class="payment">
+                                                    <span class="icon_method01"></span>
+                                                    <span class="icon_method02"></span>
+                                                    <span class="icon_method03"></span>
+                                                </td>
+                                                <td class="price">270,042.63 CNY</td>
+                                                <td class="transaction"><a href="#" class="btn_buy">Buy BTC</a></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="user">
+                                                    <p><span>H</span>Huhai8888</p>
+                                                    <ul class="clear">
+                                                        <li><span>106</span>주문</li>
+                                                        <li><span>98.1</span>% 완료</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="available_limit">
+                                                    <dl class="available clear">
+                                                        <dt>사용가능</dt>
+                                                        <dd>1.65908675 BTC</dd>
+                                                    </dl>
+                                                    <dl class="limit clear">
+                                                        <dt>한도</dt>
+                                                        <dd>50,000 - 300,000 CNY</dd>
+                                                    </dl>
+                                                </td>
+                                                <td class="payment">
+                                                    <span class="icon_method03"></span>
+                                                </td>
+                                                <td class="price">270,042.63 CNY</td>
+                                                <td class="transaction"><a href="#" class="btn_buy">Buy BTC</a></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="user">
+                                                    <p><span>I</span>Iuhai8888</p>
+                                                    <ul class="clear">
+                                                        <li><span>106</span>주문</li>
+                                                        <li><span>98.1</span>% 완료</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="available_limit">
+                                                    <dl class="available clear">
+                                                        <dt>사용가능</dt>
+                                                        <dd>1.65908675 BTC</dd>
+                                                    </dl>
+                                                    <dl class="limit clear">
+                                                        <dt>한도</dt>
+                                                        <dd>50,000 - 300,000 CNY</dd>
+                                                    </dl>
+                                                </td>
+                                                <td class="payment">
+                                                    <span class="icon_method01"></span>
+                                                </td>
+                                                <td class="price">270,042.63 CNY</td>
+                                                <td class="transaction"><a href="#" class="btn_buy">Buy BTC</a></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="user">
+                                                    <p><span>J</span>Juhai8888</p>
+                                                    <ul class="clear">
+                                                        <li><span>106</span>주문</li>
+                                                        <li><span>98.1</span>% 완료</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="available_limit">
+                                                    <dl class="available clear">
+                                                        <dt>사용가능</dt>
+                                                        <dd>1.65908675 BTC</dd>
+                                                    </dl>
+                                                    <dl class="limit clear">
+                                                        <dt>한도</dt>
+                                                        <dd>50,000 - 300,000 CNY</dd>
+                                                    </dl>
+                                                </td>
+                                                <td class="payment">
+                                                    <span class="icon_method01"></span>
+                                                    <span class="icon_method03"></span>
+                                                </td>
+                                                <td class="price">270,042.63 CNY</td>
+                                                <td class="transaction"><a href="#" class="btn_buy">Buy BTC</a></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="user">
+                                                    <p><span>F</span>Fuhai8888</p>
+                                                    <ul class="clear">
+                                                        <li><span>106</span>주문</li>
+                                                        <li><span>98.1</span>% 완료</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="available_limit">
+                                                    <dl class="available clear">
+                                                        <dt>사용가능</dt>
+                                                        <dd>1.65908675 BTC</dd>
+                                                    </dl>
+                                                    <dl class="limit clear">
+                                                        <dt>한도</dt>
+                                                        <dd>50,000 - 300,000 CNY</dd>
+                                                    </dl>
+                                                </td>
+                                                <td class="payment">
+                                                    <span class="icon_method01"></span>
+                                                    <span class="icon_method03"></span>
+                                                </td>
+                                                <td class="price">270,042.63 CNY</td>
+                                                <td class="transaction"><a href="#" class="btn_buy">Buy BTC</a></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="user">
+                                                    <p><span>L</span>Luhai8888</p>
+                                                    <ul class="clear">
+                                                        <li><span>106</span>주문</li>
+                                                        <li><span>98.1</span>% 완료</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="available_limit">
+                                                    <dl class="available clear">
+                                                        <dt>사용가능</dt>
+                                                        <dd>1.65908675 BTC</dd>
+                                                    </dl>
+                                                    <dl class="limit clear">
+                                                        <dt>한도</dt>
+                                                        <dd>50,000 - 300,000 CNY</dd>
+                                                    </dl>
+                                                </td>
+                                                <td class="payment">
+                                                    <span class="icon_method01"></span>
+                                                    <span class="icon_method02"></span>
+                                                    <span class="icon_method03"></span>
+                                                </td>
+                                                <td class="price">270,042.63 CNY</td>
+                                                <td class="transaction"><a href="#" class="btn_buy"s>Buy BTC</a></td>
+                                            </tr>
+
+                                            <tr>
+                                                <td class="user">
+                                                    <p><span>M</span>Muhai8888</p>
+                                                    <ul class="clear">
+                                                        <li><span>106</span>주문</li>
+                                                        <li><span>98.1</span>% 완료</li>
+                                                    </ul>
+                                                </td>
+                                                <td class="available_limit">
+                                                    <dl class="available clear">
+                                                        <dt>사용가능</dt>
+                                                        <dd>1.65908675 BTC</dd>
+                                                    </dl>
+                                                    <dl class="limit clear">
+                                                        <dt>한도</dt>
+                                                        <dd>50,000 - 300,000 CNY</dd>
+                                                    </dl>
+                                                </td>
+                                                <td class="payment">
+                                                    <span class="icon_method03"></span>
+                                                </td>
+                                                <td class="price">270,042.63 CNY</td>
+                                                <td class="transaction"><a href="#" class="btn_buy">Buy BTC</a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="indicator">
+                                    <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
+                                    <span class="on">1</span>
+                                    <span>2</span>
+                                    <span>3</span>
+                                    <span style={{"cursor":"default"}}>...</span>
+                                    <span>40</span>
+                                    <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
     )
 }

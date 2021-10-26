@@ -97,7 +97,7 @@ export const Affiliate = () => {
                                     <div class="container">
                                         <div class="row justify-content-center">
                                             <div class="col-md-12">
-                                            <Tabs defaultActiveKey="account-all-day-tab" id="uncontrolled-tab-example" className="mt-4">   
+                                            <Tabs defaultActiveKey="account-all-day-tab" id="uncontrolled-tab-example" className="mt-4" variant='pills'>   
                                                 <Tab eventKey="account-all-day-tab"  title="All" tabClassName="tab-bn">
                                                     <div class="container tab-content-bg py-4 px-2 mt-4">
                                                         <div class="row justify-content-center">
@@ -143,7 +143,7 @@ export const Affiliate = () => {
                                                         </div>
                                                     </div>
                                                 </Tab>
-                                                <Tab eventKey="account-yesterday-tab" title="Yesterday">
+                                                <Tab eventKey="account-yesterday-tab" title="Yesterday" tabClassName="tab-bn">
                                                     <div class="container tab-content-bg py-4 px-2 mt-4">
                                                         <div class="row justify-content-center">
                                                             <div class="col-md-10">
@@ -188,7 +188,7 @@ export const Affiliate = () => {
                                                         </div>
                                                     </div>
                                                 </Tab>
-                                                <Tab eventKey="account-this-week-tab" title="This Week">
+                                                <Tab eventKey="account-this-week-tab" title="This Week" tabClassName="tab-bn">
                                                     <div class="container tab-content-bg py-4 px-2 mt-4">
                                                         <div class="row justify-content-center">
                                                             <div class="col-md-10">
@@ -233,7 +233,7 @@ export const Affiliate = () => {
                                                         </div>
                                                     </div>
                                                 </Tab>
-                                                <Tab eventKey="account-this-month-tab" title="This Month">
+                                                <Tab eventKey="account-this-month-tab" title="This Month" tabClassName="tab-bn">
                                                     <div class="container tab-content-bg py-4 px-2 mt-4">
                                                         <div class="row justify-content-center">
                                                             <div class="col-md-10">
@@ -287,8 +287,8 @@ export const Affiliate = () => {
                                 <div class="container">
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
-                                        <Tabs defaultActiveKey="spot-all-day-tab" id="uncontrolled-tab-example" className="mt-4">  
-                                            <Tab eventKey="spot-all-day-tab" title="All">
+                                        <Tabs defaultActiveKey="spot-all-day-tab" id="uncontrolled-tab-example" className="mt-4" variant='pills'>  
+                                            <Tab eventKey="spot-all-day-tab" title="All" tabClassName="tab-bn">
                                             <div class="container tab-content-bg py-4 px-2 mt-4">
                                                 <div class="row justify-content-center">
                                                     <div class="col-md-10">
@@ -333,7 +333,7 @@ export const Affiliate = () => {
                                                 </div>
                                             </div>
                                             </Tab>
-                                            <Tab eventKey="spot-yesterday-tab" title="Yesterday">
+                                            <Tab eventKey="spot-yesterday-tab" title="Yesterday" tabClassName="tab-bn">
                                             <div class="container tab-content-bg py-4 px-2 mt-4">
                                                 <div class="row justify-content-center">
                                                     <div class="col-md-10">
@@ -378,7 +378,7 @@ export const Affiliate = () => {
                                                 </div>
                                             </div>
                                             </Tab>
-                                            <Tab eventKey="spot-this-week-tab" title="This Week">
+                                            <Tab eventKey="spot-this-week-tab" title="This Week" tabClassName="tab-bn">
                                             <div class="container tab-content-bg py-4 px-2 mt-4">
                                                 <div class="row justify-content-center">
                                                     <div class="col-md-10">
@@ -423,7 +423,7 @@ export const Affiliate = () => {
                                                 </div>
                                             </div>
                                             </Tab>
-                                            <Tab eventKey="spot-this-month-tab" title="This Month">
+                                            <Tab eventKey="spot-this-month-tab" title="This Month" tabClassName="tab-bn">
                                             <div class="container tab-content-bg py-4 px-2 mt-4">
                                                 <div class="row justify-content-center">
                                                     <div class="col-md-10">
@@ -479,7 +479,7 @@ export const Affiliate = () => {
                                 <div class="container">
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
-                                            <Tabs defaultActiveKey="futures-all-day-tab" id="uncontrolled-tab-example" className="mt-4">   
+                                            <Tabs defaultActiveKey="futures-all-day-tab" id="uncontrolled-tab-example" className="mt-4" variant='pills'>   
                                                 <Tab eventKey="futures-all-day-tab"  title="All" tabClassName="tab-bn">
                                                 <div class="container tab-content-bg py-4 px-2 mt-4">
                                                     <div class="row justify-content-center">
@@ -671,7 +671,7 @@ export const Affiliate = () => {
                                 <div class="container">
                                     <div class="row justify-content-center">
                                         <div class="col-md-12">
-                                            <Tabs defaultActiveKey="minig-all-day-tab" id="uncontrolled-tab-example" className="mt-4">   
+                                            <Tabs defaultActiveKey="minig-all-day-tab" id="uncontrolled-tab-example" className="mt-4" variant='pills'>   
                                                 <Tab eventKey="minig-all-day-tab" title="All" tabClassName="tab-bn">
                                                 <div class="container tab-content-bg py-4 px-2 mt-4">
                                                     <div class="row justify-content-center">

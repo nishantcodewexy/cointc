@@ -18,8 +18,6 @@ export const Header = () => {
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll" className="justify-content-between">
 
-      
-
             <ul class="navbar-nav">
               <li class="nav-item">
                 <Nav.Link class="nav-link " href="/trade">P2P Trade <span class="sr-only">(current)</span></Nav.Link>
@@ -36,13 +34,18 @@ export const Header = () => {
               <li class="nav-item">
                 <Nav.Link class="nav-link" href="/support">Support</Nav.Link>
               </li>
-              <li class="nav-item">
-                <Nav.Link class="nav-link" href="/ad_create">Create Ad</Nav.Link>
-              </li>
+              <li class="nav-item ml-5">
+              <div class="input-group my-input-search">
+                <div class="input-group-prepend mr-0">
+                    <span class="input-group-text pr-0" id="basic-addon1"><i class="fas fa-search"></i></span>
+                  </div>
+                <input type="search" class="form-control" placeholder="Search blocks,transactions,hash..." aria-label="search" aria-describedby="basic-addon1"/>
+              </div>
+            </li>
             </ul>
-            <ul class="navbar-nav ls-btn-info">
+            <ul class="navbar-nav">
               <li class="nav-item btn-login">
-                <Nav.Link class="" bsPrefix="btn btn-outline-white mr-2" href="/login">Log in</Nav.Link>
+                <Nav.Link class="" bsPrefix="btn btn-outline-white mr-1" href="#">Log in</Nav.Link>
                 <Nav.Link class="" bsPrefix="btn btn-white" href="/signup">Sign Up</Nav.Link>
               </li>
             </ul>

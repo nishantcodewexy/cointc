@@ -124,9 +124,7 @@ export const Footer = () => {
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>
-                  <Dropdown.Item href="#">HINDI</Dropdown.Item>
-                  <Dropdown.Item href="#">TAMIL</Dropdown.Item>
-                  <Dropdown.Item href="#">FRANCH</Dropdown.Item>
+                  <Dropdown.Item href="#">KOREA</Dropdown.Item>
                 </Dropdown.Menu>
               </Dropdown>
               

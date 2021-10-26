@@ -1,598 +1,292 @@
-import React from 'react'
-import './order.css'
+import React from 'react';
 import { Container, Row, Col, Form, Button,Div,Dropdown,Tabs,Tab,Sonnet } from 'react-bootstrap';
 // import { Link } from 'react-router-dom'
 // import { Carousel } from 'react-responsive-carousel';
 // import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 
-import usdt_icon from '../../app-assets/images/icon/usdt.png';
-import cont_icon from '../../app-assets/images/page/order/cont.png';
-
+import usdt_icon from '../../app-assets/images/coin/usdt.png';
+import lang_ch_icon from '../../app-assets/images/nation/lang_ch.png';
+import lang_ko_icon from '../../app-assets/images/nation/lang_ko.png';
+import xrp_icon from '../../app-assets/images/coin/xrp.png';
+import eth_icon from '../../app-assets/images/coin/eth.png';
 
 export const Orders = () => {
     return (     
-        <div className="Orders"> 
-            <section>
-                <div class="container-fluid">
-                    <div class="container">
-                    
-                        <div class="row justify-content-center">
-                            <div class="col-md-10">
-                                <Tabs defaultActiveKey="fri-accout" id="uncontrolled-tab-example">
-                                    <Tab eventKey="fri-accout" title="All accounts" >
-                                        <div class="container overflow-x-auto">
-                                            <div class="row align-items-center justify-content-center py-3">
-                                                <div class="col-md-12 py-3">
-                                                    <div class="row">
-                                                        <div class="col-md-6 d-flex justify-content-around">
-                                                            <div class="coin">
-                                                                <div class="coin-title">
-                                                                    <p>Coins</p>
-                                                                </div>
-                                                                <Dropdown>
-                                                                    <Dropdown.Toggle variant="" id="dropdown-basic">
-                                                                        <img src={usdt_icon}/> USDT
-                                                                    </Dropdown.Toggle>
+        <div class="content">
+            <section id="mainTop">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="wow fadeInDown" data-wow-delay="0.3s">Orders</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+            <section id="lnb">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <ul class="option clear">
+                                <li><a href="#">In progress</a></li>
+                                <li class="on"><a href="#">All Orders</a></li>
+                                <li><a href="#">My Offers</a></li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                </div>
+            </section>
+            
+            <section id="setting">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <dl class="coins">
+                                <dt>Coins</dt>
+                                <dd>
+                                    <select name="" id="">
+                                        <option value="USDT">USDT</option>
+                                    </select>
+                                </dd>
+                            </dl>
+                            <dl class="order_type">
+                                <dt>Order Type</dt>
+                                <dd>
+                                    <select name="" id="">
+                                        <option value="sell">sell</option>
+                                    </select>
+                                </dd>
+                            </dl>
+                            <dl class="status">
+                                <dt>Status</dt>
+                                <dd>
+                                    <select name="" id="">
+                                        <option value="all">All</option>
+                                    </select>
+                                </dd>
+                            </dl>
+                            <a href="#" class="btn_creat"><i class="fas fa-plus-square"></i>Creat an AD</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="orders">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Asset/Type</th>
+                                            <th>Price</th>
+                                            <th>Margine/Limits</th>
+                                            <th>Status</th>
+                                            <th>Action</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="asset">
+                                                <img src={usdt_icon} alt="USDT" />
+                                                <p class="red">Sell</p>
+                                                <p class="coin_name">USDT</p>
+                                            </td>
+                                            <td class="Price">
+                                                <img src={lang_ch_icon} alt="chn" />
+                                                <p>6.23 CNY</p>
+                                            </td>
+                                            <td class="margine_limits">
+                                                <dl class="margine clear">
+                                                    <dt>Margine</dt>
+                                                    <dd>1.65908675 BTC</dd>
+                                                </dl>
+                                                <dl class="limits clear">
+                                                    <dt>Limits</dt>
+                                                    <dd>50,000 - 300,000 CNY</dd>
+                                                </dl>
+                                            </td>
+                                            <td class="status">Active</td>
+                                            <td class="action clear">
+                                                <a href="#" class="btn_edit">Edit</a>
+                                                <a href="#" class="btn_deactive">Deactive</a>
+                                            </td>
+                                        </tr>
 
-                                                                    <Dropdown.Menu>
-                                                                        <Dropdown.Item href="#"><img src={usdt_icon}/> USDT</Dropdown.Item>
-                                                                        <Dropdown.Item href="#"><img src={usdt_icon}/> USDT</Dropdown.Item>
-                                                                        <Dropdown.Item href="#"><img src={usdt_icon}/> USDT</Dropdown.Item>
-                                                                    </Dropdown.Menu>
-                                                                </Dropdown>
-                                                            </div>
+                                        <tr>
+                                            <td class="asset">
+                                                <img src={usdt_icon} alt="USDT" />
+                                                <p class="blue">Sell</p>
+                                                <p class="coin_name">USDT</p>
+                                            </td>
+                                            <td class="Price">
+                                                <img src={lang_ch_icon} alt="chn" />
+                                                <p>6.23 CNY</p>
+                                            </td>
+                                            <td class="margine_limits">
+                                                <dl class="margine clear">
+                                                    <dt>Margine</dt>
+                                                    <dd>1.65908675 BTC</dd>
+                                                </dl>
+                                                <dl class="limits clear">
+                                                    <dt>Limits</dt>
+                                                    <dd>50,000 - 300,000 CNY</dd>
+                                                </dl>
+                                            </td>
+                                            <td class="status">Deactive</td>
+                                            <td class="action clear">
+                                                <a href="#" class="btn_edit">Edit</a>
+                                                <a href="#" class="btn_active">Active</a>
+                                            </td>
+                                        </tr>
 
-                                                            <div class="coin">
-                                                                <div class="coin-title">
-                                                                    <p>Order Type</p>
-                                                                </div>
-                                                                <Dropdown>
-                                                                    <Dropdown.Toggle variant="" id="dropdown-basic">
-                                                                    Sell
-                                                                    </Dropdown.Toggle>
+                                        <tr>
+                                            <td class="asset">
+                                                <img src={usdt_icon} alt="USDT" />
+                                                <p class="red">Sell</p>
+                                                <p class="coin_name">USDT</p>
+                                            </td>
+                                            <td class="Price">
+                                                <img src={lang_ko_icon} alt="kor" />
+                                                <p>1,200 KRW</p>
+                                            </td>
+                                            <td class="margine_limits">
+                                                <dl class="margine clear">
+                                                    <dt>Margine</dt>
+                                                    <dd>1.65908675 BTC</dd>
+                                                </dl>
+                                                <dl class="limits clear">
+                                                    <dt>Limits</dt>
+                                                    <dd>50,000 - 300,000 CNY</dd>
+                                                </dl>
+                                            </td>
+                                            <td class="status">Deactive</td>
+                                            <td class="action clear">
+                                                <a href="#" class="btn_edit">Edit</a>
+                                                <a href="#" class="btn_active">Active</a>
+                                            </td>
+                                        </tr>
 
-                                                                    <Dropdown.Menu>
-                                                                        <Dropdown.Item href="#"><img src={usdt_icon}/> Sell</Dropdown.Item>
-                                                                        <Dropdown.Item href="#"><img src={usdt_icon}/> Sell</Dropdown.Item>
-                                                                        <Dropdown.Item href="#"><img src={usdt_icon}/> Sell</Dropdown.Item>
-                                                                    </Dropdown.Menu>
-                                                                </Dropdown>
-                                                            </div>
+                                        <tr>
+                                            <td class="asset">
+                                                <img src={usdt_icon} alt="USDT" />
+                                                <p class="blue">Sell</p>
+                                                <p class="coin_name">USDT</p>
+                                            </td>
+                                            <td class="Price">
+                                                <img src={lang_ko_icon} alt="kor" />
+                                                <p>1,200 KRW</p>
+                                            </td>
+                                            <td class="margine_limits">
+                                                <dl class="margine clear">
+                                                    <dt>Margine</dt>
+                                                    <dd>1.65908675 BTC</dd>
+                                                </dl>
+                                                <dl class="limits clear">
+                                                    <dt>Limits</dt>
+                                                    <dd>50,000 - 300,000 CNY</dd>
+                                                </dl>
+                                            </td>
+                                            <td class="status">Deactive</td>
+                                            <td class="action clear">
+                                                <a href="#" class="btn_edit">Edit</a>
+                                                <a href="#" class="btn_active">Active</a>
+                                            </td>
+                                        </tr>
 
-                                                            <div class="coin">
-                                                                <div class="coin-title">
-                                                                    <p>Status</p>
-                                                                </div>
-                                                                <Dropdown>
-                                                                    <Dropdown.Toggle variant="" id="dropdown-basic">
-                                                                    All
-                                                                    </Dropdown.Toggle>
+                                        <tr>
+                                            <td class="asset">
+                                                <img src={xrp_icon} alt="XRP" />
+                                                <p class="red">Sell</p>
+                                                <p class="coin_name">XRP</p>
+                                            </td>
+                                            <td class="Price">
+                                                <img src={lang_ch_icon} alt="chn" />
+                                                <p>6.23 CNY</p>
+                                            </td>
+                                            <td class="margine_limits">
+                                                <dl class="margine clear">
+                                                    <dt>Margine</dt>
+                                                    <dd>1.65908675 BTC</dd>
+                                                </dl>
+                                                <dl class="limits clear">
+                                                    <dt>Limits</dt>
+                                                    <dd>50,000 - 300,000 CNY</dd>
+                                                </dl>
+                                            </td>
+                                            <td class="status">Active</td>
+                                            <td class="action clear">
+                                                <a href="#" class="btn_edit">Edit</a>
+                                                <a href="#" class="btn_deactive">Deactive</a>
+                                            </td>
+                                        </tr>
 
-                                                                    <Dropdown.Menu>
-                                                                        <Dropdown.Item href="#"><img src={usdt_icon}/> All</Dropdown.Item>
-                                                                        <Dropdown.Item href="#"><img src={usdt_icon}/> All</Dropdown.Item>
-                                                                        <Dropdown.Item href="#"><img src={usdt_icon}/> All</Dropdown.Item>
-                                                                    </Dropdown.Menu>
-                                                                </Dropdown>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 d-flex justify-content-end align-items-end">
-                                                            <div class="ad-bn">
-                                                                <a href="#" class="btn btn-outline-primary">+  Creat an AD</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                        <tr>
+                                            <td class="asset">
+                                                <img src={xrp_icon} alt="XRP" />
+                                                <p class="blue">Sell</p>
+                                                <p class="coin_name">XRP</p>
+                                            </td>
+                                            <td class="Price">
+                                                <img src={lang_ch_icon} alt="chn" />
+                                                <p>6.23 CNY</p>
+                                            </td>
+                                            <td class="margine_limits">
+                                                <dl class="margine clear">
+                                                    <dt>Margine</dt>
+                                                    <dd>1.65908675 BTC</dd>
+                                                </dl>
+                                                <dl class="limits clear">
+                                                    <dt>Limits</dt>
+                                                    <dd>50,000 - 300,000 CNY</dd>
+                                                </dl>
+                                            </td>
+                                            <td class="status">Active</td>
+                                            <td class="action clear">
+                                                <a href="#" class="btn_edit">Edit</a>
+                                                <a href="#" class="btn_deactive">Deactive</a>
+                                            </td>
+                                        </tr>
 
-                                                    <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="th-sm">Partner/Date</th>
-                                                                <th class="th-sm">Asset/Type</th>
-                                                                <th class="th-sm">Price/Quantity</th>
-                                                                <th class="th-sm">Total</th>
-                                                                <th class="th-sm">Status</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                    <p class="text-primary">Xuhai8888</p>
-                                                                    <p class="text-gray">2021-08-13 16:37:58</p>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="ass-ty d-flex align-items-center">
-                                                                        <div class="ass-ty-img pr-3">
-                                                                            <img src={usdt_icon}/>
-                                                                        </div>
-                                                                        <div class="ass-ty-content">
-                                                                            <p class="mb-0 sell">Sell</p>
-                                                                            <p class="mb-0 text-dark-gray">USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="price-qu d-flex pr-3">
-                                                                        <div class="left-price">
-                                                                            <p>Price Quantity</p>
-                                                                        </div>
-                                                                        <div class="right-price-qu">
-                                                                            <p>1,135.00 KRW 50.00 USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>56,750.00 KRW</td>
-                                                                <td class="text-danger">Paid</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <p class="text-primary">Xuhai8888</p>
-                                                                    <p class="text-gray">2021-08-13 16:37:58</p>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="ass-ty d-flex align-items-center">
-                                                                        <div class="ass-ty-img pr-3">
-                                                                            <img src={usdt_icon}/>
-                                                                        </div>
-                                                                        <div class="ass-ty-content">
-                                                                            <p class="mb-0 sell">Sell</p>
-                                                                            <p class="mb-0 text-dark-gray">USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="price-qu d-flex pr-3">
-                                                                        <div class="left-price">
-                                                                            <p>Price Quantity</p>
-                                                                        </div>
-                                                                        <div class="right-price-qu">
-                                                                            <p>1,135.00 KRW 50.00 USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>56,750.00 KRW</td>
-                                                                <td class="text-success">Unpaid</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <p class="text-primary">Xuhai8888</p>
-                                                                    <p class="text-gray">2021-08-13 16:37:58</p>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="ass-ty d-flex align-items-center">
-                                                                        <div class="ass-ty-img pr-3">
-                                                                            <img src={usdt_icon}/>
-                                                                        </div>
-                                                                        <div class="ass-ty-content">
-                                                                            <p class="mb-0 sell">Sell</p>
-                                                                            <p class="mb-0 text-dark-gray">USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="price-qu d-flex pr-3">
-                                                                        <div class="left-price">
-                                                                            <p>Price Quantity</p>
-                                                                        </div>
-                                                                        <div class="right-price-qu">
-                                                                            <p>1,135.00 KRW 50.00 USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>56,750.00 KRW</td>
-                                                                <td>Completed</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <p class="text-primary">Xuhai8888</p>
-                                                                    <p class="text-gray">2021-08-13 16:37:58</p>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="ass-ty d-flex align-items-center">
-                                                                        <div class="ass-ty-img pr-3">
-                                                                            <img src={usdt_icon}/>
-                                                                        </div>
-                                                                        <div class="ass-ty-content">
-                                                                            <p class="mb-0 sell">Sell</p>
-                                                                            <p class="mb-0 text-dark-gray">USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="price-qu d-flex pr-3">
-                                                                        <div class="left-price">
-                                                                            <p>Price Quantity</p>
-                                                                        </div>
-                                                                        <div class="right-price-qu">
-                                                                            <p>1,135.00 KRW 50.00 USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>56,750.00 KRW</td>
-                                                                <td>Completed</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <p class="text-primary">Xuhai8888</p>
-                                                                    <p class="text-gray">2021-08-13 16:37:58</p>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="ass-ty d-flex align-items-center">
-                                                                        <div class="ass-ty-img pr-3">
-                                                                            <img src={usdt_icon}/>
-                                                                        </div>
-                                                                        <div class="ass-ty-content">
-                                                                            <p class="mb-0 sell">Sell</p>
-                                                                            <p class="mb-0 text-dark-gray">USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="price-qu d-flex pr-3">
-                                                                        <div class="left-price">
-                                                                            <p>Price Quantity</p>
-                                                                        </div>
-                                                                        <div class="right-price-qu">
-                                                                            <p>1,135.00 KRW 50.00 USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>56,750.00 KRW</td>
-                                                                <td>Completed</td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <p class="text-primary">Xuhai8888</p>
-                                                                    <p class="text-gray">2021-08-13 16:37:58</p>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="ass-ty d-flex align-items-center">
-                                                                        <div class="ass-ty-img pr-3">
-                                                                            <img src={usdt_icon}/>
-                                                                        </div>
-                                                                        <div class="ass-ty-content">
-                                                                            <p class="mb-0 sell">Sell</p>
-                                                                            <p class="mb-0 text-dark-gray">USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="price-qu d-flex pr-3">
-                                                                        <div class="left-price">
-                                                                            <p>Price Quantity</p>
-                                                                        </div>
-                                                                        <div class="right-price-qu">
-                                                                            <p>1,135.00 KRW 50.00 USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>56,750.00 KRW</td>
-                                                                <td>Completed</td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Tab>
-                                    <Tab eventKey="myoffer" title="My Offers">
-                                        <div class="container overflow-x-auto">
-                                            <div class="row align-items-center justify-content-center py-3">
-                                                <div class="col-md-12 py-3">
-                                                    <div class="row">
-                                                        <div class="col-md-6 d-flex justify-content-around">
-                                                            <div class="coin">
-                                                                <div class="coin-title">
-                                                                    <p>Coins</p>
-                                                                </div>
-                                                                <div class="dropdown">
-                                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                        <img src={usdt_icon}/> USDT
-                                                                    </button>
-
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                        <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                        <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                        <a class="dropdown-item" href="#"><img src={usdt_icon}/> USDT</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="coin">
-                                                                <div class="coin-title">
-                                                                    <p>Order Type</p>
-                                                                </div>
-                                                                <div class="dropdown">
-                                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> Sell
-                                                                    </button>
-
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                        <a class="dropdown-item" href="#"><img src={usdt_icon}/> Sell</a>
-                                                                        <a class="dropdown-item" href="#"><img src={usdt_icon}/> Sell</a>
-                                                                        <a class="dropdown-item" href="#"><img src={usdt_icon}/> Sell</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-                                                            <div class="coin">
-                                                                <div class="coin-title">
-                                                                    <p>Status</p>
-                                                                </div>
-                                                                <div class="dropdown">
-                                                                    <button class="btn dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> All
-                                                                    </button>
-
-                                                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                        <a class="dropdown-item" href="#"><img src={usdt_icon}/> All</a>
-                                                                        <a class="dropdown-item" href="#"><img src={usdt_icon}/> All</a>
-                                                                        <a class="dropdown-item" href="#"><img src={usdt_icon}/> All</a>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6 d-flex justify-content-end align-items-end">
-                                                            <div class="ad-bn">
-                                                                <a href="#" class="btn btn-outline-primary">+  Creat an AD</a>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                        <thead>
-                                                            <tr>
-                                                                <th class="th-sm">Asset/Type</th>
-                                                                <th class="th-sm">Price/Quantity</th>
-                                                                <th class="th-sm">Margin/Limits</th>
-                                                                <th class="th-sm">Status</th>
-                                                                <th class="th-sm">Action</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            <tr>
-                                                                <td>
-                                                                    <div class="ass-ty d-flex align-items-center">
-                                                                        <div class="ass-ty-img pr-3">
-                                                                            <img src={usdt_icon}/>
-                                                                        </div>
-                                                                        <div class="ass-ty-content">
-                                                                            <p class="mb-0 sell">Sell</p>
-                                                                            <p class="mb-0 text-dark-gray">USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="price-qu d-flex pr-3 align-items-center">
-                                                                        <div class="left-price pr-2">
-                                                                            <img src={cont_icon} width="24"/>
-                                                                        </div>
-                                                                        <div class="right-price-qu">
-                                                                            <p class="mb-0">6.23 CNY</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="margin-limit d-flex pr-3">
-                                                                        <div class="left-margin-limit pr-2">
-                                                                            <p class="mb-0">Margin <br/> Limits</p>
-                                                                        </div>
-                                                                        <div class="right-margin-limit">
-                                                                            <p class="mb-0">110.00 % <br/> 1,000 ~ 10,000 CNY</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>Active</td>
-                                                                <td>
-                                                                    <a href="#" class="btn btn-outline-secondary mt-2 mr-1">Edit</a>
-                                                                    <a href="#" class="btn btn-secondary mt-2 mr-1">Deactive</a>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <div class="ass-ty d-flex align-items-center">
-                                                                        <div class="ass-ty-img pr-3">
-                                                                            <img src={usdt_icon}/>
-                                                                        </div>
-                                                                        <div class="ass-ty-content">
-                                                                            <p class="mb-0 sell">Sell</p>
-                                                                            <p class="mb-0 text-dark-gray">USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="price-qu d-flex pr-3 align-items-center">
-                                                                        <div class="left-price pr-2">
-                                                                            <img src={cont_icon} width="24"/>
-                                                                        </div>
-                                                                        <div class="right-price-qu">
-                                                                            <p class="mb-0">6.23 CNY</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="margin-limit d-flex pr-3">
-                                                                        <div class="left-margin-limit pr-2">
-                                                                            <p class="mb-0">Margin <br/> Limits</p>
-                                                                        </div>
-                                                                        <div class="right-margin-limit">
-                                                                            <p class="mb-0">110.00 % <br/> 1,000 ~ 10,000 CNY</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>Deactive</td>
-                                                                <td>
-                                                                    <a href="#" class="btn btn-outline-secondary mt-2 mr-1">Edit</a>
-                                                                    <a href="#" class="btn btn-primary mt-2 mr-1">Active</a>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <div class="ass-ty d-flex align-items-center">
-                                                                        <div class="ass-ty-img pr-3">
-                                                                            <img src={usdt_icon}/>
-                                                                        </div>
-                                                                        <div class="ass-ty-content">
-                                                                            <p class="mb-0 sell">Sell</p>
-                                                                            <p class="mb-0 text-dark-gray">USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="price-qu d-flex pr-3 align-items-center">
-                                                                        <div class="left-price pr-2">
-                                                                            <img src={cont_icon} width="24"/>
-                                                                        </div>
-                                                                        <div class="right-price-qu">
-                                                                            <p class="mb-0">6.23 CNY</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="margin-limit d-flex pr-3">
-                                                                        <div class="left-margin-limit pr-2">
-                                                                            <p class="mb-0">Margin <br/> Limits</p>
-                                                                        </div>
-                                                                        <div class="right-margin-limit">
-                                                                            <p class="mb-0">110.00 % <br/> 1,000 ~ 10,000 CNY</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>Deactive</td>
-                                                                <td>
-                                                                    <a href="#" class="btn btn-outline-secondary mt-2 mr-1">Edit</a>
-                                                                    <a href="#" class="btn btn-primary mt-2 mr-1">Active</a>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <div class="ass-ty d-flex align-items-center">
-                                                                        <div class="ass-ty-img pr-3">
-                                                                            <img src={usdt_icon}/>
-                                                                        </div>
-                                                                        <div class="ass-ty-content">
-                                                                            <p class="mb-0 sell">Sell</p>
-                                                                            <p class="mb-0 text-dark-gray">USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="price-qu d-flex pr-3 align-items-center">
-                                                                        <div class="left-price pr-2">
-                                                                            <img src={cont_icon} width="24"/>
-                                                                        </div>
-                                                                        <div class="right-price-qu">
-                                                                            <p class="mb-0">6.23 CNY</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="margin-limit d-flex pr-3">
-                                                                        <div class="left-margin-limit pr-2">
-                                                                            <p class="mb-0">Margin <br/> Limits</p>
-                                                                        </div>
-                                                                        <div class="right-margin-limit">
-                                                                            <p class="mb-0">110.00 % <br/> 1,000 ~ 10,000 CNY</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>Deactive</td>
-                                                                <td>
-                                                                    <a href="#" class="btn btn-outline-secondary mt-2 mr-1">Edit</a>
-                                                                    <a href="#" class="btn btn-primary mt-2 mr-1">Active</a>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <div class="ass-ty d-flex align-items-center">
-                                                                        <div class="ass-ty-img pr-3">
-                                                                            <img src={usdt_icon}/>
-                                                                        </div>
-                                                                        <div class="ass-ty-content">
-                                                                            <p class="mb-0 sell">Sell</p>
-                                                                            <p class="mb-0 text-dark-gray">USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="price-qu d-flex pr-3 align-items-center">
-                                                                        <div class="left-price pr-2">
-                                                                            <img src={cont_icon} width="24"/>
-                                                                        </div>
-                                                                        <div class="right-price-qu">
-                                                                            <p class="mb-0">6.23 CNY</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="margin-limit d-flex pr-3">
-                                                                        <div class="left-margin-limit pr-2">
-                                                                            <p class="mb-0">Margin <br/> Limits</p>
-                                                                        </div>
-                                                                        <div class="right-margin-limit">
-                                                                            <p class="mb-0">110.00 % <br/> 1,000 ~ 10,000 CNY</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>Deactive</td>
-                                                                <td>
-                                                                    <a href="#" class="btn btn-outline-secondary mt-2 mr-1">Edit</a>
-                                                                    <a href="#" class="btn btn-primary mt-2 mr-1">Active</a>
-                                                                </td>
-                                                            </tr>
-                                                            <tr>
-                                                                <td>
-                                                                    <div class="ass-ty d-flex align-items-center">
-                                                                        <div class="ass-ty-img pr-3">
-                                                                            <img src={usdt_icon}/>
-                                                                        </div>
-                                                                        <div class="ass-ty-content">
-                                                                            <p class="mb-0 sell">Sell</p>
-                                                                            <p class="mb-0 text-dark-gray">USDT</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="price-qu d-flex pr-3 align-items-center">
-                                                                        <div class="left-price pr-2">
-                                                                            <img src={cont_icon} width="24"/>
-                                                                        </div>
-                                                                        <div class="right-price-qu">
-                                                                            <p class="mb-0">6.23 CNY</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>
-                                                                    <div class="margin-limit d-flex pr-3">
-                                                                        <div class="left-margin-limit pr-2">
-                                                                            <p class="mb-0">Margin <br/> Limits</p>
-                                                                        </div>
-                                                                        <div class="right-margin-limit">
-                                                                            <p class="mb-0">110.00 % <br/> 1,000 ~ 10,000 CNY</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </td>
-                                                                <td>Deactive</td>
-                                                                <td>
-                                                                    <a href="#" class="btn btn-outline-secondary mt-2 mr-1">Edit</a>
-                                                                    <a href="#" class="btn btn-primary mt-2 mr-1">Active</a>
-                                                                </td>
-                                                            </tr>
-                                                        </tbody>
-                                                    </table>
-
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </Tab>
-                                </Tabs>
-                                {/* <ul class="nav nav-tabs" id="myTab" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link active font-weight-bold" id="fri-accout-tab" data-toggle="tab" href="#fri-accout" role="tab" aria-controls="fri-accout" aria-selected="true">All accounts</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link font-weight-bold" id="myoffer-tab" data-toggle="tab" href="#myoffer" role="tab" aria-controls="myoffer" aria-selected="false">My Offers</a>
-                                    </li>
-                                </ul> */}
+                                        <tr>
+                                            <td class="asset">
+                                                <img src={eth_icon} alt="ETH" />
+                                                <p class="red">Sell</p>
+                                                <p class="coin_name">ETH</p>
+                                            </td>
+                                            <td class="Price">
+                                                <img src={lang_ch_icon} alt="chn" />
+                                                <p>6.23 CNY</p>
+                                            </td>
+                                            <td class="margine_limits">
+                                                <dl class="margine clear">
+                                                    <dt>Margine</dt>
+                                                    <dd>1.65908675 BTC</dd>
+                                                </dl>
+                                                <dl class="limits clear">
+                                                    <dt>Limits</dt>
+                                                    <dd>50,000 - 300,000 CNY</dd>
+                                                </dl>
+                                            </td>
+                                            <td class="status">Active</td>
+                                            <td class="action clear">
+                                                <a href="#" class="btn_edit">Edit</a>
+                                                <a href="#" class="btn_deactive">Deactive</a>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="indicator">
+                                <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
+                                <span class="on">1</span>
+                                <span>2</span>
+                                <span>3</span>
+                                <span style={{"cursor":"default"}}>...</span>
+                                <span>40</span>
+                                <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
                             </div>
                         </div>
                     </div>

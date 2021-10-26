@@ -8,61 +8,65 @@ import {
 } from "react-bootstrap";
 // import './header.scss'
 
-import logo from '../../app-assets/images/logo/CoinTC_logo_black.png'
-import user from '../../app-assets/images/icon/user-01.png'
+import logo_icon from '../../app-assets/images/logo/logo.png';
+import icon_user from '../../app-assets/images/icon/icon_user.png';
 
 export const Header3 = () => {
 
   return (
-    <>
-      <Navbar className="navbar  navbar-light" expand='lg'>
-        <div class="container">
-          <Nav.Link href="/" bsPrefix="pr-5"><img src={logo} width="100" alt="logo" /></Nav.Link>
-          <Navbar.Toggle aria-controls="navbarScroll" />
-          <Navbar.Collapse id="navbarScroll">
+    <header class="header2">
+                <div class="inner clear">
+                    <h1>
+                        <a href="#"><img src={logo_icon} alt-="CoinTC" /></a>
+                    </h1>
+                    <nav>
+                        <h2 class="hidden">메인메뉴</h2>
+                        <div class="gnb_pc clear">
+                            <ul class="clear">
+                                <li><a href="#">P2P Trade</a></li>
+                                <li><a href="#">Orders</a></li>
+                                <li><a href="#">Wallet</a></li>
+                                <li class="on"><a href="#">Affiliate</a></li>
+                                <li><a href="#">Support</a></li>
+                            </ul> 
+                        </div>
+                        <div class="user clear">
+                            <a href="#">
+                                <img src="images/icon/icon_user_color.png" alt="My page" />
+                                <p>My page</p>
+                            </a>
+                        </div>
 
-            <Nav
-              className="me-auto my-2 my-lg-0"
-              // style={{ maxHeight: "100px" }}
-              navbarScroll
-            >
-
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <Nav.Link class="nav-link" href="/trade">P2P Trade <span class="sr-only">(current)</span></Nav.Link>
-              </li>
-              <li class="nav-item">
-                <Nav.Link class="nav-link" href="/orders">Orders</Nav.Link>
-              </li>
-              <li class="nav-item">
-                <Nav.Link class="nav-link" href="/wallet">Wallet</Nav.Link>
-              </li>
-              <li class="nav-item">
-                <Nav.Link class="nav-link" href="/affiliate">Affiliate</Nav.Link>
-              </li>
-              <li class="nav-item">
-                <Nav.Link class="nav-link" href="/support">Support</Nav.Link>
-              </li>
-              <li class="nav-item">
-                <Nav.Link class="nav-link" href="/ad_create">Create Ad</Nav.Link>
-              </li>
-            </ul>
-            
-            </Nav>
-            <Nav
-              className="ml-auto my-2 my-lg-0"
-              // style={{ maxHeight: "100px" }}
-              navbarScroll
-            >
-              <ul class="navbar-nav ls-btn-info">
-					<li class="nav-item btn-login">
-						<a class="btn btn-white" href="/my-page"><img src={user} class="pr-2"/>My Page</a>
-					</li>
-				</ul>
-            </Nav>
-          </Navbar.Collapse>
-        </div>
-      </Navbar>
-    </>
+                        <div class="side_menu">
+                            <div class="burger_box">
+                                <div class="menu-icon-container">
+                                    <a href="#" class="menu-icon js-menu_toggle closed">
+                                        <span class="menu-icon_box">
+                                            <span class="menu-icon_line menu-icon_line--1"></span>
+                                            <span class="menu-icon_line menu-icon_line--2"></span>
+                                            <span class="menu-icon_line menu-icon_line--3"></span>
+                                        </span>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="user_m">
+                                <a href="#">
+                                    <img src="images/icon/icon_user_color.png" alt="My page" />
+                                    <p>My page</p>
+                                </a>
+                            </div>
+                            <div class="gnb_m">
+                                <ul class="clear">
+                                    <li><a href="#">P2P Trade</a></li>
+                                    <li><a href="#">Orders</a></li>
+                                    <li><a href="#">Wallet</a></li>
+                                    <li><a href="#">Affiliate</a></li>
+                                    <li><a href="#">Support</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </header>
   );
 };

@@ -1,279 +1,72 @@
 import React from 'react'
-import './wallet-asset.css'
+// import './wallet-asset.css'
 import { Container, Row, Col, Form, Button,Div,Dropdown,Tabs,Tab,Sonnet } from 'react-bootstrap';
-// import { Link } from 'react-router-dom'
-// import { Carousel } from 'react-responsive-carousel';
-// import "react-responsive-carousel/lib/styles/carousel.min.css";
 
-
+import qr_code_icon from '../../app-assets/images/page/wallet/qr-code.png';
 import usdt_icon from '../../app-assets/images/icon/usdt.png';
-import cont_icon from '../../app-assets/images/page/order/cont.png';
-
-import bnb_icon from '../../app-assets/images/icon/bnb.png';
-import eth_icon from '../../app-assets/images/icon/eth.png';
-// import usdt_icon from '../../app-assets/images/icon/usdt.png';
-import xrp_icon from '../../app-assets/images/icon/xrp.png';
-import eos_icon from '../../app-assets/images/icon/eos.png';
-import wallet_qrcode_icon from '../../app-assets/images/page/wallet-qrcode.png';
-
 
 export const Wallet_deposit = () => {
     return (     
         <div className="Wallet"> 
-            <section>
-            <div class="container-fluid">
-                    <div class="container">
+            <section id="withdrawCrypto">
+                <div class="container">
                     <div class="row justify-content-center">
-                    <div class="col-md-10">
-                            <Tabs defaultActiveKey="deposit" id="uncontrolled-tab-example">
-                                <Tab eventKey="deposit" title="Deposit">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="btc-wallet-title mt-3">
-                                                    <h3>BTC Wallet</h3>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                            </div>
-                                        </div>
-                                        <div class="row mt-3">
-                                            <div class="col-md-6">
-                                                <div class="btc-asset">
-                                                    <div class="btc-top d-flex justify-content-between">
-                                                        <div class="btc-top-left">
-                                                            <h4 class="font-weight-bold">총 보유자산</h4>
-                                                        </div>
-                                                        <div class="btc-top-right">
-                                                            <h4 class="font-weight-bold text-primary">167.71 USD </h4>
-                                                        </div>
-                                                    </div>
+                        <div class="col col-sm-12 col-md-8 main-bg">
+                            <h4> Deposit Crypto </h4>
+                            <form>
+                                <div class="form-group row justify-content-between mb-0 py-2">
+                                    <label class="col-sm-4 col-form-label">Select Coin</label>
+                                    <div class="col-sm-10  col-md-6 select-coin-input">
+                                        <select id="coin" class="form-control text-center">
+                                            <option value="usdt">USDT</option>
+                                            <option value="sdt">SDT</option>
+                                        </select>
+                                    </div>
+                                </div>
 
-                                                    <div class="btc-center mt-3">
-                                                        <div class="btc-center-title">
-                                                            <h5>Asset</h5>
-                                                        </div>
-                                                    </div>
+                                <div class="form-group row justify-content-between mb-0 py-2">
+                                    <label class="col-sm-2 col-form-label">Network</label>
+                                    <div class="col-sm-10  col-md-6 network-input">
+                                        <input type="text" class="form-control-plaintext text-md-right"  value="Ethreum ERC20"/>
+                                    </div>
+                                </div>
 
-                                                    <div class="btc-footer">
-                                                        <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th class="th-sm">보유 자산만 보기</th>
-                                                                    <th class="th-sm"></th>
-                                                                    <th class="th-sm"></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td><img src={bnb_icon} class="pr-2"/>BNB <span class="text-secondary">BNB</span></td>
-                                                                    <td>0.67574356</td>
-                                                                    <td>65.5%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><img src={eth_icon} class="pr-2"/>Ethereum <span class="text-secondary">ETH</span></td>
-                                                                    <td>160,867.5</td>
-                                                                    <td>0.5%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><img src={usdt_icon} class="pr-2"/>Tether <span class="text-secondary">USDT</span></td>
-                                                                    <td>0.08675</td>
-                                                                    <td>0.0%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><img src={xrp_icon} class="pr-2"/>Ripple <span class="text-secondary">XRP</span></td>
-                                                                    <td>1.908675</td>
-                                                                    <td>33.4%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><img src={eos_icon} class="pr-2"/>EOS <span class="text-secondary">EOS</span></td>
-                                                                    <td>200.000000</td>
-                                                                    <td>0.4%</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="btc-right">
-                                                    <div class="btc-top-right mt-3">
-                                                        <label for="basic-url">입금 주소</label>
-                                                            <div class="input-group mb-3">
-                                                                <input type="text" class="form-control" placeholder="mkdiskfidjfafrlkjfireknroiwjfflvlS" aria-label="Recipient's username" aria-describedby="basic-addon2"/>
-                                                                <div class="input-group-append">
-                                                                    <span class="input-group-text text-white" id="basic-addon2">복사</span>
-                                                                </div>
-                                                            </div>
-                                                    </div>
-                                                    <div class="btc-right-center">
-                                                        <div class="center-img text-center">
-                                                            <img src={wallet_qrcode_icon} width="25%"/>
-                                                        </div>
-                                                    </div>
-                                                    <div class="btc-right-footer mt-3">
-                                                        <div class="info-section">
-                                                            <div class="info-title">
-                                                                <h6 class="text-primary font-weight-bold">BTC 입금 주의사항</h6>
-                                                            </div>
-                                                            <div class="info-section-content">
-                                                                <p class="mb-0"><small>
-                                                                    • Assets are converted to their estimated value via CoinMarketCap's real-time coin price and are for reference only.
-                                                                </small></p>
-                                                                <p class="mb-0"><small>
-                                                                    • Real assets should be based on the holding quantity of each cryptocurrency.
-                                                                </small></p>
-                                                                <p class="mb-0"><small>
-                                                                    • Assets are converted to estimated value through the real-time coin price of a coin market cap and are used for reference only.
-                                                                </small></p>
-                                                                <p class="mb-0"><small>
-                                                                    • Actual assets must be based on the amount of each cryptocurrency held.
-                                                                </small></p>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
+                                <div class="form-group row justify-content-between mb-0 py-2">
+                                    <label for="inputPassword" class="col-sm-4 col-form-label"> Deposit Address </label>	
+                                </div>
+
+                                <div class="col-md-8 mx-auto deposit-address-img">
+                                    <div class="card">
+                                        <img class="card-img-top w-25 mx-auto" src={qr_code_icon} alt="Card image cap"/>
+                                        <div class="card-body text-center">
+                                            <p class="card-text">0x7790a6DAe3174A60E171A25a040f913b5d6054d4</p>
+                                            <a href="#" class="btn btn-primary mr-1">Share</a>
+                                            <a href="#" class="btn btn-primary mr-1">Copy</a>
+                                            <p class="card-text-p card-text mt-3">최소입금금액은 2 USDT 입니다.2 USDT 미만 입금 시 잔고 반영이 불가능합니다.</p>
                                         </div>
                                     </div>
-                                </Tab>
-                                <Tab eventKey="withdraw" title="Withdraw">
-                                    <div class="container">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="btc-wallet-title mt-3">
-                                                    <h3>BTC Wallet</h3>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                            </div>
-                                        </div>
-                                        <div class="row mt-3">
-                                            <div class="col-md-6">
-                                                <div class="btc-asset">
-                                                    <div class="btc-top d-flex justify-content-between">
-                                                        <div class="btc-top-left">
-                                                            <h4 class="font-weight-bold">총 보유자산</h4>
-                                                        </div>
-                                                        <div class="btc-top-right">
-                                                            <h4 class="font-weight-bold text-primary">167.71 USD </h4>
-                                                        </div>
-                                                    </div>
+                                </div>	  	
 
-                                                    <div class="btc-center mt-3">
-                                                        <div class="btc-center-title">
-                                                            <h5>Asset</h5>
-                                                        </div>
-                                                    </div>
+                                <hr class="form-hr-bottom" />
 
-                                                    <div class="btc-footer">
-                                                        <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th class="th-sm">보유 자산만 보기</th>
-                                                                    <th class="th-sm"></th>
-                                                                    <th class="th-sm"></th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                <tr>
-                                                                    <td><img src={eos_icon} class="pr-2"/>BNB <span class="text-secondary">BNB</span></td>
-                                                                    <td>0.67574356</td>
-                                                                    <td>65.5%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><img src={eth_icon} class="pr-2"/>Ethereum <span class="text-secondary">ETH</span></td>
-                                                                    <td>160,867.5</td>
-                                                                    <td>0.5%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><img src={usdt_icon} class="pr-2"/>Tether <span class="text-secondary">USDT</span></td>
-                                                                    <td>0.08675</td>
-                                                                    <td>0.0%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><img src={xrp_icon} class="pr-2"/>Ripple <span class="text-secondary">XRP</span></td>
-                                                                    <td>1.908675</td>
-                                                                    <td>33.4%</td>
-                                                                </tr>
-                                                                <tr>
-                                                                    <td><img src={eos_icon} class="pr-2"/>EOS <span class="text-secondary">EOS</span></td>
-                                                                    <td>200.000000</td>
-                                                                    <td>0.4%</td>
-                                                                </tr>
-                                                            </tbody>
-                                                        </table>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="btc-right mt-3">
-                                                    <div class="btc-top-right">
-                                                        <label for="basic-url">입금 주소</label>
-                                                        <div class="input-group mb-3">
-                                                            <input type="text" class="form-control text-right" placeholder="0.14" aria-label="Recipient's username" aria-describedby="basic-addon2"/>
-                                                            <div class="input-group-append">
-                                                                <span class="input-group-text text-white" id="basic-addon2">최대</span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="btc-center-right d-flex justify-content-between">
-                                                        <div class="btc-center-right-left">
-                                                            <p>수수료</p>
-                                                            <p>총 출금 수량</p>
-                                                            <p>암호화폐 일일 출금 한도</p>
-                                                        </div>
-                                                        <div class="btc-center-right-right">
-                                                            <p>0.0015BTC0</p>
-                                                            <p>0.0015BTC0</p>
-                                                            <p>0.0015BTC</p>
-                                                        </div>
-                                                    </div>
+                                <div class="wd-info col-12">
+                                    <p><i class="fa fa-info-circle mr-2"></i>Deposit information</p>
+                                    <ul>
+                                        <li>위 입금 주소는 USDT만 입금이 가능합니다. 네트워크가 Ethreum ERC20인지 반드시 확인해주세요.</li>
+                                        <li>  USDT 외 다른 암호화폐 입금 시 복구가 불가하오니 주의해 주시기 바랍니다.</li>
+                                        <li>컨트랙트 입금의 경우 입금과 자산 반영에 지연이 발생할 수 있습니다.</li>
+                                        <li> 디지털 자산 명칭은 동일하나 전송 방식(네트워크)가 다른 경우에 입금 및 복구가 불가능합니다.</li>
+                                        <li>48번의 Confirmation이 발생한 이후, 입금 프로세스를 거쳐 잔고에 반영되며, 네트워크 상황에 따라 소요 시간이 달라질 수 있습니다.</li>
+                                    </ul>
+                                </div>
 
-                                                    <div class="second-bn mt-3 text-secondary">
-                                                        <h5 class="font-weight-bold">출금 주소</h5>
-                                                        <label for="basic-url font-weight-bold">입력한 주소가 정확한지 반드시 확인바랍니다</label>
-                                                        <div class="input-group mb-3">
-                                                            <input type="text" class="form-control" placeholder="0x8b4db4e2025a13428a231131c890ca73dcdce" aria-label="Recipient's username" aria-describedby="basic-addon2"/>
-                                                            <div class="input-group-append">
-                                                                <span class="input-group-text text-white" id="basic-addon2"></span>
-                                                            </div>
-                                                        </div>
-                                                    </div>
+                                <div class="wd-btn mt-4">
+                                    <a href="#" class="btn btn-primary w-100">Withdraw</a>
+                                </div>
 
-                                                    <div class="btc-right-footer mt-3">
-                                                        <div class="info-section">
-                                                            <div class="info-title">
-                                                                <h6 class="text-primary font-weight-bold">BTC 입금 주의사항</h6>
-                                                            </div>
-                                                            <div class="info-section-content">
-                                                                <p class="mb-0"><small>
-                                                                    • Assets are converted to their estimated value via CoinMarketCap's real-time coin price and are for reference only.
-                                                                </small></p>
-                                                                <p class="mb-0"><small>
-                                                                    • Real assets should be based on the holding quantity of each cryptocurrency.
-                                                                </small></p>
-                                                                <p class="mb-0"><small>
-                                                                    • Assets are converted to estimated value through the real-time coin price of a coin market cap and are used for reference only.
-                                                                </small></p>
-                                                                <p class="mb-0"><small>
-                                                                    • Actual assets must be based on the amount of each cryptocurrency held.
-                                                                </small></p>
-                                                            </div>
-                                                        </div>
-                                                        <div class="btn-footer mt-3">
-                                                            <button class="btn btn-primary w-100" type="btn">다음</button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Tab>
-                            </Tabs>
-                            </div>
+                            </form>
                         </div>
-                    </div> 
+                    </div>
                 </div>
             </section>
         </div> 

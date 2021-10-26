@@ -1,5 +1,9 @@
-import React from 'react'
+import React, { useState }  from 'react'
+
 import './Mypage.css'
+// import './ToggleSwitch.scss'
+import ToggleSwitch from '../ToggleSwitch/ToggleSwitch'
+
 import { Container, Row, Col, Form, Button,Div,Dropdown,Tabs,Tab,Sonnet,FormCheck } from 'react-bootstrap';
 import BootstrapSwitchButton from 'bootstrap-switch-button-react'
 // import { Link } from 'react-router-dom'
@@ -16,6 +20,45 @@ import email_icon from '../../app-assets/images/icon/email.png';
 import identity_verification_icon from '../../app-assets/images/icon/identity-verification.png';
 
 export const Mypage = () => {
+    let [login_conf1_email, setLoginConf1Email] = useState(true);
+    let [login_conf2_email, setLoginConf2Email] = useState(true);
+    let [trans_conf_email, setTransConfEmail] = useState(true);
+
+    let [login_conf1_sms, setLoginConf1SMS] = useState(false);
+    let [login_conf2_sms, setLoginConf2SMS] = useState(false);
+    let [trans_conf_sms, setTransConfSMS] = useState(false);
+
+    let [login_conf1_otp, setLoginConf1OTP] = useState(true);
+    let [login_conf2_otp, setLoginConf2OTP] = useState(false);
+    let [trans_conf_otp, setTransConfOTP] = useState(true);
+
+    const onLoginConf1EmailChange = (checked) => {
+        setLoginConf1Email(checked);
+    }
+    const onLoginConf2EmailChange = (checked) => {
+        setLoginConf2Email(checked);
+    }
+    const onTransConfEmailChange = (checked) => {
+        setTransConfEmail(checked);
+    }
+    const onLoginConf1SMSChange = (checked) => {
+        setLoginConf1SMS(checked);
+    }
+    const onLoginConf2SMSChange = (checked) => {
+        setLoginConf2SMS(checked);
+    }
+    const onTransConfSMSChange = (checked) => {
+        setTransConfSMS(checked);
+    }
+    const onLoginConf1OTPChange = (checked) => {
+        setLoginConf1OTP(checked);
+    }
+    const onLoginConf2OTPChange = (checked) => {
+        setLoginConf2OTP(checked);
+    }
+    const onTransConfOTPChange = (checked) => {
+        setTransConfOTP(checked);
+    }
     return (     
         <div className="Mypage"> 
             <section id="profile">
@@ -67,42 +110,37 @@ export const Mypage = () => {
                                             <tr>
                                                 <td>Login Confirmation</td>
                                                 <td class="email-switch">                                                
-                                                    <Form.Check type="switch" id="custom-switch" label="" defaultChecked={true}/>
-                                                    {/* <FormCheck size='sm' checked id="switchEnabled" type="switch" bsPrefix="switch" 
-                                                        //   checked={this.state.settings.enabled}
-                                                        //   onChange={this.toggleEnabled}
-                                                        label=""
-                                                    /> */}
+                                                    <ToggleSwitch id="login_conf1_email" checked={ login_conf1_email } onChange={ onLoginConf1EmailChange } optionLabels={[null,null]} />
                                                 </td>
                                                 <td class="email-switch sms-switch">
-                                                    <Form.Check type="switch" id="custom-switch" label="" disabled={true} defaultChecked={true}/>
+                                                    <ToggleSwitch id="login_conf1_sms" checked={ login_conf1_sms } onChange={ onLoginConf1SMSChange } optionLabels={[null,null]} />
                                                 </td>
                                                 <td class="email-switch">
-                                                    <Form.Check type="switch" id="custom-switch" label="" defaultChecked={true}/>
+                                                    <ToggleSwitch id="login_conf1_otp" checked={ login_conf1_otp } onChange={ onLoginConf1OTPChange } optionLabels={[null,null]} />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Login Confirmation</td>
                                                 <td class="email-switch">
-                                                    <Form.Check type="switch" id="custom-switch" label="" defaultChecked={true}/>
+                                                    <ToggleSwitch id="login_conf2_email" checked={ login_conf2_email } onChange={ onLoginConf2EmailChange } optionLabels={[null,null]} />
                                                 </td>
                                                 <td class="email-switch sms-switch">
-                                                    <Form.Check type="switch" id="custom-switch" label="" defaultChecked={true}/>
+                                                    <ToggleSwitch id="login_conf2_sms" checked={ login_conf2_sms } onChange={ onLoginConf2SMSChange } optionLabels={[null,null]} />
                                                 </td>
                                                 <td class="email-switch otp-switch">
-                                                    <Form.Check type="switch" id="custom-switch" label="" defaultChecked={true}/>
+                                                    <ToggleSwitch id="login_conf2_otp" checked={ login_conf2_otp } onChange={ onLoginConf2OTPChange } optionLabels={[null,null]} />
                                                 </td>
                                             </tr>
                                             <tr>
                                                 <td>Transaction Confirmation</td>
                                                 <td class="email-switch">
-                                                    <Form.Check type="switch" id="custom-switch" label="" defaultChecked={true}/>
+                                                    <ToggleSwitch id="trans_conf_email" checked={ trans_conf_email } onChange={ onTransConfEmailChange } optionLabels={[null,null]} />
                                                 </td>
                                                 <td class="email-switch sms-switch">
-                                                    <Form.Check type="switch" id="custom-switch" label="" defaultChecked={true}/>
+                                                    <ToggleSwitch id="trans_conf_sms" checked={ trans_conf_sms } onChange={ onTransConfSMSChange } optionLabels={[null,null]} />
                                                 </td>
                                                 <td class="email-switch otp-switch">
-                                                    <Form.Check type="switch" id="custom-switch" label="" defaultChecked={true}/>
+                                                    <ToggleSwitch id="trans_conf_otp" checked={ trans_conf_otp } onChange={ onTransConfOTPChange } optionLabels={[null,null]} />
                                                 </td>
                                             </tr>
                                         </tbody>

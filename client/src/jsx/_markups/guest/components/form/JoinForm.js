@@ -11,7 +11,7 @@ export const JoinForm = () => {
                     <Row className="justify-content-center">
                         <Col lg={6} md={6}>
                             <div class="create-account-section py-15">
-                                <Col md={8} lg={8} className="mx-auto"> 
+                                <Col md={11} lg={11} className="mx-auto"> 
                                     <div className="create-account-title text-center">
                                         <h2>Join the membership</h2>
                                         <p>
@@ -22,7 +22,7 @@ export const JoinForm = () => {
                                     <Form>
                                         <Form.Group controlId="formBasicEmail" className="form-group">
                                             <Form.Label>Email address</Form.Label>
-                                            <Form.Control type="email" placeholder="Enter email" />
+                                            <Form.Control type="email" placeholder="" />
                                             {/* <Form.Text className="text-muted">
                                                 We'll never share your email with anyone else.
                                             </Form.Text> */}
@@ -30,32 +30,34 @@ export const JoinForm = () => {
 
                                         <Form.Group className="mb-3" controlId="formBasicPassword">
                                             <Form.Label>Password</Form.Label>
-                                            <Form.Control type="password" placeholder="Password" />
+                                            <Form.Control type="password" placeholder="●●●●●●●" />
+                                            <div class="verify-pass mt-3">
+                                                <p class="mb-0">- Including lowercase English (Confirm)</p>
+                                                <p class="mb-0">- English capital letters included</p>
+                                                <p class="mb-0">- with numbers</p>
+                                                <p class="mb-0">- 8 characters or more</p>
+                                            </div>
                                         </Form.Group>
                                         <Form.Group className="mb-3" controlId="verify-password">
                                             <Form.Label>Verify Password</Form.Label>
-                                            <Form.Control type="password" id="verify-password" placeholder="Password" />
+                                            <Form.Control type="password" id="verify-password" placeholder="●●●●●●●" />
                                         </Form.Group>
                                         <Form.Group className="mb-3" controlId="initation-code">
                                             <Form.Label>Invitation code (Optional)</Form.Label>
-                                            <Form.Control type="password" placeholder="Password" />
+                                            <Form.Control type="password" placeholder="●●●●●●●" />
                                         </Form.Group>
-                                        <Row>
-                                            <Col lg={6} md={6}>
-                                                <Form.Group className="mb-3" controlId="formBasicCheckbox">
-                                                    <input className="form-check-input" type="checkbox" /> I have read and accepted the Terms of Service
-                                                </Form.Group>
-                                            </Col>
-                                            <Col lg={6} md={6}>
-                                                <div className="terms-condition">
-                                                    <a href="#">Corris Terms and Conditions</a>
-                                                </div>
-                                            </Col>
-                                        </Row>
+                                        <div class="detail-confirm">
+                                            <div class="form-group form-check d-flex justify-content-between">
+                                                <label class="form-check-label">
+                                                    <input class="form-check-input" type="checkbox"/>I have read and accepted the Terms of Service.
+                                                </label>
+                                                <a href="#" class="text-right">Corris Terms and Conditions</a>
+                                            </div>
+                                        </div>
 
-                                        <Button variant="primary" className="w-100" type="submit">
+                                        <a href="/verification" className="w-100 btn btn-primary" type="submit">
                                             Create an account
-                                        </Button>
+                                        </a>
                                         <div className="already-account mt-3">
                                             <p className="text-center">Already have an account? go to log in</p>
                                         </div>

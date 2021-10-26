@@ -40,22 +40,24 @@
 		border: none;
 	}
 
-	.Affiliate .tab-bn {
+	.Affiliate .nav-link.tab-bn {
 		padding-right: 15px;
 		padding-left: 15px;
 	}
 
-	.Affiliate .tab-bn a {
+	.Affiliate .nav-link.tab-bn {
 		border: 1px solid #B0B0B0;
 		border-radius: 10px;
 		font-weight: 700;
+		margin: 0px 10px;
 	}
 
-	.Affiliate .tab-bn .active {
+	.Affiliate .nav-link.tab-bn.active {
 		border: 1px solid #0059FF;
 		border-radius: 10px;
 		background-color: #ccdeff;
 		font-weight: 700;
+		color: #0059FF;
 	}
 
 	.Affiliate .tab-content-bg {
@@ -81,7 +83,7 @@
 	}
 
 	.Affiliate .table-striped {
-		background-color: #F1F1F1 !important;
+		background-color: #F1F1FF !important;
 	}
 
 	.Affiliate .table thead th {

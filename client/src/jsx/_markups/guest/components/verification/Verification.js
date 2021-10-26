@@ -24,7 +24,7 @@ export const Verification = () => {
                         <div class="row justify-content-center">
                             <div class="col-md-6">
                                 <div class="create-account-section py-15">
-                                    <div class="col-md-8 mx-auto">
+                                    <div class="col-md-11 mx-auto">
                                         <div class="create-account-title text-center">
                                         <h2>Join the membership</h2>
                                         <p>
@@ -39,7 +39,7 @@ export const Verification = () => {
                                             <input type="email" class="form-control" id="email"/>
                                         </div>
 
-                                        <div class="form-group my-5 text-center">
+                                        <div class="form-group my-5 pt-5 text-center">
                                             <label for="email">Valid time</label>
                                             <h4>03:00</h4>
                                         </div>

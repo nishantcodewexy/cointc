@@ -33,29 +33,27 @@ export const Home = () => {
         <div className="Home"> 
             <section id="slider">
                 <div class="bg-blue-multi">
-                    <Carousel bsPrefix="carousel slide" infiniteLoop useKeyboardArrows autoPlay interval={30000} showArrows={false} showStatus={false} showIndicators={false}>
+                    <Carousel bsPrefix="carousel slide" infiniteLoop useKeyboardArrows autoPlay interval={3000} showArrows={false} showStatus={false} showIndicators={false}>
                         <div class="container px-md-3">
                             <div class="row align-items-lg-center">
                                 <div class="col-6 mx-auto col-md-6 order-md-2 col-lg-6 mb-3 mb-lg-none">
-                                    <img src={slider_content_01} class="w-100"/>
                                 </div>
-                                <div class="col-md-6 order-md-1 col-lg-6 text-white">
+                                <div class="col col-sm-12 col-md-6 text-white left-slider-content py-5">
                                     <h1 class="mb-3">Buy&Sell your Cryptocurrency on CoinTC!</h1>
                                     <p class="lead mb-4">
                                         Support for easy and fast cryptocurrency transactions between individuals.
                                     </p>
 
-                                    <div class="col-md-6 d-flex flex-column flex-md-row">
+                                    <div class="col-md-6 d-flex flex-column flex-md-row pl-0">
                                         <a href="#" class="btn btn-lg btn-primary mb-3 mr-md-3">Get started</a>
-                                        <a href="#" class="btn btn-lg btn-white mb-3 mr-md-3">Log In</a>
+                                        <a href="#" class="btn btn-lg btn-white mb-3 mr-md-3 d-flex align-items-center">Log In</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="container px-md-3">
+                        {/* <div class="container px-md-3">
                             <div class="row align-items-lg-center">
                                 <div class="col-6 mx-auto col-md-6 order-md-2 col-lg-6 mb-3 mb-lg-none">
-                                    <img src={slider_content_02} class="w-100"/>
                                 </div>
                                 <div class="col-md-6 order-md-1 col-lg-6 text-white">
                                     <h1 class="mb-3">Buy&Sell your Cryptocurrency on CoinTC!</h1>
@@ -68,7 +66,7 @@ export const Home = () => {
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> */}
                         
                     </Carousel>
                 </div>
@@ -84,11 +82,11 @@ export const Home = () => {
                             
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    <th>Last Price</th>
-                                    <th>24h Change</th>
-                                    <th>시장</th>
-    					            <th></th>
+                                <th class="w-20">Name</th>
+                                <th class="w-20">Last Price</th>
+                                <th class="w-20">24h Change</th>
+                                <th class="w-20">시장</th>
+                                <th class="w-20"></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -103,7 +101,7 @@ export const Home = () => {
                                     <td>
                                         <img src={growth_grapg_icon}/>
                                     </td>
-                                    <td>
+                                    <td align="right">
                                         <a href="#" class="btn btn-outline-growth mr-1">구매하기</a>
                                         <a href="#" class="btn btn-outline-growth mr-1">거래하기</a>
                                     </td>
@@ -119,7 +117,7 @@ export const Home = () => {
                                     <td>
                                         <img src={growth_grapg_icon}/>
                                     </td>
-                                    <td>
+                                    <td align="right">
                                         <a href="#" class="btn btn-outline-growth mr-1">구매하기</a>
                                         <a href="#" class="btn btn-outline-growth mr-1">거래하기</a>
                                     </td>
@@ -135,7 +133,7 @@ export const Home = () => {
                                     <td>
                                         <img src={growth_grapg_icon}/>
                                     </td>
-                                    <td><a href="#" class="btn btn-outline-growth mr-1">거래하기</a></td>
+                                    <td align="right"><a href="#" class="btn btn-outline-growth mr-1">거래하기</a></td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -148,7 +146,7 @@ export const Home = () => {
                                     <td>
                                         <img src={growth_grapg_icon}/>
                                     </td>
-                                    <td><a href="#" class="btn btn-outline-growth mr-1">거래하기</a></td>
+                                    <td align="right"><a href="#" class="btn btn-outline-growth mr-1">거래하기</a></td>
                                 </tr>
                                 <tr>
                                     <td>
@@ -161,7 +159,7 @@ export const Home = () => {
                                     <td>
                                         <img src={growth_grapg_icon}/>
                                     </td>
-                                    <td><a href="#" class="btn btn-outline-growth mr-1">거래하기</a></td>
+                                    <td align="right"><a href="#" class="btn btn-outline-growth mr-1">거래하기</a></td>
                                 </tr>
                             </tbody>
                         </table>

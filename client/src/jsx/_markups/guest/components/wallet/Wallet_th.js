@@ -21,8 +21,8 @@ export const Wallet_th = () => {
                                         </div>
 
                                         <div class="ah-bn-start">
-                                            <button class="btn btn-primary py-0 mr-1">Asset</button>
-                                            <button class="btn btn-outline-primary py-0">History</button>
+                                            <a href="wallet" class="btn btn-outline-primary py-0 mr-1">Asset</a>
+                                            <a href="#" class="btn btn-primary  py-0">History</a>
                                         </div>
                                     </div>
 

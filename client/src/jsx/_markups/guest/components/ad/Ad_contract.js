@@ -1,13 +1,6 @@
 import React from 'react'
 import './Ad_contract.css'
-import { Container, Row, Col, Form, Button,Div,Dropdown,Tabs,Tab,Sonnet } from 'react-bootstrap';
-// import { Link } from 'react-router-dom'
-// import { Carousel } from 'react-responsive-carousel';
-// import "react-responsive-carousel/lib/styles/carousel.min.css";
-
-
-import refresh_icon from '../../app-assets/images/page/creat-ad/refresh.png';
-
+import { Form} from 'react-bootstrap';
 
 export const Ad_contract = () => {
     return (     
@@ -15,7 +8,23 @@ export const Ad_contract = () => {
             <section>
                 <div class="container-fluid">
                     <div class="container">
+                        <div class="row">
+                            <div class="col-md-6 mx-auto p-0 mt-5">
+                            <div class="timeline-title">
+                                <h5>Advertisement Create an ad</h5>
+                            </div>
+                            </div>
+                        </div>
                         <div class="row justify-content-center">
+                            <div class="col-md-12 d-flex justify-content-center my-5">
+                            <ul class="timeline my-timeline">
+                                <li>Set price and type</li>
+                                <li>Set up your trading method</li>
+                                <li class="active">Enter contract terms</li>
+                            </ul>
+                            </div>
+                        </div>
+                        <div class="row justify-content-center mb-5">
                             <div class="col-md-6 sell-buy py-4">
                                 <div class="row justify-content-center">
                                     <div class="col-md-10">

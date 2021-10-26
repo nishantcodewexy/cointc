@@ -1,0 +1,95 @@
+@charset "utf-8";
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+}
+
+body {
+  font-family: 'Roboto', sans-serif;
+  font-size: 15px;
+  color: #555555;
+  line-height: 1.6;
+}
+
+a,a:hover {
+	text-decoration: none;
+}
+ul,ol {
+	list-style: none;
+}
+
+ul,ol {
+	margin-bottom: 0;
+}
+
+.py-60 {
+	padding-top: 60px !important;
+	padding-bottom: 60px !important;
+}
+
+.img-fluid {
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: cover;
+}
+
+.page-footer {
+    background-color: #F8F8F9;
+}
+
+.page-footer ul li a {
+    color: #79818F !important;
+}
+
+.page-footer h5 {
+    color: #484D55 !important;
+    font-weight: 700;
+}
+
+.py-15 {
+	padding-top: 30px;
+	padding-bottom: 30px;
+}
+
+.overflow-x-auto {
+    overflow-x: auto;
+}
+
+.wrap header {
+    position: fixed;
+    left: 0;
+    top: 0;
+    z-index: 1000;
+    width: 100%;
+    background-color: transparent;
+}
+
+.header1 header.scroll {
+  background-color: rgba(0, 0, 0, 0.75);
+}
+
+#main-top {
+	background: url("../../app-assets/images/nav/bg-top.png") no-repeat 50% 50%;
+	background-size: cover;
+	padding: 120px 0;
+}
+
+#main-top h3 {
+	font-size: 50px;
+}
+
+.nav-text ul li a {
+	color: #FFF !important;
+	font-weight: 700;
+}
+
+
+@media only screen and (min-width: 992px){
+    #header .bg-dark {
+        background-color: transparent !important;
+    }
+}
