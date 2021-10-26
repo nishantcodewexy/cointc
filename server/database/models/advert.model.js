@@ -10,11 +10,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      const { Advert, Currency } = models;
+      const { Advert, Currency, Order } = models;
       Advert.belongsTo(Currency, {
         foreignKey: "currency_id",
         allowNull: false,
       });
+
+      Advert.hasMany(Order, {
+        foreignKey: {
+          name: 'advert_id',
+          as: 'orders',
+          allowNull: false
+        }
+      })
     }
   }
 
@@ -108,7 +116,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         comment: "Kind of fiat currency",
       },
-      remark: DataTypes.STRING,
+      remarks: DataTypes.STRING,
       auto_reply_message: {
         type: DataTypes.STRING,
         comment: "Message to be sent after order is placed",

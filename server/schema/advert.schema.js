@@ -9,32 +9,95 @@ const Joi = require("joi");
 function create(server) {
   const {
     consts: { patterns },
+    boom,
   } = server.app;
 
   return {
     payload: Joi.object({
-      min_order_qty: Joi.number().required(),
-      max_order_qty: Joi.number().required(),
-      min_order_price: Joi.number().required(),
-      max_order_price: Joi.number().required(),
-      payment_method: Joi.string().required(),
+      min_order_qty: Joi.number()
+        .required()
+        .error(
+          boom.badRequest(`Required input <min_order_qty::number> is invalid`)
+        ),
+      max_order_qty: Joi.number()
+        .required()
+        .error(
+          boom.badRequest(`Required input <max_order_qty::number> is invalid`)
+        ),
+      min_order_price: Joi.number()
+        .required()
+        .error(
+          boom.badRequest(`Required input <min_order_price::number> is invalid`)
+        ),
+      max_order_price: Joi.number()
+        .required()
+        .error(
+          boom.badRequest(`Required input <max_order_price::number> is invalid`)
+        ),
+      payment_method: Joi.array()
+        .items(Joi.string())
+        .required()
+        .error(
+          boom.badRequest(
+            `Required input <payment_method::array[string]> is invalid`
+          )
+        ),
       type: Joi.string()
         .pattern(patterns.ad_type)
-        .required(),
-      price: Joi.string().required(),
-      qty: Joi.number().required(),
-      crypto_currency: Joi.string().required(),
-      fiat_currency: Joi.string().required(),
+        .required()
+        .error(boom.badRequest(`Required input <type::string> is invalid`)),
+      price: Joi.string()
+        .required()
+        .error(boom.badRequest(`Required input <price::string> is invalid`)),
+      qty: Joi.number()
+        .required()
+        .error(boom.badRequest(`Required input <qty::number> is invalid`)),
+      crypto_currency: Joi.string()
+        .required()
+        .error(
+          boom.badRequest(`Required input <crypto_currency::string> is invalid`)
+        ),
+      fiat_currency: Joi.string()
+        .required()
+        .error(
+          boom.badRequest(`Required input <fiat_currency::string> is invalid`)
+        ),
       payment_time_limit: Joi.string()
         .isoDate()
-        .optional(),
-      floating_price: Joi.boolean().optional(),
-      remark: Joi.string().optional(),
-      auto_reply_message: Joi.string().optional(),
-      trade_conditions: Joi.string().optional(),
+        .optional()
+        .error(
+          boom.badRequest(
+            `Optional input <payment_time_limit::string> is invalid`
+          )
+        ),
+      floating_price: Joi.boolean()
+        .optional()
+        .error(
+          boom.badRequest(`Optional input <floating_price::bool> is invalid`)
+        ),
+      remarks: Joi.string()
+        .optional()
+        .error(boom.badRequest(`Optional input <remarks::string> is invalid`)),
+      auto_reply_message: Joi.string()
+        .optional()
+        .error(
+          boom.badRequest(
+            `Optional input <auto_reply_message::string> is invalid`
+          )
+        ),
+      trade_conditions: Joi.string()
+        .optional()
+        .error(
+          boom.badRequest(
+            `Optional input <trade_conditions::string> is invalid`
+          )
+        ),
       published: Joi.boolean()
         .default(false)
-        .optional(),
+        .optional()
+        .error(
+          boom.badRequest(`Optional input <published::string> is invalid`)
+        ),
     }),
   };
 }

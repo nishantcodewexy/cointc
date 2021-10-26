@@ -1,23 +1,36 @@
 "use strict";
 
 const AdvertController = (server) => {
-  const { db } = server.app;
+  const {
+    db: { Advert, User, sequelize },
+    boom,
+  } = server.app;
 
   async function completionRate(total_orders, total_completed_orders) {
     return (total_completed_orders / total_orders) * 100;
   }
 
   return {
+    /**
+     * @function create - Creates a single advert
+     * @param {Object} req 
+     * @returns 
+     */
     async create(req) {
-      const { user } = req.pre.user;
-      return db.Advert.create({ ...req.payload, owner: user.id });
+      const { payload, user } = req;
+      try {
+        return user.createAdverts([payload]);
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
+      }
     },
 
     // REMOVE ---------------------------------------
     async remove(req) {
       const { id } = req.params;
 
-      return await db.Advert.destroy({
+      return await Advert.destroy({
         where: id,
       });
     },
@@ -26,12 +39,34 @@ const AdvertController = (server) => {
     async retrieve(req) {
       const { id } = req.params;
 
-      return db.Advert.findByPk(id);
+      return Advert.findByPk(id);
     },
 
     // fetch all adverts
     async bulkRetrieve(req) {
-      return await db.Advert.findAll();
+      return await Advert.findAll({
+        group: ["user_id"],
+        raw: true,
+        include: [
+          {
+            association: "orders",
+            attributes: [
+              [
+                sequelize.fn(
+                  "sum",
+                  sequelize.col("status"),
+                  sequelize.literal("="),
+                  sequelize("orders.status.value")
+                ),
+                "completed_orders",
+              ],
+              [sequelize.fn("sum", sequelize.col("status")), "total_orders"],
+            ],
+          },
+        ],
+        // attributes: [[sequelize.fn() , 'completion_rate']],
+        logging: console.log,
+      });
     },
   };
 };

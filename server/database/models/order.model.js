@@ -11,8 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       const { Order, Advert } = models;
-      Order.belongsTo(Advert);
-      Advert.hasOne(Order);
+      Order.belongsTo(Advert);      
     }
   }
 
@@ -25,7 +24,6 @@ module.exports = (sequelize, DataTypes) => {
           return `ORD-${Date.now().toString()}`;
         },
       },
-      advert_id: DataTypes.UUID,
       total_amount: {
         type: DataTypes.DOUBLE,
         allowNull: false,

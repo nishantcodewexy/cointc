@@ -1,7 +1,7 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require('../../../schema/advert.schema')
+  const Schema = require("../../../schema/advert.schema");
   const { payload: payloadSchema } = Schema.create(server);
 
   const {
@@ -9,18 +9,17 @@ module.exports = (server) => {
       advert: { create },
     },
     helpers: {
-      jwt: { decodeUser },
+      permissions: { isUser },
     },
   } = server.app;
 
-
   return {
     method: "POST",
-    path: "/adverts",
+    path: "/ads",
     config: {
       pre: [
         {
-          method: decodeUser,
+          method: isUser,
           assign: "user",
         },
       ],
