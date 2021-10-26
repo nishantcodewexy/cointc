@@ -4,6 +4,12 @@
             "jest",
             "faker"
         ],
-        "exclude": []
+        "exclude": [
+            "node_modules/*",
+            "yarn-error.log",
+            "yarn.lock",
+            "package.json",
+            ".*"
+        ]
     }
 }
