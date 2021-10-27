@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       const { User, Currency } = models;
-
       Currency.belongsTo(User);
     }
 
@@ -27,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      
+
       name: {
         type: DataTypes.STRING,
         unique: true,

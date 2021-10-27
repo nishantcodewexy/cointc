@@ -67,6 +67,8 @@ This means that if you introduce any new route on the client side, you will need
 
 So the following steps are to be taken in order to successfully sync the client code to the server in production. 
 
+> *Note* This project uses a postgresql database. So before beginning the following steps, ensure that postgresql is running in the background and that your database env configurations are correct.
+
 1) First ensure that the production server is currently running using the following command.
 
   ```bash
@@ -75,6 +77,7 @@ So the following steps are to be taken in order to successfully sync the client 
 
   > You should see a table with a column name, `app`. Ensure that the app named `cointc_server` is **running** and is **online**.
 
+> Once server is running, you can seed some users records into the database using the command `yarn db-seed` from the root directory
 2) Once you have confirmed that the server is online, you can then navigate to the `client` folder  on your local machine and run the following command to build the client static files.
 
   ```bash

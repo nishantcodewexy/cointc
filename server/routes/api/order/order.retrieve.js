@@ -1,16 +1,15 @@
 "use strict";
 
 module.exports = (server) => {
+  const Schema = require("../../../schema/order.schema");
+  const { params: paramsSchema } = Schema.retrieve(server);
   const {
     controllers: {
       order: { retrieve },
     },
-    consts: { roles: _roles },
-    helpers:{
-      permissions:{
-        isAdmin
-      }
-    }
+    helpers: {
+      permissions: { isUser },
+    },
   } = server.app;
 
   return {
@@ -19,20 +18,15 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: (req) =>{
-            
-            return _roles.admin
-          },
-          assign: "role",
-        },
-        {
-          method:isAdmin,
-          assign: "isAdmin",
+          method: isUser,
+          assign: "user",
         },
       ],
       handler: retrieve,
       auth: "jwt",
+      validate: {
+        params: paramsSchema,
+      },
     },
-    
   };
 };

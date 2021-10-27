@@ -11,7 +11,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       const { Order, Advert } = models;
-      Order.belongsTo(Advert);      
+      Order.belongsTo(Advert, {
+        foreignKey: 'advert_id'
+      });      
     }
   }
 
@@ -37,7 +39,6 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 1,
       },
-      from_user_id: DataTypes.UUID,
       appeal: DataTypes.STRING,
       remark: DataTypes.STRING,
       status: {
@@ -62,12 +63,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       archived_at: DataTypes.DATE,
       trx_id: DataTypes.STRING,
-      profile: {
-        type: DataTypes.VIRTUAL,
-        get() {
-          return {};
-        },
-      },
     },
     {
       sequelize,
@@ -75,7 +70,8 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       paranoid: true,
       tableName: "tbl_orders",
-      hooks
+      hooks,
+      deletedAt: "archived_at",
     }
   );
   return Order;

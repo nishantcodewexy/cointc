@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest --detectOpenHandles --watch",
     "build": "node .",
-    "dev": "nodemon . --trace-warnings",
+    "dev": "nodemon . --trace-warnings --inspect",
     "sqlize": "sequelize-cli",
     "makemigrations": "sequelize-cli migration:create --name ",
     "migrate": "sequelize-cli db:migrate",
