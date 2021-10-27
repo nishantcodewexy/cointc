@@ -204,6 +204,7 @@ function bulkRestore(server) {
     }),
   };
 }
+// RETRIEVE ------------------------------------------------
 
 function retrieve(server) {
   const {
