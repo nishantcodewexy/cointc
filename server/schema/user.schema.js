@@ -101,17 +101,19 @@ function bulkUpdate(server) {
 // REMOVE ------------------------------------------------
 
 function remove(server) {
+  const { boom } = server.app;
   return {
     payload: Joi.object({
       force: Joi.boolean()
         .default(false)
         .optional()
-        .error(new Error("Optional input <force::boolean> is invalid")),
-    }),
+        .error(boom.badData("Optional input <force::boolean> is invalid")),
+    }).optional(),
 
-    params: update(server)?.params,
+    params: retrieve(server)?.params,
   };
 }
+
 
 function bulkRemove(server) {
   const { boom } = server.app;

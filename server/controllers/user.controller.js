@@ -360,8 +360,10 @@ module.exports = function UserController(server) {
       let {
         payload: { force = false },
         params: { id },
+        pre: { user },
       } = req;
-
+      // only superadmins are allowed to permanently delete a user
+      force = user?.isSuperAdmin ? force : false;
       let where = { id };
       return { deleted: Boolean(await __destroy("User", where, force)) };
     },
@@ -602,5 +604,3 @@ function renameKey(Obj, from = [], to = []) {
   });
   return Obj;
 }
-
-

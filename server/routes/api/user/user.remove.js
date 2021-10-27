@@ -1,21 +1,19 @@
 "use strict";
 const Joi = require("joi");
 module.exports = (server) => {
+  const Schema = require("../../../schema/user.schema");
+  const { params: paramsSchema, payload: payloadSchema } = Schema.remove(
+    server
+  );
+
   const {
     controllers: {
       user: { remove },
     },
-    consts: { roles: _roles },
     helpers: {
       permissions: { isUser },
     },
   } = server.app;
-
-  const schema = Joi.object({
-    force: Joi.boolean()
-      .default(false)
-      .optional(),
-  });
 
   return {
     method: "DELETE",
@@ -30,7 +28,8 @@ module.exports = (server) => {
       handler: remove,
       auth: "jwt",
       validate: {
-        payload: schema,
+        params: paramsSchema,
+        payload: payloadSchema,
       },
     },
   };
