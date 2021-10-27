@@ -13,7 +13,7 @@ table {
   width: 100%;
 }
 
-.pm-details table tr th,table tr td {
+.pm-details table tr th,.pm-details table tr td {
   padding-bottom: 10px !important;
 }
 
