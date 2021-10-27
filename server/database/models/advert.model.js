@@ -135,6 +135,8 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Advert",
       underscored: true,
       tableName: "tbl_adverts",
+      paranoid: true,
+      deletedAt: 'archived_at'
     }
   );
 
