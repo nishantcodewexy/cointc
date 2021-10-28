@@ -21,7 +21,7 @@ const uploader = function (file, options={}) {
 
 /**
  * 
- * @param {File} file 
+ * @param {Object} file 
  * @param {Object} options 
  * @returns 
  */
@@ -80,7 +80,7 @@ const _filesHandler = function (files, options) {
 
 /**
  * 
- * @param {Sting} fileName 
+ * @param {String} fileName 
  * @returns 
  */
 const imageFilter = function (fileName) {

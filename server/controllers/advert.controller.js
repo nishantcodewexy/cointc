@@ -1,6 +1,9 @@
 "use strict";
 
 const AdvertController = (server) => {
+  const { __upsert, __update, __destroy, __assertRole } = require("./utils")(
+    server
+  );
   const {
     db: { Advert, User, sequelize },
     boom,
@@ -37,11 +40,18 @@ const AdvertController = (server) => {
 
     // REMOVE ---------------------------------------
     async remove(req) {
-      const { id } = req.params;
+      const {
+        params: { id },
+        payload: { force = false },
+      } = req;
 
-      return await Advert.destroy({
-        where: id,
-      });
+      try {
+        let where = { id };
+        return { deleted: Boolean(await __destroy("Advert", where, force)) };
+      } catch (error) {
+        console.error(error);
+        throw boom.boomify(error);
+      }
     },
 
     // RETRIEVE ------------------------------------------------

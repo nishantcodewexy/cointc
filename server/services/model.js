@@ -7,6 +7,7 @@ module.exports = {
      * @param {Object} args.object
      * @param {String[]} args.include
      * @param {String[]} args.exclude
+     * @param {Boolean} args.allowNull
      * @returns {Promise<Object>}
      */
     filterFields:async ({object={},include=[],exclude=[],allowNull=false})=>{

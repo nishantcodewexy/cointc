@@ -3,9 +3,9 @@ const assert = require("assert");
 const boom = require("@hapi/boom");
 
 function OrderController(server) {
-   const { __upsert, __update, __destroy, __assertRole } = require("./utils")(
-     server
-   );
+  const { __upsert, __update, __destroy, __assertRole } = require("./utils")(
+    server
+  );
   const {
     db: { Order, Advert },
     helpers: { filters, paginator },
@@ -30,19 +30,21 @@ function OrderController(server) {
 
       try {
         // find advert
-        let ad = Advert.findByPk(advert_id);
+        let ad = await Advert.findByPk(advert_id);
         if (ad) {
           // create order using the user info
-          return user.createOrder({
-            ...payload,
-          });
+          return {
+            result: await user.createOrder({
+              ...payload,
+            }),
+          };
         } else
           return boom.notFound(
             "Advert cannot be found! Cannot create order for non-existent ad"
           );
       } catch (error) {
         console.error(error);
-        throw boom.boomify(error);
+        throw boom.internal(error.message, error);
       }
     },
     // REMOVE ---------------------------------------------------------
@@ -58,11 +60,10 @@ function OrderController(server) {
         payload: { force = false },
         pre: { user },
       } = req;
-      
+
       try {
         let where = { id };
         return { deleted: Boolean(await __destroy("Order", where, force)) };
-       
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);
