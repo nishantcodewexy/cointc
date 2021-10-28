@@ -45,7 +45,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Ticket",
-      tableName: "tbl_tickets",
+      tableName: "tbl_support_tickets",
       underscored: true,
       paranoid:true,
       deletedAt: 'deleted_at'

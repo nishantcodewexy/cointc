@@ -13,9 +13,11 @@ module.exports = (sequelize, DataTypes) => {
   }
   Analytics.init(
     {
-      full_name: DataTypes.STRING,
-      short_name: DataTypes.STRING,
-      eth_address: DataTypes.STRING,
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
     },
     {
       sequelize,

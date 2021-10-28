@@ -14,15 +14,15 @@ module.exports = (sequelize, DataTypes) => {
 
   P2PTradeFee.init(
     {
-      fiat_currency: DataTypes.STRING,
-      asset_type: DataTypes.INTEGER,
+      fiat: DataTypes.STRING,
+      crypto: DataTypes.INTEGER,
       rate: DataTypes.DOUBLE,
     },
     {
       sequelize,
       modelName: "P2PTradeFee",
       underscored: true,
-      tableName: "tbl_p2p_trade_fees",
+      tableName: "tbl_trade_fees",
     }
   );
 
