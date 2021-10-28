@@ -1,5 +1,4 @@
 "use strict";
-const { tooManyRequests } = require("boom");
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
@@ -12,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
     static total = 0;
     static associate(models) {
       // define association here
-      const { Advert, Currency, Order } = models;
+      const { Advert, Order } = models;
 
       Advert.hasMany(Order, {
         as: "orders",
@@ -102,11 +101,11 @@ module.exports = (sequelize, DataTypes) => {
           isInt: true,
         },
       },
-      crypto_currency: {
+      crypto: {
         type: DataTypes.STRING,
         comment: "Kind of crypto currency",
       },
-      fiat_currency: {
+      fiat: {
         type: DataTypes.STRING,
         comment: "Kind of fiat currency",
       },
@@ -136,7 +135,7 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       tableName: "tbl_adverts",
       paranoid: true,
-      deletedAt: 'archived_at'
+      deletedAt: "archived_at",
     }
   );
 

@@ -11,13 +11,13 @@ module.exports = (sequelize, DataTypes) => {
       const { User, Referral } = models;
       User.belongsToMany(User, {
         through: Referral,
-        as: "referee",
+        as: "user_id",
         constraint: false,
         onDelete: "CASCADE",
       });
 
       Referral.belongsTo(User, {
-        foreignKey: "referee_id",
+        foreignKey: "referred_id",
         constraint: false,
       });
 

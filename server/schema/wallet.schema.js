@@ -39,7 +39,8 @@ function bulkCreate(server) {
 }
 
 // RETRIEVE ------------------------------------------------
-function bulkRetrieve(server) {
+
+function retrieve(server) {
   const { boom } = server.app;
   
   return {
@@ -162,6 +163,7 @@ function bulkRestore(server) {
 
 module.exports = {
   create,
+  retrieve,
   update,
   remove,
   bulkCreate,
@@ -169,5 +171,4 @@ module.exports = {
   bulkRemove,
   restore,
   bulkRestore,
-  bulkRetrieve,
 };

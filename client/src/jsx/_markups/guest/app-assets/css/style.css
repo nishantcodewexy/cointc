@@ -1974,3 +1974,478 @@
     font-size:12px;
     color:#707A8A;
 }
+
+/* #homeMainTop */
+
+#homeMainTop {
+    background:url(../images/bg/main-home.png) no-repeat 50% 50%;
+    background-size:cover;
+    padding:120px 0;
+}
+
+#homeMainTop h5 {
+    color:#fff;
+    font-size:36px;
+}
+
+#homeMainTop p {
+    color: #fff;
+    font-size: 18px;
+}
+
+#homeMainTop .btn_getstarted,#homeMainTop .btn_login {
+    background-color: #0059FF;
+    color: #fff;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-weight: 500;
+}
+
+#homeMainTop .btn_login {
+    background-color: #fff;
+    color: #000;
+}
+
+header .user_btn {
+    position: absolute;
+    right: 0;
+    top: 15%;
+}
+
+header .user_btn .btn_login,header .user_btn .btn_signup {
+    border: 1px solid #fff;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-radius: 6px;
+}
+
+header .user_btn .btn_signup {
+    background-color: #fff;
+    color: #000;
+}
+
+header .user_m .btn_login,header .user_m .btn_signup {
+    border: 1px solid #fff;
+    padding-left: 30px;
+    padding-right: 30px;
+    border-radius: 6px;
+}
+
+header .user_m .btn_signup {
+    background-color: #fff;
+    color: #000;
+}
+
+header .search_pc {
+    position: absolute;
+    top: 15%;
+    right: 25%;
+}
+
+header .search_pc .has-search .form-control {
+    padding-left: 2.375rem;
+    background: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    border: none;
+    height: auto;
+}
+
+header .search_pc .has-search input::placeholder {
+    color: #fff !important;
+}
+
+header .search_pc .has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.300rem;
+    text-align: center;
+    pointer-events: none;
+    color: #fff;
+}
+
+header .search_m .has-search .form-control {
+    padding-left: 2.375rem;
+    background: rgba(255, 255, 255, 0.3);
+    color: #fff;
+    border: none;
+    height: auto;
+}
+
+header .search_m .has-search input::placeholder {
+    color: #fff !important;
+}
+
+header .search_m .has-search .form-control-feedback {
+    position: absolute;
+    z-index: 2;
+    display: block;
+    width: 2.375rem;
+    height: 2.375rem;
+    line-height: 2.300rem;
+    text-align: center;
+    pointer-events: none;
+    color: #fff;
+}
+
+/* #trend */
+
+#trend .market_table_title {
+    margin-top: 50px;
+    margin-bottom: 20px;
+}
+
+#trend .market_table_title h3 {
+    font-size: 28px;
+    font-weight: 700;
+    color: #000;
+}
+
+#trend table {
+    margin-bottom: 50px;
+    width: 100%;
+    min-width: 930px;
+    overflow-x: auto;
+}
+
+#trend .table_container {
+    overflow: auto;
+}
+
+#trend table thead th:nth-child(1) {
+    width: 20%;
+}
+
+#trend table thead th:nth-child(2) {
+    width: 20%;
+}
+
+#trend table thead th:nth-child(3) {
+    width: 15%;
+}
+
+#trend table thead th:nth-child(4) {
+    width: 20%;
+}
+
+#trend table thead th:nth-child(5) {
+    width: 25%;
+}
+
+#trend table thead th {
+    padding: 10px;
+    color: #79818F;
+    font-weight: 400;
+}
+
+#trend table tbody tr td {
+    padding: 15px 10px;
+}
+
+#trend table tbody .coin_name img {
+    float: left;
+    width: 25px;
+    margin-right: 10px;
+}
+
+#trend table tbody .last_price dt {
+    float: left;
+    color: #4E4E4E;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+#trend table tbody .last_price dd {
+    float: right;
+    color: #79818F;
+    font-weight: 400;
+    font-size: 14px;
+    margin-right: 20px;
+}
+
+.text-red{
+    color: #FF1414;
+}
+
+.text-green {
+    color: #00733C;
+}
+
+#trend table tbody .market img {
+    width: auto;
+}
+
+#trend table tbody .transaction .btn_buy,#trend table tbody .transaction .btn_trade {
+    width: 120px;
+    height: 35px;
+    line-height: 35px;
+    border-radius: 5px;
+    border: 1px solid #484D55;
+    background-color: #fff;
+    color: #0059FF;
+}
+
+/* #customerService */
+
+#customerService {
+    background: #014655;
+    padding: 60px 0 120px 0;
+}
+
+#customerService .customer_service_title h2 {
+    font-size: 32px;
+}
+
+#customerService .customer_service_title p {
+    font-size: 16px;
+}
+
+#customerService .icon-card {
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.125);
+    border-radius: 0.25rem;
+    height: 100%;
+}
+
+#customerService .icon-card .card-body h6 {
+    font-weight: 500;
+}
+
+#customerService .icon-card .card-body p {
+    font-weight: 400;
+}
+
+#customerService .row {
+    margin-top: 60px;
+}
+
+/* #cryptoCurrency */
+
+#cryptoCurrency {
+    padding: 120px 0;
+}
+
+#cryptoCurrency .btn-brand {
+    background-color: #000 !important;
+    color: #FFF !important;
+    border-radius: 15px;
+}
+
+#cryptoCurrency .btn-brand p{
+    font-size: 14px;
+}
+
+#cryptoCurrency .bg-effect {
+    background-image: url(../images/content-01.png);
+    width: 100%;
+    height: 100%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+#cryptoCurrency .order-md-1 h2 {
+    font-size: 30px;
+    color: #000;
+    font-weight: 700;
+}
+
+.text-black {
+    color: #000 !important;
+}
+
+#cryptoCurrency .order-md-1 .trade {
+    font-weight: 500;
+}
+
+/* #startCrypto */
+
+#startCrypto {
+    background: url(../images/content-01.png);
+    width: 100%;
+    height: 100%;
+    padding: 60px 0;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    margin-bottom: 60px;
+}
+
+#startCrypto .start_crypto_content .btn_getstarted {
+    background-color: #fff;
+    color: #0059FF;
+    padding-left: 30px;
+    padding-right: 30px;
+    font-weight: 500;
+}
+
+#startCrypto .start_crypto_content h4 {
+    color: #fff;
+    font-size: 30px;
+}
+
+/* .page-footer */
+
+footer .btn-brand {
+    background-color: #000 !important;
+    color: #FFF !important;
+    border-radius: 15px;
+}
+
+.page-footer {
+    padding: 100px 0;
+}
+
+.page-footer h4 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 10px;
+}
+
+.page-footer h5 {
+    font-size: 18px;
+    font-weight: 500;
+    color: #484D55;
+    margin-bottom: 30px;
+}
+
+.page-footer .navbar-nav a {
+    color: #4E4E4E;
+    font-weight: 400;
+}
+
+.page-footer .input-group .input-group-prepend button{
+    padding-top: 2px;
+    border: none !important;
+    padding-right: 0;
+}
+
+.page-footer .input-group .custom-select {
+    border: none;
+    background-color: transparent;
+    background: url(../images/icon/arrow-down-sign.png) no-repeat right 0.75rem center/8px 10px;
+}
+
+.w-18 {
+    width: 18%;
+}
+
+/* for sm */
+
+.custom-switch.custom-switch-sm .custom-control-label {
+    padding-left: 1rem;
+    padding-bottom: 1rem;
+}
+
+.custom-switch.custom-switch-sm .custom-control-label::before {
+    height: 1rem;
+    width: calc(1rem + 0.75rem);
+    border-radius: 2rem;
+}
+
+.custom-switch.custom-switch-sm .custom-control-label::after {
+    width: calc(1rem - 4px);
+    height: calc(1rem - 4px);
+    border-radius: calc(1rem - (1rem / 2));
+}
+
+.custom-switch.custom-switch-sm .custom-control-input:checked ~ .custom-control-label::after {
+    transform: translateX(calc(1rem - 0.25rem));
+}
+
+/* for md */
+
+.custom-switch.custom-switch-md .custom-control-label {
+    padding-left: 2rem;
+    padding-bottom: 1.5rem;
+}
+
+.custom-switch.custom-switch-md .custom-control-label::before {
+    height: 1.5rem;
+    width: 48px;
+    border-radius: 3rem;
+}
+
+.custom-switch.custom-switch-md .custom-control-label::after {
+    width: calc(1.5rem - 6px);
+    height: calc(1.5rem - 4px);
+    border-radius: calc(2rem - (1.5rem / 2));
+}
+
+.custom-switch.custom-switch-md .custom-control-input:checked ~ .custom-control-label::after {
+    transform: translateX(calc(1.5rem - 0.25rem));
+}
+
+/* for lg */
+
+.custom-switch.custom-switch-lg .custom-control-label {
+    padding-left: 3rem;
+    padding-bottom: 2rem;
+}
+
+.custom-switch.custom-switch-lg .custom-control-label::before {
+    height: 2rem;
+    width: calc(3rem + 0.75rem);
+    border-radius: 4rem;
+}
+
+.custom-switch.custom-switch-lg .custom-control-label::after {
+    width: calc(2rem - 4px);
+    height: calc(2rem - 4px);
+    border-radius: calc(3rem - (2rem / 2));
+}
+
+.custom-switch.custom-switch-lg .custom-control-input:checked ~ .custom-control-label::after {
+    transform: translateX(calc(2rem - 0.25rem));
+}
+
+/* for xl */
+
+.custom-switch.custom-switch-xl .custom-control-label {
+    padding-left: 4rem;
+    padding-bottom: 2.5rem;
+}
+
+.custom-switch.custom-switch-xl .custom-control-label::before {
+    height: 2.5rem;
+    width: calc(4rem + 0.75rem);
+    border-radius: 5rem;
+}
+
+.custom-switch.custom-switch-xl .custom-control-label::after {
+    width: calc(2.5rem - 4px);
+    height: calc(2.5rem - 4px);
+    border-radius: calc(4rem - (2.5rem / 2));
+}
+
+.custom-switch.custom-switch-xl .custom-control-input:checked ~ .custom-control-label::after {
+    transform: translateX(calc(2.5rem - 0.25rem));
+}
+.custom-switch.custom-switch-md .custom-control-input~.custom-control-label::before{
+    border-color: #EAECEF;
+    background-color: #EAECEF;
+}
+.custom-switch.custom-switch-md .custom-control-input:checked~.custom-control-label::before{
+    border-color: #0059FF;
+    background-color: #0059FF;
+    height: 1.5rem;
+    width: 48px;
+}
+.custom-switch.custom-switch-md .custom-control-label::after{
+    width: 1.125rem;
+    height: 1.125rem;
+;
+}
+.custom-switch.custom-switch-md .custom-control-label::before{
+    left: calc(-2.25rem + 4px); 
+}
+.custom-switch.custom-switch-md .custom-control-label::after {
+    top: calc(0.25rem + 3px);
+    left: calc(-2.25rem + 10px); 
+}
+.custom-switch .custom-control-label::after{
+    background-color: #FFFFFF;
+}

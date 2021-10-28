@@ -345,3 +345,70 @@
         width:100%;
     }
 }
+
+@media screen and (min-width:458px) {
+    /* #homeMainTop */
+    #homeMainTop h5,#homeMainTop p,#cryptoCurrency .order-md-1 h2 {
+        white-space: pre-line;
+    }
+}
+
+@media screen and (max-width:280px) {
+    /* #homeMainTop */
+    #homeMainTop h5 {
+        font-size: 24px;
+        line-height: 1.5;
+    }
+}
+
+@media screen and (max-width:360px) {
+    /* #homeMainTop */
+    #homeMainTop h5 {
+        font-size: 30px;
+        line-height: 1.5;
+    }
+}
+
+@media screen and (max-width:992px){
+    /* #homeMainTop */
+    header .user_btn {
+        display:none;
+    }
+
+    header .search_pc {
+        display: none;
+    }
+}
+
+@media screen and (min-width:992px){
+    /* #homeMainTop */
+    #homeMainTop .homemain_left {
+        /* margin-left: 25%; */
+    }
+
+    #homeMainTop .homemain_right {
+        margin-left: 15%;
+    }
+}
+
+@media screen and (max-width:992px){
+    #startCrypto .start_crypto_content {
+        display: block !important;
+        text-align: center;
+    }
+
+    #startCrypto .start_crypto_content a {
+        margin-top: 10px;
+    }
+}
+
+@media screen and (max-width:1170px) and (min-width: 992px) {
+    .search_pc .has-search {
+        width: 100px;
+    }
+
+    header .search_pc {
+        right: 26%;
+    }
+
+}

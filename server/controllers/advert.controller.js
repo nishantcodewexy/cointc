@@ -72,6 +72,7 @@ const AdvertController = (server) => {
       const queryFilters = await filters({ query, searchFields: ["user_id"] });
       const options = {
         ...queryFilters,
+        logging: console.log
       };
 
       try {

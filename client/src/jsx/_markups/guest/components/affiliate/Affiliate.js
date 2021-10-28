@@ -1,1011 +1,785 @@
-import React from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import styles from  './Affiliate.css'
 import { Container, Row, Col, Form, Button,Div,Dropdown,Tabs,Tab,Nav } from 'react-bootstrap';
-// import { Link } from 'react-router-dom'
-// import { Carousel } from 'react-responsive-carousel';
-// import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 
-import usdt_icon from '../../app-assets/images/icon/usdt.png';
-import cont_icon from '../../app-assets/images/page/order/cont.png';
+import affiliateTop from '../../app-assets/images/affiliateTop.png';
+import icon_dashboard from '../../app-assets/images/icon/icon_dashboard.png';
+import icon_friends from '../../app-assets/images/icon/icon_friends.png';
+import nodata from '../../app-assets/images/icon/nodata.png';
+import icon_commission from '../../app-assets/images/icon/icon_commission.png';
 
-
-import copy_icon from '../../app-assets/images/icon/copy.png';
-import edit_icon from '../../app-assets/images/icon/edit.png';
-import banner_01_icon from '../../app-assets/images/page/affiliate/banner-01.png';
-import affiliate_logo_icon from '../../app-assets/images/logo/affiliate-logo.png';
-import data_blank_icon from '../../app-assets/images/page/affiliate/data-blank.png';
-
-
+const AllaccountTabContent = function (props) {
+    const [activeTab, setActiveTab] = useState("all-tab");
+    const handleTab = (tab) => {
+        setActiveTab(tab);
+    };
+    return(
+        <>
+        <ul class="date clear">
+            <li className={(activeTab === "all-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("all-tab")}>All</a></li>
+            <li className={(activeTab === "yesterday-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("yesterday-tab")}>Yesterday</a></li>
+            <li className={(activeTab === "this-week-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-week-tab")}>This Week</a></li>
+            <li className={(activeTab === "this-month-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-month-tab")}>This Month</a></li>
+        </ul>
+        <p class="date_range">Date Range:<span>Until 2021-09-15 23:59:59 (UTC+0)</span></p>
+        <div class="tab-content">
+            <div className={"tab-pane " +(activeTab === "all-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+            <div className={"tab-pane " +(activeTab === "yesterday-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+            <div className={"tab-pane " +(activeTab === "this-week-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+            <div className={"tab-pane " +(activeTab === "this-month-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        </>
+    )
+}
+const SpotTabContent = function (props) {
+    const [activeTab, setActiveTab] = useState("all-tab");
+    const handleTab = (tab) => {
+        setActiveTab(tab);
+    };
+    return(
+        <>
+        <ul class="date clear">
+            <li className={(activeTab === "all-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("all-tab")}>All</a></li>
+            <li className={(activeTab === "yesterday-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("yesterday-tab")}>Yesterday</a></li>
+            <li className={(activeTab === "this-week-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-week-tab")}>This Week</a></li>
+            <li className={(activeTab === "this-month-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-month-tab")}>This Month</a></li>
+        </ul>
+        <p class="date_range">Date Range:<span>Until 2021-09-15 23:59:59 (UTC+0)</span></p>
+        <div class="tab-content">
+            <div className={"tab-pane " +(activeTab === "all-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+            <div className={"tab-pane " +(activeTab === "yesterday-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+            <div className={"tab-pane " +(activeTab === "this-week-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+            <div className={"tab-pane " +(activeTab === "this-month-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        </>
+    )
+}
+const FutureTabContent = function (props) {
+    const [activeTab, setActiveTab] = useState("all-tab");
+    const handleTab = (tab) => {
+        setActiveTab(tab);
+    };
+    return(
+        <>
+        <ul class="date clear">
+            <li className={(activeTab === "all-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("all-tab")}>All</a></li>
+            <li className={(activeTab === "yesterday-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("yesterday-tab")}>Yesterday</a></li>
+            <li className={(activeTab === "this-week-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-week-tab")}>This Week</a></li>
+            <li className={(activeTab === "this-month-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-month-tab")}>This Month</a></li>
+        </ul>
+        <p class="date_range">Date Range:<span>Until 2021-09-15 23:59:59 (UTC+0)</span></p>
+        <div class="tab-content">
+            <div className={"tab-pane " +(activeTab === "all-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+            <div className={"tab-pane " +(activeTab === "yesterday-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+            <div className={"tab-pane " +(activeTab === "this-week-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+            <div className={"tab-pane " +(activeTab === "this-month-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        </>
+    )
+}
+const MiningTabContent = function (props) {
+    const [activeTab, setActiveTab] = useState("all-tab");
+    const handleTab = (tab) => {
+        setActiveTab(tab);
+    };
+    return(
+        <>
+        <ul class="date clear">
+            <li className={(activeTab === "all-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("all-tab")}>All</a></li>
+            <li className={(activeTab === "yesterday-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("yesterday-tab")}>Yesterday</a></li>
+            <li className={(activeTab === "this-week-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-week-tab")}>This Week</a></li>
+            <li className={(activeTab === "this-month-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-month-tab")}>This Month</a></li>
+        </ul>
+        <p class="date_range">Date Range:<span>Until 2021-09-15 23:59:59 (UTC+0)</span></p>
+        <div class="tab-content">
+            <div className={"tab-pane " +(activeTab === "all-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+            <div className={"tab-pane " +(activeTab === "yesterday-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+            <div className={"tab-pane " +(activeTab === "this-week-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+            <div className={"tab-pane " +(activeTab === "this-month-tab" ? "active" : "")}>
+                <div class="box clear">
+                    <dl class="earned">
+                        <dt>You Earned</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="traded_friends">
+                        <dt>Total Number of Traded Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="friends">
+                        <dt>Total Numbers of Friends</dt>
+                        <dd>0</dd>
+                    </dl>
+                    <dl class="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                        <dd>--</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+        
+        </>
+    )
+}
 export const Affiliate = () => {
+    const [activeTab, setActiveTab] = useState("all-accounts-tab");
+    const handleTab = (tab) => {
+        setActiveTab(tab);
+    };
+
+    const [activeTabFriend, setActiveFriendTab] = useState("all-accounts-friend-tab");
+    const handleTabFriend = (tab) => {
+        setActiveFriendTab(tab);
+    };
+
+    const [activeTabCommission, setActiveCommissionTab] = useState("all-accounts-commission-tab");
+    const handleTabCommission = (tab) => {
+        setActiveCommissionTab(tab);
+    };
+
+    
     return (     
-        <div className="Affiliate"> 
-            <section class="bg-sky">
-                <div class="container-fluid">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-md-5">
-                                <div class="main-invite-element">
-                                    <div class="invite-element-left px-3 py-4">
-                                        <div class="invite-title">
-                                            <h4 class="text-primary">Invite your friends <br/> and make a profit.</h4>
-                                            <p><small>We will pay 20% of your friend’s trade transaction fee.</small></p>
-                                        </div>
-
-                                        <div class="main-default-referral px-3 py-2">
-                                            <div class="default-header-top d-flex justify-content-between">
-                                                <div class="default-header-left">
-                                                    <p class="mb-0"><small>Default Referral ID</small></p>
-                                                    <p>123456789 <sup><img src={copy_icon}/></sup></p>
-                                                </div>
-                                                <div class="default-header-right">
-                                                    <a href="#">+Generate your link</a>
-                                                </div>
-                                            </div>
-                                            <div class="default-body-top">
-                                                <div class="default-link">
-                                                    <p class="mb-0">Default Link</p>
-                                                    <p><a href="#" class="text-black">https://...123456789</a></p>
-                                                </div>
-                                                <div class="note-info d-flex align-items-center">
-                                                    <p class="pr-2 mb-0">Note</p>
-                                                    <h4 class="font-weight-bold mb-0">ABC <img src={edit_icon}/></h4>
-                                                </div>
-                                            </div>
-                                            <hr/>
-                                            <div class="default-footer d-flex justify-content-around">
-                                                <div class="you-rec">
-                                                    <p class="font-weight-bold text-secondary">You Receive</p>
-                                                    <h4 class="font-weight-bold">0%</h4>
-                                                </div>
-                                                <div class="frd-rec">
-                                                    <p class="font-weight-bold text-secondary">Friends Receive</p>
-                                                    <h4 class="font-weight-bold">0%</h4>
-                                                </div>
-                                            </div>	
-                                        </div>
-                                    </div>
+        <div class="content">
+            <section id="affiliateTop">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-12 col-sm-12  clear">
+                            <h3 class="wow fadeInLeft" data-wow-delay="0.2s">Invite your friends<br />and make a profit.</h3>
+                            <p class="wow fadeInLeft" data-wow-delay="0.4s">We will pay 20% of your friend's trade transaction fee.</p>
+                            <div class="box wow fadeInLeft" data-wow-delay="0.6s">
+                                <a href="#" class="btn_link">+ Generate your link</a>
+                                <dl class="referral_id">
+                                    <dt>Default Referral ID</dt>
+                                    <dd>12345689<a href="#" class="icon_copy"><i class="fal fa-copy"></i></a></dd>
+                                </dl>
+                                <dl class="link">
+                                    <dt>Default Link</dt>
+                                    <dd>https://...12345689<a href="#" class="icon_copy"><i class="fal fa-copy"></i></a></dd>
+                                </dl>
+                                <dl class="note clear">
+                                    <dt>Note</dt>
+                                    <dd>ABC<a href="#" class="icon_write"><i class="fal fa-pencil"></i></a></dd>
+                                </dl>
+                                <div class="bottom clear">
+                                    <dl>
+                                        <dt>You Receive</dt>
+                                        <dd>0%</dd>
+                                    </dl>
+                                    <dl>
+                                        <dt>Friends Receive</dt>
+                                        <dd>0%</dd>
+                                    </dl>
                                 </div>
                             </div>
-                            <div class="col-md-5">
-                                <div class="invite-element-right px-3 py-4">
-                                    <div class="invite-banner">
-                                        <img src={banner_01_icon} width="100%"/>
-                                    </div>
-                                </div>
-                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-12 col-sm-12 wow fadeInRight" data-wow-delay="0.8s">
+                            <img src={affiliateTop} alt="Invite your friends and make a profit." />
                         </div>
                     </div>
                 </div>
             </section>
+            
+            <section id="dashboard">
+                <div class="container">
+                    <div class="row wow fadeInUp" data-wow-delay="0.2s">
+                        <div class="col-12 clear">
+                            <h4><img src={icon_dashboard} alt="Dashboard" />Dashboard</h4>
 
-            <section>
-                <div class="container-fluid">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-md-10">
-                                <div class="dashboad-title">
-                                    <h2><img src={affiliate_logo_icon} width="50"/>Dashboard</h2>
+                            <ul class="dash_menu clear">
+                                <li className={(activeTab === "all-accounts-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("all-accounts-tab")}>All Accounts</a></li>
+                                <li className={(activeTab === "spot-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("spot-tab")}>Spot</a></li>
+                                <li className={(activeTab === "futures-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("futures-tab")}>Futures</a></li>
+                                <li className={(activeTab === "mining-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("mining-tab")}>Mining</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div className={"tab-pane " +(activeTab === "all-accounts-tab" ? "active" : "")}>
+                                    <AllaccountTabContent/>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="row justify-content-center">
-                            <div class="col-md-10">
-                           
-                            <Tabs defaultActiveKey="account" id="uncontrolled-tab-example">
-                                <Tab eventKey="account" title="All accounts">
-                                    <div class="container">
-                                        <div class="row justify-content-center">
-                                            <div class="col-md-12">
-                                            <Tabs defaultActiveKey="account-all-day-tab" id="uncontrolled-tab-example" className="mt-4" variant='pills'>   
-                                                <Tab eventKey="account-all-day-tab"  title="All" tabClassName="tab-bn">
-                                                    <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                        <div class="row justify-content-center">
-                                                            <div class="col-md-10">
-                                                                <div class="row mt-3">
-                                                                    <div class="col-md-4">
-                                                                        <div class="icome-tab">
-                                                                            <p class="font-weight-bold">You Earned</p>
-                                                                            <h4 class="text-black">0</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="icome-tab">
-                                                                            <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                            <h4 class="text-black">0</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="icome-tab">
-                                                                            <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                            <h4 class="text-black">0</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>	
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <div class="rank-lits d-flex align-items-center">
-                                                                            <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                            <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                        </div>
-                                                                        <div class="rank-content">
-                                                                            <p class="text-black font-weight-bold">--</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="container mt-3">
-                                                        <div class="tab-footer">
-                                                            <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                            <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                        </div>
-                                                    </div>
-                                                </Tab>
-                                                <Tab eventKey="account-yesterday-tab" title="Yesterday" tabClassName="tab-bn">
-                                                    <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                        <div class="row justify-content-center">
-                                                            <div class="col-md-10">
-                                                                <div class="row mt-3">
-                                                                    <div class="col-md-4">
-                                                                        <div class="icome-tab">
-                                                                            <p class="font-weight-bold">You Earned</p>
-                                                                            <h4 class="text-black">0</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="icome-tab">
-                                                                            <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                            <h4 class="text-black">0</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="icome-tab">
-                                                                            <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                            <h4 class="text-black">0</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>	
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <div class="rank-lits d-flex align-items-center">
-                                                                            <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                            <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                        </div>
-                                                                        <div class="rank-content">
-                                                                            <p class="text-black font-weight-bold">--</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="container mt-3">
-                                                        <div class="tab-footer">
-                                                            <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                            <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                        </div>
-                                                    </div>
-                                                </Tab>
-                                                <Tab eventKey="account-this-week-tab" title="This Week" tabClassName="tab-bn">
-                                                    <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                        <div class="row justify-content-center">
-                                                            <div class="col-md-10">
-                                                                <div class="row mt-3">
-                                                                    <div class="col-md-4">
-                                                                        <div class="icome-tab">
-                                                                            <p class="font-weight-bold">You Earned</p>
-                                                                            <h4 class="text-black">0</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="icome-tab">
-                                                                            <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                            <h4 class="text-black">0</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="icome-tab">
-                                                                            <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                            <h4 class="text-black">0</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>	
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <div class="rank-lits d-flex align-items-center">
-                                                                            <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                            <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                        </div>
-                                                                        <div class="rank-content">
-                                                                            <p class="text-black font-weight-bold">--</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="container mt-3">
-                                                        <div class="tab-footer">
-                                                            <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                            <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                        </div>
-                                                    </div>
-                                                </Tab>
-                                                <Tab eventKey="account-this-month-tab" title="This Month" tabClassName="tab-bn">
-                                                    <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                        <div class="row justify-content-center">
-                                                            <div class="col-md-10">
-                                                                <div class="row mt-3">
-                                                                    <div class="col-md-4">
-                                                                        <div class="icome-tab">
-                                                                            <p class="font-weight-bold">You Earned</p>
-                                                                            <h4 class="text-black">0</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="icome-tab">
-                                                                            <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                            <h4 class="text-black">0</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-4">
-                                                                        <div class="icome-tab">
-                                                                            <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                            <h4 class="text-black">0</h4>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>	
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <div class="rank-lits d-flex align-items-center">
-                                                                            <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                            <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                        </div>
-                                                                        <div class="rank-content">
-                                                                            <p class="text-black font-weight-bold">--</p>
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <div class="container mt-3">
-                                                        <div class="tab-footer">
-                                                            <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                            <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                        </div>
-                                                    </div>
-                                                </Tab>
-                                            </Tabs>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </Tab>
-                                <Tab eventKey="spot-tab" title="Spot">
-                                <div class="container">
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-12">
-                                        <Tabs defaultActiveKey="spot-all-day-tab" id="uncontrolled-tab-example" className="mt-4" variant='pills'>  
-                                            <Tab eventKey="spot-all-day-tab" title="All" tabClassName="tab-bn">
-                                            <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                <div class="row justify-content-center">
-                                                    <div class="col-md-10">
-                                                        <div class="row mt-3">
-                                                            <div class="col-md-4">
-                                                                <div class="icome-tab">
-                                                                    <p class="font-weight-bold">You Earned</p>
-                                                                    <h4 class="text-black">0</h4>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="icome-tab">
-                                                                    <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                    <h4 class="text-black">0</h4>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="icome-tab">
-                                                                    <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                    <h4 class="text-black">0</h4>
-                                                                </div>
-                                                            </div>
-                                                        </div>	
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="rank-lits d-flex align-items-center">
-                                                                    <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                    <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                </div>
-                                                                <div class="rank-content">
-                                                                    <p class="text-black font-weight-bold">--</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="container mt-3">
-                                                <div class="tab-footer">
-                                                    <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                    <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                </div>
-                                            </div>
-                                            </Tab>
-                                            <Tab eventKey="spot-yesterday-tab" title="Yesterday" tabClassName="tab-bn">
-                                            <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                <div class="row justify-content-center">
-                                                    <div class="col-md-10">
-                                                        <div class="row mt-3">
-                                                            <div class="col-md-4">
-                                                                <div class="icome-tab">
-                                                                    <p class="font-weight-bold">You Earned</p>
-                                                                    <h4 class="text-black">0</h4>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="icome-tab">
-                                                                    <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                    <h4 class="text-black">0</h4>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="icome-tab">
-                                                                    <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                    <h4 class="text-black">0</h4>
-                                                                </div>
-                                                            </div>
-                                                        </div>	
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="rank-lits d-flex align-items-center">
-                                                                    <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                    <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                </div>
-                                                                <div class="rank-content">
-                                                                    <p class="text-black font-weight-bold">--</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="container mt-3">
-                                                <div class="tab-footer">
-                                                    <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                    <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                </div>
-                                            </div>
-                                            </Tab>
-                                            <Tab eventKey="spot-this-week-tab" title="This Week" tabClassName="tab-bn">
-                                            <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                <div class="row justify-content-center">
-                                                    <div class="col-md-10">
-                                                        <div class="row mt-3">
-                                                            <div class="col-md-4">
-                                                                <div class="icome-tab">
-                                                                    <p class="font-weight-bold">You Earned</p>
-                                                                    <h4 class="text-black">0</h4>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="icome-tab">
-                                                                    <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                    <h4 class="text-black">0</h4>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="icome-tab">
-                                                                    <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                    <h4 class="text-black">0</h4>
-                                                                </div>
-                                                            </div>
-                                                        </div>	
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="rank-lits d-flex align-items-center">
-                                                                    <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                    <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                </div>
-                                                                <div class="rank-content">
-                                                                    <p class="text-black font-weight-bold">--</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="container mt-3">
-                                                <div class="tab-footer">
-                                                    <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                    <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                </div>
-                                            </div>
-                                            </Tab>
-                                            <Tab eventKey="spot-this-month-tab" title="This Month" tabClassName="tab-bn">
-                                            <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                <div class="row justify-content-center">
-                                                    <div class="col-md-10">
-                                                        <div class="row mt-3">
-                                                            <div class="col-md-4">
-                                                                <div class="icome-tab">
-                                                                    <p class="font-weight-bold">You Earned</p>
-                                                                    <h4 class="text-black">0</h4>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="icome-tab">
-                                                                    <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                    <h4 class="text-black">0</h4>
-                                                                </div>
-                                                            </div>
-                                                            <div class="col-md-4">
-                                                                <div class="icome-tab">
-                                                                    <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                    <h4 class="text-black">0</h4>
-                                                                </div>
-                                                            </div>
-                                                        </div>	
-                                                        <div class="row">
-                                                            <div class="col-md-6">
-                                                                <div class="rank-lits d-flex align-items-center">
-                                                                    <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                    <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                </div>
-                                                                <div class="rank-content">
-                                                                    <p class="text-black font-weight-bold">--</p>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="container mt-3">
-                                                <div class="tab-footer">
-                                                    <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                    <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                </div>
-                                            </div>
-                                            </Tab>
-                                        </Tabs> 
-                                            
-                                        </div>
-                                    </div>
+                                <div className={"tab-pane " +(activeTab === "spot-tab" ? "active" : "")}>
+                                    <SpotTabContent/>
+                                </div> 
+                                <div className={"tab-pane " +(activeTab === "futures-tab" ? "active" : "")}>
+                                    <FutureTabContent/>
                                 </div>
-                                
-                                </Tab>
-                                <Tab eventKey="futures-tab" title="Futures">
-                                <div class="container">
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-12">
-                                            <Tabs defaultActiveKey="futures-all-day-tab" id="uncontrolled-tab-example" className="mt-4" variant='pills'>   
-                                                <Tab eventKey="futures-all-day-tab"  title="All" tabClassName="tab-bn">
-                                                <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                    <div class="row justify-content-center">
-                                                        <div class="col-md-10">
-                                                            <div class="row mt-3">
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">You Earned</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                            </div>	
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="rank-lits d-flex align-items-center">
-                                                                        <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                        <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                    </div>
-                                                                    <div class="rank-content">
-                                                                        <p class="text-black font-weight-bold">--</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="container mt-3">
-                                                    <div class="tab-footer">
-                                                        <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                        <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                    </div>
-                                                </div>
-                                                </Tab>
-                                                <Tab eventKey="futures-yesterday-tab"  title="Yesterday" tabClassName="tab-bn">
-                                                <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                    <div class="row justify-content-center">
-                                                        <div class="col-md-10">
-                                                            <div class="row mt-3">
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">You Earned</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                            </div>	
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="rank-lits d-flex align-items-center">
-                                                                        <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                        <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                    </div>
-                                                                    <div class="rank-content">
-                                                                        <p class="text-black font-weight-bold">--</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="container mt-3">
-                                                    <div class="tab-footer">
-                                                        <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                        <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                    </div>
-                                                </div>
-                                                </Tab>
-                                                <Tab eventKey="futures-this-week-tab"  title="This Week" tabClassName="tab-bn">
-                                                <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                    <div class="row justify-content-center">
-                                                        <div class="col-md-10">
-                                                            <div class="row mt-3">
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">You Earned</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                            </div>	
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="rank-lits d-flex align-items-center">
-                                                                        <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                        <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                    </div>
-                                                                    <div class="rank-content">
-                                                                        <p class="text-black font-weight-bold">--</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="container mt-3">
-                                                    <div class="tab-footer">
-                                                        <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                        <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                    </div>
-                                                </div>
-                                                </Tab>
-                                                <Tab eventKey="futures-this-month-tab"  title="This Month" tabClassName="tab-bn">
-                                                <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                    <div class="row justify-content-center">
-                                                        <div class="col-md-10">
-                                                            <div class="row mt-3">
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">You Earned</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                            </div>	
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="rank-lits d-flex align-items-center">
-                                                                        <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                        <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                    </div>
-                                                                    <div class="rank-content">
-                                                                        <p class="text-black font-weight-bold">--</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="container mt-3">
-                                                    <div class="tab-footer">
-                                                        <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                        <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                    </div>
-                                                </div>
-                                                </Tab>
-                                            </Tabs>
-                                            
-                                        </div>
-                                    </div>
-                                </div>
-                                
-                                </Tab>
-                                <Tab eventKey="mining-tab" title="Mining">
-                                <div class="container">
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-12">
-                                            <Tabs defaultActiveKey="minig-all-day-tab" id="uncontrolled-tab-example" className="mt-4" variant='pills'>   
-                                                <Tab eventKey="minig-all-day-tab" title="All" tabClassName="tab-bn">
-                                                <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                    <div class="row justify-content-center">
-                                                        <div class="col-md-10">
-                                                            <div class="row mt-3">
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">You Earned</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                            </div>	
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="rank-lits d-flex align-items-center">
-                                                                        <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                        <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                    </div>
-                                                                    <div class="rank-content">
-                                                                        <p class="text-black font-weight-bold">--</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="container mt-3">
-                                                    <div class="tab-footer">
-                                                        <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                        <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                    </div>
-                                                </div>
-                                                </Tab>
-                                                <Tab eventKey="minig-yesterday-tab" title="Yesterday" tabClassName="tab-bn">
-                                                <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                    <div class="row justify-content-center">
-                                                        <div class="col-md-10">
-                                                            <div class="row mt-3">
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">You Earned</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                            </div>	
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="rank-lits d-flex align-items-center">
-                                                                        <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                        <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                    </div>
-                                                                    <div class="rank-content">
-                                                                        <p class="text-black font-weight-bold">--</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="container mt-3">
-                                                    <div class="tab-footer">
-                                                        <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                        <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                    </div>
-                                                </div>
-                                                </Tab>
-                                                <Tab eventKey="minig-this-week-tab" title="This Week" tabClassName="tab-bn">
-                                                <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                    <div class="row justify-content-center">
-                                                        <div class="col-md-10">
-                                                            <div class="row mt-3">
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">You Earned</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                            </div>	
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="rank-lits d-flex align-items-center">
-                                                                        <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                        <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                    </div>
-                                                                    <div class="rank-content">
-                                                                        <p class="text-black font-weight-bold">--</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="container mt-3">
-                                                    <div class="tab-footer">
-                                                        <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                        <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                    </div>
-                                                </div>
-                                                </Tab>
-                                                <Tab eventKey="minig-this-month-tab" title="This Month" tabClassName="tab-bn">
-                                                <div class="container tab-content-bg py-4 px-2 mt-4">
-                                                    <div class="row justify-content-center">
-                                                        <div class="col-md-10">
-                                                            <div class="row mt-3">
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">You Earned</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Number of Traded Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                                <div class="col-md-4">
-                                                                    <div class="icome-tab">
-                                                                        <p class="font-weight-bold">Total Numbers of Friends</p>
-                                                                        <h4 class="text-black">0</h4>
-                                                                    </div>
-                                                                </div>
-                                                            </div>	
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="rank-lits d-flex align-items-center">
-                                                                        <p class="text-black font-weight-bold mb-0 pr-2">Your Ranking</p>
-                                                                        <a href="#" class="btn btn-rank-list font-weight-bold">Ranking List ></a>
-                                                                    </div>
-                                                                    <div class="rank-content">
-                                                                        <p class="text-black font-weight-bold">--</p>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="container mt-3">
-                                                    <div class="tab-footer">
-                                                        <p class="font-weight-bold mb-0">Lorem Ipsum is simply dummy text of the printing</p>
-                                                        <p class="text-secondary">There are many variations of passages of Lorem Ipsum available, but the majority have suffered alteration in some form, by injected humour, or randomised words which don't look even slightly believable.</p>
-                                                    </div>
-                                                </div>
-                                                </Tab>
-                                            </Tabs>                                            
-                                        </div>
-                                    </div>
-                                </div>
-                                </Tab>
-                            </Tabs>
-                                
-                            </div>
+                                <div className={"tab-pane " +(activeTab === "mining-tab" ? "active" : "")}>
+                                    <MiningTabContent/>
+                                </div> 
+                            </div>                            
+                            
+                            <ul class="notice">
+                                <li>* Data update time refers to UTC + 0 time zone. The data maintenance time is 3am - 5am (UTC+0) every day. During this period, the calculation of today's data is based on the assets of previous day.<br />After maintenance, all data will be displayed properly</li>
+                                <li>* Statement: due to the complexity of financial data, there might be nuances and delay. Data displayed above is for reference only. We sincerely apologize for any inconvenience.</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </section>
-
-            <section class="py-60">
-                <div class="container-fluid">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-md-10">
-                                <div class="dashboad-title d-flex align-items-center justify-content-between">
-                                    <h2><img src={affiliate_logo_icon} width="40"/>Friends List</h2>
-                                    <a href="#">View Chart</a>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row justify-content-center">
-                            <div class="col-md-10">
-                            <Tabs defaultActiveKey="fri-accout-tab">
-                                <Tab eventKey="fri-accout-tab" title="All accounts">
-                                <div class="container mt-4">
-                                    <div class="row align-items-center">
-                                        <div class="col-md-1"></div>
-                                        <div class="col-md-8">
-                                            <div class="fri-content">
-                                                <p>All friends data as of 0:00 UTC today is displayed, and will be updated between 3:00-5:00 (UTC+0)today excluding Mining Pool, Please click the"Export" button to download detailed data.</p>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <a href="#">Export complete history</a>
-                                        </div>
+            
+            <section id="friendsList">
+                <div class="container">
+                    <div class="row wow fadeInUp" data-wow-delay="0.4s">
+                        <div class="col-12">
+                            <h4><img src={icon_friends} alt="Friends List" />Friends List</h4>
+                            <a href="#" class="btn_chart"><i class="far fa-chart-line"></i>View Chart</a>
+                            <ul class="friends_menu clear">
+                                <li className={(activeTabFriend === "all-accounts-friend-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabFriend("all-accounts-friend-tab")}>All Accounts</a></li>
+                                <li className={(activeTabFriend === "spot-friend-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabFriend("spot-friend-tab")}>Spot</a></li>
+                                <li className={(activeTabFriend === "futures-friend-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabFriend("futures-friend-tab")}>Futures</a></li>
+                                <li className={(activeTabFriend === "mining-friend-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabFriend("mining-friend-tab")}>Mining</a></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div className={"tab-pane " +(activeTabFriend === "all-accounts-friend-tab" ? "active" : "")}>
+                                    <p>All friends data as of 0:00 UTC today is displayed, and will be updated between 3:00 - 5:00 (UTC+0) today, excluding Mining Pool. All records can be exported directly from desktop downloads.</p>
+                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
+                                    <div class="table_container">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Account Type</th>
+                                                    <th>Friend's User ID</th>
+                                                    <th>Referral Bonus Earned (BTC)</th>
+                                                    <th>Traded</th>
+                                                    <th>Registration Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <img src={nodata} alt="No Data." />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-
-                                    <div class="row justify-content-center">
-                                        <div class="col-md-12">
-                                            <table class="table table-striped">
-                                                <thead>
-                                                    <tr>
-                                                        <th scope="col">Account Type</th>
-                                                        <th scope="col">Friend’s User ID</th>
-                                                        <th scope="col">Referral Bonus Earned (BTC)</th>
-                                                        <th scope="col">Traded</th>
-                                                        <th scope="col">Registration Time</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                </tbody>
-                                            </table>
-                                            <div class="data-blank d-flex justify-content-center">
-                                                <img src={data_blank_icon}/>
-                                            </div>
-                                        </div>
+                                    <div class="indicator">
+                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
+                                        <span class="on">1</span>
+                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
                                     </div>
-
                                 </div>
-                                </Tab>
-                                <Tab eventKey="fri-spot-tab" title="Spot">
-
-                                </Tab>
-                                <Tab eventKey="fri-futures-tab" title="Futures">
-
-                                </Tab>
-                                <Tab eventKey="fri-mining-tab" title="Mining">
-
-                                </Tab>
-                            </Tabs>                               
+                                <div className={"tab-pane " +(activeTabFriend === "spot-friend-tab" ? "active" : "")}>
+                                    <p>All friends data as of 0:00 UTC today is displayed, and will be updated between 3:00 - 5:00 (UTC+0) today, excluding Mining Pool. All records can be exported directly from desktop downloads.</p>
+                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
+                                    <div class="table_container">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Account Type</th>
+                                                    <th>Friend's User ID</th>
+                                                    <th>Referral Bonus Earned (BTC)</th>
+                                                    <th>Traded</th>
+                                                    <th>Registration Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <img src={nodata} alt="No Data." />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="indicator">
+                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
+                                        <span class="on">1</span>
+                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    </div>
+                                </div> 
+                                <div className={"tab-pane " +(activeTabFriend === "futures-friend-tab" ? "active" : "")}>
+                                    <p>All friends data as of 0:00 UTC today is displayed, and will be updated between 3:00 - 5:00 (UTC+0) today, excluding Mining Pool. All records can be exported directly from desktop downloads.</p>
+                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
+                                    <div class="table_container">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Account Type</th>
+                                                    <th>Friend's User ID</th>
+                                                    <th>Referral Bonus Earned (BTC)</th>
+                                                    <th>Traded</th>
+                                                    <th>Registration Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <img src={nodata} alt="No Data." />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="indicator">
+                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
+                                        <span class="on">1</span>
+                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    </div>
+                                </div>
+                                <div className={"tab-pane " +(activeTabFriend === "mining-friend-tab" ? "active" : "")}>
+                                    <p>All friends data as of 0:00 UTC today is displayed, and will be updated between 3:00 - 5:00 (UTC+0) today, excluding Mining Pool. All records can be exported directly from desktop downloads.</p>
+                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
+                                    <div class="table_container">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Account Type</th>
+                                                    <th>Friend's User ID</th>
+                                                    <th>Referral Bonus Earned (BTC)</th>
+                                                    <th>Traded</th>
+                                                    <th>Registration Time</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="5">
+                                                        <img src={nodata} alt="No Data." />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="indicator">
+                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
+                                        <span class="on">1</span>
+                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    </div>
+                                </div> 
                             </div>
+                            
                         </div>
                     </div>
                 </div>
             </section>
-
-            <section class="py-60">
-                <div class="container-fluid">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-md-10">
-                                <div class="dashboad-title d-flex align-items-center justify-content-between">
-                                    <h2><img src={affiliate_logo_icon} width="40"/>Commission History</h2>
-                                    <a href="#">View Chart</a>
-                                </div>
+            
+            <section id="commission">
+                <div class="container">
+                    <div class="row wow fadeInUp" data-wow-delay="0.6s">
+                        <div class="col-12">
+                            <h4><img src={icon_commission} alt="Commission" />Commission History</h4>
+                            <a href="#" class="btn_chart"><i class="far fa-chart-line"></i>View Chart</a>
+                            <div class="box clear">
+                                <i class="fal fa-megaphone"></i>
+                                <p>Your referral commission will be credited to your wallet balance within the next 72 hours. If you do not receive your commission within 72 hours, please contact our online support center for further assistance. </p>
                             </div>
-                        </div>
-                        <div class="row justify-content-center">
-                            <div class="col-md-10">
-                            <Tabs defaultActiveKey="comm-accout-tab">
-                                <Tab eventKey="comm-accout-tab" title="All accounts">
-                                    <div class="container">
-                                        <div class="row align-items-center justify-content-center py-3">
-                                            <div class="col-md-12 ch-content py-3">
-                                                <p class="mb-0">
-                                                    Your referral commission will be credited to your walled balance within the next 72 hours. If you do not receive your commission within 72 hours. Please contact our online support center for futher assistance.
-                                                </p>
-                                            </div>
-                                        </div>
-
-                                        <div class="row justify-content-center">
-                                            <div class="col-md-12">
-                                                <table class="table table-striped">
-                                                    <thead>
-                                                        <tr>
-                                                            <th scope="col">Account Type</th>
-                                                            <th scope="col">Friend’s User ID</th>
-                                                            <th scope="col">Referral Bonus Earned (BTC)</th>
-                                                            <th scope="col">Traded</th>
-                                                            <th scope="col">Registration Time</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    </tbody>
-                                                </table>
-                                                <div class="row">
-                                                    <div class="col-md-9">
-                                                        <div class="fri-content">
-                                                            <p>
-                                                                Show only the last 7 days of records(click the right-hand export button for all records
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                <div class="col-md-3">
-                                                    <a href="#">Export complete history</a>
-                                                </div>
-                                                </div>
-                                                <div class="data-blank d-flex justify-content-center">
-                                                    <img src={data_blank_icon}/>
-                                                </div>
-                                            </div>
-                                        </div>
+                            <ul class="commission_menu clear">
+                                <li className={(activeTabCommission === "all-accounts-commission-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabCommission("all-accounts-commission-tab")}>All Accounts</a></li>
+                                <li className={(activeTabCommission === "spot-commission-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabCommission("spot-commission-tab")}>Spot (Margin Included)</a></li>
+                                <li className={(activeTabCommission === "futures-commission-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabCommission("futures-commission-tab")}>Futures</a></li>
+                                <li className={(activeTabCommission === "mining-commission-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabCommission("mining-commission-tab")}>Mining</a></li>
+                            </ul>
+                            <p>Only show the records of the last 7 days. All records can be exported directly from desktop downloads.</p>
+                            <div class="tab-content">
+                                <div className={"tab-pane " +(activeTabCommission === "all-accounts-commission-tab" ? "active" : "")}>
+                                    
+                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
+                                    <div class="table_container">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Order Type</th>
+                                                    <th>Friend's User ID</th>
+                                                    <th>Commission Earned</th>
+                                                    <th>Friend's Trade Date</th>
+                                                    <th>Commission Time</th>
+                                                    <th>Distribution Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <img src={nodata} alt="No Data." />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                </Tab>
-                                <Tab eventKey="comm-spot-tab" title="Spot">
-
-                                </Tab>
-                                <Tab eventKey="comm-futures-tab" title="Futures">
-
-                                </Tab>
-                                <Tab eventKey="comm-mining-tab" title="Mining">
-
-                                </Tab>
-                            </Tabs>                                
-                            </div>
+                                    <div class="indicator">
+                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
+                                        <span class="on">1</span>
+                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    </div>
+                                </div>
+                                <div className={"tab-pane " +(activeTabCommission === "spot-commission-tab" ? "active" : "")}>
+                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
+                                    <div class="table_container">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Order Type</th>
+                                                    <th>Friend's User ID</th>
+                                                    <th>Commission Earned</th>
+                                                    <th>Friend's Trade Date</th>
+                                                    <th>Commission Time</th>
+                                                    <th>Distribution Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <img src={nodata} alt="No Data." />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="indicator">
+                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
+                                        <span class="on">1</span>
+                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    </div>
+                                </div>
+                                <div className={"tab-pane " +(activeTabCommission === "futures-commission-tab" ? "active" : "")}>
+                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
+                                    <div class="table_container">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Order Type</th>
+                                                    <th>Friend's User ID</th>
+                                                    <th>Commission Earned</th>
+                                                    <th>Friend's Trade Date</th>
+                                                    <th>Commission Time</th>
+                                                    <th>Distribution Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <img src={nodata} alt="No Data." />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="indicator">
+                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
+                                        <span class="on">1</span>
+                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    </div>
+                                </div>
+                                <div className={"tab-pane " +(activeTabCommission === "mining-commission-tab" ? "active" : "")}>
+                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
+                                    <div class="table_container">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th>Order Type</th>
+                                                    <th>Friend's User ID</th>
+                                                    <th>Commission Earned</th>
+                                                    <th>Friend's Trade Date</th>
+                                                    <th>Commission Time</th>
+                                                    <th>Distribution Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td colspan="6">
+                                                        <img src={nodata} alt="No Data." />
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="indicator">
+                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
+                                        <span class="on">1</span>
+                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    </div>
+                                </div>
+                            </div>                            
                         </div>
                     </div>
                 </div>
             </section>
-        </div> 
+        </div>
     )
 }
 export default Affiliate;

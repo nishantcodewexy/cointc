@@ -25,8 +25,8 @@ function GuestMarkup() {
   var Custom_Header = null;
   var Custom_Footer = null
   if(cur_loc==='/'){
-    Custom_Header = <Header2 />;
-  }else if(cur_loc==='/affiliate'){
+    Custom_Header = <Header />;
+  }else if(cur_loc==='/affiliate'||cur_loc==='/support'){
     Custom_Header = <Header3 />;
   }else if(cur_loc==='/my-page' || cur_loc==='/my-page-2'){
     Custom_Header = <Header4 />;
@@ -37,7 +37,7 @@ function GuestMarkup() {
   }
 
   if(cur_loc === '/'){
-    Custom_Footer = <Footer2 />;
+    Custom_Footer = <Footer />;
   }else if(cur_loc === '/frame01'){
     Custom_Footer = null;
   }else{

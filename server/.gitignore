@@ -9,7 +9,7 @@
 /coverage
 
 # production
-/views
+# /views
 
 # misc
 .DS_Store

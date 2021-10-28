@@ -61,6 +61,10 @@ module.exports = (sequelize, DataTypes) => {
       suitability: {
         type: DataTypes.INTEGER,
         defaultValue: 0,
+        validate: {
+          min: 0,
+          max: 5
+        }
       },
       payment_methods: DataTypes.JSON,
       pname: { type: DataTypes.STRING, comment: "public name" },

@@ -1,10 +1,8 @@
 "use strict";
-const uuid = require("uuid");
 
 function CurrencyController(server) {
   const {
     db: { Currency, sequelize, User },
-    consts: { roles: _roles },
     helpers: { filters, paginator },
     boom,
   } = server.app;

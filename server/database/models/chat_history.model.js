@@ -53,7 +53,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "ChatHistory",
       underscored: true,
-      tableName: 'tbl_chathistories',
+      tableName: 'tbl_chat_histories',
       paranoid:true
     }
   );

@@ -376,8 +376,8 @@ module.exports = function UserController(server) {
      * @returns
      */
     async bulkRetrieve(req) {
+      const { query } = req;
       try {
-        const { query } = req;
         const queryFilters = await filters({ query, searchFields: ["email"] });
 
         const include = filterAssociations(query?.include);
