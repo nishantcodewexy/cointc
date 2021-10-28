@@ -1,6 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
 const Tatum = require("@tatumio/tatum");
+const walletServices = require("../../services/wallet")
+
 const _ = require("underscore");
 
 module.exports = (sequelize, DataTypes) => {
@@ -41,6 +43,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: "BTC",
       },
+      tatum_account_id: DataTypes.STRING,
     },
     {
       sequelize,
@@ -48,18 +51,26 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       tableName: "tbl_wallets",
       hooks: {
+        /**
+         * 
+         * @param {Object} model 
+         * @param {Object} options 
+         */
         async beforeValidate(model, options) {
+          
           model.asset = model.asset.toUpperCase();
           const {
             mnemonic,
             xpub,
             key,
             address,
-          } = await new WalletCreator().generate(model.asset);
+            tatum_account_id
+          } = await new WalletCreator().generate(model.asset,model.user_id);
           model.extended_pub = xpub;
           model.private_key = key;
           model.address = address;
           model.mnemonic = mnemonic;
+          model.tatum_account_id = tatum_account_id;
         },
       },
     }
@@ -74,11 +85,19 @@ class WalletCreator {
   }
 
   /**
+   * 
+   * @typedef getMnemonicAndExPubReturn
+   * @property {String} mnemonic
+   * @property {String} xpub
+   */
+
+  
+  /**
    * @name getMnemonicAndExPub
    * @description generate mnemonic and extended public key
-   * @param {String} mnemonic string for generating wallet
+   * @param {String} [mnemonic] string for generating wallet
    * @param {String} currency crypto asset to be created
-   * @returns {Object} {mnemonic, xpub}
+   * @returns {Promise<Object>} {mnemonic, xpub}
    */
   async #getMnemonicAndExPub(currency, mnemonic) {
     const wallet = await Tatum.generateWallet(
@@ -94,7 +113,7 @@ class WalletCreator {
    * @description generate wallet private key
    * @param {String} currency crypto asset
    * @param {String} mnemonic
-   * @returns {Object}
+   * @returns {Promise<Object>}
    */
   async #createPrivateKey(currency, mnemonic) {
     const privateKey = await Tatum.generatePrivateKeyFromMnemonic(
@@ -124,10 +143,30 @@ class WalletCreator {
     return address;
   }
 
-  async generate(currency) {
+
+  /**
+   * 
+   * @typedef generateReturn
+   * @property {String} mnemonic
+   * @property {String} xpub
+   * @property {String} key
+   * @property {String} address
+   * @property {String} tatum_account_id
+   */
+
+  /**
+   * 
+   * @param {String} currency
+   * @param {String} user_id
+   * @returns {Promise<generateReturn>}
+   */
+  async generate(currency,user_id) {
     const { mnemonic, xpub } = await this.#getMnemonicAndExPub(currency);
     const key = await this.#createPrivateKey(currency, mnemonic);
-    const address = await this.#createWalletAddress(currency, xpub);
-    return { mnemonic, xpub, key, address };
+    // const address = await this.#createWalletAddress(currency, xpub);
+    const {id:tatum_account_id} = await walletServices.createAccount({currency,xpub,user_id})
+    
+    const {address} = await walletServices.createAddressFromWallet({wallet:{tatum_account_id}})
+    return { mnemonic, xpub, key, address,tatum_account_id };
   }
 }
