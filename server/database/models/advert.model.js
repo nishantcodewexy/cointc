@@ -1,5 +1,4 @@
 "use strict";
-const { tooManyRequests } = require("boom");
 const { Model } = require("sequelize");
 
 module.exports = (sequelize, DataTypes) => {
@@ -136,7 +135,7 @@ module.exports = (sequelize, DataTypes) => {
       underscored: true,
       tableName: "tbl_adverts",
       paranoid: true,
-      deletedAt: 'archived_at'
+      deletedAt: "archived_at",
     }
   );
 
