@@ -19,13 +19,23 @@ import wallet_qrcode_icon from '../../app-assets/images/page/wallet-qrcode.png';
 
 export const Wallet_withdraw = () => {
     return (     
-        <div className="Wallet"> 
+        <div class="content">
+            <section id="mainTop">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="wow fadeInDown" data-wow-delay="0.3s">Wallet</h3>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             <section id="withdrawCrypto">
                 <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col col-sm-12 col-md-8 main-bg">
+                    <div class="row justify-content-center" data-wow-delay="0.2s">
+                        <div class="col col-sm-12 col-md-6 main-bg wow fadeInDown">
                             <h4>Withdraw Crypto</h4>
-                            <form>
+                            <form id="walletModal">
                                 <div class="form-group row justify-content-between mb-0 py-2">
                                     <label class="col-sm-4 col-form-label">Select Coin</label>
                                     <div class="col-sm-10  col-md-6 select-coin-input">
@@ -38,8 +48,8 @@ export const Wallet_withdraw = () => {
 
                                 <div class="form-group row justify-content-between mb-0 py-2">
                                     <label class="col-sm-2 col-form-label">Network</label>
-                                    <div class="col-sm-10  col-md-6 network-input">
-                                        <input type="text" class="form-control-plaintext text-md-right"  value="Ethreum ERC20"/>
+                                    <div class="col-sm-10  col-md-6 network-text text-right">
+                                        <p>Ethreum ERC20</p>
                                     </div>
                                 </div>
 
@@ -54,7 +64,7 @@ export const Wallet_withdraw = () => {
                                     <label for="inputPassword" class="col-sm-4 col-form-label">Withdraw Amount</label>
                                     <div class="col-sm-10  col-md-6 amount-input">
                                         <div class="input-group">
-                                            <input type="text" class="form-control"/>
+                                            <input type="text" class="form-control" />
                                             <div class="input-group-append">
                                                 <span class="input-group-text" id="basic-addon2">1000 | <span class="pl-2">USDT</span></span>
                                             </div>
@@ -66,23 +76,23 @@ export const Wallet_withdraw = () => {
                                 <div class="form-group row justify-content-between mb-0 py-2 wa-icon">
                                     <label class="col-sm-3 col-form-label postion-relative">Withdrawal <span></span> <span class="d-block">Available</span></label>
                                     <div class="col-sm-10  col-md-6 fee-input">
-                                        <input type="text" class="form-control-plaintext text-md-right font-weight-bold"  value="999.000000 USDT"/>
+                                        <input type="text" class="form-control-plaintext text-md-right font-weight-bold"  value="999.000000 USDT" />
                                     </div>
                                 </div>
 
                                 <hr class="form-hr-bottom" />
 
-                                <div class="form-group row justify-content-between mb-0 py-2">
+                                <div class="form-group row justify-content-between mb-0">
                                     <label class="col-sm-2 col-form-label">Fee</label>
                                     <div class="col-sm-10  col-md-6 fee-input">
-                                        <input type="text" class="form-control-plaintext text-md-right"  value="1 USDT"/>
+                                        <input type="text" class="form-control-plaintext text-md-right"  value="1 USDT" />
                                     </div>
                                 </div>
 
-                                <div class="form-group row justify-content-between mb-0 py-2">
+                                <div class="form-group row justify-content-between mb-0">
                                     <label class="col-sm-4 col-form-label">Receive Amount</label>
                                     <div class="col-sm-10  col-md-6 fee-input">
-                                        <input type="text" class="form-control-plaintext text-md-right font-weight-bold"  value="999.000000 USDT"/>
+                                        <input type="text" class="form-control-plaintext text-md-right font-weight-bold"  value="999.000000 USDT" />
                                     </div>
                                 </div>
 
@@ -104,6 +114,6 @@ export const Wallet_withdraw = () => {
                     </div>
                 </div>
             </section>
-        </div> 
+        </div>
     )
 }

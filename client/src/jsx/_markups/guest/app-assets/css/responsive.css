@@ -412,3 +412,11 @@
     }
 
 }
+
+@media screen and (max-width:576px) {
+    #join .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+}
