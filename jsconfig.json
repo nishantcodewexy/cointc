@@ -4,12 +4,20 @@
             "jest",
             "faker"
         ],
-        "exclude": [
-            "node_modules/*",
-            "yarn-error.log",
-            "yarn.lock",
-            "package.json",
-            ".*"
-        ]
+    },
+    "exclude": [
+        "**/node_modules",
+        ".git",
+        "**/build/*",
+        "**/views/*",
+        "yarn-error.log",
+        "yarn.lock",
+        "package.json",
+        ".*"
+    ],
+    "compilerOptions": {
+        "module": "commonJS",
+        "target": "es6",
+        "checkJS": true,
     }
 }

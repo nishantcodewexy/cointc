@@ -1,6 +1,7 @@
 "use strict";
 const { tooManyRequests } = require("boom");
 const { Model } = require("sequelize");
+
 module.exports = (sequelize, DataTypes) => {
   class Advert extends Model {
     /**
@@ -8,12 +9,17 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
+    static total = 0;
     static associate(models) {
       // define association here
-      const { Advert, Currency } = models;
-      Advert.belongsTo(Currency, {
-        foreignKey: "currency_id",
-        allowNull: false,
+      const { Advert, Currency, Order } = models;
+
+      Advert.hasMany(Order, {
+        as: "orders",
+        foreignKey: {
+          name: "advert_id",
+          allowNull: false,
+        },
       });
     }
   }
@@ -61,16 +67,12 @@ module.exports = (sequelize, DataTypes) => {
         comment: "Best price for buy ad",
       },
       payment_methods: {
-        type: DataTypes.JSON,
+        type: DataTypes.STRING,
         allowNull: false,
       },
       type: {
-        type: DataTypes.ENUM,
-        values: ["buy", "sell"],
+        type: DataTypes.ENUM("buy", "sell"),
         allowNull: false,
-        validate: {
-          contains: ["buy", "sell"],
-        },
         comment:
           "Advert type where a buyer ad requires a seller to initiate an order. A seller ad requires a buyer to inititate an order",
       },
@@ -108,13 +110,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         comment: "Kind of fiat currency",
       },
-      remark: DataTypes.STRING,
+      remarks: DataTypes.STRING(255),
       auto_reply_message: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(255),
         comment: "Message to be sent after order is placed",
       },
       trade_conditions: {
-        type: DataTypes.STRING,
+        type: DataTypes.STRING(400),
         comment: "Trade conditions",
       },
       published: {
@@ -133,7 +135,28 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Advert",
       underscored: true,
       tableName: "tbl_adverts",
+      paranoid: true,
+      deletedAt: 'archived_at'
     }
   );
+
+  Advert.addHook("afterFind", async (findResult, options) => {
+    if (!findResult) return;
+    if (!Array.isArray(findResult)) findResult = [findResult];
+    for (const instance of findResult) {
+      if (!(instance instanceof Advert)) return;
+
+      let orders = await instance.getOrders();
+      let completed_orders = await instance.getOrders({
+        where: { status: "completed" },
+      });
+      if (instance)
+        instance.dataValues = {
+          total_orders: orders.length,
+          total_completed_orders: completed_orders.length,
+          ...instance?.dataValues,
+        };
+    }
+  });
   return Advert;
 };

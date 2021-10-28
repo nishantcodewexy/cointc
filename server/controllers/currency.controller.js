@@ -1,11 +1,8 @@
 "use strict";
-const uuid = require("uuid");
-const { H } = require("../../client/node_modules/jest-haste-map/build");
 
 function CurrencyController(server) {
   const {
     db: { Currency, sequelize, User },
-    consts: { roles: _roles },
     helpers: { filters, paginator },
     boom,
   } = server.app;

@@ -1,43 +1,31 @@
 const Joi = require("joi");
-
 // CREATE ------------------------------------------------
 
 /**
- * @function create - Schema validator for creating a single record
+ * @function create - Schema validator for creating a single currency entity
  * @param {Object} server - Hapi server instance
  * @returns {Object} validator
  */
 function create(server) {
-  const {
-    boom,
-    consts: { patterns },
-  } = server.app;
+  const { boom } = server.app;
 
   return {
     payload: Joi.object({
-      email: Joi.string()
-        .email({ minDomainSegments: 2 })
+      total_amount: Joi.number()
         .required()
-        .error(boom.badRequest("Required input <email::string> is invalid")),
-      password: Joi.string()
-        .pattern(patterns.password)
-        .optional()
+        .error(boom.badData(`Required data <total_amount::number> is invalid`)),
+      total_quantity: Joi.number()
+        .required()
         .error(
-          boom.badRequest(
-            `Required input <password::string(${patterns.password})> is invalid`
-          )
+          boom.badData(`Required data <total_quantity::number> is invalid`)
         ),
-      repeat_password: Joi.ref("password"),
-      invite_code: Joi.string()
-        .length(10)
-        .optional()
-        .error(
-          boom.badRequest("Optional input <invite_code::string> is invalid")
-        ),
-    }).with("password", "repeat_password"),
+      advert_id: Joi.string()
+        .uuid()
+        .required()
+        .error(boom.badData(`Required data <advert_id::uuid> is invalid`)),
+    }),
   };
 }
-
 /**
  * @function bulkCreate - Schema validator for creating bulk currency entities
  * @param {Object} server - Hapi server instance
@@ -69,15 +57,77 @@ function update(server) {
         .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
     }),
     payload: Joi.object({
-      iso_code: Joi.string()
+      min_order_qty: Joi.number()
         .optional()
-        .error(boom.badRequest("Required input <iso_code::string> is invalid")),
-      name: Joi.string()
+        .error(
+          boom.badRequest(`Required input <min_order_qty::number> is invalid`)
+        ),
+
+      max_order_qty: Joi.number()
         .optional()
-        .error(boom.badRequest("Required input <name::string> is invalid")),
-      type: Joi.string()
+        .error(
+          boom.badRequest(`Required input <max_order_qty::number> is invalid`)
+        ),
+
+      min_order_price: Joi.number()
         .optional()
-        .error(boom.badRequest("Required input <type::string> is invalid")),
+        .error(
+          boom.badRequest(`Required input <min_order_price::number> is invalid`)
+        ),
+
+      max_order_price: Joi.number()
+        .optional()
+        .error(
+          boom.badRequest(`Required input <max_order_price::number> is invalid`)
+        ),
+
+      payment_method: Joi.object()
+        .optional()
+        .error(
+          boom.badRequest(`Required input <payment_method::objec> is invalid`)
+        ),
+
+      payment_time_limit: Joi.string()
+        .isoDate()
+        .optional()
+        .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
+
+      price: Joi.string()
+        .optional()
+        .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
+
+      floating_price: Joi.boolean()
+        .optional()
+        .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
+
+      qty: Joi.number()
+        .optional()
+        .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
+
+      crypto_currency: Joi.string()
+        .optional()
+        .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
+
+      fiat_currency: Joi.string()
+        .optional()
+        .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
+
+      remark: Joi.string()
+        .optional()
+        .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
+
+      auto_reply_message: Joi.string()
+        .optional()
+        .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
+
+      trade_conditions: Joi.string()
+        .optional()
+        .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
+
+      published: Joi.boolean()
+        .default(false)
+        .optional()
+        .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
     }),
   };
 }
@@ -101,19 +151,17 @@ function bulkUpdate(server) {
 // REMOVE ------------------------------------------------
 
 function remove(server) {
-  const { boom } = server.app;
   return {
     payload: Joi.object({
       force: Joi.boolean()
         .default(false)
         .optional()
-        .error(boom.badData("Optional input <force::boolean> is invalid")),
+        .error(new Error("optional input <force::boolean> is invalid")),
     }).optional(),
 
     params: retrieve(server)?.params,
   };
 }
-
 
 function bulkRemove(server) {
   const { boom } = server.app;
@@ -159,12 +207,23 @@ function bulkRestore(server) {
 // RETRIEVE ------------------------------------------------
 
 function retrieve(server) {
+  const {
+    consts: { patterns },
+    boom,
+  } = server.app;
+
   return {
-    params: update(server)?.params,
+    params: Joi.object({
+      id: Joi.string()
+        .pattern(patterns?.order_no)
+        .required()
+        .error(
+          boom.badData("required data <id::string> is not a valid order number")
+        ),
+    }),
+   
   };
 }
-
-
 
 module.exports = {
   create,

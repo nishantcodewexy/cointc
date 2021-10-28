@@ -3,91 +3,114 @@ const assert = require("assert");
 const boom = require("@hapi/boom");
 
 function OrderController(server) {
+  const { __upsert, __update, __destroy, __assertRole } = require("./utils")(
+    server
+  );
   const {
-    db: { Order },
+    db: { Order, Advert },
     helpers: { filters, paginator },
   } = server.app;
 
   return {
+    // CREATE ---------------------------------------------------------
+
+    /**
+     * @function create - create single order record
+     * @param {Object} req
+     * @returns
+     */
     async create(req) {
       const {
-        auth: {
-          credentials: { user },
-        },
+        pre: { user },
+        payload,
+      } = req;
+
+      const { advert_id } = payload;
+      if (!advert_id) throw boom.badRequest("Missing advert_id in request");
+
+      try {
+        // find advert
+        let ad = await Advert.findByPk(advert_id);
+        if (ad) {
+          // create order using the user info
+          return {
+            result: await user.createOrder({
+              ...payload,
+            }),
+          };
+        } else
+          return boom.notFound(
+            "Advert cannot be found! Cannot create order for non-existent ad"
+          );
+      } catch (error) {
+        console.error(error);
+        throw boom.internal(error.message, error);
+      }
+    },
+    // REMOVE ---------------------------------------------------------
+
+    /**
+     * @function remove - remove a single record
+     * @param {Object} req
+     * @returns
+     */
+    async remove(req) {
+      const {
+        params: { id },
+        payload: { force = false },
+        pre: { user },
       } = req;
 
       try {
-        return Order.create({
-          ...req.payload,
-          from_user_id: user.dataValues.id,
-        });
+        let where = { id };
+        return { deleted: Boolean(await __destroy("Order", where, force)) };
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);
       }
     },
 
-    // Delete Order
-    async destroy(req) {
-      const { id } = req.params;
-      try {
-        return await Order.destroy({
-          where: id,
-          force: true,
-        });
-      } catch (error) {
-        console.error(error);
-        throw boom.boomify(error);
-      }
-    },
-
-    // archive
-    async archive(req) {
-      const { id } = req.payload;
-      try {
-        return await Order.destroy({
-          where: id,
-        });
-      } catch (error) {
-        console.error(error);
-        throw boom.boomify(error);
-      }
-    },
-
-    // retrieve Order
+    // RETRIEVE ---------------------------------------------------------
+    /**
+     * @function retrieve
+     * @param {Object} req
+     * @returns
+     */
     async retrieve(req) {
       const { id } = req.params;
       try {
-        return Order.findByPk(id);
+        return { result: await Order.findByPk(id) };
       } catch (error) {
         console.error(error);
-        throw boom.boomify(error);
+        throw boom.internal(error.message, error);
       }
     },
 
-    // fetch all Orders
-    async list(req) {
+    /**
+     * @function bulkRetrieve
+     * @param {Object} req
+     * @returns
+     */
+    async bulkRetrieve(req) {
       const {
         query,
-        pre: { isAdmin },
+        pre: { user },
       } = req;
 
-      // if(!isAdmin){
-      //   throw boom.forbidden("unauthorized")
-      // }
-
       try {
-        const filterResults = await filters({
+        const queryFilters = await filters({
           query,
           searchFields: ["appeal", "remark", "status"],
         });
-
-        const queryset = Order.findAndCountAll(filterResults);
-
+        const options = {
+          ...queryFilters,
+        };
+        const queryset = await Order.findAndCountAll(options);
+        const { limit, offset } = queryFilters;
         return await paginator({
           queryset,
-          limit: filterResults.limit,
-          offset: filterResults.offset,
+          limit,
+          offset,
         });
       } catch (error) {
         console.error(error);

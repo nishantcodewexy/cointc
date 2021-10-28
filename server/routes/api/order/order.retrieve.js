@@ -1,25 +1,20 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
+  const Schema = require("../../../schema/order.schema");
+  const { params: paramsSchema } = Schema.retrieve(server);
   const {
     controllers: {
-      user: { remove },
+      order: { retrieve },
     },
-    consts: { roles: _roles },
     helpers: {
       permissions: { isUser },
     },
   } = server.app;
 
-  const schema = Joi.object({
-    force: Joi.boolean()
-      .default(false)
-      .optional(),
-  });
-
   return {
-    method: "DELETE",
-    path: "/users/{id}",
+    method: "GET",
+    path: "/order/{id}",
     config: {
       pre: [
         {
@@ -27,10 +22,10 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: remove,
+      handler: retrieve,
       auth: "jwt",
       validate: {
-        payload: schema,
+        params: paramsSchema,
       },
     },
   };

@@ -1,8 +1,4 @@
 const assert = require("assert");
-const searchBuilder = require("sequelize-search-builder");
-const Sequelize = require("sequelize");
-const Joi = require("joi");
-const { roles } = require("../consts");
 const faker = require("faker");
 const dfn = require("date-fns");
 const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
@@ -22,7 +18,6 @@ module.exports = function UserController(server) {
     boom,
     config: { client_url },
     helpers: { decrypt, mailer, jwt, generator, paginator, filters },
-    consts: { roles: _roles },
   } = server.app;
 
   async function login(account) {
@@ -365,8 +360,10 @@ module.exports = function UserController(server) {
       let {
         payload: { force = false },
         params: { id },
+        pre: { user },
       } = req;
-
+      // only superadmins are allowed to permanently delete a user
+      force = user?.isSuperAdmin ? force : false;
       let where = { id };
       return { deleted: Boolean(await __destroy("User", where, force)) };
     },
@@ -374,13 +371,13 @@ module.exports = function UserController(server) {
     // RETRIEVE------------------------------------------------------------
 
     /**
-     * @function bulkList - Fetched multiple User
+     * @function bulkRetrieve - Fetched multiple User
      * @param {Object} req
      * @returns
      */
     async bulkRetrieve(req) {
+      const { query } = req;
       try {
-        const { query } = req;
         const queryFilters = await filters({ query, searchFields: ["email"] });
 
         const include = filterAssociations(query?.include);
@@ -607,5 +604,3 @@ function renameKey(Obj, from = [], to = []) {
   });
   return Obj;
 }
-
-

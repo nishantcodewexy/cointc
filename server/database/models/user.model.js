@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         Upload,
         Currency,
         Advert,
+        Order,
       } = models;
 
       User.hasMany(Wallet, {
@@ -40,37 +41,51 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       User.hasMany(BankDetail, {
-        foreignKey: { name: "user_id", as: "bankdetails", allowNull: false },
+        as: "bankdetails",
+        foreignKey: { name: "user_id", allowNull: false },
       });
 
       User.hasMany(Address, {
-        foreignKey: { name: "user_id", as: "addresses", allowNull: false },
+        as: "addresses",
+        foreignKey: { name: "user_id", allowNull: false },
       });
 
       User.hasOne(KYC, {
-        foreignKey: { name: "user_id", as: "kyc", allowNull: false },
+        as: "kyc",
+        foreignKey: { name: "user_id", allowNull: false },
       });
 
       User.hasOne(Security, {
-        foreignKey: { name: "user_id", as: "security", allowNull: false },
+        as: "security",
+        foreignKey: { name: "user_id", allowNull: false },
       });
 
       User.hasMany(Secession, {
-        foreignKey: { name: "user_id", as: "secessions", allowNull: false },
+        as: "secessions",
+        foreignKey: { name: "user_id", allowNull: false },
       });
 
       User.hasMany(Upload, {
-        foreignKey: { name: "user_id", as: "uploads", allowNull: false },
+        as: "uploads",
+        foreignKey: { name: "user_id", allowNull: false },
       });
 
       User.hasMany(Currency, {
-        foreignKey: { name: "user_id", as: "currencies", allowNull: false },
+        as: "currencies",
+        foreignKey: { name: "user_id", allowNull: false },
       });
 
       User.hasMany(Advert, {
-        foreignKey: { name: "user_id", as: "adverts", allowNull: false },
+        as: "adverts",
+        foreignKey: { name: "user_id", allowNull: false },
       });
 
+      User.hasMany(Order, {
+        as: "orders",
+        foreignKey: {
+          name: "user_id",
+        },
+      });
       // User.hasMany(Message, {})
     }
     toPublic() {
@@ -181,6 +196,7 @@ module.exports = (sequelize, DataTypes) => {
 
     if (!Array.isArray(findResult)) findResult = [findResult];
     for (const instance of findResult) {
+      if (!(instance instanceof User)) return;
       instance.profile = await instance.getProfile();
       /*  if (instance?.role === "admin") {
         instance.profile = await instance.getAdminProfile();

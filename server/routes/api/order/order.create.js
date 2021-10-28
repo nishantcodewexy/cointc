@@ -1,34 +1,33 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require('../../../schema/advert.schema')
+  const Schema = require("../../../schema/order.schema");
   const { payload: payloadSchema } = Schema.create(server);
 
   const {
     controllers: {
-      advert: { create },
+      order: { create },
     },
     helpers: {
-      jwt: { decodeUser },
+      permissions: { isUser },
     },
   } = server.app;
 
-
   return {
     method: "POST",
-    path: "/adverts",
+    path: "/order",
     config: {
       pre: [
         {
-          method: decodeUser,
+          method: isUser,
           assign: "user",
         },
       ],
       handler: create,
+      auth: "jwt",
       validate: {
         payload: payloadSchema,
       },
-      auth: "jwt",
     },
   };
 };

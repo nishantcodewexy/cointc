@@ -1,37 +1,94 @@
 "use strict";
 
 const AdvertController = (server) => {
-  const { db } = server.app;
+  const { __upsert, __update, __destroy, __assertRole } = require("./utils")(
+    server
+  );
+  const {
+    db: { Advert, User, sequelize },
+    boom,
+    helpers: { filters, paginator },
+  } = server.app;
 
   async function completionRate(total_orders, total_completed_orders) {
     return (total_completed_orders / total_orders) * 100;
   }
 
   return {
+    /**
+     * @function create - Creates a single advert
+     * @param {Object} req
+     * @returns
+     */
     async create(req) {
-      const { user } = req.pre.user;
-      return db.Advert.create({ ...req.payload, owner: user.id });
+      const {
+        payload,
+        pre: { user },
+      } = req;
+      try {
+        return {
+          result: await user.createAdvert(payload).catch((err) => {
+            console.error(err);
+            throw boom.badData(err.message, err);
+          }),
+        };
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
+      }
     },
 
     // REMOVE ---------------------------------------
     async remove(req) {
-      const { id } = req.params;
+      const {
+        params: { id },
+        payload: { force = false },
+      } = req;
 
-      return await db.Advert.destroy({
-        where: id,
-      });
+      try {
+        let where = { id };
+        return { deleted: Boolean(await __destroy("Advert", where, force)) };
+      } catch (error) {
+        console.error(error);
+        throw boom.boomify(error);
+      }
     },
 
     // RETRIEVE ------------------------------------------------
     async retrieve(req) {
-      const { id } = req.params;
+      const {
+        params: { id },
+      } = req;
 
-      return db.Advert.findByPk(id);
+      return { result: await Advert.findByPk(id) };
     },
 
-    // fetch all adverts
+    /**
+     * @function bulkRetrieve - Retrieves multiple advert records
+     * @param {Object} req
+     */
     async bulkRetrieve(req) {
-      return await db.Advert.findAll();
+      const { query } = req;
+      const queryFilters = await filters({ query, searchFields: ["user_id"] });
+      const options = {
+        ...queryFilters,
+      };
+
+      try {
+        let queryset = await Advert.findAndCountAll(options).catch((err) => {
+          throw boom.badData(err.message, err);
+        });
+        const { limit, offset } = queryFilters;
+
+        return paginator({
+          queryset,
+          limit,
+          offset,
+        });
+      } catch (err) {
+        console.error(err);
+        return boom.isBoom ? err : boom.internal(err.message, err);
+      }
     },
   };
 };
