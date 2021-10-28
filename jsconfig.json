@@ -17,7 +17,6 @@
     ],
     "compilerOptions": {
         "module": "commonJS",
-        "target": "es6",
-        "checkJS": true,
+        "target": "es6"
     }
 }
