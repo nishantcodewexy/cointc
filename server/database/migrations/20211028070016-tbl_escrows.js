@@ -5,58 +5,65 @@ let table_name = "tbl_escrows";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
-      await queryInterface
-        .describeTable(table_name)
-        .then(
-          async (d) =>
+          // Table fields definitions
+          let fields = {
+            id: {
+              type: Sequelize.UUID,
+              primaryKey: true,
+              defaultValue: Sequelize.UUIDV4,
+            },
+            fiat_amount_in_hold: {
+              type: Sequelize.DOUBLE,
+              allowNull: false,
+              validate: {
+                min: 0,
+                isInt: true,
+              },
+            },
+            fee: {
+              type: Sequelize.DOUBLE,
+              allowNull: false,
+              validate: {
+                min: 0,
+                isInt: true,
+              },
+            },
+            created_at: Sequelize.DATE,
+            updated_at: Sequelize.DATE,
+            seller_id: {
+              type: Sequelize.UUID,
+              allowNull: false,
+              references: { model: "tbl_users", key: "id" },
+            },
+            order_id: {
+              type: Sequelize.STRING,
+              allowNull: false,
+              references: { model: "tbl_orders", key: "id" },
+            },
+            buyer_id: {
+              type: Sequelize.UUID,
+              allowNull: false,
+              references: { model: "tbl_users", key: "id" },
+            },
+          };
+
+          // Add table modifications here
+          async function modifications(d) {
             await queryInterface.sequelize.transaction(async (t) => {
               return await Promise.all([]);
-            })
-        )
-        .catch(
-          async () =>
-            await queryInterface.createTable(table_name, {
-              id: {
-                type: Sequelize.UUID,
-                primaryKey: true,
-                defaultValue: Sequelize.UUIDV4,
-              },
-              fiat_amount_in_hold: {
-                type: Sequelize.DOUBLE,
-                allowNull: false,
-                validate: {
-                  min: 0,
-                  isInt: true,
-                },
-              },
-              fee: {
-                type: Sequelize.DOUBLE,
-                allowNull: false,
-                validate: {
-                  min: 0,
-                  isInt: true,
-                },
-              },
-              created_at: Sequelize.DATE,
-              updated_at: Sequelize.DATE,
-              seller_id: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                references: { model: "tbl_users", key: "id" },
-              },
-              order_id: {
-                type: Sequelize.STRING,
-                allowNull: false,
-                references: { model: "tbl_orders", key: "id" },
-              },
-              buyer_id: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                references: { model: "tbl_users", key: "id" },
-              },
-            })
-        );
-    } catch (error) {
+            });
+          }
+
+          // Check if table exist and apply modifications else create and apply modifications
+          await queryInterface
+            .describeTable(table_name)
+            .then(modifications)
+            .catch(async () => {
+              await queryInterface.createTable(table_name, fields);
+              let dfns = await queryInterface.describeTable(table_name);
+              modifications(dfns);
+            });
+        } catch (error) {
       console.error(error);
     }
   },

@@ -7,15 +7,8 @@ let table_name = "tbl_support_tickets";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
-      await queryInterface
-        .describeTable(table_name)
-        .then(async (d) => {
-          await queryInterface.sequelize.transaction(async (t) => {
-            return await Promise.all([]);
-          });
-        })
-        .catch(async (err) => {
-          let dfn = {
+          // Table fields
+          let fields = {
             id: {
               type: Sequelize.UUID,
               primaryKey: true,
@@ -40,9 +33,24 @@ module.exports = {
               references: { model: "tbl_users", key: "id" },
             },
           };
-          await queryInterface.createTable(table_name, dfn);
-        });
-    } catch (error) {
+          
+          // Add table modifications here
+          async function modifications(d) {
+            await queryInterface.sequelize.transaction(async (t) => {
+              return await Promise.all([]);
+            });
+          }
+          
+          // Check if table exist and apply modifications else create and apply modifications
+          await queryInterface
+            .describeTable(table_name)
+            .then(modifications)
+            .catch(async () => {
+              await queryInterface.createTable(table_name, fields);
+              let dfns = await queryInterface.describeTable(table_name);
+              modifications(dfns);
+            });
+        } catch (error) {
       console.error(error);
     }
   },

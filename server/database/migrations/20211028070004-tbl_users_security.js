@@ -4,41 +4,48 @@ let table_name = "tbl_users_security";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
+      // Add all modifications here
+      async function modifications(d) {
+        await queryInterface.sequelize.transaction(async (t) => {
+          return await Promise.all([]);
+        });
+      }
+
+      // Table field definitions
+      let fields = {
+        id: {
+          type: Sequelize.UUID,
+          primaryKey: true,
+          defaultValue: Sequelize.UUIDV4,
+        },
+        otp: {
+          type: Sequelize.STRING,
+        },
+        otp_ttl: Sequelize.DATE,
+        two_factor: {
+          type: Sequelize.BOOLEAN,
+          defaultValue: false,
+        },
+        verify_token: Sequelize.STRING,
+        created_at: Sequelize.DATE,
+        updated_at: Sequelize.DATE,
+        verify_token_ttl: { type: Sequelize.DATE },
+        user_id: {
+          type: Sequelize.UUID,
+          allowNull: false,
+          references: { model: "tbl_users", key: "id" },
+        },
+      };
+
+      // Check if table exist and apply modifications else create and apply modifications
       await queryInterface
         .describeTable(table_name)
-        .then(
-          async (d) =>
-            await queryInterface.sequelize.transaction(async (t) => {
-              return await Promise.all([]);
-            })
-        )
-        .catch(
-          async () =>
-            await queryInterface.createTable(table_name, {
-              id: {
-                type: Sequelize.UUID,
-                primaryKey: true,
-                defaultValue: Sequelize.UUIDV4,
-              },
-              otp: {
-                type: Sequelize.STRING,
-              },
-              otp_ttl: Sequelize.DATE,
-              two_factor: {
-                type: Sequelize.BOOLEAN,
-                defaultValue: false,
-              },
-              verify_token: Sequelize.STRING,
-              created_at: Sequelize.DATE,
-              updated_at: Sequelize.DATE,
-              verify_token_ttl: { type: Sequelize.DATE },
-              user_id: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                references: { model: "tbl_users", key: "id" },
-              },
-            })
-        );
+        .then(modifications)
+        .catch(async () => {
+          await queryInterface.createTable(table_name, fields);
+          let dfns = await queryInterface.describeTable(table_name);
+          modifications(dfns);
+        });
     } catch (error) {
       console.error(error);
     }

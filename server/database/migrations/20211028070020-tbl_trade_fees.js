@@ -5,29 +5,35 @@ let table_name = "tbl_trade_fees";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
+      // Table fields or columns definition
+      let fields = {
+        fiat: Sequelize.STRING,
+        crypto: Sequelize.INTEGER,
+        rate: Sequelize.DOUBLE,
+        created_at: Sequelize.DATE,
+        updated_at: Sequelize.DATE,
+        user_id: {
+          type: Sequelize.UUID,
+          allowNull: false,
+          references: { model: "tbl_users", key: "id" },
+        },
+      };
+
+      // Add table modifications here
+      async function modifications(d) {
+        await queryInterface.sequelize.transaction(async (t) => {
+          return await Promise.all([]);
+        });
+      }
+      // Check if table exist and apply modifications else create and apply modifications
       await queryInterface
         .describeTable(table_name)
-        .then(
-          async (d) =>
-            await queryInterface.sequelize.transaction(async (t) => {
-              return await Promise.all([]);
-            })
-        )
-        .catch(
-          async () =>
-            await queryInterface.createTable(table_name, {
-              fiat: Sequelize.STRING,
-              crypto: Sequelize.INTEGER,
-              rate: Sequelize.DOUBLE,
-              created_at: Sequelize.DATE,
-              updated_at: Sequelize.DATE,
-              user_id: {
-                type: Sequelize.UUID,
-                allowNull: false,
-                references: { model: "tbl_users", key: "id" },
-              },
-            })
-        );
+        .then(modifications)
+        .catch(async () => {
+          await queryInterface.createTable(table_name, fields);
+          let dfns = await queryInterface.describeTable(table_name);
+          modifications(dfns);
+        });
     } catch (error) {
       console.error(error);
     }
