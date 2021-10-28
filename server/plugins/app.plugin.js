@@ -7,7 +7,7 @@ module.exports = {
      * Serve static react app
      **************************************/
     const urlPaths = [
-      "/",
+      "",
       "/admin",
       "/admin/admin-bank-details",
       "/admin/user-management",
@@ -49,7 +49,7 @@ module.exports = {
     urlPaths.forEach((url) => {
       HapiServer.route({
         method: "GET",
-        path: path.normalize(`${url}/{param*}`),
+        path: `${url}/{params*}`,
         handler: {
           directory: {
             path: ".",
