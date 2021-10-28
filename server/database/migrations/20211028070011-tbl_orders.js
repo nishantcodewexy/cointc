@@ -76,6 +76,11 @@ module.exports = {
                 allowNull: false,
                 references: { model: "tbl_users", key: "id" },
               },
+              advert_id: {
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: { model: "tbl_adverts", key: "id" },
+              },
             })
         );
     } catch (error) {

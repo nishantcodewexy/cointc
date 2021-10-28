@@ -21,7 +21,6 @@ module.exports = {
                 primaryKey: true,
                 defaultValue: Sequelize.UUIDV4,
               },
-              order_id: Sequelize.STRING,
               fiat_amount_in_hold: {
                 type: Sequelize.DOUBLE,
                 allowNull: false,
@@ -44,6 +43,11 @@ module.exports = {
                 type: Sequelize.UUID,
                 allowNull: false,
                 references: { model: "tbl_users", key: "id" },
+              },
+              order_id: {
+                type: Sequelize.STRING,
+                allowNull: false,
+                references: { model: "tbl_orders", key: "id" },
               },
               buyer_id: {
                 type: Sequelize.UUID,

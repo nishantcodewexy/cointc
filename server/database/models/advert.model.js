@@ -12,7 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static total = 0;
     static associate(models) {
       // define association here
-      const { Advert, Currency, Order } = models;
+      const { Advert, Order } = models;
 
       Advert.hasMany(Order, {
         as: "orders",

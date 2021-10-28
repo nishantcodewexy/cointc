@@ -104,11 +104,11 @@ module.exports = {
                   isInt: true,
                 },
               },
-              crypto_currency: {
+              crypto: {
                 type: Sequelize.STRING,
                 comment: "Kind of crypto currency",
               },
-              fiat_currency: {
+              fiat: {
                 type: Sequelize.STRING,
                 comment: "Kind of fiat currency",
               },

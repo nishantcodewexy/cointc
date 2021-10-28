@@ -1,6 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
-const hooks = require("../hooks/order.hook")
+const hooks = require("../hooks/order.hook");
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
     /**
@@ -12,8 +12,8 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       const { Order, Advert } = models;
       Order.belongsTo(Advert, {
-        foreignKey: 'advert_id'
-      });      
+        foreignKey: "advert_id",
+      });
     }
   }
 
