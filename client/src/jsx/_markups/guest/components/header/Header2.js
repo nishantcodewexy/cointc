@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import { Link } from "react-router-dom";
 
 import logo_white from '../../app-assets/images/logo/logo-white.png';
 import icon_user from '../../app-assets/images/icon/icon_user.png';
@@ -23,7 +24,7 @@ export const Header2 = () => {
     <header class="header1"  style={scroll ? {'backgroundColor':'rgba(0,0,0,0.75)'} : {"backgroundColor":"transparent"}}>
         <div class="inner clear">
             <h1>
-                <a href="/"><img src={logo_white} alt-="CoinTC" /></a>
+                <Link to="/"><img src={logo_white} alt-="CoinTC" /></Link>
             </h1>
             <nav>
                 <h2 class="hidden">메인메뉴</h2>
@@ -37,7 +38,7 @@ export const Header2 = () => {
                     </ul> 
                 </div>
                 <div class="user clear">
-                    <a href="#">
+                    <a href="/my-page">
                         <img src={icon_user} alt="My page" />
                         <p>My page</p>
                     </a>

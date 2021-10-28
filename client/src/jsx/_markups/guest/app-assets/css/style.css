@@ -2449,3 +2449,219 @@ footer .btn-brand {
 .custom-switch .custom-control-label::after{
     background-color: #FFFFFF;
 }
+
+/* #join */
+
+#join {
+    padding: 50px 0;
+}
+
+#join .join-row {
+    box-shadow: 0 0 10px 3px rgb(0 0 0 / 15%);
+    border-radius: 5px;
+    padding: 30px;
+}
+
+#join h4 {
+    font-size: 24px;
+    color: #000;
+    font-weight: 700;
+    text-align: center;
+}
+
+#join p {
+    white-space: pre-line;
+    color: #000;
+    font-size: 18px;
+    text-align: center;
+}
+
+#join .login_p p {
+    white-space: none;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+#join .join-hr {
+    border-color: #C4C4C4;
+}
+
+#join form .form-label {
+    margin-bottom: 8px;
+    font-size: 18px;
+    color: #000;
+}
+
+#join form .form-control {
+    border-color: #000;
+    border-radius: 0;
+}
+
+#join #signUp .read--1,#join #signUp .ct--1 {
+    font-size: 12px;
+}
+
+#join #signUp .rm--1,#join #signUp .fp--1 {
+    font-size: 16px;
+}
+
+#join #signUp .ct--1 ,#join #signUp .fp--1 {
+    color: #0059FF;
+}
+
+#join #signUp .coin-password-required {
+    background-color: #F1F1FF;
+    padding: 20px;
+}
+
+#join #signUp .btn_signup {
+    background-color: #0059FF;
+    color: #fff;
+    font-weight: 500;
+}
+
+#join #signUp .login_link {
+    color: #000;
+    font-size: 16px;
+}
+
+#join #signUp .coin-password-required ul li {
+    color: #0059FF;
+}
+
+#join #signUp .coin-password-required ul li:before {
+    content: "-";
+    margin-right: 5px;
+}
+
+#join #signUp .valid-time li {
+    color: #000;
+    text-align: center;
+    font-weight: 500;
+}
+
+#join #signUp .valid-time li:nth-child(2) {
+    font-size: 30px;
+    margin-top: 15px;
+}
+
+/* #walletModal */
+
+#withdrawCrypto {
+    padding: 50px 0;
+}
+
+#withdrawCrypto .main-bg {
+    box-shadow: 0 0 10px 3px rgb(0 0 0 / 15%);
+    border-radius: 5px;
+    padding: 30px;
+    overflow-x: auto;
+}
+
+#withdrawCrypto h4 {
+    font-size: 24px;
+    color: #000;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.wd-crypto {
+    padding: 10px 0;
+}
+
+#coin {
+    -webkit-appearance: none;
+}
+
+#withdrawCrypto .form-group .select-coin-input .form-control,
+#withdrawCrypto .form-group .address-input .form-control {
+    border: 1px solid #79818F;
+    border-radius: 0;
+    font-size: 13px;
+}
+
+#withdrawCrypto .form-group .select-coin-input select{
+    color: #4E4E4E !important;
+    font-weight: 500;
+}
+
+#withdrawCrypto .address-input .form-control{
+    color: #0059FF;
+}
+
+#withdrawCrypto .network-text p {
+    color: #000;
+    font-weight: 500;
+}
+
+#withdrawCrypto .amount-input .input-group .form-control {
+    border: 1px solid #79818F !important;
+    border-radius: 0 !important;
+    font-size: 13px !important;
+    border-right: none !important;
+}
+
+#withdrawCrypto .amount-input .input-group .input-group-append {
+    border: 1px solid #79818F !important;
+    border-radius: 0 !important;
+    font-size: 13px !important;
+    border-left: none !important;
+}
+
+#withdrawCrypto .amount-input .input-group .input-group-append .input-group-text {
+    border: none !important;
+    padding: 0px 12px;
+    background: none;
+    font-size: 13px;
+}
+
+#withdrawCrypto .amount-input p {
+    font-size: 12px;
+}
+
+#withdrawCrypto .amount-input p span{
+    color: #0059FF;
+}
+
+#withdrawCrypto .form-hr-bottom {
+    border-bottom:1px solid #79818F;
+}
+
+#withdrawCrypto .wd-info .fa-info-circle {
+    color: #471DFF;
+}
+
+#withdrawCrypto .wd-info p {
+    font-weight: 500;
+    font-size: 18px;
+}
+
+#withdrawCrypto .wd-info ul {
+    padding-left: 20px;
+    list-style: disc !important;
+    font-size: 14px;
+}
+
+#withdrawCrypto .wd-info ul li {
+    list-style: disc !important;
+}
+
+#withdrawCrypto .wa-icon label span:nth-child(1)::after {
+    position: absolute;
+    content: "";
+    font-family: 'Font Awesome 5 Pro';
+    top: 0;
+    color: #5C59F5;
+}
+
+#withdrawCrypto .deposit-address-img .card{
+    border: none !important;
+}
+
+#withdrawCrypto .deposit-address-img .card .card-body .card-text-p{
+    color: #0059FF;
+}
+
+#walletModal .form-group label {
+    color: #000 !important;
+}
