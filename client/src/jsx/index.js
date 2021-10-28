@@ -12,6 +12,8 @@ import { ToastContainer } from "react-toastify";
 /* import "../vendor/bootstrap-select/dist/css/bootstrap-select.min.css";
 import "../css/style.css"; */
 
+import front_loader from './_markups/guest/app-assets/images/loader/light-loader.gif';
+
 const {
   store: { store, persistor },
   history,
@@ -19,6 +21,38 @@ const {
 
 // import { withResizeDetector } from "react-resize-detector";
 
+// const front_loader_style = {
+//   background: `url(${front_loader}) center center no-repeat scroll rgb(255, 255, 255)`,
+//   position: "fixed",
+//     top: "0",
+//     left: "0",
+//     width: "100px",
+//     height: "1001px",
+//     "background-size": "100% auto",
+//     "background-color": "#fff",
+//     "z-index": "9999999",
+//     "background-repeat": "no-repeat",
+//     "background-attachment": "fixed",
+//     "background-position": "center middle",
+// };
+
+const style_bg=  {
+  position: "fixed",
+  top: "-50%",
+  left: "-50%", 
+  width: "200%", 
+  height: "200%",
+};
+const style_bg_img= {
+  position: "absolute", 
+  top: "0", 
+  left: "0", 
+  right: 0, 
+  bottom: 0, 
+  margin: "auto", 
+  "width": "100px",
+  "height": "100px"
+}
 const AdminMarkup = lazy(() => import("./_markups/admin"));
 const GuestMarkup = lazy(() => import("./_markups/guest"));
 
@@ -65,7 +99,13 @@ function Markup() {
 
             {/* Guest user pages */}
             <Route path="/">
-              <Suspense fallback={<div>Loading...</div>}>
+              <Suspense fallback={
+                  <div>
+                    <div id="bg" style={style_bg}>
+                      <img src={front_loader} alt="" style={style_bg_img}/>
+                  </div>
+                </div>
+              }>
                 <GuestMarkup></GuestMarkup>
               </Suspense>
             </Route>

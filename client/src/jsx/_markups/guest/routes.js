@@ -30,7 +30,7 @@ import Playground from "./pages/Plaground";
 
 
 const routes =[
-  { url: "", component: Trade },
+  { url: "", component: Home },
   { url: "playground", component: Playground },
   { url: "orders" , component:Orders},
   { url: "signup" , component:JoinForm},
