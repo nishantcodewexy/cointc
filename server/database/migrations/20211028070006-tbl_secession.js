@@ -20,13 +20,6 @@ module.exports = {
                 primaryKey: true,
                 defaultValue: Sequelize.UUIDV4,
               },
-              user_id: {
-                type: Sequelize.UUID,
-                references: {
-                  model: "tbl_users",
-                  key: "id",
-                },
-              },
               level: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
@@ -48,6 +41,14 @@ module.exports = {
               },
               updated_at: {
                 type: Sequelize.DATE,
+              },
+              user_id: {
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: {
+                  model: "tbl_users",
+                  key: "id",
+                },
               },
             })
         );

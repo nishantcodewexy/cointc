@@ -49,6 +49,10 @@ module.exports = {
                   notEmpty: true,
                   isEmail: true,
                 },
+                references: {
+                  model: 'tbl_users',
+                  key: 'email'
+                }
               },
               suitability: {
                 type: Sequelize.INTEGER,
@@ -73,6 +77,10 @@ module.exports = {
               created_at: Sequelize.DATE,
               updated_at: Sequelize.DATE,
               archived_at: Sequelize.DATE,
+              user_id: {
+                type: Sequelize.UUID,
+                references: { model: "tbl_users", key: "id" },
+              },
             })
         );
     } catch (error) {

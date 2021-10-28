@@ -48,6 +48,11 @@ module.exports = {
               },
               created_at: Sequelize.DATE,
               updated_at: Sequelize.DATE,
+              user_id: {
+                allowNull: false,
+                type: Sequelize.UUID,
+                references: { model: "tbl_users", key: "id" },
+              },
             })
         );
     } catch (error) {

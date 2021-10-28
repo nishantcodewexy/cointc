@@ -33,7 +33,6 @@ module.exports = {
                 primaryKey: true,
                 defaultValue: Sequelize.UUIDV4,
               },
-              user_id: Sequelize.UUID,
               min_order_qty: {
                 type: Sequelize.INTEGER,
                 allowNull: false,
@@ -134,6 +133,11 @@ module.exports = {
               },
               created_at: Sequelize.DATE,
               updated_at: Sequelize.DATE,
+              user_id: {
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: { model: "tbl_users", key: "id" },
+              },
             })
         );
     } catch (error) {

@@ -21,10 +21,6 @@ module.exports = {
                 primaryKey: true,
                 defaultValue: Sequelize.UUIDV4,
               },
-              sender_id: {
-                type: Sequelize.STRING,
-                allowNull: false,
-              },
               text: {
                 type: Sequelize.TEXT,
                 allowNull: false,
@@ -32,6 +28,14 @@ module.exports = {
               read: { type: Sequelize.BOOLEAN, defaultValue: false },
               created_at: Sequelize.DATE,
               updated_at: Sequelize.DATE,
+              sender_id: {
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: {
+                  model: 'tbl_users',
+                  key: 'id'
+                }
+              },
             })
         );
     } catch (error) {

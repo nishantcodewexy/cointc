@@ -30,13 +30,21 @@ module.exports = {
                 allowNull: false,
                 defaultValue: KycStatusType.PENDING,
               },
-              user_id: {
-                type: Sequelize.UUID,
-              },
               created_at: Sequelize.DATE,
               updated_at: Sequelize.DATE,
               archived_at: Sequelize.DATE,
-              document_id: Sequelize.UUID,
+              document_id: {
+                type: Sequelize.UUID,
+                references: {
+                  model: "tbl_uploads",
+                  key: "id",
+                },
+              },
+              user_id: {
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: { model: "tbl_users", key: "id" },
+              },
             })
         );
     } catch (error) {

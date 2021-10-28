@@ -30,8 +30,6 @@ module.exports = {
                   isInt: true,
                 },
               },
-              seller_id: Sequelize.UUID,
-              buyer_id: Sequelize.UUID,
               fee: {
                 type: Sequelize.DOUBLE,
                 allowNull: false,
@@ -42,6 +40,16 @@ module.exports = {
               },
               created_at: Sequelize.DATE,
               updated_at: Sequelize.DATE,
+              seller_id: {
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: { model: "tbl_users", key: "id" },
+              },
+              buyer_id: {
+                type: Sequelize.UUID,
+                allowNull: false,
+                references: { model: "tbl_users", key: "id" },
+              },
             })
         );
     } catch (error) {

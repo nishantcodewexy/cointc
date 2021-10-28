@@ -26,18 +26,22 @@ module.exports = {
               },
               created_at: Sequelize.DATE,
               updated_at: Sequelize.DATE,
-              /* referred_id: {
+              referred_id: {
+                type: Sequelize.UUID,
+                allowNull: false,
                 references: {
                   model: "tbl_users",
                   key: "id",
                 },
               },
               user_id: {
+                type: Sequelize.UUID,
+                allowNull: false,
                 references: {
                   model: "tbl_users",
                   key: "id",
                 },
-              }, */
+              },
             })
         );
     } catch (error) {

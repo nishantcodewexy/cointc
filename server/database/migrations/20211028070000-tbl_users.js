@@ -20,6 +20,7 @@ module.exports = {
                 type: Sequelize.UUID,
                 primaryKey: true,
                 defaultValue: Sequelize.UUIDV4,
+                onDelete: "CASCADE",
               },
               email: {
                 type: Sequelize.STRING,
@@ -29,6 +30,7 @@ module.exports = {
                   notEmpty: true,
                   isEmail: true,
                 },
+                onUpdate: "CASCADE",
               },
               password: {
                 type: Sequelize.STRING,
@@ -37,7 +39,6 @@ module.exports = {
                   notEmpty: true,
                 },
               },
-              role: Sequelize.STRING,
               permission: {
                 type: Sequelize.BOOLEAN,
                 defaultValue: true,

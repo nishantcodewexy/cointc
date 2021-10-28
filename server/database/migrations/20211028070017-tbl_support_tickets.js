@@ -34,12 +34,11 @@ module.exports = {
             },
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE,
-            /* user_id: {
-              references: {
-                model: "tbl_users",
-                key: "id",
-              },
-            }, */
+            user_id: {
+              type: Sequelize.UUID,
+              allowNull: false,
+              references: { model: "tbl_users", key: "id" },
+            },
           };
           await queryInterface.createTable(table_name, dfn);
         });
