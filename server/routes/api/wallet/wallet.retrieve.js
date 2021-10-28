@@ -2,7 +2,7 @@
 
 module.exports = (server) => {
   const Schema = require('../../../schema/wallet.schema');
-  const { params: paramsSchema } = Schema.bulkRetrieve(server)
+  const { params: paramsSchema } = Schema.retrieve(server)
   const {
     controllers: {
       wallet: { retrieve },
@@ -25,6 +25,9 @@ module.exports = (server) => {
       ],
       handler: retrieve,
       auth: "jwt",
+      validate: {
+        params: paramsSchema
+      }
     },
   };
 };

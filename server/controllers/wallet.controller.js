@@ -1,10 +1,15 @@
 const assert = require("assert");
 
 module.exports = function WalletController(server) {
+  /*********************** HELPERS ***************************/
+  const { __upsert, __update, __destroy, __assertRole } = require("./utils")(
+    server
+  );
+
   const {
     db: { Wallet, User },
     boom,
-    helpers: {},
+    helpers: { filters, paginator },
   } = server.app;
 
   const walletExist = async (address, user) => {
@@ -22,19 +27,31 @@ module.exports = function WalletController(server) {
         .createWallet({ asset: currency })
         .toPublic();
     },
-    // RETrIEVE ----------------------------------------
-    // Fetch all user wallets
+    // RETRIEVE ----------------------------------------
     bulkRetrieve: async (req) => {
       let {
         pre: { user },
+        query,
       } = req;
-      assert(type, "must specify wallet type");
 
-      return await Wallet.findAll({
-        where: {
-          owner_id: user,
-        },
-      }).catch(boom.boomify);
+      try {
+        const queryFilters = await filters({ query, searchFields: ["email"] });
+        const options = {
+          ...queryFilters,
+        };
+
+        let queryset = await Wallet.findAndCountAll(options);
+        const { limit, offset } = queryFilters;
+
+        return paginator({
+          queryset,
+          limit,
+          offset,
+        });
+      } catch (error) {
+        console.error(error);
+        return boom.internal(error.message, error);
+      }
     },
 
     // Fetch specific user wallet
