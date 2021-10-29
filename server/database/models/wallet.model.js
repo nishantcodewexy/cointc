@@ -42,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: "BTC",
       },
+      tatum_account_id: DataTypes.STRING,
     },
     {
       sequelize,
