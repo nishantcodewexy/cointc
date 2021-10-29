@@ -1,84 +1,98 @@
 "use strict";
 
 let { tableNames } = require("../../consts");
-let table_name = tableNames?.PROFILE || 'tbl_user_profiles';
+let table_name = tableNames?.PROFILE || "tbl_user_profiles";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
       //  Add all table modifications here
       async function modifications(d) {
-        await queryInterface.sequelize.transaction(async (t) => {
-          return await Promise.all([
-            !("date_of_birth" in d) &&
-              queryInterface.addColumn(
-                table_name,
-                "date_of_birth", // new field name
-                {
-                  type: Sequelize.DATE,
-                },
-                {
-                  transaction: t,
-                }
-              ),
-            !("phone" in d) &&
-              queryInterface.addColumn(
-                table_name,
-                "phone", // new field name
-                {
-                  type: Sequelize.STRING,
-                },
-                {
-                  transaction: t,
-                }
-              ),
-            !("kyc_id" in d) &&
-              queryInterface.addColumn(
-                table_name,
-                "kyc_id", // new field name
-                {
-                  type: Sequelize.UUID,
-                  references: {
-                    model: tableNames?.KYC || "tbl_kyc",
-                    key: "id",
+        await queryInterface.sequelize
+          .transaction(async (t) => {
+            return await Promise.all([
+              !("date_of_birth" in d) &&
+                queryInterface.addColumn(
+                  table_name,
+                  "date_of_birth", // new field name
+                  {
+                    type: Sequelize.DATE,
                   },
-                },
-                {
-                  transaction: t,
-                }
-              ),
-            !("address_id" in d) &&
-              queryInterface.addColumn(
-                table_name,
-                "address_id", // new field name
-                {
-                  type: Sequelize.UUID,
-                  references: {
-                    model: tableNames?.ADDRESS || "tbl_addresses",
-                    key: "id",
+                  {
+                    transaction: t,
+                  }
+                ),
+              !("phone" in d) &&
+                queryInterface.addColumn(
+                  table_name,
+                  "phone", // new field name
+                  {
+                    type: Sequelize.STRING,
                   },
-                },
-                {
-                  transaction: t,
-                }
-              ),
-            !("avatar_upload" in d) &&
-              queryInterface.addColumn(
-                table_name,
-                "avatar_upload", // new field name
-                {
-                  type: Sequelize.UUID,
-                  references: {
-                    model: tableNames?.UPLOAD || "tbl_uploads",
-                    key: "id",
+                  {
+                    transaction: t,
+                  }
+                ),
+              !("kyc_id" in d) &&
+                queryInterface.addColumn(
+                  table_name,
+                  "kyc_id", // new field name
+                  {
+                    type: Sequelize.UUID,
+                    references: {
+                      model: tableNames?.KYC || "tbl_kyc",
+                      key: "id",
+                    },
                   },
-                },
-                {
-                  transaction: t,
-                }
-              ),
-          ]);
-        }).catch(console.error);
+                  {
+                    transaction: t,
+                  }
+                ),
+              !("address_id" in d) &&
+                queryInterface.addColumn(
+                  table_name,
+                  "address_id", // new field name
+                  {
+                    type: Sequelize.UUID,
+                    references: {
+                      model: tableNames?.ADDRESS || "tbl_addresses",
+                      key: "id",
+                    },
+                  },
+                  {
+                    transaction: t,
+                  }
+                ),
+              !("avatar_upload" in d) &&
+                queryInterface.addColumn(
+                  table_name,
+                  "avatar_upload", // new field name
+                  {
+                    type: Sequelize.UUID,
+                    references: {
+                      model: tableNames?.UPLOAD || "tbl_uploads",
+                      key: "id",
+                    },
+                  },
+                  {
+                    transaction: t,
+                  }
+                ),
+              !("is_verified" in d) &&
+                queryInterface.addColumn(
+                  table_name,
+                  "is_verified", // new field name
+                  {
+                    type: Sequelize.BOOLEAN,
+                    defaultValue: true,
+                  },
+                  {
+                    transaction: t,
+                  }
+                ),
+            ]);
+          })
+          .catch(console.error);
       }
 
       // table field definitions
@@ -121,7 +135,7 @@ module.exports = {
         archived_at: Sequelize.DATE,
         user_id: {
           type: Sequelize.UUID,
-          references: { model: tableNames?.USER || 'tbl_users', key: "id" },
+          references: { model: tableNames?.USER || "tbl_users", key: "id" },
         },
         email: {
           type: Sequelize.STRING,
@@ -132,7 +146,7 @@ module.exports = {
             isEmail: true,
           },
           references: {
-            model: tableNames?.USER || 'tbl_users',
+            model: tableNames?.USER || "tbl_users",
             key: "email",
           },
         },

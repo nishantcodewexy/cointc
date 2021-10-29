@@ -62,6 +62,7 @@ async function seedAdminUsers() {
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
       email,
+      is_verified: faker.datatype.boolean()
     });
 
     securityTableRecords.push({
@@ -138,6 +139,7 @@ async function seedUsers() {
       user_id: id,
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
+      is_verified: faker.datatype.boolean(),
     });
 
     securityTableRecords.push({

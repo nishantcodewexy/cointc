@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Profile.belongsTo(KYC, {
-        foreignKey: "kyc_id",        
+        foreignKey: "kyc_id",
       });
 
       Profile.belongsTo(Upload, {
@@ -67,6 +67,7 @@ module.exports = (sequelize, DataTypes) => {
           max: 5,
         },
       },
+      is_verified: { type: DataTypes.BOOLEAN, defaultValue: false },
       payment_methods: DataTypes.JSON,
       pname: { type: DataTypes.STRING, comment: "public name" },
       lname: { type: DataTypes.STRING, comment: "last name", allowNull: false },
