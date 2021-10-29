@@ -5,6 +5,8 @@ const dfn = require("date-fns");
 module.exports = function SecurityController(server) {
   const {
     db: { User },
+    helpers: { generator },
+    boom,
   } = server.app;
 
   return {
@@ -20,24 +22,34 @@ module.exports = function SecurityController(server) {
         let user = await User.findByPk(id);
         if (!user) throw boom.notFound(`Account with id, ${id} not found!`);
 
+        let security = await user.getSecurity();
         // generate OTP
         let otp = generator.otp();
         let otp_ttl = dfn.addMinutes(new Date(), 14);
         let data = { otp, otp_ttl };
-        let security = await user.getSecurity();
-        security = security
-          ? await security.update(data)
-          : await user?.createSecurity(data);
-        // await user.setSecurity(data);
+
+        if (security) {
+          // if user created_at from now is less than a minute; don't create new otp
+          let now = new Date();
+          let former = new Date(security?.updatedAt);
+          let diff = dfn.differenceInSeconds(now, former, {
+            roundingMethod: "floor",
+          });
+          if (diff < 60)
+            return boom.badRequest(`Try again after ${60 - diff} secs`);
+          await security.update(data);
+        }
+
+        await user?.createSecurity(data);
 
         // TODO: Send via email or SMS
         return h
           .response({
             status: true,
-            message: "OTP Sent successfully",
+            message: "OTP sent successfully",
             data: {
               phone_number: user?.phone,
-              email: user?.email
+              email: user?.email,
             },
           })
           .code(200);

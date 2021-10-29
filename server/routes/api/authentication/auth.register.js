@@ -2,28 +2,20 @@
 
 module.exports = (server) => {
   const Schema = require("../../../schema/user.schema");
-  const { payload: payloadSchema } = Schema?.create(server);
+  const { payload: payloadSchema } = Schema?.register(server);
 
   const {
     controllers: {
-      user: { create },
+      user: { registerMe },
     },
-    helpers: {
-      permissions: { isUser },
-    },
+   
   } = server.app;
 
   return {
     method: "POST",
     path: `/auth/register`,
-    config: {
-      pre: [
-        {
-          method: isUser,
-          assign: "user",
-        },
-      ],
-      handler: create,
+    config: {     
+      handler: registerMe,
       validate: {
         payload: payloadSchema,
       },

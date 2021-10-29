@@ -31,17 +31,27 @@ module.exports = function UserController(server) {
 
   /**
    * @function createNew - Creates a new user record
-   * @param {Object} payload
+   * @param {Object} payload - Payload object
+   * @param {Object} created_by - Creator as a user
    * @returns
    */
-  async function createNew({ email, password = null, ...others }) {
+  async function createNew(
+    { email, password = null, access_level = 1, repeat_password, ...others },
+    created_by = null
+  ) {
     try {
       let mailBody = "";
+
+      // Verifications
+      if (password && password !== repeat_password)
+        throw boom.badData(`Password mismatch!`);
+
       let user = await User.findOne({
         where: {
           email,
         },
       });
+
       if (user)
         throw boom.notAcceptable(`User with the email: ${email} already exist`);
 
@@ -56,6 +66,8 @@ module.exports = function UserController(server) {
           data: {
             email,
             password,
+            access_level,
+            ...(created_by && { created_by }),
             profile: {
               email,
               ...others,
@@ -71,21 +83,29 @@ module.exports = function UserController(server) {
 
         // Security
         await user.createSecurity({}, { transaction: t });
-        await user.createWallet({ asset: "BTC" }, { transaction: t });
-        // Set referral link id any
-        if (others?.invite_code) {
-          const ref = await User.findOne({
-            where: {
-              "profile.invite_code": invite_code,
-            },
-          });
-          ref && ref.addReferrer(user, { transaction: t });
-        }
+
+        // Standard user operations
+        +access_level < 2 &&
+          (async () => {
+            await user.createWallet({ asset: "BTC" }, { transaction: t }).catch(console.error);
+
+            // Set referral link id any
+            if (others?.invite_code) {
+              const ref = await User.findOne({
+                where: {
+                  "profile.invite_code": invite_code,
+                },
+              });
+              ref && ref.addReferrer(user, { transaction: t });
+            }
+          })();
 
         //TODO Send mail to user
 
-        return {
-          user: user.toPublic(),
+        return {  
+          result: user.toPublic(),
+          message: 'User created successfully',
+          status: true
         };
       });
     } catch (err) {
@@ -112,17 +132,20 @@ module.exports = function UserController(server) {
   return {
     // CREATE------------------------------------------------------------
     /**
-     * @function create - Personal account creation
-     * @description - Creates new user
+     * @function create
+     * @description - Creates new user record (**Admins only**)
      * @param {Object} req - Request object
      * @param {Object} req.pre - Request Prehandler object
      * @returns
      */
     async create(req) {
-      let { payload } = req;
+      let {
+        payload,
+        pre: { user },
+      } = req;
 
       try {
-        return createNew(payload);
+        return createNew(payload, user);
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -434,6 +457,22 @@ module.exports = function UserController(server) {
         return boom.notFound(
           "Account not found! May be due to incorrect email or password. Try again!"
         );
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
+
+    /**
+     * @function registerMe - registers or creates a new user record
+     * @param {Object} req - Request object
+     * @returns
+     */
+    async registerMe(req) {
+      let { payload } = req;
+
+      try {
+        return createNew(payload);
       } catch (error) {
         console.error(error);
         return boom.boomify(error);

@@ -29,9 +29,15 @@ module.exports = (sequelize, DataTypes) => {
         Advert,
         Order,
         Fee,
-        Policy
+        Policy,
       } = models;
 
+      User.hasOne(User, {
+        foreignKey: {
+          type: DataTypes.UUID,
+          name: "created_by",
+        },
+      });
       User.hasMany(Wallet, {
         foreignKey: { name: "user_id", allowNull: false },
       });

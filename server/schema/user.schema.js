@@ -25,6 +25,44 @@ function authenticate(server) {
     }).with("email", "password"),
   };
 }
+
+// REGISTER ------------------------------------------------
+
+/**
+ * @function register - Schema validator for creating a single record
+ * @param {Object} server - Hapi server instance
+ * @returns {Object} validator
+ */
+function register(server) {
+  const {
+    boom,
+    consts: { patterns },
+  } = server.app;
+
+  return {
+    payload: Joi.object({
+      email: Joi.string()
+        .email({ minDomainSegments: 2 })
+        .required()
+        .error(boom.badRequest("Required data <email::string> is invalid")),
+      password: Joi.string()
+        .pattern(patterns.password)
+        .required()
+        .error(
+          boom.badRequest(
+            `Required input <password::string(${patterns.password})> is invalid`
+          )
+        ),
+      repeat_password: Joi.ref("password"),
+      invite_code: Joi.string()
+        .allow("", null)
+        .error(
+          boom.badRequest("optional input <invite_code::string> is invalid")
+        ),
+    }).with("password", "repeat_password"),
+  };
+}
+
 // CREATE ------------------------------------------------
 
 /**
@@ -49,17 +87,15 @@ function create(server) {
         .optional()
         .error(
           boom.badRequest(
-            `Required input <password::string(${patterns.password})> is invalid`
+            `optional data <password::string(${patterns.password})> is invalid`
           )
         ),
-      repeat_password: Joi.ref("password"),
       invite_code: Joi.string()
-        .length(10)
         .optional()
         .error(
-          boom.badRequest("Optional input <invite_code::string> is invalid")
+          boom.badRequest("optional data <invite_code::string> is invalid")
         ),
-    }).with("password", "repeat_password"),
+    }),
   };
 }
 
@@ -199,4 +235,5 @@ module.exports = {
   restore,
   bulkRestore,
   retrieve,
+  register,
 };
