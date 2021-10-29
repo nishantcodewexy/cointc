@@ -2,6 +2,7 @@
 
 const faker = require("faker");
 const { nanoid } = require("nanoid");
+const { tableNames } = require("../../consts");
 const len = 10;
 
 const UsersSeeder = {
@@ -14,10 +15,12 @@ const UsersSeeder = {
   },
 
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.bulkDelete("tbl_users", null, {});
-    await queryInterface.bulkDelete("tbl_users_profile", null, {});
-    await queryInterface.bulkDelete("tbl_basic_users_profile", null, {});
-    await queryInterface.bulkDelete("tbl_admin_users_profile", null, {});
+    await queryInterface.bulkDelete(tableNames?.USER || "tbl_users", null, {});
+    await queryInterface.bulkDelete(
+      tableNames?.PROFILE || "tbl_user_profiles",
+      null,
+      {}
+    );
   },
 };
 
@@ -45,7 +48,6 @@ async function seedAdminUsers() {
           "$2a$10$IvL78DSLxzFjDjtwba5hcuZog4kc5XsooEBtmt0gZaWTmvwc7gO4u",
         created_at: faker.date.recent(),
         updated_at: faker.date.recent(),
-        role: "admin",
         access_level: 3,
         // profile_id
       };
@@ -78,23 +80,26 @@ async function seedAdminUsers() {
       // referral_code: 'seet7pcH'
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
-      role: "admin",
       access_level: 2,
     });
   }
   await this.queryInterface.sequelize.transaction(
     async (t) =>
       await Promise.all([
-        this.queryInterface.bulkInsert("tbl_users", userTableRecords, {
-          transaction: t,
-        }),
         this.queryInterface.bulkInsert(
-          "tbl_users_profile",
+          tableNames?.USER || "tbl_users",
+          userTableRecords,
+          {
+            transaction: t,
+          }
+        ),
+        this.queryInterface.bulkInsert(
+          tableNames?.PROFILE || "tbl_user_profiles",
           profileTableRecords,
           { transaction: t }
         ),
         this.queryInterface.bulkInsert(
-          "tbl_users_security",
+          tableNames?.SECURITY || "tbl_user_securities",
           securityTableRecords,
           { transaction: t }
         ),
@@ -122,7 +127,6 @@ async function seedUsers() {
       access_level: 1,
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
-      role: "basic",
     });
 
     profileTableRecords.push({
@@ -147,16 +151,20 @@ async function seedUsers() {
   await this.queryInterface.sequelize.transaction(
     async (t) =>
       await Promise.all([
-        this.queryInterface.bulkInsert("tbl_users", userTableRecords, {
-          transaction: t,
-        }),
         this.queryInterface.bulkInsert(
-          "tbl_users_profile",
+          tableNames?.USER || "tbl_users",
+          userTableRecords,
+          {
+            transaction: t,
+          }
+        ),
+        this.queryInterface.bulkInsert(
+          tableNames?.PROFILE || "tbl_user_profiles",
           profileTableRecords,
           { transaction: t }
         ),
         this.queryInterface.bulkInsert(
-          "tbl_users_security",
+          tableNames?.SECURITY || "tbl_user_securities",
           securityTableRecords,
           { transaction: t }
         ),
