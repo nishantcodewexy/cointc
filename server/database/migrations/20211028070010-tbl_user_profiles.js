@@ -39,7 +39,22 @@ module.exports = {
                 {
                   type: Sequelize.UUID,
                   references: {
-                    model: tableNames?.KYC || 'tbl_kyc',
+                    model: tableNames?.KYC || "tbl_kyc",
+                    key: "id",
+                  },
+                },
+                {
+                  transaction: t,
+                }
+              ),
+            !("address_id" in d) &&
+              queryInterface.addColumn(
+                table_name,
+                "address_id", // new field name
+                {
+                  type: Sequelize.UUID,
+                  references: {
+                    model: tableNames?.ADDRESS || "tbl_addresses",
                     key: "id",
                   },
                 },
@@ -54,7 +69,7 @@ module.exports = {
                 {
                   type: Sequelize.UUID,
                   references: {
-                    model: tableNames?.UPLOAD || 'tbl_uploads',
+                    model: tableNames?.UPLOAD || "tbl_uploads",
                     key: "id",
                   },
                 },
@@ -63,7 +78,7 @@ module.exports = {
                 }
               ),
           ]);
-        });
+        }).catch(console.error);
       }
 
       // table field definitions

@@ -19,8 +19,7 @@ module.exports = (sequelize, DataTypes) => {
       });
 
       Profile.belongsTo(KYC, {
-        foreignKey: "kyc_id",
-        as: 'kyc'
+        foreignKey: "kyc_id",        
       });
 
       Profile.belongsTo(Upload, {
@@ -29,7 +28,6 @@ module.exports = (sequelize, DataTypes) => {
 
       Profile.belongsTo(Address, {
         foreignKey: "address_id",
-        as: 'address'
       });
     }
     toPublic() {
