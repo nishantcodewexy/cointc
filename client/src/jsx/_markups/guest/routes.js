@@ -5,6 +5,7 @@ import { Orders } from './components/order/Orders';
 import { Wallet } from './components/wallet/Wallet';
 import { Wallet_deposit } from './components/wallet/Wallet_deposit';
 import { Wallet_withdraw } from './components/wallet/Wallet_withdraw';
+import { Wallet_trade } from './components/wallet/Wallet_trade';
 import { Trade_crypto } from './components/wallet/Trade_crypto';
 import { Wallet_verification } from './components/wallet/Wallet_verification';
 import { Wallet_verification2 } from './components/wallet/Wallet_verification2';
@@ -39,6 +40,7 @@ const routes =[
   { url: "wallet_deposit" , component:Wallet_deposit ,title:'Wallet'},
   { url: "wallet_withdraw" , component:Wallet_withdraw ,title:'Wallet'},
   { url: "wallet_th" , component:Wallet_th ,title:'Wallet'},
+  { url: "wallet_trade" , component:Wallet_trade ,title:'Wallet'},  
   { url: "trade_crypto" , component:Trade_crypto ,title:''},
   { url: "trade" , component:Trade ,title:'P2P Trade'},
   { url: "sell_btc" , component:Sell_btc ,title:''},
