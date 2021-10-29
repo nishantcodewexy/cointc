@@ -1,13 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
-import './Trade.css'
 import {  Button,Modal,Nav,ProgressBar,Tabs,Tab,Dropdown,Overlay,Tooltip,OverlayTrigger,Image } from 'react-bootstrap';
 
 
-import usdt_icon from '../../app-assets/images/icon/usdt.png';
-import refresh_icon from '../../app-assets/images/page/creat-ad/refresh.png';
 import bank_icon from '../../app-assets/images/icon/bank-icon.png';
-import money_icon from '../../app-assets/images/icon/money.png';
-import chat_icon from '../../app-assets/images/icon/chat-icon.png';
 
 function BankTooltip() {
     const [show, setShow] = useState(true);
@@ -45,7 +40,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },
             {
@@ -62,7 +57,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_limited"
             },{
                 first_char : "C",
@@ -78,7 +73,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "D",
@@ -94,7 +89,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "E",
@@ -110,7 +105,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -126,7 +121,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "G",
@@ -142,7 +137,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "H",
@@ -158,7 +153,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "I",
@@ -174,7 +169,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "J",
@@ -190,7 +185,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -206,7 +201,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "L",
@@ -222,7 +217,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "M",
@@ -238,7 +233,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             }],
         'eth' : [
@@ -256,7 +251,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },
             {
@@ -273,7 +268,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_limited"
             },{
                 first_char : "C",
@@ -289,7 +284,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "D",
@@ -305,7 +300,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "E",
@@ -321,7 +316,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -337,7 +332,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "G",
@@ -353,7 +348,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "H",
@@ -369,7 +364,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "I",
@@ -385,7 +380,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "J",
@@ -401,7 +396,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -417,7 +412,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "L",
@@ -433,7 +428,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "M",
@@ -449,7 +444,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             }],
         'usdt' : [
@@ -466,7 +461,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },
             {
@@ -483,7 +478,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_limited"
             },{
                 first_char : "C",
@@ -499,7 +494,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "D",
@@ -515,7 +510,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "E",
@@ -531,7 +526,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -547,7 +542,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "G",
@@ -563,7 +558,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "H",
@@ -579,7 +574,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "I",
@@ -595,7 +590,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "J",
@@ -611,7 +606,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -627,7 +622,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "L",
@@ -643,7 +638,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "M",
@@ -659,7 +654,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             }],
         'xrp' : [
@@ -677,7 +672,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },
             {
@@ -694,7 +689,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_limited"
             },{
                 first_char : "C",
@@ -710,7 +705,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "D",
@@ -726,7 +721,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "E",
@@ -742,7 +737,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -758,7 +753,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "G",
@@ -774,7 +769,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "H",
@@ -790,7 +785,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "I",
@@ -806,7 +801,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "J",
@@ -822,7 +817,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -838,7 +833,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "L",
@@ -854,7 +849,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "M",
@@ -870,7 +865,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             }],
         'eos' : [
@@ -888,7 +883,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },
             {
@@ -905,7 +900,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_limited"
             },{
                 first_char : "C",
@@ -921,7 +916,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "D",
@@ -937,7 +932,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "E",
@@ -953,7 +948,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -969,7 +964,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "G",
@@ -985,7 +980,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "H",
@@ -1001,7 +996,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "I",
@@ -1017,7 +1012,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "J",
@@ -1033,7 +1028,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -1049,7 +1044,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "L",
@@ -1065,7 +1060,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "M",
@@ -1081,7 +1076,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             }]
     },
@@ -1101,7 +1096,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },
             {
@@ -1118,7 +1113,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_limited"
             },{
                 first_char : "C",
@@ -1134,7 +1129,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "D",
@@ -1150,7 +1145,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "E",
@@ -1166,7 +1161,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -1182,7 +1177,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "G",
@@ -1198,7 +1193,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "H",
@@ -1214,7 +1209,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "I",
@@ -1230,7 +1225,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "J",
@@ -1246,7 +1241,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -1262,7 +1257,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "L",
@@ -1278,7 +1273,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "M",
@@ -1294,7 +1289,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             }],
         'eth' : [
@@ -1312,7 +1307,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },
             {
@@ -1329,7 +1324,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_limited"
             },{
                 first_char : "C",
@@ -1345,7 +1340,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "D",
@@ -1361,7 +1356,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "E",
@@ -1377,7 +1372,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -1393,7 +1388,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "G",
@@ -1409,7 +1404,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "H",
@@ -1425,7 +1420,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "I",
@@ -1441,7 +1436,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "J",
@@ -1457,7 +1452,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -1473,7 +1468,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "L",
@@ -1489,7 +1484,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "M",
@@ -1505,7 +1500,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             }],
         'usdt' : [
@@ -1522,7 +1517,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },
             {
@@ -1539,7 +1534,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_limited"
             },{
                 first_char : "C",
@@ -1555,7 +1550,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "D",
@@ -1571,7 +1566,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "E",
@@ -1587,7 +1582,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -1603,7 +1598,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "G",
@@ -1619,7 +1614,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "H",
@@ -1635,7 +1630,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "I",
@@ -1651,7 +1646,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "J",
@@ -1667,7 +1662,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -1683,7 +1678,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "L",
@@ -1699,7 +1694,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "M",
@@ -1715,7 +1710,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             }],
         'xrp' : [
@@ -1733,7 +1728,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },
             {
@@ -1750,7 +1745,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_limited"
             },{
                 first_char : "C",
@@ -1766,7 +1761,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "D",
@@ -1782,7 +1777,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "E",
@@ -1798,7 +1793,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -1814,7 +1809,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "G",
@@ -1830,7 +1825,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "H",
@@ -1846,7 +1841,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "I",
@@ -1862,7 +1857,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "J",
@@ -1878,7 +1873,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -1894,7 +1889,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "L",
@@ -1910,7 +1905,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "M",
@@ -1926,7 +1921,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             }],
         'eos' : [
@@ -1944,7 +1939,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },
             {
@@ -1961,7 +1956,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_limited"
             },{
                 first_char : "C",
@@ -1977,7 +1972,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "D",
@@ -1993,7 +1988,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "E",
@@ -2009,7 +2004,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -2025,7 +2020,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "G",
@@ -2041,7 +2036,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "H",
@@ -2057,7 +2052,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "I",
@@ -2073,7 +2068,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "J",
@@ -2089,7 +2084,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "F",
@@ -2105,7 +2100,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "L",
@@ -2121,7 +2116,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             },{
                 first_char : "M",
@@ -2137,7 +2132,7 @@ const table_data = {
                 payment_range: "50,000 - 300,000 CNY",
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
-                button_url:"#",
+                button_url:"/wallet_verification",
                 button_class:"btn_buy" 
             }]
     },
@@ -2505,7 +2500,7 @@ const SellTabContent = function (props) {
     )
 }
 
-export const Trade = () => {
+export const Wallet_trade = () => {
     const [activeTab, setActiveTab] = useState("buy-tab");
     const [activeBuyTab, setActiveBuyTab] = useState("buy-btc-tab");
     const [activeSellTab, setActiveSellTab] = useState("sell-btc-tab");
@@ -2593,7 +2588,7 @@ export const Trade = () => {
                                         </select>
                                     </dd>
                                 </dl>
-                                <a href="/ad_create" class="btn_creat"><i class="fas fa-plus-square"></i>Creat an AD</a>
+                                <a href="#" class="btn_creat"><i class="fas fa-plus-square"></i>Creat an AD</a>
                             </div>
                         </div>
                     </div>

@@ -412,3 +412,71 @@
     }
 
 }
+
+@media screen and (max-width:576px) {
+    #join .row {
+        margin-left: 0;
+        margin-right: 0;
+    }
+
+}
+
+@media screen and (max-width:992px) and (min-width: 768px) {
+    #withdrawCrypto .wa-icon label span:nth-child(1)::after {
+        right: -22px;
+    }
+}
+
+@media screen and (max-width:576px) {
+    #sellbtc .sell-btc-left-row .sell-payment {
+        margin-bottom: 30px;
+    }
+}
+
+@media screen and (max-width:992px) and (min-width: 768px) {
+    .my-timeline li {
+        width: 119px !important;
+    }
+}
+
+@media screen and (max-width:1200px) and (min-width: 992px) {
+    .my-timeline li {
+        width: 175px !important;
+    }
+}
+
+@media screen and (max-width:767px) and (min-width: 540px) {
+    .my-timeline li {
+        width: 135px !important;
+    }
+}
+
+@media screen and (max-width:540px) and (min-width: 425px){
+    .my-timeline li {
+        width: 98px !important;
+    }
+}
+
+@media screen and (max-width:414px) {
+    .my-timeline li {
+        width: 93px !important;
+    }
+}
+
+@media screen and (max-width:375px) {
+    .my-timeline li {
+        width: 76px !important;
+    }
+}
+
+@media screen and (max-width:320px) {
+    .my-timeline li {
+        width: 63px !important;
+    }
+}
+
+@media screen and (max-width:280px) {
+    .my-timeline li {
+        width: 48px !important;
+    }
+}

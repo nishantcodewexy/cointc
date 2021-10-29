@@ -1,7 +1,7 @@
 import { Switch, Route } from "react-router-dom";
 import routes from "./routes";
 
-
+import WOW from 'wowjs';
 import './app-assets/css/bootstrap.min.css';
 import './app-assets/css/animate.css';
 import './app-assets/css/common.css';
@@ -20,16 +20,20 @@ import { Footer2 } from './components/footer/Footer2';
 // import Error404 from "../pages/error404";
 
 function GuestMarkup() {
+  const wow = new WOW.WOW( {
+      boxClass:     'wow',
+      animateClass: 'animated',
+    }
+  );
+  wow.init();
 
   const  cur_loc = window.location.pathname;
   var Custom_Header = null;
   var Custom_Footer = null
   if(cur_loc==='/'){
     Custom_Header = <Header />;
-  }else if(cur_loc==='/affiliate'||cur_loc==='/support'){
+  }else if(cur_loc==='/affiliate'||cur_loc==='/support'||cur_loc==='/my-page' || cur_loc==='/my-page-2'){
     Custom_Header = <Header3 />;
-  }else if(cur_loc==='/my-page' || cur_loc==='/my-page-2'){
-    Custom_Header = <Header4 />;
   }else if(cur_loc==='/frame01'){
     Custom_Header = null;
   }else{
@@ -58,6 +62,7 @@ function GuestMarkup() {
          exact
          path={`/${data.url}`}
          component={data.component}
+         title={data.title}
        />
      ))}
    </Switch>
