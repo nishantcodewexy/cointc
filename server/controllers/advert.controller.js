@@ -1,18 +1,14 @@
 "use strict";
 
 const AdvertController = (server) => {
-  const { __upsert, __update, __destroy, __assertRole } = require("./utils")(
+  const { __destroy } = require("./utils")(
     server
   );
   const {
-    db: { Advert, User, sequelize },
+    db: { Advert },
     boom,
     helpers: { filters, paginator },
   } = server.app;
-
-  async function completionRate(total_orders, total_completed_orders) {
-    return (total_completed_orders / total_orders) * 100;
-  }
 
   return {
     /**

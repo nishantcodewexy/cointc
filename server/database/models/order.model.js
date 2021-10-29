@@ -1,6 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
 const hooks = require("../hooks/order.hook");
+const { tableNames } = require("../../consts");
+
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
     /**
@@ -69,7 +71,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Order",
       underscored: true,
       paranoid: true,
-      tableName: "tbl_orders",
+      tableName: tableNames?.ORDER || "tbl_orders",
       hooks,
       deletedAt: "archived_at",
     }

@@ -1,12 +1,9 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/advert.schema");
-  const { payload: payloadSchema } = Schema.create(server);
-
   const {
     controllers: {
-      advert: { create },
+      user: { retrieveMe },
     },
     helpers: {
       permissions: { isUser },
@@ -14,8 +11,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "POST",
-    path: "/ad",
+    method: "GET",
+    path: "/user/{id}",
     config: {
       pre: [
         {
@@ -23,10 +20,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: create,
-      validate: {
-        payload: payloadSchema,
-      },
+      handler: retrieveMe,
       auth: "jwt",
     },
   };

@@ -2,6 +2,7 @@
 const { Model } = require("sequelize");
 const _ = require("underscore");
 const hooks = require("../hooks/user.profile.hook");
+const { tableNames } = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
   class UserProfile extends Model {
@@ -19,14 +20,16 @@ module.exports = (sequelize, DataTypes) => {
 
       Profile.belongsTo(KYC, {
         foreignKey: "kyc_id",
+        as: 'kyc'
       });
 
       Profile.belongsTo(Upload, {
-        foreignKey: "profile_pic",
+        foreignKey: "avatar_upload",
       });
 
       Profile.belongsTo(Address, {
         foreignKey: "address_id",
+        as: 'address'
       });
     }
     toPublic() {
@@ -63,8 +66,8 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: 0,
         validate: {
           min: 0,
-          max: 5
-        }
+          max: 5,
+        },
       },
       payment_methods: DataTypes.JSON,
       pname: { type: DataTypes.STRING, comment: "public name" },
@@ -80,7 +83,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Profile",
       underscored: true,
-      tableName: "tbl_users_profile",
+      tableName: tableNames?.PROFILE || "tbl_user_profiles",
       paranoid: true,
       deletedAt: "archived_at",
       hooks,

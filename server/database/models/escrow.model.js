@@ -1,5 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
+const { tableNames } = require("../../consts");
+
 module.exports = (sequelize, DataTypes) => {
   class Escrow extends Model {
     /**
@@ -8,13 +10,21 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { Escrow, Order } = models;
+      const { Escrow, Order, User } = models;
 
       Order.hasOne(Escrow, {
         foreignKey: {
           name: 'order_id'
         }
-      })
+      });
+
+      Escrow.belongsTo(User, {
+        foreignKey: 'buyer_id'
+      });
+
+      Escrow.belongsTo(User, {
+        foreignKey: 'seller_id'
+      });
 
     }
   }
@@ -49,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Escrow",
       underscored: true,
-      tableName: "tbl_escrows",
+      tableName: tableNames?.ESCROW || "tbl_escrows",
     }
   );
 

@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
+const { tableNames } = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
   class Security extends Model {
@@ -40,7 +41,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Security",
       underscored: true,
-      tableName: "tbl_users_security",
+      tableName: tableNames?.SECURITY || "tbl_user_securities",
     }
   );
 

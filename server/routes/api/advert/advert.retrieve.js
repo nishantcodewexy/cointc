@@ -1,4 +1,4 @@
-const Joi = require("joi");
+"use strict";
 
 module.exports = (server) => {
   const Schema = require("../../../schema/advert.schema");
@@ -11,7 +11,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/ads/{id}",
+    path: "/ad/{id}",
     config: {
       handler: retrieve,
       auth: "jwt",

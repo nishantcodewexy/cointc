@@ -1,12 +1,10 @@
 "use strict";
-const {Op} = require('sequelize');
 
 const {filterFields} = require("../services/model")
 
 module.exports = function SupportTicketController (server) {
   const {
-    db: { Ticket, sequelize },
-    consts: { roles: _roles },
+    db: {  SupportTicket },
     helpers:{
       filters,
       paginator
@@ -37,7 +35,7 @@ module.exports = function SupportTicketController (server) {
             }
         } = req
 
-        return await Ticket.findOne({
+        return await SupportTicket.findOne({
             where:{
                 id,
                 ...(!isAdmin?{user_id:user.id}:{}),
@@ -75,7 +73,7 @@ module.exports = function SupportTicketController (server) {
             })
             
             
-            const queryset = Ticket.findAndCountAll(filterResults)
+            const queryset = SupportTicket.findAndCountAll(filterResults)
             return await paginator({queryset,limit:filterResults.limit,offset:filterResults.offset})
             
         } catch (error) {
@@ -103,7 +101,7 @@ module.exports = function SupportTicketController (server) {
         } = req
 
 
-        return await Ticket.update(payload,{
+        return await SupportTicket.update(payload,{
             where:{
                 ...(!isAdmin?{
                     user_id:user.id,
@@ -122,7 +120,7 @@ module.exports = function SupportTicketController (server) {
             }
         } = req
         try {
-            const object =  await Ticket.create({...payload,user_id:user.id})
+            const object =  await SupportTicket.create({...payload,user_id:user.id})
             return filterFields({object:object.dataValues,exclude:[
                 "user_id",
                 "deleted_at",
@@ -149,7 +147,7 @@ module.exports = function SupportTicketController (server) {
             params:{id}
         } = req
 
-        return await Ticket.destroy({
+        return await SupportTicket.destroy({
             where:{
                 ...(!isAdmin?{
                     user_id:user.id,

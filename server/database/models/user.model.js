@@ -2,6 +2,7 @@
 const { Model } = require("sequelize");
 const _ = require("underscore");
 const hooks = require("../hooks/user.hook");
+const { tableNames } = require("../../consts");
 
 // debugger;
 const uppercaseFirst = (str) => `${str[0].toUpperCase()}${str.substr(1)}`;
@@ -27,6 +28,8 @@ module.exports = (sequelize, DataTypes) => {
         Currency,
         Advert,
         Order,
+        Fee,
+        Policy
       } = models;
 
       User.hasMany(Wallet, {
@@ -86,6 +89,18 @@ module.exports = (sequelize, DataTypes) => {
           name: "user_id",
         },
       });
+      User.hasMany(Fee, {
+        as: "fees",
+        foreignKey: {
+          name: "user_id",
+        },
+      });
+      User.hasMany(Policy, {
+        as: "policies",
+        foreignKey: {
+          name: "user_id",
+        },
+      });
       // User.hasMany(Message, {})
     }
     toPublic() {
@@ -125,7 +140,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: { notEmpty: true },
       },
-      role: DataTypes.STRING,
+      // role: DataTypes.STRING,
       permission: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
@@ -176,18 +191,13 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "User",
       underscored: true,
-      tableName: "tbl_users",
+      tableName: tableNames?.USER || "tbl_users",
       paranoid: true,
       deletedAt: "archived_at",
       hooks,
-      scopes: {
-        admin: {
-          role: "admin",
-        },
-        basic: {
-          role: "basic",
-        },
-      },
+      /* scopes: {
+       
+      }, */
     }
   );
 

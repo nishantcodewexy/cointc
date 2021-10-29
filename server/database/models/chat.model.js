@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
-const crypto = require("crypto");
-const hooks = require("../hooks/chat.hook")
+const hooks = require("../hooks/chat.hook");
+const { tableNames } = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
   class Chat extends Model {
@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       Chat.hasMany(Message, {});
     }
     static makeHash(to, from) {
-      console.log({ to, from });
+      // console.log({ to, from });
       return [to.replace(/-/g, ""), from.replace(/-/g, "")].sort().join("-");
     }
   }
@@ -38,10 +38,10 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Chat",
       underscored: true,
-      tableName: "tbl_chats",
+      tableName: tableNames?.CHAT || "tbl_chats",
       hooks,
     }
   );
-  
+
   return Chat;
 };

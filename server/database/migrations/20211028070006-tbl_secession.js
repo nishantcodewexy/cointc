@@ -1,6 +1,8 @@
 "use strict";
 
-let table_name = "tbl_secessions";
+let { tableNames } = require("../../consts");
+let table_name = tableNames?.SECESSION || 'tbl_secessions';
+
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
@@ -44,7 +46,7 @@ module.exports = {
           type: Sequelize.UUID,
           allowNull: false,
           references: {
-            model: "tbl_users",
+            model: tableNames?.USER || 'tbl_users',
             key: "id",
           },
         },

@@ -7,16 +7,16 @@ module.exports = (server) => {
       chathistory: { create },
     },
     consts: {
-      types: { country },
+      countries,
     },
     helpers: {
-      permissions: { isAdminOrError },
+      permissions: { isUser },
     },
   } = server.app;
 
   const schema = Joi.object({
     country: Joi.string()
-      .valid(...Object.keys(country))
+      .valid(...Object.keys(countries))
       .required(),
     visitor_email: Joi.string()
       .email()
@@ -30,7 +30,7 @@ module.exports = (server) => {
       pre: [
         [
           {
-            method: isAdminOrError,
+            method: isUser,
             assign: "user",
           },
         ],

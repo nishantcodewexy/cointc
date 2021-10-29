@@ -1,5 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
+const { tableNames } = require("../../consts");
+
 module.exports = (sequelize, DataTypes) => {
   class Referral extends Model {
     /**
@@ -46,7 +48,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Referral",
       underscored: true,
-      tableName: "tbl_referrals",
+      tableName: tableNames?.REFERRAL || "tbl_referrals",
       timestamps: false,
     }
   );

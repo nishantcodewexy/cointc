@@ -20,7 +20,7 @@ module.exports = (server) => {
 
   return {
     method: "DELETE",
-    path: `/users`,
+    path: `/user/bulk`,
     config: {
       pre: [
         {

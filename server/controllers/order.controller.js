@@ -1,9 +1,8 @@
 "use strict";
-const assert = require("assert");
 const boom = require("@hapi/boom");
 
 function OrderController(server) {
-  const { __upsert, __update, __destroy, __assertRole } = require("./utils")(
+  const {   __destroy } = require("./utils")(
     server
   );
   const {

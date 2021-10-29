@@ -1,18 +1,24 @@
 "use strict";
 const { Model } = require("sequelize");
+const { tableNames } = require('../../consts');
+
 module.exports = (sequelize, DataTypes) => {
-  class P2PTradeFee extends Model {
+  class Fee extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
-      // define association here
+    static associate({User, Fee}) {
+      Fee.belongsTo(User, {
+        foreignKey: {
+          name: 'user_id'
+        }
+      })
     }
   }
 
-  P2PTradeFee.init(
+  Fee.init(
     {
       fiat: DataTypes.STRING,
       crypto: DataTypes.INTEGER,
@@ -20,11 +26,10 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "P2PTradeFee",
+      modelName: "Fee",
       underscored: true,
-      tableName: "tbl_trade_fees",
+      tableName: tableNames?.FEE || "tbl_fees",
     }
   );
-
-  return P2PTradeFee;
+  return Fee;
 };

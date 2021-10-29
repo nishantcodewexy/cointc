@@ -6,7 +6,6 @@ const { filterFields } = require("../services/model");
 const ChatHistoryController = (server) => {
   const {
     db: { ChatHistory },
-    consts: { roles: _roles },
     helpers: { filters, paginator },
   } = server.app;
 

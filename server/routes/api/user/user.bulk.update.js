@@ -22,8 +22,8 @@ module.exports = (server) => {
   });
 
   return {
-    method: ["PUT", "PATCH"],
-    path: "/users",
+    method: "PUT",
+    path: "/user/bulk",
     config: {
       pre: [
         {

@@ -1,13 +1,9 @@
 "use strict";
 const { Model } = require("sequelize");
-const {
-    types:{
-        TicketSubjectType,
-        TicketStatusType
-    }
-} = require("../../consts")
+const { tableNames, TicketSubjectType, TicketStatusType } = require("../../consts");
+
 module.exports = (sequelize, DataTypes) => {
-  class Ticket extends Model {
+  class SupportTicket extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
@@ -15,41 +11,41 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      const {User,Ticket} = models
+      const { User, Ticket } = models;
 
-      User.hasMany(Ticket,{
-        foreignKey:"user_id"
-      })
-      Ticket.belongsTo(User)
+      User.hasMany(Ticket, {
+        foreignKey: "user_id",
+      });
+      Ticket.belongsTo(User);
     }
   }
-  Ticket.init(
+  SupportTicket.init(
     {
       id: {
-            type: DataTypes.UUID,
-            primaryKey: true,
-            defaultValue: DataTypes.UUIDV4,
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
       },
       subject: {
-        type:DataTypes.ENUM(Object.keys(TicketSubjectType)),
-        allowNull:false,
-        defaultValue:TicketSubjectType.LOW
+        type: DataTypes.ENUM(Object.keys(TicketSubjectType)),
+        allowNull: false,
+        defaultValue: TicketSubjectType.LOW,
       },
-      description:DataTypes.STRING,
+      description: DataTypes.STRING,
       status: {
-        type:DataTypes.ENUM(Object.keys(TicketStatusType)),
-        allowNull:false,
-        defaultValue:TicketStatusType.OPEN
+        type: DataTypes.ENUM(Object.keys(TicketStatusType)),
+        allowNull: false,
+        defaultValue: TicketStatusType.OPEN,
       },
     },
     {
       sequelize,
       modelName: "Ticket",
-      tableName: "tbl_support_tickets",
+      tableName: tableNames?.SUPPORT_TICKET || "tbl_support_tickets",
       underscored: true,
-      paranoid:true,
-      deletedAt: 'deleted_at'
+      paranoid: true,
+      deletedAt: "deleted_at",
     }
   );
-  return Ticket;
+  return SupportTicket;
 };

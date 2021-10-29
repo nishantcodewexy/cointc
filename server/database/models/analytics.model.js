@@ -1,5 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
+const { tableNames } = require("../../consts");
+
 module.exports = (sequelize, DataTypes) => {
   class Analytics extends Model {
     /**
@@ -22,7 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Analytics",
-      tableName: "tbl_analytics",
+      tableName: tableNames?.ANALYTICS || "tbl_analytics",
       underscored: true,
     }
   );

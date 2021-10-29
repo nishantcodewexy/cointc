@@ -2,12 +2,10 @@
 
 function CurrencyController(server) {
   const {
-    db: { Currency, sequelize, User },
+    db: { Currency, sequelize },
     helpers: { filters, paginator },
     boom,
   } = server.app;
-  /* const queryInterface = sequelize.getQueryInterface();
-      const table = Currency.getTableName(); */
 
   return {
     // CREATE------------------------------------------------------------

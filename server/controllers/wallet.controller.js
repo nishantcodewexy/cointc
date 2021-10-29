@@ -1,10 +1,9 @@
-const assert = require("assert");
-
+"use strict";
 module.exports = function WalletController(server) {
   /*********************** HELPERS ***************************/
-  const { __upsert, __update, __destroy, __assertRole } = require("./utils")(
+ /*  const {  __update, __destroy } = require("./utils")(
     server
-  );
+  ); */
 
   const {
     db: { Wallet, User },
@@ -12,12 +11,12 @@ module.exports = function WalletController(server) {
     helpers: { filters, paginator },
   } = server.app;
 
-  const walletExist = async (address, user) => {
+  /* const walletExist = async (address, user) => {
     // Search wallet by address
     return await Wallet.findOne({
       where: { address, ...(() => (user ? { owner_id: user } : null))() },
     });
-  };
+  }; */
 
   return {
     create: async (req) => {

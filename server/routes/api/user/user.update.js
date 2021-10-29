@@ -13,7 +13,7 @@ module.exports = (server) => {
 
   return {
     method: "PUT",
-    path: "/users/{id}",
+    path: "/user/{id}",
     config: {
       pre: [
         {

@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
+const { countries, tableNames } = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
   class Address extends Model {
@@ -29,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       country: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM(Object.keys(countries)),
       },
       address_line: {
         type: DataTypes.STRING,
@@ -37,13 +38,12 @@ module.exports = (sequelize, DataTypes) => {
       region: {
         type: DataTypes.STRING,
       },
-    
     },
     {
       sequelize,
       modelName: "Address",
       underscored: true,
-      tableName: "tbl_addresses",
+      tableName: tableNames?.ADDRESS || "tbl_addresses",
     }
   );
 

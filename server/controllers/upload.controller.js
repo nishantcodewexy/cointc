@@ -6,8 +6,8 @@ const { uploader, imageFilter } = require("../services/fileUpload");
 
 module.exports = function UploadController(server) {
   const {
-    db: { Upload, sequelize },
-    consts: { roles: _roles, FILE_UPLOAD_PATH },
+    db: { Upload },
+    consts: {  FILE_UPLOAD_PATH },
     helpers: { filters, paginator },
     boom,
   } = server.app;

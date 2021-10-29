@@ -1,5 +1,6 @@
 "use strict";
-let table_name = "tbl_user_addresses";
+const { countries, tableNames } = require("../../consts");
+let table_name = tableNames?.ADDRESS || 'addresses';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -19,7 +20,7 @@ module.exports = {
               defaultValue: Sequelize.UUIDV4,
             },
             country: {
-              type: Sequelize.STRING,
+              type: Sequelize.ENUM(Object.keys(countries)),
             },
             address_line: {
               type: Sequelize.STRING,
@@ -32,7 +33,7 @@ module.exports = {
             user_id: {
               type: Sequelize.UUID,
               allowNull: false,
-              references: { model: "tbl_users", key: "id" },
+              references: { model: tableNames?.USER || 'users', key: "id" },
             },
           };
 

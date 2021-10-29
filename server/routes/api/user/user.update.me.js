@@ -1,11 +1,10 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
   const {
     controllers: {
       user: { updateMe },
     },
-    consts: { roles: _roles },
     helpers: {
       permissions: { isUser },
     },
@@ -13,7 +12,7 @@ module.exports = (server) => {
 
   return {
     method: "PUT",
-    path: "/users/me",
+    path: "/user",
     config: {
       pre: [
         {

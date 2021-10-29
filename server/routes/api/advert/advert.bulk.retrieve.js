@@ -1,4 +1,4 @@
-const Joi = require("joi");
+"use strict";
 
 module.exports = (server) => {
   const {
@@ -7,14 +7,12 @@ module.exports = (server) => {
     },
   } = server.app;
 
-  
-
   return {
     method: "GET",
-    path: "/ads",
+    path: "/ad/bulk",
     config: {
       handler: bulkRetrieve,
-      auth: 'jwt'
+      auth: "jwt",
     },
   };
 };

@@ -1,44 +1,40 @@
 "use strict";
-
-let table_name = "tbl_currencies";
+let { tableNames } = require("../../consts");
+let table_name = tableNames?.SECURITY || 'tbl_user_securities';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
-      // Add all table modifications here
+      // Add all modifications here
       async function modifications(d) {
         await queryInterface.sequelize.transaction(async (t) => {
           return await Promise.all([]);
         });
       }
 
-      // table field definitions
+      // Table field definitions
       let fields = {
         id: {
           type: Sequelize.UUID,
           primaryKey: true,
           defaultValue: Sequelize.UUIDV4,
         },
-
-        name: {
+        otp: {
           type: Sequelize.STRING,
-          unique: true,
         },
-        iso_code: {
-          type: Sequelize.STRING,
-          unique: true,
+        otp_ttl: Sequelize.DATE,
+        two_factor: {
+          type: Sequelize.BOOLEAN,
+          defaultValue: false,
         },
-        type: {
-          type: Sequelize.ENUM("fiat", "crypto"),
-          defaultValue: "crypto",
-        },
+        verify_token: Sequelize.STRING,
         created_at: Sequelize.DATE,
         updated_at: Sequelize.DATE,
-        archived_at: Sequelize.DATE,
+        verify_token_ttl: { type: Sequelize.DATE },
         user_id: {
           type: Sequelize.UUID,
           allowNull: false,
-          references: { model: "tbl_users", key: "id" },
+          references: { model: tableNames?.USER, key: "id" },
         },
       };
 

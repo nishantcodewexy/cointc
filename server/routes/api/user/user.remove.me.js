@@ -1,12 +1,14 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/advert.schema");
-  const { payload: payloadSchema } = Schema.create(server);
+  const Schema = require("../../../schema/user.schema");
+  const { params: paramsSchema, payload: payloadSchema } = Schema.remove(
+    server
+  );
 
   const {
     controllers: {
-      advert: { create },
+      user: { remove },
     },
     helpers: {
       permissions: { isUser },
@@ -14,8 +16,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "POST",
-    path: "/ad",
+    method: "DELETE",
+    path: "/user",
     config: {
       pre: [
         {
@@ -23,11 +25,12 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: create,
+      handler: remove,
+      auth: "jwt",
       validate: {
+        params: paramsSchema,
         payload: payloadSchema,
       },
-      auth: "jwt",
     },
   };
 };

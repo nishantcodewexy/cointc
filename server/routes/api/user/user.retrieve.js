@@ -5,19 +5,18 @@ module.exports = (server) => {
     controllers: {
       user: { retrieve },
     },
-    consts: { roles: _roles },
     helpers: {
-      permissions: { isUser },
+      permissions: { isAdminOrError },
     },
   } = server.app;
 
   return {
     method: "GET",
-    path: "/users/{id}",
+    path: "/user/{id}",
     config: {
       pre: [
         {
-          method: isUser,
+          method: isAdminOrError,
           assign: "user",
         },
       ],

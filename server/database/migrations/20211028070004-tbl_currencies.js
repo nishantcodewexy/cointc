@@ -1,34 +1,47 @@
 "use strict";
-let { tableNames } = require('../../consts')
-let table_name = tableNames?.POLICY || 'tbl_policies';
+let { tableNames, currencies } = require("../../consts");
+let table_name = tableNames?.CURRENCY || 'tbl_currencies';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
-      // Table fields or columns definition
-      let fields = {
-        escrow_fee: Sequelize.DOUBLE,
-        seller_ad_fee: Sequelize.DOUBLE,
-        buyer_ad_fee: Sequelize.DOUBLE,
-        min_confirmation_block: {
-          type: Sequelize.INTEGER,
-        },
-        created_at: Sequelize.DATE,
-        updated_at: Sequelize.DATE,
-        user_id: {
-          type: Sequelize.UUID,
-          // allowNull: false,
-          references: { model: tableNames?.USER || 'tbl_users', key: "id" },
-        },
-      };
-
-      // Add table modifications here
+      // Add all table modifications here
       async function modifications(d) {
         await queryInterface.sequelize.transaction(async (t) => {
           return await Promise.all([]);
         });
       }
-      
+
+      // table field definitions
+      let fields = {
+        id: {
+          type: Sequelize.UUID,
+          primaryKey: true,
+          defaultValue: Sequelize.UUIDV4,
+        },
+
+        name: {
+          type: Sequelize.STRING,
+          unique: true,
+        },
+        iso_code: {
+          type: Sequelize.ENUM(...Object.keys(currencies)),
+          unique: true,
+        },
+        type: {
+          type: Sequelize.ENUM("fiat", "crypto"),
+          defaultValue: "crypto",
+        },
+        created_at: Sequelize.DATE,
+        updated_at: Sequelize.DATE,
+        archived_at: Sequelize.DATE,
+        user_id: {
+          type: Sequelize.UUID,
+          allowNull: false,
+          references: { model: tableNames?.USER || "tbl_users", key: "id" },
+        },
+      };
+
       // Check if table exist and apply modifications else create and apply modifications
       await queryInterface
         .describeTable(table_name)

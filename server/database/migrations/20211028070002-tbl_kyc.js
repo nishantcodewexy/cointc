@@ -1,41 +1,47 @@
 "use strict";
-let table_name = "tbl_users_security";
+const { KycStatusType, tableNames } = require("../../consts");
+
+let table_name = tableNames?.KYC || "tbl_kyc";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
-      // Add all modifications here
-      async function modifications(d) {
-        await queryInterface.sequelize.transaction(async (t) => {
-          return await Promise.all([]);
-        });
-      }
-
-      // Table field definitions
+      // Table fields or columns definition
       let fields = {
         id: {
           type: Sequelize.UUID,
           primaryKey: true,
           defaultValue: Sequelize.UUIDV4,
         },
-        otp: {
-          type: Sequelize.STRING,
+        type: Sequelize.ENUM("email", "id", "sms"),
+        status: {
+          type: Sequelize.ENUM(Object.keys(KycStatusType)),
+          allowNull: false,
+          defaultValue: KycStatusType.PENDING,
         },
-        otp_ttl: Sequelize.DATE,
-        two_factor: {
-          type: Sequelize.BOOLEAN,
-          defaultValue: false,
-        },
-        verify_token: Sequelize.STRING,
         created_at: Sequelize.DATE,
         updated_at: Sequelize.DATE,
-        verify_token_ttl: { type: Sequelize.DATE },
+        archived_at: Sequelize.DATE,
+        document_id: {
+          type: Sequelize.UUID,
+          references: {
+            model: tableNames.UPLOAD,
+            key: "id",
+          },
+        },
         user_id: {
           type: Sequelize.UUID,
           allowNull: false,
-          references: { model: "tbl_users", key: "id" },
+          references: { model: tableNames?.USER || "tbl_users", key: "id" },
         },
       };
+
+      // Add table modifications here
+      async function modifications(d) {
+        await queryInterface.sequelize.transaction(async (t) => {
+          return await Promise.all([]);
+        });
+      }
 
       // Check if table exist and apply modifications else create and apply modifications
       await queryInterface

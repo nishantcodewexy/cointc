@@ -1,8 +1,6 @@
 "use strict";
-let table_name = "tbl_chat_histories";
-const {
-  types: { country },
-} = require("../../consts");
+const { countries, tableNames } = require("../../consts");
+let table_name = tableNames?.CHAT_HISTORY || 'tbl_chat_histories';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -27,9 +25,9 @@ module.exports = {
           defaultValue: "CHAT",
         },
         country: {
-          type: Sequelize.ENUM(...Object.keys(country)),
-          allowNull: false,
-          defaultValue: "NG",
+          type: Sequelize.ENUM(Object.keys(countries)),
+          // allowNull: false,
+          // defaultValue: "CN",
         },
         browser: {
           type: Sequelize.STRING,

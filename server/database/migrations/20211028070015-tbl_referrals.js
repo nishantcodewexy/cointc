@@ -1,6 +1,6 @@
 "use strict";
-
-let table_name = "tbl_referrals";
+let { tableNames } = require("../../consts");
+let table_name = tableNames?.REFERRAL || 'tbl_referrals';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -21,7 +21,7 @@ module.exports = {
               type: Sequelize.UUID,
               allowNull: false,
               references: {
-                model: "tbl_users",
+                model: tableNames?.USER || "tbl_users",
                 key: "id",
               },
             },
@@ -29,7 +29,7 @@ module.exports = {
               type: Sequelize.UUID,
               allowNull: false,
               references: {
-                model: "tbl_users",
+                model: tableNames?.USER || "tbl_users",
                 key: "id",
               },
             },

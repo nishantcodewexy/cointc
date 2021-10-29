@@ -1,5 +1,6 @@
 "use strict";
 const { Model } = require("sequelize");
+const { tableNames } = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
   class Advert extends Model {
@@ -133,7 +134,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Advert",
       underscored: true,
-      tableName: "tbl_adverts",
+      tableName: tableNames?.ADVERT || "tbl_adverts",
       paranoid: true,
       deletedAt: "archived_at",
     }

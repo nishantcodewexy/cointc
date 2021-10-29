@@ -1,5 +1,6 @@
 "use strict";
-let table_name = "tbl_analytics";
+let { tableNames } = require("../../consts");
+let table_name = tableNames?.ANALYTICS || 'tbl_analytics';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {

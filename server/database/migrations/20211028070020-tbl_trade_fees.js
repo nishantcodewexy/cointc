@@ -1,6 +1,6 @@
 "use strict";
-
-let table_name = "tbl_trade_fees";
+let { tableNames } = require("../../consts");
+let table_name = tableNames?.FEE || 'tbl_fees';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -14,8 +14,8 @@ module.exports = {
         updated_at: Sequelize.DATE,
         user_id: {
           type: Sequelize.UUID,
-          allowNull: false,
-          references: { model: "tbl_users", key: "id" },
+          // allowNull: false,
+          references: { model: tableNames?.USER || 'tbl_users', key: "id" },
         },
       };
 

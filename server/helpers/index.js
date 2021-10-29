@@ -493,3 +493,14 @@ module.exports = {
     return user?.access_level === 3;    
   } */
 };
+
+function renameKey(Obj, from = [], to = []) {
+  from.forEach((key, idx) => {
+    if (key in Obj) {
+      let temp = Obj[key];
+      delete Obj[key];
+      Obj[to[idx]] = temp;
+    }
+  });
+  return Obj;
+}

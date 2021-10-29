@@ -1,5 +1,30 @@
 const Joi = require("joi");
 
+// AUTHENTICATE ------------------------------------------
+function authenticate(server) {
+  const {
+    boom,
+    consts: { patterns },
+  } = server.app;
+
+  return {
+    payload: Joi.object({
+      email: Joi.string()
+        .email({ minDomainSegments: 2 })
+        .required()
+        .error(boom.badData("Required data <email::string> is invalid")),
+      password: Joi.string()
+        .pattern(patterns.password)
+        .required()
+        .error(boom.badData("Required data <password::string> is invalid")),
+      access_level: Joi.number()
+        .max(3)
+        .default(1)
+        .required()
+        .error(boom.badData("Required data <access_level::number> is invalid")),
+    }).with("email", "password"),
+  };
+}
 // CREATE ------------------------------------------------
 
 /**
@@ -18,7 +43,7 @@ function create(server) {
       email: Joi.string()
         .email({ minDomainSegments: 2 })
         .required()
-        .error(boom.badRequest("Required input <email::string> is invalid")),
+        .error(boom.badRequest("Required data <email::string> is invalid")),
       password: Joi.string()
         .pattern(patterns.password)
         .optional()
@@ -114,7 +139,6 @@ function remove(server) {
   };
 }
 
-
 function bulkRemove(server) {
   const { boom } = server.app;
   return {
@@ -164,9 +188,8 @@ function retrieve(server) {
   };
 }
 
-
-
 module.exports = {
+  authenticate,
   create,
   update,
   remove,

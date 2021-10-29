@@ -12,7 +12,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/secessions/{id}",
+    path: "/secession/{id}",
     config: {
       pre: [
         {

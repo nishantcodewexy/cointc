@@ -1,8 +1,10 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
+const { tableNames } = require("../../consts");
+
 const {
-  types: { KycStatusType },
+  KycStatusType,
 } = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
@@ -52,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "KYC",
       underscored: true,
-      tableName: "tbl_kyc",
+      tableName: tableNames?.KYC || "tbl_kyc",
       paranoid: true,
       deletedAt: "archived_at",
     }
