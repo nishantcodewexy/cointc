@@ -1,7 +1,4 @@
 const boom = require("@hapi/boom");
-const {
-  roles: { admin, basic },
-} = require("../consts");
 
 module.exports = {
   isUser: async (req) => {

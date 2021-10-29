@@ -28,7 +28,6 @@ module.exports = (server) => {
       handler: remove,
       auth: "jwt",
       validate: {
-        params: paramsSchema,
         payload: payloadSchema,
       },
     },

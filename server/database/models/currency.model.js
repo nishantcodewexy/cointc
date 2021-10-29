@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Currency",
       underscored: true,
-      tableName: tablenames?.CURRENCY || "tbl_currencies",
+      tableName: tableNames?.CURRENCY || "tbl_currencies",
       paranoid: true,
       deletedAt: "archived_at",
       /* indexes: [

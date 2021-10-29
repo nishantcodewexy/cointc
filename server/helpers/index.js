@@ -14,9 +14,7 @@ const glob = require("glob");
 const util = require("util");
 const { Op } = require("sequelize");
 const permissions = require("../permissions");
-const {
-  roles: { admin, basic },
-} = require("../consts");
+
 // const wallets = require("../wallets");
 const env = process.env.NODE_ENV || "development";
 

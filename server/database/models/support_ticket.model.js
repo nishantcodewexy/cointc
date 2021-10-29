@@ -26,7 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      subject: {
+      severity: {
         type: DataTypes.ENUM(Object.keys(TicketSubjectType)),
         allowNull: false,
         defaultValue: TicketSubjectType.LOW,
