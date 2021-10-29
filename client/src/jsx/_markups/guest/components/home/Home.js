@@ -1,10 +1,8 @@
 import React from 'react'
-// import '../../app-assets/css/pages/index.css';
+import { Link } from "react-router-dom";
 
-import './Home.css'
-// import '../../assets/css/style.css';
+import './Home.css';
 import { Container, Row, Col, Form, Button,Div } from 'react-bootstrap';
-// import { Link } from 'react-router-dom'
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 
@@ -47,8 +45,8 @@ export const Home = () => {
                                     transactions between individuals.
                                 </p>
                                 <div class="d-flex flex-column flex-md-row">
-                                    <a href="#" class="btn btn_getstarted mr-3 my-3 wow fadeInLeft">Get started</a>
-                                    <a href="#" class="btn btn_login mr-3 my-3 wow fadeInRight">Log In</a>
+                                    <Link className="btn btn_getstarted mr-3 my-3 wow fadeInLeft" to="/signup">Get started</Link>
+                                    <Link className="btn btn_login mr-3 my-3 wow fadeInRight" to="/login">Log In</Link>
                                 </div>
                             </div>
                         </div>

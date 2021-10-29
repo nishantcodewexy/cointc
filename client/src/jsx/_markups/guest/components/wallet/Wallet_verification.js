@@ -6,54 +6,75 @@ import { Container, Row, Col, Form, Button,Div,Dropdown,Tabs,Tab,Sonnet } from '
 // import "react-responsive-carousel/lib/styles/carousel.min.css";
 
 
-import usdt_icon from '../../app-assets/images/icon/usdt.png';
+import usdt_icon from '../../app-assets/images/coin/usdt.png';
 
 
 export const Wallet_verification = () => {
     return (     
-        <div className="Wallet_verification"> 
-            <section>
-                <div class="container-fluid">
-                    <div class="container">
-                        <div class="row justify-content-center mt-3">
-                            <div class="col-md-6">
-                                <div class="wallet-veri">
-                                    <div class="wallet-veri-top pb-4">
-                                        <div class="wallet-veri-title">
-                                            <h4 class="text-black font-weight-bold">Verification</h4>
-                                        </div>
-                                    </div>
-                                    <div class="wallet-veri-body mt-4">
-                                        <div class="wallet-user-info d-flex justify-content-around">
-                                            <div class="info-wallet-left">
-                                                <p>coin/network</p>
-                                                <p>Address</p>
-                                                <p>Amount</p>
-                                            </div>
-                                            <div class="info-wallet-right">
-                                                <p><img src={usdt_icon} class="pr-2"/>USDT/Ethreum ERC20</p>
-                                                <p>0x7790a6DAe3174A60E171A25a040f913b5d6054d4</p>
-                                                <p>999.0000000 USDT (Fee 1 USDT)</p>
-                                            </div>
-                                        </div>
-
-                                        <form class="mt-5">
-                                            <div class="form-group">
-                                                <label for="email">E-mail verification Code</label>
-                                                <input type="email" class="form-control" id="email"/>
-                                                <small>Enter the 6 digit code received by ema***@gmail.com.</small>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="footer-body">
-                                        <a href="/wallet_verification2" class="btn btn-primary w-100">NEXT</a>
-                                    </div>
-                                </div>
-                            </div>
+        <div class="content">
+            <section id="mainTop">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="wow fadeInDown" data-wow-delay="0.3s">Wallet</h3>
                         </div>
                     </div>
                 </div>
             </section>
-        </div> 
+            
+            <section id="walletVerification">
+                <div class="container">
+                    <div class="row" data-wow-delay="0.2s">
+                        <div class="col-12 col-md-6 mx-auto walletVerification-row wow fadeInDown">
+                            <h4>Verification</h4>
+                            <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                                <table class="w-100">
+                                    <thead>
+                                        <tr>
+                                            <th></th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Coin/Network</td>
+                                            <td class="network">
+                                                <img src={usdt_icon}/>
+                                                USDT/Ethreum ERC20
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Address</td>
+                                            <td class="network">
+                                                0x7790a6DAe3174A60E171A25a040f913b5d6054d4
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Amount</td>
+                                            <td class="network">
+                                                999.0000000 USDT (Fee 1 USDT)
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <form>
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1 mb-1">Email address</label>
+                                    <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" />
+                                    <small id="emailHelp" class="form-text text-muted">Enter the 6 digit code received by ema***@gmail.com.</small>
+                                </div>
+
+                                <div class="btn-next">
+                                    <a class="btn btn_next" href="/wallet_verification2">Next</a>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </div>
     )
 }

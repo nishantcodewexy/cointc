@@ -1,4 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
+import { Link } from "react-router-dom";
+
 import {
   Button,
   Nav,
@@ -35,7 +37,7 @@ export const Header3 = () => {
                     </ul>
                 </div>
                 <div class="user clear">
-                    <a href="#">
+                    <a href="my-page">
                         <img src={icon_user_color} alt="My page" />
                         <p>My page</p>
                     </a>

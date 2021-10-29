@@ -239,7 +239,7 @@ export const Wallet = () => {
 							<h4>Asset</h4>
 							<ul class="clear">
 								<li class="on"><a href="#">Asset</a></li>
-								<li><a href="#">History</a></li>
+								<li><a href="/wallet_th">History</a></li>
 							</ul>
 							<div class="table_container">
 								<table>
@@ -265,7 +265,9 @@ export const Wallet = () => {
 											<td class="order">0.5908675</td>
 											<td class="value">$27,170.5</td>
 											<td class="action">
-												<a href="#">Deposit</a><a href="#">Withdraw</a><a href="#">Trade</a>
+												<a href="/wallet_deposit">Deposit</a>
+												<a href="/wallet_withdraw">Withdraw</a>
+												<a href="/wallet_trade">Trade</a>
 											</td>
 										</tr>
 										<tr class="ethereum">
@@ -280,7 +282,9 @@ export const Wallet = () => {
 											<td class="order">1.908675</td>
 											<td class="value">$2,740.37</td>
 											<td class="action">
-												<a href="#">Deposit</a><a href="#">Withdraw</a><a href="#">Trade</a>
+												<a href="/wallet_deposit">Deposit</a>
+												<a href="/wallet_withdraw">Withdraw</a>
+												<a href="/wallet_trade">Trade</a>
 											</td>
 										</tr>
 										<tr class="tether">
@@ -295,7 +299,9 @@ export const Wallet = () => {
 											<td class="order">160,867.5</td>
 											<td class="value">$160,867.5</td>
 											<td class="action">
-												<a href="#">Deposit</a><a href="#">Withdraw</a><a href="#">Trade</a>
+												<a href="/wallet_deposit">Deposit</a>
+												<a href="/wallet_withdraw">Withdraw</a>
+												<a href="/wallet_trade">Trade</a>
 											</td>
 										</tr>
 										<tr class="ripple">
@@ -310,7 +316,9 @@ export const Wallet = () => {
 											<td class="order">0.08675</td>
 											<td class="value">$0.0054</td>
 											<td class="action">
-												<a href="#">Deposit</a><a href="#">Withdraw</a><a href="#">Trade</a>
+												<a href="/wallet_deposit">Deposit</a>
+												<a href="/wallet_withdraw">Withdraw</a>
+												<a href="/wallet_trade">Trade</a>
 											</td>
 										</tr>
 										<tr class="eos">
@@ -325,7 +333,9 @@ export const Wallet = () => {
 											<td class="order">200.000000</td>
 											<td class="value">$3,864.11</td>
 											<td class="action">
-												<a href="#">Deposit</a><a href="#">Withdraw</a><a href="#">Trade</a>
+												<a href="/wallet_deposit">Deposit</a>
+												<a href="/wallet_withdraw">Withdraw</a>
+												<a href="/wallet_trade">Trade</a>
 											</td>
 										</tr>
 									</tbody>
