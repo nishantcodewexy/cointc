@@ -43,6 +43,7 @@ module.exports = {
       "/my-page",
       "/login",
       "/signup",
+      "/wallet_th"
     ];
 
     urlPaths.forEach((url) => {
