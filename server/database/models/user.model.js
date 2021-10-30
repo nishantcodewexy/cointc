@@ -213,18 +213,15 @@ module.exports = (sequelize, DataTypes) => {
     if (!Array.isArray(findResult)) findResult = [findResult];
     for (const instance of findResult) {
       if (!(instance instanceof User)) return;
-      instance.profile = await instance.getProfile();
-      /*  if (instance?.role === "admin") {
-        instance.profile = await instance.getAdminProfile();
-      } else if (instance?.role === "basic") {
-        instance.profile = await instance.getBasicProfile();
-      } */
+      let profile = await instance.getProfile();
+
       if (instance)
         instance.dataValues = {
-          ...instance?.profile?.dataValues,
+          ...profile?.dataValues,
           ...instance?.dataValues,
         };
     }
   });
+  
   return User;
 };

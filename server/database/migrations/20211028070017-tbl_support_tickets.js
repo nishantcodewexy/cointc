@@ -1,6 +1,10 @@
 "use strict";
-const { TicketSubjectType, TicketStatusType, tableNames } = require("../../consts");
-let table_name = tableNames?.SUPPORT_TICKET || 'tbl_support_tickets';
+const {
+  TicketSubjectType,
+  TicketStatusType,
+  tableNames,
+} = require("../../consts");
+let table_name = tableNames?.SUPPORT_TICKET || "tbl_support_tickets";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -35,14 +39,19 @@ module.exports = {
         user_id: {
           type: Sequelize.UUID,
           allowNull: false,
-          references: { model: tableNames?.USER || 'tbl_users', key: "id" },
+          references: { model: tableNames?.USER || "tbl_users", key: "id" },
         },
       };
 
       // Add table modifications here
       async function modifications(d) {
         await queryInterface.sequelize.transaction(async (t) => {
-          return await Promise.all([]);
+          return await Promise.all([
+            !("archived_at" in d) &&
+              queryInterface.addColumn(table_name, "archived_at", {
+                type: Sequelize.DATE,
+              }),
+          ]);
         });
       }
 

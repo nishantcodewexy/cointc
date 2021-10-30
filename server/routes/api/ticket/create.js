@@ -1,35 +1,35 @@
 "use strict";
 const Joi = require("joi");
-
 module.exports = (server) => {
   const {
     controllers: {
-      user: { findID },
+      support_ticket: { create },
     },
+
     helpers: {
-      jwt: { decodeUser },
+      permissions: { isUser },
     },
   } = server.app;
 
   const schema = Joi.object({
-    id: Joi.string().required(),
+    description: Joi.string().required(),
   });
-  
+
   return {
-    method: "GET",
-    path: "/user/{id}",
+    method: "POST",
+    path: "/ticket",
     config: {
       pre: [
         {
-          method: decodeUser,
+          method: isUser,
           assign: "user",
         },
       ],
-      handler: findID,
-      validate: {
-        params: schema,
-      },
+      handler: create,
       auth: "jwt",
+      validate: {
+        payload: schema,
+      },
     },
   };
 };

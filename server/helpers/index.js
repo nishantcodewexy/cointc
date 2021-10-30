@@ -409,7 +409,7 @@ module.exports = {
     const searchQuery = {};
     const paranoid = query?.paranoid
       ? Boolean(JSON.parse(query?.paranoid))
-      : true;
+      : false;
     q &&
       searchFields.forEach((key) => {
         searchQuery[key] = {

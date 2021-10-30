@@ -54,7 +54,6 @@ module.exports = (sequelize, DataTypes) => {
       mimetype: {
         type: DataTypes.ENUM(Object.keys(mimeTypes)),
         allowNull: false,
-        defaultValue: "<unknown mimetype>",
       },
       original: {
         type: DataTypes.JSON,

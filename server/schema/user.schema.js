@@ -142,6 +142,43 @@ function update(server) {
     }),
   };
 }
+/**
+ * @function update - Schema validator for updating a single currency entity
+ * @param {Object} server - Hapi server instance
+ * @returns
+ */
+function updateMe(server) {
+  const { boom } = server.app;
+
+  return {
+    payload: Joi.object({
+      profile: Joi.object({
+        lname: Joi.string()
+          .optional()
+          .error(boom.badData("optional input <lname::string> is invalid")),
+        oname: Joi.string()
+          .optional()
+          .error(boom.badData("optional input <oname::string> is invalid")),
+        pname: Joi.string()
+          .optional()
+          .error(boom.badData("optional input <pname::string> is invalid")),
+        mode: Joi.string()
+          .optional()
+          .error(boom.badData("optional input <mode::string> is invalid")),
+        payment_methods: Joi.any()
+          .allow({})
+          .optional()
+          .error(
+            boom.badData("optional input <payment_methods::string> is invalid")
+          ),
+      })
+        ?.optional()
+        .error(
+          boom.badData("optional key <profile::string> is invalid or missing")
+        ),
+    }),
+  };
+}
 
 /**
  * @function bulkUpdate - Schema validator for creating bulk currency entities
@@ -236,4 +273,5 @@ module.exports = {
   bulkRestore,
   retrieve,
   register,
+  updateMe,
 };

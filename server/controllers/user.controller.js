@@ -1,6 +1,7 @@
 "use strict";
 const assert = require("assert");
 const faker = require("faker");
+const { login } = require("./security.controller");
 
 /**
  * @description - User controller
@@ -18,17 +19,31 @@ module.exports = function UserController(server) {
     helpers: { decrypt, mailer, jwt, paginator, filters },
   } = server.app;
 
-  async function login(account) {
-    // Update the last_login
-    account.login_at = new Date();
-    await account.save();
+  async function modify(target_user, data, { profileFields, userFields }) {
+    try {
+      let target_user_profile = await target_user.getProfile();
 
-    return {
-      token: jwt.create(account),
-      ...account.toPublic(),
-    };
+      const { profile, ...others } = data;
+
+      let _updatedUser = await target_user.update(others, {
+        returning: true,
+        ...(userFields && { fields: userFields }),
+        logging: console.log,
+      });
+      let _updatedProfile = await target_user_profile.update(profile, {
+        returning: true,
+        ...(profileFields && { fields: profileFields }),
+        logging: console.log,
+      });
+
+      return {
+        ..._updatedUser?.dataValues,
+        ..._updatedProfile?.dataValues,
+      };
+    } catch (err) {
+      console.error(err);
+    }
   }
-
   /**
    * @function createNew - Creates a new user record
    * @param {Object} payload - Payload object
@@ -68,18 +83,25 @@ module.exports = function UserController(server) {
             password,
             access_level,
             ...(created_by && { created_by }),
-            profile: {
-              email,
-              ...others,
-            },
           },
           options: {
             transaction: t,
-            include: Profile,
           },
         };
 
+        // User
         user = await User.create(newUser.data, newUser.options);
+
+        // Profile
+        await user.createProfile(
+          {
+            email,
+            ...others,
+          },
+          {
+            transaction: t,
+          }
+        );
 
         // Security
         await user.createSecurity({}, { transaction: t });
@@ -87,7 +109,9 @@ module.exports = function UserController(server) {
         // Standard user operations
         +access_level < 2 &&
           (async () => {
-            await user.createWallet({ asset: "BTC" }, { transaction: t }).catch(console.error);
+            await user
+              .createWallet({ asset: "BTC" }, { transaction: t })
+              .catch(console.error);
 
             // Set referral link id any
             if (others?.invite_code) {
@@ -102,10 +126,10 @@ module.exports = function UserController(server) {
 
         //TODO Send mail to user
 
-        return {  
+        return {
           result: user.toPublic(),
-          message: 'User created successfully',
-          status: true
+          message: "User created successfully",
+          status: true,
         };
       });
     } catch (err) {
@@ -188,22 +212,19 @@ module.exports = function UserController(server) {
           pre: { user },
           payload,
         } = req;
-        //determine the allowed attributes to modify per user role
 
-        //  Generally allowed attrinutes
-        let attributes = user?.isAdmin
-          ? ["lname", "onames", "pname"]
-          : ["lname", "onames", "pname", "payment_methods", "mode"];
-
-        let options = {
-          returning: true,
-          attributes,
-          where: {
-            id: user?.id,
-          },
+        let profileFields = [
+          "lname",
+          "oname",
+          "pname",
+          "mode",
+          "payment_methods",
+        ];
+        return {
+          result: await modify(user, payload, {
+            profileFields,
+          }),
         };
-        let model = user?.__proto__.constructor.name;
-        return await __update(model, payload, options);
       } catch (error) {
         console.error(error);
       }
@@ -223,18 +244,18 @@ module.exports = function UserController(server) {
           params: { id },
         } = req;
 
-        let fields = ["permission", "profile.suitability"];
+        let target_user = await User.findByPk(id);
+        if (!target_user) return boom.notFound(`User with id ${id} not found`);
 
-        let options = {
-          fields,
-          where: {
-            id,
-          },
-          returning: true,
-          // logging: console.log,
+        let userFields = ["permission"];
+        let profileFields = ["is_verified", "suitability"];
+
+        return {
+          result: await modify(target_user, payload, {
+            userFields,
+            profileFields,
+          }),
         };
-
-        return await __update("User", payload, options);
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -296,14 +317,16 @@ module.exports = function UserController(server) {
         payload: { data, force = false },
       } = req;
 
-      if (!data?.id) throw boom.badRequest("No ID provided");
+      if (!data?.length) throw boom.badRequest("No ID provided");
       return {
         deleted: Boolean(
           await sequelize.transaction(async (t) => {
-            data.forEach(async (id) => {
-              let where = { id };
-              await __destroy("User", where, force, { transaction: t });
-            });
+            await Promise.all([
+              data.map(async (id) => {
+                let where = { id };
+                await __destroy("User", where, force, { transaction: t });
+              }),
+            ]);
           })
         ),
       };
@@ -319,7 +342,7 @@ module.exports = function UserController(server) {
         pre: { user },
       } = req;
       // only superadmins are allowed to permanently delete a user
-      force = false;
+      let force = false;
       let where = { id: user?.id };
       return { deleted: Boolean(await __destroy("User", where, force)) };
     },
@@ -385,7 +408,13 @@ module.exports = function UserController(server) {
       } = req;
       try {
         // Find target user
-        return (await user?.toPublic()) ?? boom.notFound("User not found!");
+        return user
+          ? {
+              result: user?.toPublic(),
+              status: "success",
+              message: "User found",
+            }
+          : boom.notFound("User not found!");
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -399,17 +428,25 @@ module.exports = function UserController(server) {
      */
     async retrieve(req) {
       const {
-        query: { id },
+        params: { id },
       } = req;
       try {
-        // handle invalid query <id> 400
-        if (!id) return boom.badRequest();
+        // handle invalid params <id> 400
+        if (!id)
+          return boom.badData(
+            `Required params id is ${id}. Check id value and try again!`
+          );
 
         // Find target user
         return await User.findOne({
           where: { id },
         }).then(
-          (_user) => _user?.toPublic() ?? boom.notFound("User not found!")
+          (target_user) => ({
+            result: target_user?.toPublic(),
+            status: "success",
+            message: "User found",
+          }),
+          boom.notFound
         );
       } catch (error) {
         console.error(error);
@@ -436,21 +473,21 @@ module.exports = function UserController(server) {
         let where = { email, access_level };
 
         // fetch user record from DB that matches the email
-        let account = await User.findOne({
+        let user = await User.findOne({
           where,
           logger: console.log,
         });
 
-        if (account) {
+        if (user) {
           //  get account Security setting
-          let security = await account?.getSecurity();
+          let security = await user?.getSecurity();
 
           return security?.two_factor
             ? {
-                id: account?.id,
+                id: user?.id,
               }
-            : (await decrypt(password, account.password))
-            ? login(account, password)
+            : (await decrypt(password, user.password))
+            ? login(user, jwt.create(user))
             : boom.notFound("Incorrect password!");
         }
 

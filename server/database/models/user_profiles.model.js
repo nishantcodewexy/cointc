@@ -16,6 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 
       Profile.belongsTo(User, {
         foreignKey: "user_id",
+        constraints: false,
       });
 
       Profile.belongsTo(KYC, {
@@ -41,6 +42,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.UUID,
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
+      },
+      user_id: {
+        type: DataTypes.UUID,
       },
       mode: {
         type: DataTypes.ENUM,
@@ -70,11 +74,10 @@ module.exports = (sequelize, DataTypes) => {
       is_verified: { type: DataTypes.BOOLEAN, defaultValue: false },
       payment_methods: DataTypes.JSON,
       pname: { type: DataTypes.STRING, comment: "public name" },
-      lname: { type: DataTypes.STRING, comment: "last name", allowNull: false },
+      lname: { type: DataTypes.STRING, comment: "last name" },
       oname: {
         type: DataTypes.STRING,
         comment: "other names",
-        allowNull: false,
       },
       archived_at: DataTypes.DATE,
     },

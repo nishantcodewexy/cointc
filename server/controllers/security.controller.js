@@ -5,7 +5,7 @@ const dfn = require("date-fns");
 module.exports = function SecurityController(server) {
   const {
     db: { User },
-    helpers: { generator },
+    helpers: { generator, jwt },
     boom,
   } = server.app;
 
@@ -38,9 +38,7 @@ module.exports = function SecurityController(server) {
           if (diff < 60)
             return boom.badRequest(`Try again after ${60 - diff} secs`);
           await security.update(data);
-        }
-
-        await user?.createSecurity(data);
+        } else await user?.createSecurity(data);
 
         // TODO: Send via email or SMS
         return h
@@ -84,7 +82,7 @@ module.exports = function SecurityController(server) {
         let isValid = dfn.isBefore(now, security?.otp_ttl);
 
         return security?.otp === code && isValid
-          ? login(user)
+          ? login(user, jwt.create(user))
           : boom.notFound("OTP code is incorrect. Try again!");
       } catch (err) {
         console.error(err);
@@ -93,3 +91,16 @@ module.exports = function SecurityController(server) {
     },
   };
 };
+
+async function login(account, token) {
+  // Update the last_login
+  account.login_at = new Date();
+  await account?.save();
+
+  return {
+    token,
+    ...account?.toPublic(),
+  };
+}
+
+module.exports.login = login;

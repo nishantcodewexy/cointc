@@ -2,13 +2,11 @@
 
 module.exports = (server) => {
   const Schema = require("../../../schema/user.schema");
-  const { params: paramsSchema, payload: payloadSchema } = Schema.remove(
-    server
-  );
+  const { payload: payloadSchema } = Schema.remove(server);
 
   const {
     controllers: {
-      user: { remove },
+      user: { removeMe },
     },
     helpers: {
       permissions: { isUser },
@@ -25,7 +23,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: remove,
+      handler: removeMe,
       auth: "jwt",
       validate: {
         payload: payloadSchema,

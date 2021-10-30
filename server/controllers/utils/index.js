@@ -23,7 +23,7 @@ module.exports = (server) => {
         ...options,
         logging: console.log,
       });
-      return { count: affectedRowCount, results: affectedRow || null };
+      return { count: affectedRowCount, result: affectedRow || null };
     },
     async __upsert(model, values, options) {
       return await db[model]?.upsert(values, options);

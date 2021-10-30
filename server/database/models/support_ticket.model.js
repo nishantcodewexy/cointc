@@ -1,6 +1,10 @@
 "use strict";
 const { Model } = require("sequelize");
-const { tableNames, TicketSubjectType, TicketStatusType } = require("../../consts");
+const {
+  tableNames,
+  TicketSubjectType,
+  TicketStatusType,
+} = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
   class SupportTicket extends Model {
@@ -11,14 +15,15 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      const { User, Ticket } = models;
+      const { User, SupportTicket } = models;
 
-      User.hasMany(Ticket, {
+      User.hasMany(SupportTicket, {
         foreignKey: "user_id",
       });
-      Ticket.belongsTo(User);
+      SupportTicket.belongsTo(User);
     }
   }
+
   SupportTicket.init(
     {
       id: {
@@ -37,14 +42,15 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: TicketStatusType.OPEN,
       },
+      archived_at: DataTypes.DATE
     },
     {
       sequelize,
-      modelName: "Ticket",
+      modelName: "SupportTicket",
       tableName: tableNames?.SUPPORT_TICKET || "tbl_support_tickets",
       underscored: true,
       paranoid: true,
-      deletedAt: "deleted_at",
+      deletedAt: "archived_at",
     }
   );
   return SupportTicket;

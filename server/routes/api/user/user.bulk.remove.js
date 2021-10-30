@@ -1,6 +1,9 @@
 const Joi = require("joi");
 
 module.exports = (server) => {
+  const Schema = require("../../../schema/user.schema");
+  const { payload: payloadSchema } = Schema.bulkRemove(server);
+
   const {
     controllers: {
       user: { bulkRemove },
@@ -9,14 +12,6 @@ module.exports = (server) => {
       permissions: { isAdminOrError },
     },
   } = server.app;
-
-  // define Joi schema
-  const schema = Joi.object({
-    data: Joi.array()
-      .items(Joi.string())
-      .required(),
-    soft: Joi.boolean().required(),
-  });
 
   return {
     method: "DELETE",
@@ -29,8 +24,9 @@ module.exports = (server) => {
         },
       ],
       handler: bulkRemove,
+      auth: "jwt",
       validate: {
-        payload: schema,
+        payload: payloadSchema,
       },
     },
   };

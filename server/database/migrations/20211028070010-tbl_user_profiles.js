@@ -123,12 +123,10 @@ module.exports = {
         lname: {
           type: Sequelize.STRING,
           comment: "last name",
-          allowNull: false,
         },
         oname: {
           type: Sequelize.STRING,
           comment: "other names",
-          allowNull: false,
         },
         created_at: Sequelize.DATE,
         updated_at: Sequelize.DATE,

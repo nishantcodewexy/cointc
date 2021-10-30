@@ -3,31 +3,26 @@
 module.exports = (server) => {
   const {
     controllers: {
-      user: { profile },
+      upload: { remove },
     },
     helpers: {
-      jwt: { decodeUser },
+      permissions: { isUser },
     },
-    consts: { roles: _roles },
   } = server.app;
 
   return {
-    method: ["GET"],
-    path: "/admin",
+    method: "DELETE",
+    path: "/upload/{id}",
     config: {
       pre: [
         [
           {
-            method: decodeUser,
+            method: isUser,
             assign: "user",
-          },
-          {
-            method: () => _roles.admin,
-            assign: "role",
           },
         ],
       ],
-      handler: profile,
+      handler: remove,
       auth: "jwt",
     },
   };
