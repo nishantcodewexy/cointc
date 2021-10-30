@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './Trade.css'
 import {  Button,Modal,Nav,ProgressBar,Tabs,Tab,Dropdown,Overlay,Tooltip,OverlayTrigger,Image } from 'react-bootstrap';
+import { Link } from "react-router-dom";
 
 
 import usdt_icon from '../../app-assets/images/icon/usdt.png';
@@ -46,7 +47,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },
             {
                 first_char : "B",
@@ -63,7 +65,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
                 button_url:"#",
-                button_class:"btn_limited"
+                button_class:"btn_limited",
+                isPopup:false
             },{
                 first_char : "C",
                 name : "Cuhai8888",
@@ -79,7 +82,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "D",
                 name : "Duhai8888",
@@ -95,7 +99,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "E",
                 name : "Euhai8888",
@@ -111,7 +116,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -127,7 +133,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "G",
                 name : "Guhai8888",
@@ -143,7 +150,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "H",
                 name : "Huhai8888",
@@ -159,7 +167,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "I",
                 name : "Iuhai8888",
@@ -175,7 +184,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "J",
                 name : "Juhai8888",
@@ -191,7 +201,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -207,7 +218,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "L",
                 name : "Luhai8888",
@@ -223,7 +235,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "M",
                 name : "Muhai8888",
@@ -239,7 +252,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             }],
         'eth' : [
             {
@@ -257,7 +271,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },
             {
                 first_char : "B",
@@ -274,7 +289,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
                 button_url:"#",
-                button_class:"btn_limited"
+                button_class:"btn_limited",
+                isPopup:false
             },{
                 first_char : "C",
                 name : "Cuhai8888",
@@ -290,7 +306,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "D",
                 name : "Duhai8888",
@@ -306,7 +323,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "E",
                 name : "Euhai8888",
@@ -322,7 +340,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -338,7 +357,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "G",
                 name : "Guhai8888",
@@ -354,7 +374,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "H",
                 name : "Huhai8888",
@@ -370,7 +391,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "I",
                 name : "Iuhai8888",
@@ -386,7 +408,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "J",
                 name : "Juhai8888",
@@ -402,7 +425,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -418,7 +442,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "L",
                 name : "Luhai8888",
@@ -434,7 +459,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "M",
                 name : "Muhai8888",
@@ -450,7 +476,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             }],
         'usdt' : [
             {
@@ -467,7 +494,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },
             {
                 first_char : "B",
@@ -484,7 +512,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
                 button_url:"#",
-                button_class:"btn_limited"
+                button_class:"btn_limited",
+                isPopup:false
             },{
                 first_char : "C",
                 name : "Cuhai8888",
@@ -500,7 +529,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "D",
                 name : "Duhai8888",
@@ -516,7 +546,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "E",
                 name : "Euhai8888",
@@ -532,7 +563,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -548,7 +580,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "G",
                 name : "Guhai8888",
@@ -564,7 +597,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "H",
                 name : "Huhai8888",
@@ -580,7 +614,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "I",
                 name : "Iuhai8888",
@@ -596,7 +631,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "J",
                 name : "Juhai8888",
@@ -612,7 +648,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -628,7 +665,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "L",
                 name : "Luhai8888",
@@ -644,7 +682,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "M",
                 name : "Muhai8888",
@@ -660,7 +699,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             }],
         'xrp' : [
             {
@@ -678,7 +718,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },
             {
                 first_char : "B",
@@ -695,7 +736,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
                 button_url:"#",
-                button_class:"btn_limited"
+                button_class:"btn_limited",
+                isPopup:false
             },{
                 first_char : "C",
                 name : "Cuhai8888",
@@ -711,7 +753,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "D",
                 name : "Duhai8888",
@@ -727,7 +770,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "E",
                 name : "Euhai8888",
@@ -743,7 +787,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -759,7 +804,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "G",
                 name : "Guhai8888",
@@ -775,7 +821,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "H",
                 name : "Huhai8888",
@@ -791,7 +838,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "I",
                 name : "Iuhai8888",
@@ -807,7 +855,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "J",
                 name : "Juhai8888",
@@ -823,7 +872,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -839,7 +889,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "L",
                 name : "Luhai8888",
@@ -855,7 +906,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "M",
                 name : "Muhai8888",
@@ -871,7 +923,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             }],
         'eos' : [
             {
@@ -889,7 +942,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },
             {
                 first_char : "B",
@@ -906,7 +960,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
                 button_url:"#",
-                button_class:"btn_limited"
+                button_class:"btn_limited",
+                isPopup:false
             },{
                 first_char : "C",
                 name : "Cuhai8888",
@@ -922,7 +977,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "D",
                 name : "Duhai8888",
@@ -938,7 +994,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "E",
                 name : "Euhai8888",
@@ -954,7 +1011,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -970,7 +1028,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "G",
                 name : "Guhai8888",
@@ -986,7 +1045,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "H",
                 name : "Huhai8888",
@@ -1002,7 +1062,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "I",
                 name : "Iuhai8888",
@@ -1018,7 +1079,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "J",
                 name : "Juhai8888",
@@ -1034,7 +1096,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -1050,7 +1113,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "L",
                 name : "Luhai8888",
@@ -1066,7 +1130,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "M",
                 name : "Muhai8888",
@@ -1082,7 +1147,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Buy EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             }]
     },
     sell_data : {
@@ -1102,7 +1168,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },
             {
                 first_char : "B",
@@ -1119,7 +1186,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
                 button_url:"#",
-                button_class:"btn_limited"
+                button_class:"btn_limited",
+                isPopup:false
             },{
                 first_char : "C",
                 name : "Cuhai8888",
@@ -1135,7 +1203,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "D",
                 name : "Duhai8888",
@@ -1151,7 +1220,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "E",
                 name : "Euhai8888",
@@ -1167,7 +1237,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -1183,7 +1254,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "G",
                 name : "Guhai8888",
@@ -1199,7 +1271,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "H",
                 name : "Huhai8888",
@@ -1215,7 +1288,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "I",
                 name : "Iuhai8888",
@@ -1231,7 +1305,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "J",
                 name : "Juhai8888",
@@ -1247,7 +1322,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -1263,7 +1339,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "L",
                 name : "Luhai8888",
@@ -1279,7 +1356,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "M",
                 name : "Muhai8888",
@@ -1295,7 +1373,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell BTC",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             }],
         'eth' : [
             {
@@ -1313,7 +1392,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },
             {
                 first_char : "B",
@@ -1330,7 +1410,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
                 button_url:"#",
-                button_class:"btn_limited"
+                button_class:"btn_limited",
+                isPopup:false
             },{
                 first_char : "C",
                 name : "Cuhai8888",
@@ -1346,7 +1427,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "D",
                 name : "Duhai8888",
@@ -1362,7 +1444,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "E",
                 name : "Euhai8888",
@@ -1378,7 +1461,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -1394,7 +1478,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "G",
                 name : "Guhai8888",
@@ -1410,7 +1495,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "H",
                 name : "Huhai8888",
@@ -1426,7 +1512,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "I",
                 name : "Iuhai8888",
@@ -1442,7 +1529,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "J",
                 name : "Juhai8888",
@@ -1458,7 +1546,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -1474,7 +1563,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "L",
                 name : "Luhai8888",
@@ -1490,7 +1580,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "M",
                 name : "Muhai8888",
@@ -1506,7 +1597,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell ETH",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             }],
         'usdt' : [
             {
@@ -1523,7 +1615,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },
             {
                 first_char : "B",
@@ -1540,7 +1633,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
                 button_url:"#",
-                button_class:"btn_limited"
+                button_class:"btn_limited",
+                isPopup:false
             },{
                 first_char : "C",
                 name : "Cuhai8888",
@@ -1556,7 +1650,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "D",
                 name : "Duhai8888",
@@ -1572,7 +1667,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "E",
                 name : "Euhai8888",
@@ -1588,7 +1684,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -1604,7 +1701,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "G",
                 name : "Guhai8888",
@@ -1620,7 +1718,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "H",
                 name : "Huhai8888",
@@ -1636,7 +1735,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "I",
                 name : "Iuhai8888",
@@ -1652,7 +1752,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "J",
                 name : "Juhai8888",
@@ -1668,7 +1769,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -1684,7 +1786,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "L",
                 name : "Luhai8888",
@@ -1700,7 +1803,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             },{
                 first_char : "M",
                 name : "Muhai8888",
@@ -1716,7 +1820,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell USDT",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true
             }],
         'xrp' : [
             {
@@ -1734,7 +1839,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },
             {
                 first_char : "B",
@@ -1751,7 +1857,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
                 button_url:"#",
-                button_class:"btn_limited"
+                button_class:"btn_limited",
+                isPopup:false
             },{
                 first_char : "C",
                 name : "Cuhai8888",
@@ -1767,7 +1874,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "D",
                 name : "Duhai8888",
@@ -1783,7 +1891,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "E",
                 name : "Euhai8888",
@@ -1799,7 +1908,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -1815,7 +1925,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "G",
                 name : "Guhai8888",
@@ -1831,7 +1942,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "H",
                 name : "Huhai8888",
@@ -1847,7 +1959,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "I",
                 name : "Iuhai8888",
@@ -1863,7 +1976,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "J",
                 name : "Juhai8888",
@@ -1879,7 +1993,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -1895,7 +2010,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "L",
                 name : "Luhai8888",
@@ -1911,7 +2027,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "M",
                 name : "Muhai8888",
@@ -1927,7 +2044,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell XRP",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             }],
         'eos' : [
             {
@@ -1945,7 +2063,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },
             {
                 first_char : "B",
@@ -1962,7 +2081,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Limited",
                 button_url:"#",
-                button_class:"btn_limited"
+                button_class:"btn_limited",
+                isPopup:false
             },{
                 first_char : "C",
                 name : "Cuhai8888",
@@ -1978,7 +2098,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "D",
                 name : "Duhai8888",
@@ -1994,7 +2115,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "E",
                 name : "Euhai8888",
@@ -2010,7 +2132,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -2026,7 +2149,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "G",
                 name : "Guhai8888",
@@ -2042,7 +2166,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "H",
                 name : "Huhai8888",
@@ -2058,7 +2183,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "I",
                 name : "Iuhai8888",
@@ -2074,7 +2200,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "J",
                 name : "Juhai8888",
@@ -2090,7 +2217,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "F",
                 name : "Fuhai8888",
@@ -2106,7 +2234,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "L",
                 name : "Luhai8888",
@@ -2122,7 +2251,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             },{
                 first_char : "M",
                 name : "Muhai8888",
@@ -2138,7 +2268,8 @@ const table_data = {
                 price: "270,042.63 CNY",        
                 button_text:"Sell EOS",
                 button_url:"#",
-                button_class:"btn_buy" 
+                button_class:"btn_buy",
+                isPopup:true 
             }]
     },
 };
@@ -2172,10 +2303,125 @@ function renderTableData(data) {
                 <span class="icon_method03"></span>
             </td>
             <td class="price">{data.price}</td>
-            <td class="transaction"><a href={data.button_url} className={data.button_class}>{data.button_text}</a></td>
+            <td class="transaction">
+                <TradeModel button_text={data.button_text} button_class={data.button_class} isPopup={data.isPopup}>
+                </TradeModel>
+            </td>
         </tr>
     )
   }
+
+  const TradeModel = function(props) {
+    const button_text=props.button_text;
+    const button_class=props.button_class;
+    const isPopup=props.isPopup;
+
+    const [show, setShow] = useState(false);
+  
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+  
+    return (
+        <>
+            <Link to="#" className={button_class} onClick={isPopup ? handleShow:undefined }>
+                {button_text}
+            </Link>
+            
+            <Modal show={show} onHide={handleClose} size={"xl"}>
+            
+                <Modal.Body>
+                    <div class="row" id="tradeModal">
+                        <div class="col-sm-12 col-md-6" >
+                            <div class="scroll-area-sm">
+                                <div class="modal-header align-items-center">
+                                    <h3 class="modal-title">Bi7752</h3>
+                                    <p class="mb-0">2270 orders    99.65% completion</p>
+                                </div>
+                                
+                                <div class="col col-sm-12 col-md-8 mt-3">
+                                    <div class="trade-my-modal">
+                                        <div class="my-modal-top d-flex justify-content-between align-items-center">
+                                            <h5 class="mb-0">Trade Info</h5>
+                                            <a href="#" class="btn btn-ref-my-modal">30s to Refresh</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col col-sm-12 col-md-10 mt-4">
+                                    <div class="trade-my-modal">
+                                        <div class="my-modal-center">
+                                            <table class="w-100">
+                                                <thead>
+                                                    <th class="text-light-gray font-weight-light">Price</th>
+                                                    <th class="text-light-gray font-weight-light">Available</th>
+                                                </thead>
+                                                <tbody>
+                                                    <td class="text-black">47,757.8541 USD</td>
+                                                    <td class="text-black">1.546410 BTC</td>
+                                                </tbody>
+                                                <thead>
+                                                    <th class="text-light-gray font-weight-light pt-4">Payment</th>
+                                                    <th class="text-light-gray font-weight-light pt-4">Limit</th>
+                                                </thead>
+                                                <tbody>
+                                                    <td class="text-black">60 Minutes</td>
+                                                    <td class="text-black">$50,000.00 ~ $100,000.00</td>
+                                                </tbody>
+                                                <thead>
+                                                    <th class="text-light-gray font-weight-light pt-4">Payment Method</th>
+                                                    <th class="text-light-gray font-weight-light pt-4"></th>
+                                                </thead>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>                                                  
+                            </div>
+                        </div>
+                        <div class="col-sm-12 col-md-6">
+                            <div class="modal-body">
+                                <div class="modal-body-input">
+                                    <label>How much do you want to Sell?</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Enter Amount.." aria-label="Recipient's username" aria-describedby="basic-addon2"/>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text my-input" id="basic-addon2">BTC</span>
+                                        </div>
+                                    </div>
+                                    <p class="d-flex justify-content-end text-black">사용 가능 : 0.24810 BTC &nbsp;<span class="text-light-blue"> 전체 </span> </p>
+                                </div>
+                                <div class="modal-body-input">
+                                    <label>How much do you want to Sell?</label>
+                                    <div class="input-group mb-3">
+                                        <input type="text" class="form-control" placeholder="Enter Amount.." aria-label="Recipient's username" aria-describedby="basic-addon2"/>
+                                        <div class="input-group-append">
+                                            <span class="input-group-text my-input" id="basic-addon2">BTC</span>
+                                        </div>
+                                    </div>
+                                    <p class="d-flex justify-content-end text-black">사용 가능 : 0.24810 BTC &nbsp;<span class="text-light-blue"> 전체 </span> </p>
+                                    <div class="row ">
+                                        <div class="col-12">
+                                            <div class="md-head">Guides</div>
+                                            <div class="md-dt-txt">1. Please confirm the price and amount before place this trade.</div>
+                                            <div class="md-dt-txt">2. Please pay the seller in the payment window. After completed the payment, please click "I have paid". The seller will release the crypto to you after received payment. If you do not mark as paid in time, the trade will be automatically cancelled after timeout.</div>
+                                            <div class="md-dt-txt">3.If you encounter trade dispute, you can open a dispute, the customer service will intervene to deal with it. For details, please see "Help</div>
+                                        </div>
+                                    </div>
+                                    <div class="row justify-content-center mt-5 mb-5">
+                                        <div class="col-4">
+                                            <a href="/sell_btc" class="btn btn-primary ">Sell BTC</a>
+                                        </div>
+                                        <div class="col-4">
+                                            <a href="#" class="btn btn-outline-limited btn-cans">Cancel</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </Modal.Body>
+            </Modal>
+        </>
+    );
+}
 const BuyTabContent = function (props) {
     var activeSubTab=props.valueFromParent;
     return(

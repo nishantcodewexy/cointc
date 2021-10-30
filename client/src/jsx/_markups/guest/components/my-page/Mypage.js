@@ -1,12 +1,89 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Form } from 'react-bootstrap';
+import { Form,Button,Modal,Nav,ProgressBar} from 'react-bootstrap';
 
 import icon_password from '../../app-assets/images/icon/icon_password.png';
 import icon_recommended from '../../app-assets/images/icon/icon_recommended.png';
 import icon_phone from '../../app-assets/images/icon/icon_phone.png';
 import icon_email from '../../app-assets/images/icon/icon_email.png';
 import icon_verification from '../../app-assets/images/icon/icon_verification.png';
+import '../frame/Frame01.css'
 
+function Add_payment_method() {
+    const [show, setShow] = useState(false);
+  
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+  
+    return (
+        <>
+            <Button variant="" className="btn_add" onClick={handleShow}>
+                + add a payment method
+            </Button>
+            
+            <Modal show={show} onHide={handleClose}>
+            <Modal.Body>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="all-payment-header d-flex justify-content-between pt-4">
+                            <div class="all-payment-header-left">
+                                <h3>All Payment Methods</h3>
+                            </div>
+                            <div class="all-payment-header-right">
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text border-top-0 border-right-0 border-left-0  bg-transparent"><i class="fa fa-search" aria-hidden="true"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Search"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="all-payment-nav pb-4">
+                            <div class="all-payment-nav-btn d-flex align-items-center">
+                                <button class="btn btn-primary">ALL</button>
+                                <p class="mb-0 pl-3">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>
+                            </div>
+                        </div>
+
+                        <div class="all-payment-body mt-4">
+                            <table class="w-75">
+                                <thead>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="position-relative orange"><h5>7-Eleven</h5></td>
+                                        <td class="position-relative light-green"><h5>A-Bank</h5></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="position-relative dark-green"><h5>ABA Bank</h5></td>
+                                        <td class="position-relative dark-green"><h5>ABN AMRO</h5></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="position-relative red"><h5>Absolut Bank</h5></td>
+                                        <td class="position-relative green"><h5>Advcash</h5></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="position-relative green"><h5>Agrebank</h5></td>
+                                        <td class="position-relative blue"><h5>AirTM</h5></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="position-relative green"><h5>Ak Bars Bank</h5></td>
+                                        <td class="position-relative red"><h5>Alfa-bank</h5></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </Modal.Body>
+            </Modal>
+        </>
+    );
+}
 export const Mypage = () => {
     return (
         <div class="content">
@@ -165,7 +242,9 @@ export const Mypage = () => {
                         <h4>Security</h4>
                         <div class="p2p"><span>P2P</span></div>
                         <p>P2P payment methods: When you sell cryptocurrencies, the payment method added will be displayed to buyer as options to accept payment, please ensure that the account owner’s name is consistent with your verified name on Binance. You can add up to 20 pay ment methods</p>
-                        <a href="#" class="btn_add">+ add a payment method</a>
+                        
+                        <Add_payment_method>
+                        </Add_payment_method>
                         <div class="wechat">
                             <div class="top clear">
                                 <h5>Wechat</h5>
