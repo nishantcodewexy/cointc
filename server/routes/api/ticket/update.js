@@ -5,16 +5,20 @@ module.exports = (server) => {
     controllers: {
       support_ticket: { update },
     },
-    consts: { TicketSubjectType, TicketStatusType },
+    consts: { TicketPriorityType, TicketStatusType },
     helpers: {
       permissions: { isAdminOrError },
     },
   } = server.app;
 
   const schema = Joi.object({
-    subject: Joi.string().required(),
-    severity: Joi.string().valid(...Object.keys(TicketSubjectType)),
-    status: Joi.string().valid(...Object.keys(TicketStatusType)),
+    priority: Joi.string()
+      .valid(...Object.keys(TicketPriorityType))
+      .optional(),
+    subject: Joi.string().optional(),
+    status: Joi.string()
+      .valid(...Object.keys(TicketStatusType))
+      .optional(),
   });
 
   return {

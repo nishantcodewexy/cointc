@@ -2,7 +2,7 @@
 const { Model } = require("sequelize");
 const {
   tableNames,
-  TicketSubjectType,
+  TicketPriorityType,
   TicketStatusType,
 } = require("../../consts");
 
@@ -20,6 +20,9 @@ module.exports = (sequelize, DataTypes) => {
       User.hasMany(SupportTicket, {
         foreignKey: "user_id",
       });
+      User.hasMany(SupportTicket, {
+        foreignKey: "handler",
+      });
       SupportTicket.belongsTo(User);
     }
   }
@@ -31,18 +34,19 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      severity: {
-        type: DataTypes.ENUM(Object.keys(TicketSubjectType)),
+      priority: {
+        type: DataTypes.ENUM(Object.keys(TicketPriorityType)),
         allowNull: false,
-        defaultValue: TicketSubjectType.LOW,
+        defaultValue: TicketPriorityType.LOW,
       },
+      subject: DataTypes.STRING,
       description: DataTypes.STRING,
       status: {
         type: DataTypes.ENUM(Object.keys(TicketStatusType)),
         allowNull: false,
         defaultValue: TicketStatusType.OPEN,
       },
-      archived_at: DataTypes.DATE
+      archived_at: DataTypes.DATE,
     },
     {
       sequelize,

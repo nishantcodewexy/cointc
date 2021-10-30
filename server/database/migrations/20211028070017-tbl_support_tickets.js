@@ -1,6 +1,6 @@
 "use strict";
 const {
-  TicketSubjectType,
+  TicketPriorityType,
   TicketStatusType,
   tableNames,
 } = require("../../consts");
@@ -16,10 +16,10 @@ module.exports = {
           primaryKey: true,
           defaultValue: Sequelize.UUIDV4,
         },
-        severity: {
-          type: Sequelize.ENUM(Object.keys(TicketSubjectType)),
+        priority: {
+          type: Sequelize.ENUM(Object.keys(TicketPriorityType)),
           allowNull: false,
-          defaultValue: TicketSubjectType.LOW,
+          defaultValue: TicketPriorityType.LOW,
         },
         subject: {
           type: Sequelize.STRING,
@@ -50,6 +50,14 @@ module.exports = {
             !("archived_at" in d) &&
               queryInterface.addColumn(table_name, "archived_at", {
                 type: Sequelize.DATE,
+              }),
+            !("handler" in d) &&
+              queryInterface.addColumn(table_name, "handler", {
+                type: Sequelize.UUID,
+                references: {
+                  model: tableNames?.USER || "tbl_users",
+                  key: "id",
+                },
               }),
           ]);
         });

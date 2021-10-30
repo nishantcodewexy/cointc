@@ -11,7 +11,7 @@ module.exports = {
   banks: {
     USBANK: "USBANK",
   },
-  TicketSubjectType: {
+  TicketPriorityType: {
     HIGH: "HIGH",
     LOW: "LOW",
   },
