@@ -24,27 +24,6 @@ module.exports = function UserController(server) {
     helpers: { decrypt, mailer, jwt, paginator, filters },
   } = server.app;
 
-  async function runAnalytics() {
-    try {
-      let userAnalytics = {
-        total: await User.count(),
-        suspended: await User.count({
-          where: { archived_at: { [Op.ne]: null } },
-        }),
-        recent: await User.count({
-          where: {
-            created_at: {
-              [Op.lte]: dateFn.subDays(new Date(), 30),
-            },
-          },
-        }),
-      };
-      Analytics.create({ user: userAnalytics });
-      console.log("Analytics completed");
-    } catch (err) {
-      console.error(err);
-    }
-  }
   async function modify(target_user, data, { profileFields, userFields }) {
     try {
       let target_user_profile = await target_user.getProfile();
@@ -136,7 +115,7 @@ module.exports = function UserController(server) {
         +access_level < 2 &&
           (async () => {
             await user
-              .createWallet({ asset: "BTC" }, { transaction: t })
+              .createWallet({ currency: "BTC" }, { transaction: t })
               .catch(console.error);
 
             // Set referral link id any

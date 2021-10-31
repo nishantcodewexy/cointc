@@ -2,102 +2,116 @@
 
 const Tatum = require("@tatumio/tatum");
 
-class WalletCreator {
-  constructor(index = 0) {
-    this.networkType = process.env.NODE_ENV === "production";
-    this.index = index;
-  }
+// class TatumAccount {
+//   constructor({user_id, currency}) {
+//     this.testnet = process.env.NODE_ENV === "development";
+//     this.currency = currency?.toUpperCase();
+//     this.user_id = user_id;
 
-  /**
-   *
-   * @typedef getMnemonicAndExPubReturn
-   * @property {String} mnemonic
-   * @property {String} xpub
-   */
+//     return this
+//   }
 
-  /**
-   * @name getMnemonicAndExPub
-   * @description generate mnemonic and extended public key
-   * @param {String} [mnemonic] string for generating wallet
-   * @param {String} currency crypto asset to be created
-   * @returns {Promise<Object>} {mnemonic, xpub}
-   */
-  async #getMnemonicAndExPub(currency, mnemonic) {
-    const wallet = await Tatum.generateWallet(
-      Tatum.Currency[currency.toUpperCase()],
-      this.networkType, // network type
-      mnemonic
-    );
-    return wallet;
-  }
+//   generateWallet() {
+//     return Tatum?.generateWallet(currency, this.testnet);
+//   }
 
-  /**
-   * @name createPrivateKey
-   * @description generate wallet private key
-   * @param {String} currency crypto asset
-   * @param {String} mnemonic
-   * @returns {Promise<Object>}
-   */
-  async #createPrivateKey(currency, mnemonic) {
-    const privateKey = await Tatum.generatePrivateKeyFromMnemonic(
-      Tatum.Currency[currency.toUpperCase()],
-      this.networkType, // network type
-      mnemonic,
-      this.index
-    );
+//   createAccount() {
+//     return await Tatum?.createAccount({
+//       currency,
+//       xpub,
+//       customer: {
+//         externalId: this.user_id
+//       }
+//     });
+//   }
+//   /**
+//    *
+//    * @typedef getMnemonicAndExPubReturn
+//    * @property {String} mnemonic
+//    * @property {String} xpub
+//    */
 
-    return privateKey;
-  }
+//   /**
+//    * @name getMnemonicAndExPub
+//    * @description generate mnemonic and extended public key
+//    * @param {String} [mnemonic] string for generating wallet
+//    * @param {String} currency crypto asset to be created
+//    * @returns {Promise<Object>} {mnemonic, xpub}
+//    */
+//   async #getMnemonicAndExPub() {
+//     const wallet = await Tatum.generateWallet(
+//       Tatum.Currency[currency.toUpperCase()],
+//       this.testnet, // network type
+//       mnemonic
+//     );
+//     return wallet;
+//   }
 
-  /**
-   * @name createWalletAddress
-   * @description create account wallet address
-   * @param {String} currency crypto asset
-   * @param {String} pubicKey wallet extended public key
-   * @returns {Object}
-   */
-  #createWalletAddress(currency, pubicKey) {
-    const address = Tatum.generateAddressFromXPub(
-      Tatum.Currency[currency.toUpperCase()],
-      this.networkType, // network type
-      pubicKey,
-      this.index
-    );
-    return address;
-  }
+//   /**
+//    * @name createPrivateKey
+//    * @description generate wallet private key
+//    * @param {String} currency crypto asset
+//    * @param {String} mnemonic
+//    * @returns {Promise<Object>}
+//    */
+//   async #createPrivateKey(mnemonic) {
+//     const privateKey = await Tatum.generatePrivateKeyFromMnemonic(
+//       Tatum.Currency[currency.toUpperCase()],
+//       this.testnet, // network type
+//       mnemonic,
+//       this.user_id
+//     );
 
-  /**
-   *
-   * @typedef generateReturn
-   * @property {String} mnemonic
-   * @property {String} xpub
-   * @property {String} key
-   * @property {String} address
-   * @property {String} tatum_account_id
-   */
+//     return privateKey;
+//   }
 
-  /**
-   *
-   * @param {String} currency
-   * @param {String} user_id
-   * @returns {Promise<generateReturn>}
-   */
-  async generate(currency, user_id) {
-    const { mnemonic, xpub } = await this.#getMnemonicAndExPub(currency);
-    const key = await this.#createPrivateKey(currency, mnemonic);
-    // const address = await this.#createWalletAddress(currency, xpub);
-    const { id: tatum_account_id } = await walletServices.createAccount({
-      currency,
-      xpub,
-      user_id,
-    });
+//   /**
+//    * @name createWalletAddress
+//    * @description create account wallet address
+//    * @param {String} currency crypto asset
+//    * @param {String} pubicKey wallet extended public key
+//    * @returns {Object}
+//    */
+//   #createWalletAddress(pubicKey) {
+//     const address = Tatum.generateAddressFromXPub(
+//       Tatum.Currency[currency.toUpperCase()],
+//       this.testnet, // network type
+//       pubicKey,
+//       this.user_id
+//     );
+//     return address;
+//   }
 
-    const { address } = await walletServices.createAddressFromWallet({
-      wallet: { tatum_account_id },
-    });
-    return { mnemonic, xpub, key, address, tatum_account_id };
-  }
-}
+//   /**
+//    *
+//    * @typedef generateReturn
+//    * @property {String} mnemonic
+//    * @property {String} xpub
+//    * @property {String} key
+//    * @property {String} address
+//    * @property {String} tatum_account_id
+//    */
+
+//   /**
+//    *
+//    * @param {String} currency
+//    * @param {String} user_id
+//    * @returns {Promise<generateReturn>}
+//    */
+//   // generateWallet(currency: Currency, testnet: boolean, mnemonic?: string)
+//   async generate(mnemonic) {
+//     /* const { mnemonic, xpub } = await this.#getMnemonicAndExPub();
+//     const key = await this.#createPrivateKey(this?.currency, mnemonic);
+//     // const address = await this.#createWalletAddress(currency, xpub);
+//     const { id: tatum_account_id } = await Tatum.createAccount(currency, this.testnet);
+
+//     const { address } = Tatum.generateWallet({
+//       wallet: { tatum_account_id },
+//     });
+//     return { mnemonic, xpub, key, address, tatum_account_id }; */
+//     return await Tatum.generateWallet(this.currency, this.testnet, mnemonic);
+//   }
+// }
 
 module.exports = {
   /**
@@ -105,20 +119,30 @@ module.exports = {
    * @param {Object} model
    * @param {Object} options
    */
-  async beforeValidate(model, options) {
-    model.asset = model.asset.toUpperCase();
-    const {
-      mnemonic,
-      xpub,
-      key,
-      address,
-      tatum_account_id,
-    } = await new WalletCreator().generate(model.asset, model.user_id);
-    model.extended_pub = xpub;
-    model.private_key = key;
-    model.address = address;
-    model.mnemonic = mnemonic;
-    model.tatum_account_id = tatum_account_id;
+  async beforeValidate(model) {
+    model.currency = model.currency.toUpperCase();
+    let testnet = process.env.NODE_ENV === "development";
+
+    // let { mnemonic, xpub, privateKey,address, secret } = Tatum?.generateWallet(
+    //   model.currency,
+    //   testnet
+    // );
+
+    let account = {
+      currency: model.currency,
+      customer: {
+        externalId: model.user_id,
+      },
+    };
+    // create user account
+    Tatum.createAccount(account).then(({ id, currency, xpub }) => {
+      let address = Tatum.generateAddressFromXPub(currency, testnet, xpub, 1);
+      model.xpub = xpub;
+      model.key = key;
+      model.address = address;
+      model.mnemonic = mnemonic;
+      model.tatum_account_id = id;
+    });
   },
   // prioryty 1
   // beforeBulkCreate:async (instances,options)=>{
