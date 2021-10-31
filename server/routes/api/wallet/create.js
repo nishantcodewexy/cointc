@@ -1,9 +1,11 @@
 "use strict";
 
 module.exports = (server) => {
+  const Schema = require("../../../schema/wallet.schema");
+  const { payload: payloadSchema } = Schema.create(server);
   const {
     controllers: {
-      wallet: { bulkRetrieve },
+      wallet: { create },
     },
     helpers: {
       permissions: { isUser },
@@ -11,8 +13,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "GET",
-    path: "/wallet/bulk",
+    method: "POST",
+    path: "/wallet",
     config: {
       pre: [
         {
@@ -20,8 +22,11 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: bulkRetrieve,
+      handler: create,
       auth: "jwt",
+      validate: {
+        payload: payloadSchema,
+      },
     },
   };
 };

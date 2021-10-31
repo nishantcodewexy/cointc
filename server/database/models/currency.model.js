@@ -12,8 +12,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      const { User, Currency } = models;
+      const { User, Currency, Upload } = models;
       Currency.belongsTo(User);
+      Currency.belongsTo(Upload, {
+        foreignKey: {
+          name: "image_url",
+        },
+      });
     }
 
     toPublic() {
@@ -39,6 +44,9 @@ module.exports = (sequelize, DataTypes) => {
       type: {
         type: DataTypes.ENUM("fiat", "crypto"),
         defaultValue: "crypto",
+      },
+      image_url: {
+        type: DataTypes.STRING,
       },
       archived_at: DataTypes.DATE,
     },

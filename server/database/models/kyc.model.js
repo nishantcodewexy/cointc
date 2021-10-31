@@ -1,11 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
-const { tableNames } = require("../../consts");
-
-const {
-  KycStatusType,
-} = require("../../consts");
+const { tableNames, KycStatusType } = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
   class KYC extends Model {

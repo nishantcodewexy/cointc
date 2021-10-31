@@ -8,7 +8,9 @@ module.exports = {
       // Add all table modifications here
       async function modifications(d) {
         await queryInterface.sequelize.transaction(async (t) => {
-          return await Promise.all([]);
+          return await Promise.all([
+
+          ]);
         });
       }
 
@@ -19,6 +21,13 @@ module.exports = {
           primaryKey: true,
           defaultValue: Sequelize.UUIDV4,
         },
+        user: {
+          type: Sequelize.JSON,
+        },
+        wallet: { type: Sequelize.JSON },
+        support_ticket: { type: Sequelize.JSON },
+        kyc: { type: Sequelize.JSON },
+        security: { type: Sequelize.JSON },
         created_at: Sequelize.DATE,
         updated_at: Sequelize.DATE,
       };

@@ -116,8 +116,8 @@ module.exports = function SupportTicketController(server) {
         where: {
           id,
           [Op.or]: {
-            handler: to,
-            handler: null,
+            assigned_to: to,
+            assigned_to: null,
           },
         },
       });
@@ -126,7 +126,7 @@ module.exports = function SupportTicketController(server) {
           `Ticket ID: ${id} is may already have been assigned and does not belong to you`
         );
 
-      let result = await ticket.update({ handler: to });
+      let result = await ticket.update({ assigned_to: to });
       return {
         from: user?.id,
         to,

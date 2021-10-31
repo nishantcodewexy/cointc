@@ -1,6 +1,6 @@
 "use strict";
 let { tableNames } = require("../../consts");
-let table_name = tableNames?.ADVERT || 'adverts';
+let table_name = tableNames?.ADVERT || "adverts";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -102,13 +102,15 @@ module.exports = {
             isInt: true,
           },
         },
-        crypto_currency: {
+        crypto: {
           type: Sequelize.STRING,
           comment: "Kind of crypto currency",
+          allowNull: false,
         },
-        fiat_currency: {
+        fiat: {
           type: Sequelize.STRING,
           comment: "Kind of fiat currency",
+          allowNull: false,
         },
         remarks: Sequelize.STRING(255),
         auto_reply_message: {
@@ -134,7 +136,7 @@ module.exports = {
         user_id: {
           type: Sequelize.UUID,
           allowNull: false,
-          references: { model: tableNames?.USER || 'users', key: "id" },
+          references: { model: tableNames?.USER || "users", key: "id" },
         },
       };
 

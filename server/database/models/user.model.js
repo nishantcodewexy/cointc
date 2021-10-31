@@ -163,7 +163,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         defaultValue: 1,
       },
-
       // VIRTUALS
       online: {
         type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["createdAt"]),
@@ -171,7 +170,7 @@ module.exports = (sequelize, DataTypes) => {
           return this.get("updateAt") > Date.now() - 7 * 24 * 60 * 60 * 1000;
         },
       },
-
+      
       isBasic: {
         type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["access_level"]),
         get() {

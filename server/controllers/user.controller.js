@@ -2,7 +2,7 @@
 const assert = require("assert");
 const faker = require("faker");
 const { login } = require("./security.controller");
-
+const dateFn = require("date-fns");
 /**
  * @description - User controller
  * @param {Object} server  - Server instance
@@ -13,12 +13,38 @@ module.exports = function UserController(server) {
   const { __update, __destroy } = require("./utils")(server);
 
   const {
-    db: { User, sequelize, Profile },
+    db: {
+      User,
+      sequelize,
+      Analytics,
+      Sequelize: { Op },
+    },
     boom,
     config: { client_url },
     helpers: { decrypt, mailer, jwt, paginator, filters },
   } = server.app;
 
+  async function runAnalytics() {
+    try {
+      let userAnalytics = {
+        total: await User.count(),
+        suspended: await User.count({
+          where: { archived_at: { [Op.ne]: null } },
+        }),
+        recent: await User.count({
+          where: {
+            created_at: {
+              [Op.lte]: dateFn.subDays(new Date(), 30),
+            },
+          },
+        }),
+      };
+      Analytics.create({ user: userAnalytics });
+      console.log("Analytics completed");
+    } catch (err) {
+      console.error(err);
+    }
+  }
   async function modify(target_user, data, { profileFields, userFields }) {
     try {
       let target_user_profile = await target_user.getProfile();

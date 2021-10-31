@@ -34,15 +34,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         defaultValue: 0,
       },
-      extended_pub: DataTypes.STRING,
-      private_key: DataTypes.STRING,
+      xpub: DataTypes.STRING,
+      key: DataTypes.STRING,
       address: DataTypes.STRING,
-      asset: {
-        type: DataTypes.ENUM("BTC", "ETH", "BNB", "XRP", "USDT"),
+      hash: DataTypes.STRING,
+      currency: {
+        type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: "BTC",
       },
-      tatum_account_id: DataTypes.STRING,
+      
     },
     {
       sequelize,
