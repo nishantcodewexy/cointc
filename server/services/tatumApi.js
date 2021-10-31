@@ -128,15 +128,14 @@ class Ledger{
 
 
 
-
-
-
-
-
 }
 
 
 
+/**
+ * this client is ment to intract with the api while the wallet service is use to 
+ * to create methods to interface between the api client and coinTC
+ */
 
 class TatumAPI{
     constructor(){
