@@ -6,7 +6,7 @@ module.exports = (server) => {
 
   const {
     controllers: {
-      analytics: { userAnalytics },
+      analytics: { kycAnalytics },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -15,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/analytics/user",
+    path: "/analytics/kyc",
     config: {
       pre: [
         {
@@ -23,8 +23,8 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: userAnalytics,
-      auth: 'jwt'
+      handler: kycAnalytics,
+      auth: "jwt",
       // validate: {
       //   payload: payloadSchema,
       // },

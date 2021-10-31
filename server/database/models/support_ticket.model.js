@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
       });
       User.hasMany(SupportTicket, {
-        foreignKey: "handler",
+        foreignKey: "assigned_to",
       });
       SupportTicket.belongsTo(User);
     }

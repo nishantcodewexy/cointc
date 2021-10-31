@@ -51,8 +51,8 @@ module.exports = {
               queryInterface.addColumn(table_name, "archived_at", {
                 type: Sequelize.DATE,
               }),
-            !("handler" in d) &&
-              queryInterface.addColumn(table_name, "handler", {
+            !("assigned_to" in d) &&
+              queryInterface.addColumn(table_name, "assigned_to", {
                 type: Sequelize.UUID,
                 references: {
                   model: tableNames?.USER || "tbl_users",

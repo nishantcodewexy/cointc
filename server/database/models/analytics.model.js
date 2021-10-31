@@ -20,6 +20,13 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
+      user: {
+        type: DataTypes.JSON,
+      },
+      wallet: { type: DataTypes.JSON },
+      support_ticket: { type: DataTypes.JSON },
+      kyc: { type: DataTypes.JSON },
+      security: { type: DataTypes.JSON },
     },
     {
       sequelize,

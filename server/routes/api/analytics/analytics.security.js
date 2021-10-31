@@ -6,7 +6,7 @@ module.exports = (server) => {
 
   const {
     controllers: {
-      analytics: { userAnalytics },
+      analytics: { securityAnalytics },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -15,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/analytics/user",
+    path: "/analytics/security",
     config: {
       pre: [
         {
@@ -23,8 +23,8 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: userAnalytics,
-      auth: 'jwt'
+      handler: securityAnalytics,
+      auth: "jwt",
       // validate: {
       //   payload: payloadSchema,
       // },
