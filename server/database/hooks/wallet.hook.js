@@ -123,10 +123,10 @@ module.exports = {
     model.currency = model.currency.toUpperCase();
     let testnet = process.env.NODE_ENV === "development";
 
-    // let { mnemonic, xpub, privateKey,address, secret } = Tatum?.generateWallet(
-    //   model.currency,
-    //   testnet
-    // );
+    let { mnemonic, xpub, privateKey,address, secret } = Tatum?.generateWallet(
+      model.currency,
+      testnet
+    );
 
     let account = {
       currency: model.currency,
