@@ -151,7 +151,7 @@ class TatumAPI{
             }
         });
 
-        this.Account = new Ledger(this.axios)
+        this.Ledger = new Ledger(this.axios)
 
 
     }
