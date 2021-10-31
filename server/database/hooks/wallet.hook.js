@@ -4,7 +4,7 @@ const Tatum = require("@tatumio/tatum");
 
 class WalletCreator {
   constructor(index = 0) {
-    this.newtworkType = process.env.NODE_ENV === "production";
+    this.networkType = process.env.NODE_ENV === "production";
     this.index = index;
   }
 
@@ -25,7 +25,7 @@ class WalletCreator {
   async #getMnemonicAndExPub(currency, mnemonic) {
     const wallet = await Tatum.generateWallet(
       Tatum.Currency[currency.toUpperCase()],
-      this.newtworkType, // network type
+      this.networkType, // network type
       mnemonic
     );
     return wallet;
@@ -41,7 +41,7 @@ class WalletCreator {
   async #createPrivateKey(currency, mnemonic) {
     const privateKey = await Tatum.generatePrivateKeyFromMnemonic(
       Tatum.Currency[currency.toUpperCase()],
-      this.newtworkType, // network type
+      this.networkType, // network type
       mnemonic,
       this.index
     );
@@ -59,7 +59,7 @@ class WalletCreator {
   #createWalletAddress(currency, pubicKey) {
     const address = Tatum.generateAddressFromXPub(
       Tatum.Currency[currency.toUpperCase()],
-      this.newtworkType, // network type
+      this.networkType, // network type
       pubicKey,
       this.index
     );

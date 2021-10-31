@@ -11,16 +11,10 @@ function create(server) {
   const { boom } = server.app;
 
   return {
-    payload: Joi.object({
-      iso_code: Joi.string()
+    params: Joi.object({
+      asset: Joi.string()
         .required()
-        .error(boom.badRequest("Required input <iso_code::string> is invalid")),
-      name: Joi.string()
-        .required()
-        .error(boom.badRequest("Required input <name::string> is invalid")),
-      type: Joi.string()
-        .required()
-        .error(boom.badRequest("Required input <type::string> is invalid")),
+        .error(boom.badRequest("Required input <asset::string> is invalid")),
     }),
   };
 }
@@ -49,7 +43,7 @@ function retrieve(server) {
         .alphanum()
         .min(26)
         .max(35)
-        .required()
+        .optional()
         .error(
           boom.badData("Required input <address::string(26, 35)> is invalid")
         ),

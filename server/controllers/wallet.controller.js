@@ -1,7 +1,10 @@
 "use strict";
+
+const sequelize = require("sequelize");
+
 module.exports = function WalletController(server) {
   /*********************** HELPERS ***************************/
- /*  const {  __update, __destroy } = require("./utils")(
+  /*  const {  __update, __destroy } = require("./utils")(
     server
   ); */
 
@@ -20,10 +23,12 @@ module.exports = function WalletController(server) {
 
   return {
     create: async (req) => {
-      const { pre: user } = req;
-      const { currency } = req.params;
+      const {
+        pre: user,
+        params: { asset },
+      } = req;
       return await User.findByPk(user)
-        .createWallet({ asset: currency })
+        .createWallet({ asset })
         .toPublic();
     },
     // RETRIEVE ----------------------------------------
@@ -59,12 +64,42 @@ module.exports = function WalletController(server) {
         pre: { user },
         params: { address },
       } = req;
-      //`Requesting for wallet id:${id}`
-      return await Wallet.findOne({
-        where: {
-          address,
-        },
-      }).toPublic();
+      let where, result;
+      try {
+        where = { address };
+        result = await Wallet.findOne({
+          where,
+        }).toPublic();
+
+        return result
+          ? { result }
+          : boom.notFound(`Wallet address: ${address} not found!`);
+      } catch (err) {
+        console.error(err);
+      }
+    },
+    async retrieveMe() {
+      let {
+        pre: { user },
+      } = req;
+      let where, result;
+      try {
+        where = {
+          user_id: user?.id,
+        };
+        let attributes = [
+          [sequelize.fn("count", "address"), "count"],
+          [sequelize.fn("count" /* wallet balance */), "total_balance"],
+        ];
+        result = await Wallet.findAll({
+          where,
+          attributes,
+        }).toPublic();
+
+        return { result };
+      } catch (err) {
+        console.error(err);
+      }
     },
 
     // Fetch total user wallet balance

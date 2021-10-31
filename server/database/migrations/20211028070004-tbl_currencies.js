@@ -1,15 +1,33 @@
 "use strict";
 let { tableNames, currencies } = require("../../consts");
-let table_name = tableNames?.CURRENCY || 'tbl_currencies';
+let table_name = tableNames?.CURRENCY || "tbl_currencies";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
       // Add all table modifications here
       async function modifications(d) {
-        await queryInterface.sequelize.transaction(async (t) => {
-          return await Promise.all([]);
-        });
+        try {
+          await queryInterface.sequelize.transaction(async (t) => {
+            return await Promise.all([
+              !("image_url" in d) &&
+                queryInterface.addColumn(
+                  table_name,
+                  "image_url",
+                  {
+                    type: Sequelize.UUID,
+                    references: {
+                      model: tableNames?.UPLOAD || "tbl_uploads",
+                      key: "id",
+                    },
+                  },
+                  { transaction: t }
+                ),
+            ]);
+          });
+        } catch (err) {
+          console.error(err);
+        }
       }
 
       // table field definitions
