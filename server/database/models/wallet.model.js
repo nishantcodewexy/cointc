@@ -3,6 +3,7 @@ const { Model } = require("sequelize");
 const _ = require("underscore");
 const { tableNames } = require("../../consts");
 const hooks = require('../hooks/wallet.hook');
+const walletServices = require("../../services/wallet")
 
 module.exports = (sequelize, DataTypes) => {
   class Wallet extends Model {
@@ -18,6 +19,18 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "owner_id",
       });
     }
+
+    
+    async freezeWallet(){
+      return await walletServices.freezeWallet(this)
+    }
+
+    async unfreezeWallet(){
+      return await walletServices.unfreezeWallet(this)
+    }
+
+    
+
 
     toPublic() {
       return _.pick(this, "extended_pub", "asset", "address");
