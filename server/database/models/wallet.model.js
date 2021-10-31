@@ -37,7 +37,7 @@ module.exports = (sequelize, DataTypes) => {
       xpub: DataTypes.STRING,
       key: DataTypes.STRING,
       address: DataTypes.STRING,
-      hash: DataTypes.STRING,
+      secret: DataTypes.STRING,
       currency: {
         type: DataTypes.STRING,
         allowNull: false,
