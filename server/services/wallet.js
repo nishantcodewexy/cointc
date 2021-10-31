@@ -1,4 +1,5 @@
 const tatum = require("@tatumio/tatum")
+const api = require("./tatumApi")
 
 // tatum.cr
 
@@ -31,9 +32,8 @@ async function createAccount({currency,xpub,user_id,accountingCurrency}) {
  * @returns {Promise<tatum.AccountBalance>}
  */
 async function getWalletBalance(wallet) {
+    return api.Ledger.getAccountBalance({id:wallet.account_id})
     
-    const result = await tatum.getAccountBalance(wallet.account_id)
-    return result
 
 }
 

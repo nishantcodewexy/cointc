@@ -10,9 +10,7 @@ const tatum = require("@tatumio/tatum")
  */
 
 
-  axios.request({
-      url
-  })
+  
 
 class Ledger{
     /**
@@ -126,6 +124,24 @@ class Ledger{
     }
 
 
+    /**
+     * 
+     * @param {Object} args
+     * @param {Object} args.data
+     * @param {tatum.Account[]} args.data.accounts
+     * @returns {Promise}
+     */
+     createMultipleAccounts(args){
+        const {data} = args
+        
+        return this.axios.request({
+            url:`${this.baseURL}/account/`,
+            method:"GET",
+            data
+        })
+    }
+
+
 
 
 }
@@ -157,6 +173,7 @@ class TatumAPI{
     }
 
 }
+
 
 
 module.exports = new TatumAPI()
