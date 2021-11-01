@@ -95,7 +95,7 @@ function TableGenerator({
     }
     setCount(data?.count);
     setLimit(data?.limit);
-  }, [data, setTableData, setCount, setLimit, omit, mapping]);
+  }, [data/* , setTableData, setCount, setLimit, omit, mapping */]);
 
   function onRowsPerPageChange(e, { props }) {
     setLimit(props.value);
