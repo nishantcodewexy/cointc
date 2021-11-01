@@ -19,6 +19,18 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
+    
+    async freezeWallet(){
+      return await walletServices.freezeWallet(this)
+    }
+
+    async unfreezeWallet(){
+      return await walletServices.unfreezeWallet(this)
+    }
+
+    
+
+
     toPublic() {
       return _.pick(this, "extended_pub", "asset", "address");
     }
@@ -32,13 +44,16 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       account_id: DataTypes.STRING,
-      /*  key: DataTypes.STRING,
+      derivation_key: DataTypes.INTEGER,
       address: DataTypes.STRING,
-      secret: DataTypes.STRING, */
       currency: {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      frozen: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      }
     },
     {
       sequelize,

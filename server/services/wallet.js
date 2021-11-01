@@ -1,6 +1,7 @@
-const tatum = require("@tatumio/tatum")
+const tatum = require("@tatumio/tatum");
 
-// tatum.cr
+
+
 
 /**
  * 
@@ -13,11 +14,7 @@ const tatum = require("@tatumio/tatum")
  */
 async function createAccount({currency,xpub,user_id,accountingCurrency}) {
     
-    
-    return await tatum.createAccount({currency,customer:{externalId:user_id},xpub,accountingCurrency})
-
-    
-    
+    return await tatum.createAccount({currency,customer:{externalId:user_id},xpub,accountingCurrency}) 
 }
 
 
@@ -31,21 +28,19 @@ async function createAccount({currency,xpub,user_id,accountingCurrency}) {
  * @returns {Promise<tatum.AccountBalance>}
  */
 async function getWalletBalance(wallet) {
+    return await tatum.getAccountBalance(wallet.account_id)
     
-    const result = await tatum.getAccountBalance(wallet.account_id)
-    return result
-
 }
 
 
 /**
  * 
  * @param {Object} wallet 
- * @param {String} wallet.account_id
+ * @param {String} wallet.tatum_account_id
  * @returns {Promise<void>}
  */
 async function freezeWallet(wallet) {
-    await tatum.freezeAccount(wallet.account_id)
+    await tatum.freezeAccount(wallet.tatum_account_id)
     
 }
 
@@ -77,11 +72,19 @@ async function getUserTatumAccounts({user,pageSize,offset}){
 
 
 
+/**
+ * 
+ * @param {Object} wallet
+ * @param {String} wallet.tatum_account_id
+ * @param {tatum.TransferBtcBasedOffchainKMS} body 
+ * @returns {Promise<tatum.SignatureId>}
+ */
+async function transferBtc(wallet,body) {
+    body.senderAccountId = wallet.tatum_account_id
+    return await tatum.offchainTransferBtcKMS(body)
+}
 
-// async function transfer(wallet) {
-//     tatum
-    
-// }
+
 
 
 
@@ -138,9 +141,10 @@ async function getTransactionsByWallet({wallet,filter={},limit,offset}){
  * @param {Number} [params.index]
  * @returns {Promise<tatum.Address>}
  */
-async function createAddressFromWallet({wallet,index}) {
+async function createAddressFromWallet({wallet,index=0}) {
     return await tatum.generateDepositAddress(wallet.tatum_account_id,index)
 }
+
 
 
 
@@ -152,7 +156,8 @@ module.exports = {
     getUserTatumAccounts,
     getTransactionsByUser,
     getTransactionsByWallet,
-    createAddressFromWallet
+    createAddressFromWallet,
+    transferBtc
 }
 
 

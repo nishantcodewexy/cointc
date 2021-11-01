@@ -2,6 +2,7 @@ const axios = require('axios').default;
 const assert = require("assert")
 const tatum = require("@tatumio/tatum")
 
+
 /*
   mnemonic: 'organ merit dune hotel essence basic riot buzz dirt impact damage auto sing soap glow giraffe glare eye damage chunk orphan verify awake buyer',
   const xpub = 'tpubDE4LDjyTNBXcv25ZZo1E9kaAABuG5hmMZ24PnEqhkfMTgJrhPsU3UMRAwtNtJJdGK2vNmWPCjeommeZ76JckVdoY1Fwj8ASvxgt2pjas6s3'
@@ -9,10 +10,102 @@ const tatum = require("@tatumio/tatum")
   user_id = '086d48d9-24bf-4720-bf67-f41dd5d7553c'
  */
 
+    
+class OffChain{
+    /**
+     * 
+     * @param {axios} axios 
+     */
+    constructor(axios){
+        this.axios = axios
+        this.baseURL = "/offchain"
+    }
 
-  axios.request({
-      url
-  })
+
+    /**
+     * 
+     * @param {Object} args
+     * @param {Object} args.id account id
+     * @returns {Promise}
+     */
+     createNewDepositAddress(args){
+        const {id} = args
+        
+        return this.axios.request({
+            url:`${this.baseURL}/account/${id}/`,
+            method:"POST",
+        })
+    }
+
+    /**
+     * 
+     * @param {Object} args
+     * @param {Object} args.id account id
+     * @returns {Promise}
+     */
+     getAllDepositAddressForAccount(args){
+        const {id} = args
+        
+        return this.axios.request({
+            url:`${this.baseURL}/account/${id}/address`,
+            method:"GET",
+        })
+    }
+
+    /**
+     * 
+     * @param {Object} args
+     * @param {Object} args.id account id
+     * @param {Object} args.address address
+     * @returns {Promise}
+     */
+     removeAddressFromAccount(args){
+        const {id,address} = args
+        
+        return this.axios.request({
+            url:`${this.baseURL}/account/${id}/address/${address}/`,
+            method:"DELETE",
+        })
+    }
+
+
+    /**
+     * 
+     * @param {Object} args
+     * @param {Object} args.id account id
+     * @param {Object} args.address address
+     * @returns {Promise}
+     */
+     assignAddressForAccount(args){
+        const {id,address} = args
+        
+        return this.axios.request({
+            url:`${this.baseURL}/account/${id}/address/${address}/`,
+            method:"POST",
+        })
+    }
+
+    
+
+    /**
+     * 
+     * @param {Object} args
+     * @param {tatum.TransferBtcBasedOffchainKMS} args.data
+     * @returns {Promise<tatum.SignatureId>}
+     */
+     sendBitcoinFromAccount(args){
+        const {data} = args
+        
+        return this.axios.request({
+            url:`${this.baseURL}/bitcoin/transfer/`,
+            method:"POST",
+            data
+        })
+    }
+}
+
+
+  
 
 class Ledger{
     /**
@@ -21,10 +114,7 @@ class Ledger{
      */
     constructor(axios){
         this.baseURL = "/ledger"
-        
-        /**
-         * @type {axios}
-         */
+       
         this.axios = axios
         
         
@@ -113,10 +203,13 @@ class Ledger{
      * 
      * @param {Object} args
      * @param {Object} args.params
+     * @param {Number} args.params.pageSize
+     * @param {Number} args.params.offset
+     * @param {String} args.params.accountCode
      * @returns {Promise}
      */
      listAllAccounts(args){
-        const {params} = args
+        const {params={}} = args
         
         return this.axios.request({
             url:`${this.baseURL}/account/`,
@@ -126,7 +219,25 @@ class Ledger{
     }
 
 
+    /**
+     * 
+     * @param {Object} args
+     * @param {Object} args.data
+     * @param {tatum.Account[]} args.data.accounts
+     * @returns {Promise}
+     */
+     createMultipleAccounts(args){
+        const {data} = args
+        
+        return this.axios.request({
+            url:`${this.baseURL}/account/`,
+            method:"GET",
+            data
+        })
+    }
 
+
+   
 
 }
 
@@ -143,7 +254,8 @@ class TatumAPI{
         assert(process.env.TATUM_API_KEY,"TATUM_API_KEY was not provided")
 
         this.axios = axios.create({
-            baseURL: 'https://api-eu1.tatum.io',
+            
+            baseURL: 'https://api-eu1.tatum.io/v3',
             timeout: 1000,
             headers: {
                 'x-api-key': process.env.TATUM_API_KEY,
@@ -152,11 +264,13 @@ class TatumAPI{
         });
 
         this.Ledger = new Ledger(this.axios)
+        this.OffChain = new OffChain(this.axios)
 
 
     }
 
 }
+
 
 
 module.exports = new TatumAPI()

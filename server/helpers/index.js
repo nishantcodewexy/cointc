@@ -169,7 +169,7 @@ const MailerHelpers = () => {
     assert(emailTemplates[name], `Email template: ${name} not found!`);
     return emailTemplates[name];
   }
-
+  
   return {
     /*************************************
      * Maps email templates litrals to specified transform mapping
@@ -184,6 +184,8 @@ const MailerHelpers = () => {
         text,
         ...rest
       } = options;
+
+
 
       const htmlContent = htmlTemplate && hasEmailTemplate(htmlTemplate.name);
       const textContent = textTemplate && hasEmailTemplate(textTemplate.name);
