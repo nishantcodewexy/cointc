@@ -38,208 +38,280 @@ function ToggleButtonGroupControlled() {
 export const Support = () => {
     return (
         <div class="content">
-        <section id="profile">
-            <div class="container">
-                <div class="row wow fadeInDown" data-wow-delay="0.2s">
-                    <div class="col-12">
-                        <h4>My profile</h4>
-                        <div class="user_info clear">
-                            <div class="nickname"><span>B</span>BLOCKDAON<i class="fas fa-check-circle"></i><a href="#" class="btn_edit"><i class="fas fa-edit"></i>Edit</a></div>
-                            <div class="user_id">User ID: <span>22798832</span></div>
-                        </div>
-                        <p>Last login time : <span>2021-08-13 16:36:14</span></p>
-                        <p>IP : <span>210.183.98.102</span></p>
-                        <div class="bottom clear">
-                            <dl>
-                                <dt>Total orders</dt>
-                                <dd>35</dd>
-                            </dl>
-                            <dl>
-                                <dt>Completion rate</dt>
-                                <dd>75%</dd>
-                            </dl>
-                            <dl>
-                                <dt>Trade Review(Positive/Negative)</dt>
-                                <dd><span class="positive">5</span>/<span class="negative">4</span></dd>
-                            </dl>
+            <div class="support-banner" id="support">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col col-sm-12 col-md-6">
+                            <div class="support-search-input">
+                                <label for="searchInput" class="d-flex justify-content-center font-weight-bold"><h4>궁금한 내용을 검색해보세요.</h4></label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text" id="basic-addon1"><i class="fas fa-search"></i></span>
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="검색" aria-label="검색" aria-describedby="basic-addon1"/>
+                                </div>
+                            </div> 
                         </div>
                     </div>
                 </div>
             </div>
-        </section>
-        
-        <section id="settings">
-            <div class="container">
-                <div class="row wow fadeInDown" data-wow-delay="0.4s">
-                    <div class="col-12">
-                        <h4>Authentication Settings</h4>
-                        <div class="table_container">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th></th>
-                                        <th>Email</th>
-                                        <th>SMS</th>
-                                        <th>OTP</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Login Confirmation</td>
-                                        <td>
-                                            <Form.Check type="switch" id="custom-switch-login1-email" className="custom-switch-md text-center" size="lg" label="" defaultChecked={true}/>
-                                        </td>
-                                        <td>
-                                            <Form.Check type="switch" id="custom-switch-login1-sms" className="custom-switch-md text-center" size="lg" label="" defaultChecked={false}/>
-                                        </td>
-                                        <td>
-                                            <Form.Check type="switch" id="custom-switch-login1-otp" className="custom-switch-md text-center" size="lg" label="" defaultChecked={true}/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Transaction Confirmation</td>
-                                        <td>
-                                            <Form.Check type="switch" id="custom-switch-trans-email" className="custom-switch-md text-center" size="lg" label="" defaultChecked={true}/>
-                                        </td>
-                                        <td>
-                                            <Form.Check type="switch" id="custom-switch-trans-sms" className="custom-switch-md text-center" size="lg" label="" defaultChecked={false}/>
-                                        </td>
-                                        <td>
-                                            <Form.Check type="switch" id="custom-switch-trans-otp" className="custom-switch-md text-center" size="lg" label="" defaultChecked={false}/>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>Login Confirmation</td>
-                                        <td>
-                                            <Form.Check type="switch" id="custom-switch-login2-email" className="custom-switch-md text-center" size="lg" label="" defaultChecked={true}/>
-                                        </td>
-                                        <td>
-                                            <Form.Check type="switch" id="custom-switch-login2-sms" className="custom-switch-md text-center" size="lg" label="" defaultChecked={false}/>
-                                        </td>
-                                        <td>
-                                            <Form.Check type="switch" id="custom-switch-login2-otp" className="custom-switch-md text-center" size="lg" label="" defaultChecked={true}/>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+
+            <section class="py-5">
+                <div class="container-fluid">
+                    <div class="container">
+                        <div class="customer-center">
+                            <h5 class="customer-center-title font-weight-bold mb-5">온라인 고객센터 안내사항</h5>
+                            <p class="customer-center-content font-weight-bold mb-0">[안내] Coin TC, 알고란 채널과 함께 ‘Coin TC의 거의 모든 것’ 영상 공개</p>
+                            <hr class="mt-0 mb-4"/>
+                            <p class="customer-center-content font-weight-bold mb-0">[안내]비기너를 위한 'Coin TC 앱 사용설명서' 영상 공개</p>
+                            <hr class="m-0"/>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-        
-        <section id="securityTop">
-            <div class="container">
-                <div class="row wow fadeInDown" data-wow-delay="0.6s">
-                    <div class="col-12">
-                        <h4>Security</h4>
-                        <ul>
-                            <li class="password clear">
-                                <img src={icon_password} alt="Login Password" />
-                                <dl>
-                                    <dt>Login Password</dt>
-                                    <dd>Login password is used to log in to your account.</dd>
-                                </dl>
-                                <a href="#" class="btn btn_change">Change</a>
-                            </li>
-                            <li class="recommended clear">
-                                <img src={icon_recommended} alt="Google Authenticator (Recommended)" />
-                                <dl>
-                                    <dt>Google Authenticator (Recommended)</dt>
-                                    <dd>Protect your account and transactions.</dd>
-                                    <dd><a href="#">Having trouble?</a></dd>
-                                </dl>
-                                <a href="#" class="btn_unset"><i class="fad fa-plus-circle"></i>Unset</a>
-                                <a href="#" class="btn btn_enable">Enable</a>
-                            </li>
-                            <li class="phone clear">
-                                <img src={icon_phone} alt="Phone Number Verification" />
-                                <dl>
-                                    <dt>Phone Number Verification</dt>
-                                    <dd>Protect your account and transactions.</dd>
-                                </dl>
-                                <p><i class="fas fa-check-circle"></i>010****1234</p>
-                                <a href="#" class="btn btn_change">Change</a>
-                                <a href="#" class="btn btn_remove">Remove</a>
-                            </li>
-                            <li class="email clear">
-                                <img src={icon_email} alt="Email Address Verification" />
-                                <dl>
-                                    <dt>Email Address Verification</dt>
-                                    <dd>Protect your account and transactions.</dd>
-                                </dl>
-                                <p><i class="fas fa-check-circle"></i>abc**@naver.com</p>
-                                <a href="#" class="btn btn_change">Change</a>
-                                <a href="#" class="btn btn_remove">Remove</a>
-                            </li>
-                            <li class="verification clear">
-                                <img src={icon_verification} alt="Identity Verification" />
-                                <dl>
-                                    <dt>Identity Verification</dt>
-                                    <dd>Identity Verification can protect your account security and increase transaction limits.</dd>
-                                </dl>
-                                <a href="#" class="btn btn_enable">Enable</a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <section id="securityBottom">
-            <div class="container">
-                <div class="row wow fadeInDown" data-wow-delay="0.8s">
-                    <div class="col-12">
-                        <h4>Security</h4>
-                        <div class="p2p"><span>P2P</span></div>
-                        <p>P2P payment methods: When you sell cryptocurrencies, the payment method added will be displayed to buyer as options to accept payment, please ensure that the account owner’s name is consistent with your verified name on Binance. You can add up to 20 pay ment methods</p>
-                        <a href="#" class="btn_add">+ add a payment method</a>
-                        <div class="wechat">
-                            <div class="top clear">
-                                <h5>Wechat</h5>
-                                <ul class="clear">
-                                    <li><a href="#">Edit</a></li>
-                                    <li><a href="#">Delete</a></li>
-                                </ul>
+            </section>
+
+            <section class="py-5">
+                <div class="container-fluid">
+                    <div class="container">
+                        <div class="user-guide">
+                            <div class="user-guide-title mb-3">
+                                <h5 class="font-weight-bold">이용자 가이드</h5>
                             </div>
-                            <div class="bottom clear">
-                                <dl>
-                                    <dt>Name</dt>
-                                    <dd>Name</dd>
-                                </dl>
-                                <dl>
-                                    <dt>Wechat account</dt>
-                                    <dd>Wechat account</dd>
-                                </dl>
+                            <div class="row py-3">
+                                <div class="col col-sm-12 col-md-4 my-text">
+                                    <h5 class="text-left font-weight-bold">이용 안내</h5>
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 거래 이용 안내</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> [상담] 1:1문의 및 카카오톡 상담 방법</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col col-sm-12 col-md-4 my-text">
+                                    <h5 class="text-left font-weight-bold">인증 절차</h5>
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 보안등급 레벨 3 상향 방법 (PC)</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 보안등급 레벨 3 상향 방법 (모바일)</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 보안등급 레벨 4 상향 방법</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> + 더보기</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col col-sm-12 col-md-4 my-text">
+                                    <h5 class="text-left font-weight-bold">입출금</h5>
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 원화 입출금 방법 (모바일)</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 원화 입출금 방법 (PC)</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 입출금 계좌 초기화 방법 (모바일)</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> + 더보기</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
-                        <div class="bank">
-                            <div class="top clear">
-                                <h5>Bank Transfer</h5>
-                                <ul class="clear">
-                                    <li><a href="#">Edit</a></li>
-                                    <li><a href="#">Delete</a></li>
-                                </ul>
-                            </div>
-                            <div class="bottom clear">
-                                <dl>
-                                    <dt>Name</dt>
-                                    <dd>Name</dd>
-                                </dl>
-                                <dl>
-                                    <dt>Bank account number</dt>
-                                    <dd>Bank account number</dd>
-                                </dl>
-                                <dl>
-                                    <dt>Bank name</dt>
-                                    <dd>Bank name</dd>
-                                </dl>
+                            <div class="row py-3">
+                                <div class="col col-sm-12 col-md-4 mt-5 my-text">
+                                    <h5 class="text-left font-weight-bold">이용 안내</h5>
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 거래 이용 안내</a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> [상담] 1:1문의 및 카카오톡 상담 방법</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-        </section>
-    </div>
-  );
+            </section>
+
+            <section class="py-5">
+                <div class="container-fluid">
+                    <div class="container">
+                        <div class="user-guide">
+                            <div class="user-guide-title mb-3">
+                                <h5 class="font-weight-bold"> 자주하는 질문 </h5>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col col-sm-12 col-md-4 my-text">
+                                    <h5 class="text-left font-weight-bold"> 계정 </h5>
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> Coin TC 계정을 복구하고 싶어요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 로그인이 안됩니다. / 로그인 인증번호가 오지 않아요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 휴대전화 번호가 변경되었어요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> + 더보기 </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col col-sm-12 col-md-4 my-text">
+                                    <h5 class="text-left font-weight-bold">가입 / 보안등급 / 탈퇴</h5>
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 본인 명의 휴대전화와 계좌가 없어도 되나요? </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 법인 명의 전화로 이용 가능한가요? </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 보안등급 상향은 어떻게 하나요? </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> + 더보기 </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col col-sm-12 col-md-4 my-text">
+                                    <h5 class="text-left font-weight-bold">거래 / 자산</h5>
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 갑자기 USDT가 생겼어요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 원화 마켓, BTC 마켓, USDT 마켓이 어떻게 다른가요? </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 자산을 보유하고 있으나 매수 또는 매도 주문이 안돼요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> + 더보기 </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col col-sm-12 col-md-4 mt-5 my-text">
+                                    <h5 class="text-left font-weight-bold"> 원화 입금 / 출금 </h5>
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 원화 출금 실패했어요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 원화 입금 실패했어요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> Coin TC 계정으로 원화 입금은 어떻게 하나요? </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> + 더보기 </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col col-sm-12 col-md-4 mt-5 my-text">
+                                    <h5 class="text-left font-weight-bold"> 디지털 자산 입금 / 출금 </h5>
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 2차 주소가 무엇인가요? </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 디지털 자산 출금 방법을 알려 주세요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 디지털 자산별 입출금 가능 여부는 어떻게 확인하나요? </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> + 더보기 </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col col-sm-12 col-md-4 mt-5 my-text">
+                                    <h5 class="text-left font-weight-bold">디지털 자산 오입금</h5>
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 타 거래소로 잘못 출금했는데 반환되었어요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 디지털 자산 주소를 잘못 입력했어요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 이전에 입금했던 주소로 입금했는데 현재 발급된 입금 주소와 달라요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> + 더보기 </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="row py-3">
+                                <div class="col col-sm-12 col-md-4 mt-5 my-text">
+                                    <h5 class="text-left font-weight-bold">카카오페이</h5>
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 카카오페이 인증을 사용하고 싶어요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 카카오페이 인증까지 완료했는데 왜 출금이 안되나요? </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 카카오페이 인증 메시지 수신이 안돼요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> + 더보기 </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col col-sm-12 col-md-4 mt-5 my-text">
+                                    <h5 class="text-left font-weight-bold">디지털 자산 관련 용어</h5>
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> NFT가 무엇인가요? </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> TXID가 무엇인가요? </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 거래소 용어를 잘 모르겠어요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> + 더보기 </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col col-sm-12 col-md-4 mt-5 my-text">
+                                    <h5 class="text-left font-weight-bold">기타 문의</h5>
+                                    <ul class="navbar-nav">
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> Open API를 사용하고 싶어요. </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> API란 무엇인가요? </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> 로그인을 유지할 수 있는 기능이 있나요? </a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link d-flex align-items-center text-black" href="#"> + 더보기 </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    );
 };
