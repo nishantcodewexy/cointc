@@ -23,13 +23,13 @@ module.exports = (server) => {
         ...options,
         logging: console.log,
       });
-      return { count: affectedRowCount, results: affectedRow || null };
+      return { count: affectedRowCount, result: affectedRow || null };
     },
     async __upsert(model, values, options) {
       return await db[model]?.upsert(values, options);
     },
 
-    __assertRole: function(role) {
+    /*  __assertRole: function(role) {
       let profile, profile_attributes;
       switch (role) {
         case _roles.admin:
@@ -68,11 +68,11 @@ module.exports = (server) => {
       let creator = accessors?.create;
 
       let model = User.associations[profile]["target"]["name"];
-      /* profile
-        .split("_")
-        .map((_p) => _p.charAt(0).toUpperCase() + _p.slice(1, +_p.length))
-        .join(""); */
+      // profile
+      //   .split("_")
+      //   .map((_p) => _p.charAt(0).toUpperCase() + _p.slice(1, +_p.length))
+      //   .join("");
       return { profile, profile_attributes, model, getter, setter, creator };
-    },
+    }, */
   };
 };

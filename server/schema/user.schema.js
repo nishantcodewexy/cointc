@@ -1,5 +1,68 @@
 const Joi = require("joi");
 
+// AUTHENTICATE ------------------------------------------
+function authenticate(server) {
+  const {
+    boom,
+    consts: { patterns },
+  } = server.app;
+
+  return {
+    payload: Joi.object({
+      email: Joi.string()
+        .email({ minDomainSegments: 2 })
+        .required()
+        .error(boom.badData("Required data <email::string> is invalid")),
+      password: Joi.string()
+        .pattern(patterns.password)
+        .required()
+        .error(boom.badData("Required data <password::string> is invalid")),
+      access_level: Joi.number()
+        .max(3)
+        .default(1)
+        .required()
+        .error(boom.badData("Required data <access_level::number> is invalid")),
+    }).with("email", "password"),
+  };
+}
+
+// REGISTER ------------------------------------------------
+
+/**
+ * @function register - Schema validator for creating a single record
+ * @param {Object} server - Hapi server instance
+ * @returns {Object} validator
+ */
+function register(server) {
+  const {
+    boom,
+    consts: { patterns },
+  } = server.app;
+
+  return {
+    payload: Joi.object({
+      email: Joi.string()
+        .email({ minDomainSegments: 2 })
+        .required()
+        .error(boom.badRequest("Required data <email::string> is invalid")),
+      password: Joi.string()
+        .pattern(patterns.password)
+        .required()
+        .error(
+          boom.badRequest(
+            `Required input <password::string(${patterns.password})> is invalid`
+          )
+        ),
+      repeat_password: Joi.ref("password"),
+      invite_code: Joi.string()
+        .allow("", null)
+        .error(
+          boom.badRequest("optional input <invite_code::string> is invalid")
+        ),
+    }).with("password", "repeat_password"),
+  };
+}
+
 // CREATE ------------------------------------------------
 
 /**
@@ -18,23 +81,21 @@ function create(server) {
       email: Joi.string()
         .email({ minDomainSegments: 2 })
         .required()
-        .error(boom.badRequest("Required input <email::string> is invalid")),
+        .error(boom.badRequest("Required data <email::string> is invalid")),
       password: Joi.string()
         .pattern(patterns.password)
         .optional()
         .error(
           boom.badRequest(
-            `Required input <password::string(${patterns.password})> is invalid`
+            `optional data <password::string(${patterns.password})> is invalid`
           )
         ),
-      repeat_password: Joi.ref("password"),
       invite_code: Joi.string()
-        .length(10)
         .optional()
         .error(
-          boom.badRequest("Optional input <invite_code::string> is invalid")
+          boom.badRequest("optional data <invite_code::string> is invalid")
         ),
-    }).with("password", "repeat_password"),
+    }),
   };
 }
 
@@ -81,6 +142,43 @@ function update(server) {
     }),
   };
 }
+/**
+ * @function update - Schema validator for updating a single currency entity
+ * @param {Object} server - Hapi server instance
+ * @returns
+ */
+function updateMe(server) {
+  const { boom } = server.app;
+
+  return {
+    payload: Joi.object({
+      profile: Joi.object({
+        lname: Joi.string()
+          .optional()
+          .error(boom.badData("optional input <lname::string> is invalid")),
+        oname: Joi.string()
+          .optional()
+          .error(boom.badData("optional input <oname::string> is invalid")),
+        pname: Joi.string()
+          .optional()
+          .error(boom.badData("optional input <pname::string> is invalid")),
+        mode: Joi.string()
+          .optional()
+          .error(boom.badData("optional input <mode::string> is invalid")),
+        payment_methods: Joi.any()
+          .allow({})
+          .optional()
+          .error(
+            boom.badData("optional input <payment_methods::string> is invalid")
+          ),
+      })
+        ?.optional()
+        .error(
+          boom.badData("optional key <profile::string> is invalid or missing")
+        ),
+    }),
+  };
+}
 
 /**
  * @function bulkUpdate - Schema validator for creating bulk currency entities
@@ -113,7 +211,6 @@ function remove(server) {
     params: retrieve(server)?.params,
   };
 }
-
 
 function bulkRemove(server) {
   const { boom } = server.app;
@@ -164,9 +261,8 @@ function retrieve(server) {
   };
 }
 
-
-
 module.exports = {
+  authenticate,
   create,
   update,
   remove,
@@ -176,4 +272,6 @@ module.exports = {
   restore,
   bulkRestore,
   retrieve,
+  register,
+  updateMe,
 };

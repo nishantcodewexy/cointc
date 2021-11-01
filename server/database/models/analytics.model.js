@@ -1,5 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
+const { tableNames } = require("../../consts");
+
 module.exports = (sequelize, DataTypes) => {
   class Analytics extends Model {
     /**
@@ -18,11 +20,18 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
+      user: {
+        type: DataTypes.JSON,
+      },
+      wallet: { type: DataTypes.JSON },
+      support_ticket: { type: DataTypes.JSON },
+      kyc: { type: DataTypes.JSON },
+      security: { type: DataTypes.JSON },
     },
     {
       sequelize,
       modelName: "Analytics",
-      tableName: "tbl_analytics",
+      tableName: tableNames?.ANALYTICS || "tbl_analytics",
       underscored: true,
     }
   );

@@ -12,7 +12,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/bank-details/{id}",
+    path: "/bank-detail/{id}",
     config: {
       pre: [
         {

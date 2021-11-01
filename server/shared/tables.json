@@ -1,0 +1,23 @@
+{
+  "USER": "tbl_users",
+  "PROFILE": "tbl_user_profiles",
+  "SECURITY ": "tbl_user_securities",
+  "BANK_DETAIL": "tbl_bank_details",
+  "KYC": "tbl_kyc",
+  "ORDER": "tbl_orders",
+  "ADVERT": "tbl_adverts",
+  "CHAT": "tbl_chats",
+  "CHAT_HISTORY": "tbl_chat_histories",
+  "CURRENCY": "tbl_currencies",
+  "REFERRAL": "tbl_referrals",
+  "SECESSION": "tbl_secessions",
+  "ANALYTICS": "tbl_analytics",
+  "SUPPORT_TICKET": "tbl_support_tickets",
+  "UPLOAD": "tbl_uploads",
+  "WALLET": "tbl_wallets",
+  "ADDRESS": "tbl_addresses",
+  "POLICY": "tbl_policies",
+  "FEE": "tbl_fees",
+  "CHAT_MESSAGE": "tbl_chat_messages",
+  "ESCROW": "tbl_escrows"
+}

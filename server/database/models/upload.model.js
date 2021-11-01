@@ -1,10 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
 const del = require("del");
-const {
-  types: { MimeType },
-  FILE_UPLOAD_PATH,
-} = require("../../consts");
+const { mimeTypes, FILE_UPLOAD_PATH, tableNames } = require("../../consts");
+
 module.exports = (sequelize, DataTypes) => {
   class Upload extends Model {
     /**
@@ -54,9 +52,8 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       mimetype: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM(Object.keys(mimeTypes)),
         allowNull: false,
-        defaultValue: "unknown",
       },
       original: {
         type: DataTypes.JSON,
@@ -71,7 +68,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "Upload",
-      tableName: "tbl_uploads",
+      tableName: tableNames?.UPLOAD || "tbl_uploads",
       underscored: true,
       paranoid: true,
       deletedAt: "deleted_at",

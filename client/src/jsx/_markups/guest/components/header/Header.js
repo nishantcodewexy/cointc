@@ -39,8 +39,8 @@ export const Header = () => {
                     </div>
                 </div>
                 <div class="user_btn clear">
-                    <a href="#" class="btn btn_login text-white mr-3">Login</a>
-                    <a href="#" class="btn btn_signup">Sign Up</a>
+                    <a href="/login" class="btn btn_login text-white mr-3">Login</a>
+                    <a href="/signup" class="btn btn_signup">Sign Up</a>
                 </div>
 
                 <div class="side_menu" style={menuToggle ? {'right':'0px'} : {"right":"-250px"}}>
@@ -71,7 +71,7 @@ export const Header = () => {
                         </ul>
                     </div>
                     <div class="user_m">
-                        <a href="#" class="btn btn_login text-white mb-2">Login</a>
+                        <a href="/login" class="btn btn_login text-white mb-2">Login</a>
                         <a href="/signup" class="btn btn_signup">Sign Up</a>
                     </div>
                 </div>

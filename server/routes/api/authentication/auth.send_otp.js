@@ -1,9 +1,11 @@
+"use strict";
+
 const Joi = require("joi");
 
 module.exports = (server) => {
   const {
     controllers: {
-      user: { sendOTP },
+      security: { sendOTP },
     },
     boom,
   } = server.app;

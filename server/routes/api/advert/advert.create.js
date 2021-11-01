@@ -15,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "POST",
-    path: "/ads",
+    path: "/ad",
     config: {
       pre: [
         {

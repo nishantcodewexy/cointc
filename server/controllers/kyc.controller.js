@@ -1,5 +1,4 @@
 "use strict";
-const assert = require("assert");
 
 /**
  * @description - KYC Controller helpers
@@ -8,19 +7,14 @@ const assert = require("assert");
  */
 function KYCController(server) {
   const {
-    db: { User },
+    db: { KYC },
     boom,
   } = server.app;
   return {
     async fetch(req, h) {
+      const { params } = req;
       try {
-        const { type } = req.params;
-
-        const UserController = require("./user.controller")(server);
-
-        let profile = await UserController.profile(req);
-        let kyc = profile.kyc;
-        return type ? { [type]: kyc[type] } : kyc;
+        return null;
       } catch (error) {
         console.error(error);
         boom.boomify(error);

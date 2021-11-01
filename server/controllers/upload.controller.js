@@ -6,8 +6,8 @@ const { uploader, imageFilter } = require("../services/fileUpload");
 
 module.exports = function UploadController(server) {
   const {
-    db: { Upload, sequelize },
-    consts: { roles: _roles, FILE_UPLOAD_PATH },
+    db: { Upload },
+    consts: { FILE_UPLOAD_PATH },
     helpers: { filters, paginator },
     boom,
   } = server.app;
@@ -23,16 +23,14 @@ module.exports = function UploadController(server) {
     async retrieve(req) {
       const {
         params: { id },
-        auth: {
-          credentials: { user },
-        },
-        pre: { isAdmin },
+
+        pre: { user },
       } = req;
 
       const upload = await Upload.findOne({
         where: {
           id,
-          ...(isAdmin ? {} : { user_id: user.id }),
+          ...(!user?.isAdmin && { user_id: user.id }),
         },
         attributes: {
           exclude: [
@@ -46,17 +44,14 @@ module.exports = function UploadController(server) {
       });
 
       if (!Upload) {
-        throw boom.notFound();
+        throw boom.notFound(`Upload not found!`);
       }
       return upload;
     },
     async bulkRetrieve(req) {
       const {
         query,
-        pre: { isAdmin },
-        auth: {
-          credentials: { user },
-        },
+        pre: { user },
       } = req;
 
       try {
@@ -64,7 +59,7 @@ module.exports = function UploadController(server) {
         const filterResults = await filters({
           query,
           extra: {
-            ...(isAdmin && !!extend ? {} : { user_id: user.id }),
+            ...(!(user?.isAdmin && !!extend) && { user_id: user?.id }),
           },
         });
 
@@ -91,13 +86,15 @@ module.exports = function UploadController(server) {
     },
 
     //   CREATE ---------------------------------------------------
-
+    /**
+     * @function create
+     * @param {Object} req
+     * @returns
+     */
     async create(req) {
       const {
         payload: { file },
-        auth: {
-          credentials: { user },
-        },
+        pre: { user },
       } = req;
 
       const fileOptions = {
@@ -125,7 +122,7 @@ module.exports = function UploadController(server) {
             fileDetails.map((value) => ({
               mimetype: value.mimetype,
               original: value,
-              user_id: user.id,
+              user_id: user?.id,
             }))
           );
 
@@ -149,16 +146,13 @@ module.exports = function UploadController(server) {
     async remove(req) {
       const {
         params: { id },
-        pre: { isAdmin },
-        auth: {
-          credentials: { user },
-        },
+        pre: { user },
       } = req;
 
       const result = await Upload.destroy({
         where: {
           id,
-          ...(isAdmin ? {} : { user_id: user.id }),
+          ...(!user?.isAdmin && { user_id: user.id }),
         },
       });
 
@@ -166,12 +160,15 @@ module.exports = function UploadController(server) {
 
       return result;
     },
+
+    /**
+     * @function bulkRemove
+     * @param {Object} req
+     * @returns
+     */
     async bulkRemove(req) {
       const {
-        pre: { isAdmin },
-        auth: {
-          credentials: { user },
-        },
+        pre: { user },
         payload,
       } = req;
 
@@ -180,12 +177,11 @@ module.exports = function UploadController(server) {
           id: {
             [Op.in]: payload,
           },
-          ...(isAdmin ? {} : { user_id: user.id }),
+          ...(!user?.isAdmin && { user_id: user.id }),
         },
       });
 
       if (!result) throw boom.notFound();
-
       return result;
     },
   };

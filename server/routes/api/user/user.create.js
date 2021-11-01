@@ -1,36 +1,33 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
+  const Schema = require("../../../schema/user.schema");
+  const { payload: payloadSchema } = Schema?.create(server);
+
   const {
     controllers: {
       user: { create },
     },
-    consts: { roles: _roles },
     helpers: {
-      permissions: { isUser },
+      permissions: { isAdminOrError },
     },
   } = server.app;
 
-  // const schema = Joi.array().items(Joi.object({
-  //     email:Joi.string().email().required().required(),
-  //     role:Joi.string().valid(...Object.values(_roles)).required()
-  // }))
-
   return {
     method: "POST",
-    path: "/users",
+    path: "/user",
     config: {
       pre: [
         {
-          method: isUser,
+          method: isAdminOrError,
           assign: "user",
         },
       ],
       handler: create,
       auth: "jwt",
-      // validate:{
-      //     payload:schema
-      // }
+      validate: {
+        payload: payloadSchema,
+      },
     },
   };
 };

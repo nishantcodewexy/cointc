@@ -1,11 +1,11 @@
 "use strict";
-const assert = require("assert");
-
-const { Op } = require("sequelize");
 
 module.exports = function SecessionController(server) {
   const {
-    db: { Secession },
+    db: {
+      Secession,
+      Sequelize: { Op },
+    },
     boom,
     helpers: { filters, paginator },
   } = server.app;
@@ -76,7 +76,7 @@ module.exports = function SecessionController(server) {
         });
       }
     },
-    
+
     /**
      * @function retrieve - retrieves a single currency record
      * @param {Object} req

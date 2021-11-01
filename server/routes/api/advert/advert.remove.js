@@ -16,7 +16,7 @@ module.exports = (server) => {
 
   return {
     method: "DELETE",
-    path: "/ads/{id}",
+    path: "/ad/{id}",
     config: {
       pre: [
         {

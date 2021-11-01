@@ -1,8 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
-const {
-  types: { country, banks, currencies },
-} = require("../../consts");
+const { tableNames, currencies } = require("../../consts");
+
 module.exports = (sequelize, DataTypes) => {
   class BankDetail extends Model {
     /**
@@ -44,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },      
       currency: {
-        type: DataTypes.ENUM(...Object.keys(currencies)),
+        type: DataTypes.ENUM(Object.keys(currencies)),
         defaultValue: "USD",
         allowNull: false,
       },
@@ -52,7 +51,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "BankDetail",
-      tableName: "tbl_bank_details",
+      tableName: tableNames?.BANK_DETAIL || "tbl_bank_details",
       underscored: true,
     }
   );

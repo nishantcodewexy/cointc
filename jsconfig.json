@@ -5,6 +5,7 @@
             "faker"
         ],
     },
+    "include": [],
     "exclude": [
         "**/node_modules",
         ".git",

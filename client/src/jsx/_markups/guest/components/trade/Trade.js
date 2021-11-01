@@ -2593,7 +2593,7 @@ export const Trade = () => {
                                         </select>
                                     </dd>
                                 </dl>
-                                <a href="#" class="btn_creat"><i class="fas fa-plus-square"></i>Creat an AD</a>
+                                <a href="/ad_create" class="btn_creat"><i class="fas fa-plus-square"></i>Creat an AD</a>
                             </div>
                         </div>
                     </div>

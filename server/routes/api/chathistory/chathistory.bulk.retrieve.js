@@ -3,13 +3,11 @@
 module.exports = (server) => {
   const {
     controllers: {
-        chathistory: { bulkRetrieve },
+      chathistory: { bulkRetrieve },
     },
-    helpers:{
-      permissions:{
-        isAdminOrError
-      }
-    }
+    helpers: {
+      permissions: { isAdminOrError },
+    },
   } = server.app;
 
   return {
@@ -17,16 +15,13 @@ module.exports = (server) => {
     path: "/chat-history",
     config: {
       pre: [
-        
         {
-          method:isAdminOrError,
+          method: isAdminOrError,
           assign: "user",
         },
-        
       ],
       handler: bulkRetrieve,
       auth: "jwt",
     },
-    
   };
 };

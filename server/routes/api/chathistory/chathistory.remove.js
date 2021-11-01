@@ -1,12 +1,12 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
   const {
     controllers: {
       chathistory: { remove },
     },
     helpers: {
-      permissions: { isAdminOrError },
+      permissions: { isUser },
     },
   } = server.app;
 
@@ -17,7 +17,7 @@ module.exports = (server) => {
       pre: [
         [
           {
-            method: isAdminOrError,
+            method: isUser,
             assign: "user",
           },
         ],

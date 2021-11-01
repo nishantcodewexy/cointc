@@ -2,6 +2,7 @@
 const { Model } = require("sequelize");
 const _ = require("underscore");
 const hooks = require("../hooks/user.hook");
+const { tableNames } = require("../../consts");
 
 // debugger;
 const uppercaseFirst = (str) => `${str[0].toUpperCase()}${str.substr(1)}`;
@@ -27,8 +28,16 @@ module.exports = (sequelize, DataTypes) => {
         Currency,
         Advert,
         Order,
+        Fee,
+        Policy,
       } = models;
 
+      User.hasOne(User, {
+        foreignKey: {
+          type: DataTypes.UUID,
+          name: "created_by",
+        },
+      });
       User.hasMany(Wallet, {
         foreignKey: { name: "user_id", allowNull: false },
       });
@@ -86,6 +95,18 @@ module.exports = (sequelize, DataTypes) => {
           name: "user_id",
         },
       });
+      User.hasMany(Fee, {
+        as: "fees",
+        foreignKey: {
+          name: "user_id",
+        },
+      });
+      User.hasMany(Policy, {
+        as: "policies",
+        foreignKey: {
+          name: "user_id",
+        },
+      });
       // User.hasMany(Message, {})
     }
     toPublic() {
@@ -125,7 +146,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: { notEmpty: true },
       },
-      role: DataTypes.STRING,
+      // role: DataTypes.STRING,
       permission: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
@@ -142,7 +163,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         defaultValue: 1,
       },
-
       // VIRTUALS
       online: {
         type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["createdAt"]),
@@ -150,7 +170,7 @@ module.exports = (sequelize, DataTypes) => {
           return this.get("updateAt") > Date.now() - 7 * 24 * 60 * 60 * 1000;
         },
       },
-
+      
       isBasic: {
         type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["access_level"]),
         get() {
@@ -176,18 +196,13 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "User",
       underscored: true,
-      tableName: "tbl_users",
+      tableName: tableNames?.USER || "tbl_users",
       paranoid: true,
       deletedAt: "archived_at",
       hooks,
-      scopes: {
-        admin: {
-          role: "admin",
-        },
-        basic: {
-          role: "basic",
-        },
-      },
+      /* scopes: {
+       
+      }, */
     }
   );
 
@@ -197,18 +212,15 @@ module.exports = (sequelize, DataTypes) => {
     if (!Array.isArray(findResult)) findResult = [findResult];
     for (const instance of findResult) {
       if (!(instance instanceof User)) return;
-      instance.profile = await instance.getProfile();
-      /*  if (instance?.role === "admin") {
-        instance.profile = await instance.getAdminProfile();
-      } else if (instance?.role === "basic") {
-        instance.profile = await instance.getBasicProfile();
-      } */
+      let profile = await instance.getProfile();
+
       if (instance)
         instance.dataValues = {
-          ...instance?.profile?.dataValues,
+          ...profile?.dataValues,
           ...instance?.dataValues,
         };
     }
   });
+  
   return User;
 };

@@ -1,5 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
+const { tableNames } = require("../../consts");
+
 module.exports = (sequelize, DataTypes) => {
   class Secession extends Model {
     /**
@@ -47,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Secession",
       underscored: true,
-      tableName: "tbl_secessions",
+      tableName: tableNames?.SECESSION || "tbl_secessions",
     }
   );
   return Secession;

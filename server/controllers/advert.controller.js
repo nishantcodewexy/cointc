@@ -1,18 +1,16 @@
 "use strict";
 
 const AdvertController = (server) => {
-  const { __upsert, __update, __destroy, __assertRole } = require("./utils")(
-    server
-  );
+  const { __destroy } = require("./utils")(server);
   const {
-    db: { Advert, User, sequelize },
+    db: {
+      Advert,
+      User,
+      Sequelize: { Op },
+    },
     boom,
     helpers: { filters, paginator },
   } = server.app;
-
-  async function completionRate(total_orders, total_completed_orders) {
-    return (total_completed_orders / total_orders) * 100;
-  }
 
   return {
     /**
@@ -68,11 +66,21 @@ const AdvertController = (server) => {
      * @param {Object} req
      */
     async bulkRetrieve(req) {
-      const { query } = req;
-      const queryFilters = await filters({ query, searchFields: ["user_id"] });
+      const {
+        query,
+        pre: { user },
+      } = req;
+      const queryFilters = await filters({
+        query,
+        searchFields: ["user_id"],
+       /*  extras: {
+          user_id: { [Op?.ne]: user?.id },
+        }, */
+      });
       const options = {
         ...queryFilters,
-        logging: console.log
+        logging: console.log,
+        include: User,
       };
 
       try {

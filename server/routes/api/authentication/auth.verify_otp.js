@@ -1,9 +1,10 @@
+"use strict";
 const Joi = require("joi");
 
 module.exports = (server) => {
   const {
     controllers: {
-      user: { verifyOTP },
+      security: { verifyOTP },
     },
     boom,
   } = server.app;
@@ -14,7 +15,10 @@ module.exports = (server) => {
       .uuid()
       .required()
       .error(boom.badRequest("Required input <id::uuid> is invalid")),
-    code : Joi.string().length(5).required().error(boom.badRequest('Required input <code::string(5)> is invalid'))
+    code: Joi.string()
+      .length(5)
+      .required()
+      .error(boom.badRequest("Required input <code::string(5)> is invalid")),
   });
 
   return {

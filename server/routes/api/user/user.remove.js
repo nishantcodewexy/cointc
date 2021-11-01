@@ -1,5 +1,5 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
   const Schema = require("../../../schema/user.schema");
   const { params: paramsSchema, payload: payloadSchema } = Schema.remove(
@@ -11,17 +11,17 @@ module.exports = (server) => {
       user: { remove },
     },
     helpers: {
-      permissions: { isUser },
+      permissions: { isAdminOrError },
     },
   } = server.app;
 
   return {
     method: "DELETE",
-    path: "/users/{id}",
+    path: "/user/{id}",
     config: {
       pre: [
         {
-          method: isUser,
+          method: isAdminOrError,
           assign: "user",
         },
       ],

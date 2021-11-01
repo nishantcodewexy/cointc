@@ -51,12 +51,12 @@ function create(server) {
       qty: Joi.number()
         .required()
         .error(boom.badRequest(`Required input <qty::number> is invalid`)),
-      crypto_currency: Joi.string()
+      crypto: Joi.string()
         .required()
         .error(
           boom.badRequest(`Required input <crypto_currency::string> is invalid`)
         ),
-      fiat_currency: Joi.string()
+      fiat: Joi.string()
         .required()
         .error(
           boom.badRequest(`Required input <fiat_currency::string> is invalid`)

@@ -1,5 +1,4 @@
 "use strict";
-const Joi = require("joi");
 
 module.exports = (server) => {
   const Schema = require("../../../schema/currency.schema");

@@ -1,46 +1,21 @@
-const Joi = require("joi");
+"use strict";
 
 module.exports = (server) => {
   const Schema = require("../../../schema/user.schema");
-  const {payload: payloadSchema} = Schema?.create(server)
+  const { payload: payloadSchema } = Schema?.register(server);
+
   const {
     controllers: {
-      user: { create },
+      user: { registerMe },
     },
-    consts: { patterns, roles: _roles },
-    helpers:{
-      // permissions:{
-      //   isAdmin
-      // }
-    }
+   
   } = server.app;
-
-  // define Joi schema
-  const schema = Joi.object({
-    email: Joi.string()
-      .email({ minDomainSegments: 2 })
-      .required(),
-    password: Joi.string()
-      .pattern(patterns.password)
-      .required(),
-    repeat_password: Joi.ref("password"),
-    referrer: Joi.string()
-      .min(21)
-      .optional(),
-    access_level: Joi.number()
-      .max(3)
-      .default(1)
-      .optional(),
-
-    // role: Joi.string().min(21).required(),
-    // user should not be able to set his role only admin should be able to set anothers users role
-  }).with("password", "repeat_password");
 
   return {
     method: "POST",
     path: `/auth/register`,
-    config: {
-      handler: create,
+    config: {     
+      handler: registerMe,
       validate: {
         payload: payloadSchema,
       },

@@ -1,11 +1,9 @@
 "use strict";
-const { Op } = require("sequelize");
-const boom = require("@hapi/boom");
 
 const BankDetailController = (server) => {
   const {
-    db: { BankDetail, sequelize, Profile },
-
+    db: { BankDetail, sequelize },
+    boom,
     helpers: { filters, paginator },
   } = server.app;
   /* const queryInterface = sequelize.getQueryInterface();

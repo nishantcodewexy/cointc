@@ -2449,3 +2449,1048 @@ footer .btn-brand {
 .custom-switch .custom-control-label::after{
     background-color: #FFFFFF;
 }
+
+/* #join */
+
+#join {
+    padding: 50px 0;
+}
+
+#join .join-row {
+    box-shadow: 0 0 10px 3px rgb(0 0 0 / 15%);
+    border-radius: 5px;
+    padding: 30px;
+}
+
+#join h4 {
+    font-size: 24px;
+    color: #000;
+    font-weight: 700;
+    text-align: center;
+}
+
+#join p {
+    white-space: pre-line;
+    color: #000;
+    font-size: 18px;
+    text-align: center;
+}
+
+#join .login_p p {
+    white-space: none;
+    font-size: 14px;
+    margin-top: 10px;
+}
+
+#join .join-hr {
+    border-color: #C4C4C4;
+}
+
+#join form .form-label {
+    margin-bottom: 8px;
+    font-size: 18px;
+    color: #000;
+}
+
+#join form .form-control {
+    border-color: #000;
+    border-radius: 0;
+}
+
+#join #signUp .read--1,#join #signUp .ct--1 {
+    font-size: 12px;
+}
+
+#join #signUp .rm--1,#join #signUp .fp--1 {
+    font-size: 16px;
+}
+
+#join #signUp .ct--1 ,#join #signUp .fp--1 {
+    color: #0059FF;
+}
+
+#join #signUp .coin-password-required {
+    background-color: #F1F1FF;
+    padding: 20px;
+}
+
+#join #signUp .btn_signup {
+    background-color: #0059FF;
+    color: #fff;
+    font-weight: 500;
+}
+
+#join #signUp .login_link {
+    color: #000;
+    font-size: 16px;
+}
+
+#join #signUp .coin-password-required ul li {
+    color: #0059FF;
+}
+
+#join #signUp .coin-password-required ul li:before {
+    content: "-";
+    margin-right: 5px;
+}
+
+#join #signUp .valid-time li {
+    color: #000;
+    text-align: center;
+    font-weight: 500;
+}
+
+#join #signUp .valid-time li:nth-child(2) {
+    font-size: 30px;
+    margin-top: 15px;
+}
+
+/* #walletModal */
+
+#withdrawCrypto {
+    padding: 50px 0;
+}
+
+#withdrawCrypto .main-bg {
+    box-shadow: 0 0 10px 3px rgb(0 0 0 / 15%);
+    border-radius: 5px;
+    padding: 30px;
+    overflow-x: auto;
+}
+
+#withdrawCrypto h4 {
+    font-size: 24px;
+    color: #000;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.wd-crypto {
+    padding: 10px 0;
+}
+
+#coin {
+    -webkit-appearance: none;
+}
+
+#withdrawCrypto .form-group .select-coin-input .form-control,
+#withdrawCrypto .form-group .address-input .form-control {
+    border: 1px solid #79818F;
+    border-radius: 0;
+    font-size: 13px;
+}
+
+#withdrawCrypto .form-group .select-coin-input select{
+    color: #4E4E4E !important;
+    font-weight: 500;
+}
+
+#withdrawCrypto .address-input .form-control{
+    color: #0059FF;
+}
+
+#withdrawCrypto .network-text p {
+    color: #000;
+    font-weight: 500;
+}
+
+#withdrawCrypto .amount-input .input-group .form-control {
+    border: 1px solid #79818F !important;
+    border-radius: 0 !important;
+    font-size: 13px !important;
+    border-right: none !important;
+}
+
+#withdrawCrypto .amount-input .input-group .input-group-append {
+    border: 1px solid #79818F !important;
+    border-radius: 0 !important;
+    font-size: 13px !important;
+    border-left: none !important;
+}
+
+#withdrawCrypto .amount-input .input-group .input-group-append .input-group-text {
+    border: none !important;
+    padding: 0px 12px;
+    background: none;
+    font-size: 13px;
+}
+
+#withdrawCrypto .amount-input p {
+    font-size: 12px;
+}
+
+#withdrawCrypto .amount-input p span{
+    color: #0059FF;
+}
+
+#withdrawCrypto .form-hr-bottom {
+    border-bottom:1px solid #79818F;
+}
+
+#withdrawCrypto .wd-info .fa-info-circle {
+    color: #471DFF;
+}
+
+#withdrawCrypto .wd-info p {
+    font-weight: 500;
+    font-size: 18px;
+}
+
+#withdrawCrypto .wd-info ul {
+    padding-left: 20px;
+    list-style: disc !important;
+    font-size: 14px;
+}
+
+#withdrawCrypto .wd-info ul li {
+    list-style: disc !important;
+}
+
+#withdrawCrypto .wa-icon label span:nth-child(1)::after {
+    position: absolute;
+    content: "";
+    font-family: 'Font Awesome 5 Pro';
+    top: 0;
+    color: #5C59F5;
+}
+
+#withdrawCrypto .deposit-address-img .card{
+    border: none !important;
+}
+
+#withdrawCrypto .deposit-address-img .card .card-body .card-text-p{
+    color: #0059FF;
+}
+
+#walletModal .form-group label {
+    color: #000 !important;
+}
+
+/* #progressTransition, historyTransition */
+
+#progressTransition, #historyTransition {
+    margin: 50px 0;
+}
+
+#progressTransition .row , #historyTransition .row{
+    box-shadow: 0 0 10px 3px rgb(0 0 0 / 15%);
+    border-radius: 5px;
+    padding: 30px;
+}
+
+#progressTransition .progress-top ul li {
+    list-style: inside;
+    color: #000000;
+    font-weight: 500;
+}
+
+#progressTransition .progress-top .progress-income span {
+    margin-right: 10px;
+    font-weight: 400;
+    font-size: 25px;
+    color: #0059FF;
+}
+
+#progressTransition .progress-top .progress-income {
+    font-size: 18px;
+}
+
+#progressTransition .progress-top .progress-total {
+    line-height: 42px;
+}
+
+#progressTransition .progress-top dt {
+    color: #000;
+}
+
+.font-25 {
+    font-size: 25px;
+}
+
+#progressTransition .progress-top  dd {
+    color: #76808F;
+}
+
+#historyTransition h4 {
+    font-size: 25px;
+    font-weight: bold;
+    color: #000000;
+    line-height: 34px;
+}
+
+#historyTransition ul {
+    position: absolute;
+    right: 10px;
+    top: 0;
+}
+
+#historyTransition ul li {
+    float: left;
+    width: 140px;
+    height: 30px;
+    line-height: 30px;
+    text-align: center;
+    margin-left: 10px;
+}
+
+#historyTransition ul .on a {
+    background-color: #0059FF;
+    color: #fff;
+}
+
+#historyTransition ul li a {
+    display: inline-block;
+    width: 100%;
+    border: 2px solid #0059FF;
+    border-radius: 5px;
+    color: #0059FF;
+    font-weight: bold;
+    font-size: 13px;
+}
+
+#historyTransition table {
+    overflow-x: auto;
+    margin: 50px 0 30px;
+}
+
+#historyTransition table thead {
+    background: #DEDEDE;
+}
+
+#historyTransition table thead th:nth-child(1) {
+    width: 20%;
+}
+
+#historyTransition table thead th:nth-child(2) {
+    width: 15%;
+}
+
+#historyTransition table thead th:nth-child(3) {
+    width: 15%;
+}
+
+#historyTransition table thead th:nth-child(4) {
+    width: 15%;
+}
+
+#historyTransition table thead th:nth-child(5) {
+    width: 35%;
+}
+
+#historyTransition table thead th {
+    padding: 10px;
+    color: #000000;
+    font-weight: 600;
+}
+
+#historyTransition table tbody tr td {
+    padding: 15px 10px;
+}
+
+
+#historyTransition table tbody .time, #historyTransition table tbody .type, #historyTransition table tbody .asset,
+#historyTransition table tbody .amount,#historyTransition table tbody .txid {
+    color: #212833;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+#historyTransition table tbody tr:nth-child(2) {
+    border-bottom: 1px solid #C4C4C4 !important;
+}
+
+#historyTransition table tbody tr:nth-child(6) {
+    border-bottom: 1px solid #C4C4C4 !important;
+}
+
+#historyTransition table tbody tr:nth-child(8) {
+    border-bottom: 1px solid #C4C4C4 !important;
+}
+
+#historyTransition table tbody tr:nth-child(10) {
+    border-bottom: 1px solid #C4C4C4 !important;
+}
+
+#historyTransition table tbody tr:nth-child(12) {
+    border-bottom: 1px solid #C4C4C4 !important;
+}
+
+.text-red {
+    color: #FF0000 !important;
+}
+
+.text-green {
+    color: #00934C !important;
+}
+
+#historyTransition .indicator button {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    border: 0 none;
+}
+
+#historyTransition .indicator .on {
+    background-color: #EAECEF;
+    border-radius: 5px;
+}
+
+#historyTransition .indicator span {
+    display: inline-block;
+    width: 25px;
+    height: 25px;
+    line-height: 25px;
+    text-align: center;
+    cursor: pointer;
+}
+
+.table_container tbody .data-title {
+    color: #000;
+    font-weight: 600;
+    font-size: 18px;
+}
+
+.table_container tbody .no-record {
+    padding: 50px 0 !important;
+}
+
+.table_container tbody .no-record img {
+    width: 80px;
+}
+
+#historyTransition .time-select {
+    float: left;
+    margin-right: 30px;
+}
+
+#historyTransition .type-select {
+    float: left;
+    margin-right: 30px;
+}
+
+#historyTransition .asset-select {
+    float: left;
+    margin-right: 30px;
+}
+
+#historyTransition .time-select dd {
+    width: 193px;
+    border: 1px solid #4F4F4F;
+    color: #000000;
+    height: 35px;
+    line-height: 35px;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+#historyTransition .type-select dd select , #historyTransition .asset-select dd select{
+    width: 105px;
+    height: 35px;
+    border: 1px solid #4F4F4F;
+    align-items: center;
+    cursor: pointer;
+    padding: 0 10px;
+}
+
+#historyTransition .main-select {
+    margin-top: 50px;
+}
+
+#historyTransition .time-select dt,
+#historyTransition .type-select dt,
+#historyTransition .asset-select dt {
+    color: #575757;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+/**/
+
+#walletVerification {
+    padding: 50px 0;
+}
+
+#walletVerification .walletVerification-row {
+    box-shadow: 0 0 10px 3px rgb(0 0 0 / 15%);
+    border-radius: 5px;
+    padding: 30px;
+}
+
+#walletVerification h4 {
+    font-size: 24px;
+    color: #000;
+    font-weight: 700;
+    margin-bottom: 30px;
+}
+
+#walletVerification table thead tr th:nth-child(1) {
+    width: 25%;
+}
+
+#walletVerification table thead tr th:nth-child(2) {
+    width: 75%;
+}
+
+#walletVerification table tbody tr td:nth-child(1) {
+    color: #6A6A6A;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    font-size: 16px;
+}
+
+#walletVerification .network img {
+    width: 25px !important;
+    margin-right: 5px;
+}
+
+#walletVerification .table_container table tbody tr .network {
+    color: #000;
+    font-weight: 500;
+}
+
+#walletVerification .table_container table tbody tr td {
+    padding: 15px 10px;
+}
+
+#walletVerification form .form-group {
+    padding: 15px 10px;
+}
+
+#walletVerification form .form-group label{
+    color: #454545;
+    margin-bottom: 10px;
+}
+
+#walletVerification form .form-group small{
+    color: #6A6A6A;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+#walletVerification form .form-group .form-control {
+    border-color: #000;
+    border-radius: 0;
+}
+
+#walletVerification .btn-next .btn_next {
+    background-color: #0059FF;
+    color: #fff;
+    display: block;
+    width: 100%;
+}
+
+#walletVerification .valid-time {
+    text-align: center;
+}
+
+#walletVerification .valid-time .valid {
+    color: #000;
+    text-align: center;
+    font-weight: 500;
+}
+
+#walletVerification .valid-time .time {
+    color: #000;
+    font-size: 30px;
+    margin-top: 15px;
+}
+
+/* #sellbtc */
+
+#sellbtc {
+    padding: 50px 0;
+}
+
+#sellbtc .sell-btc-left-row {
+    box-shadow: 0 0 10px 3px rgb(0 0 0 / 15%);
+    border-radius: 5px;
+    padding: 30px;
+}
+
+#sellbtc h4 {
+    font-size: 24px;
+    color: #000;
+    font-weight: 700;
+}
+
+#sellbtc .sell-btc-left-row .billed {
+    color: #000;
+}
+
+#sellbtc .sell-btc-left-row .billed span {
+    width: 50%;
+}
+
+#sellbtc .sell-btc-left-row .billed span:nth-child(2) {
+    float: right;
+}
+
+#sellbtc .sell-btc-left-row .sellbtc-hr {
+    border-color: #C4C4C4;
+    margin-top: 30px;
+}
+
+#sellbtc .sell-btc-left-row dl dt,#sellbtc .sell-btc-left-row dl dd {
+    font-weight: 500;
+    color: #707070;
+}
+
+/*#bankTransfer*/
+
+#bankTransfer .banktransfer {
+    box-shadow: 0 0 10px 3px rgb(0 0 0 / 15%);
+    border-radius: 5px;
+    padding: 30px;
+}
+
+#bankTransfer h4 {
+    font-size: 18px;
+    color: #000;
+    font-weight: 700;
+}
+
+#bankTransfer h4 img {
+    width: 25px;
+    padding: 6px 0;
+    margin-bottom: 8px;
+}
+
+#bankTransfer .billed dl {
+    padding: 6px 0;
+}
+
+#bankTransfer .billed dl dt,#bankTransfer .billed dl dd{
+    color: #000;
+}
+/*#bankTransfer*/
+/* #sellbtc */
+
+#sellbtc .sellbtc-process {
+    margin-top: 20px;
+}
+
+#sellbtc .sellbtc-process h3 {
+    font-size: 18px;
+    color: #000;
+    margin-bottom: 15px;
+    font-weight: 500;
+}
+
+#sellbtc .sellbtc-process p {
+    font-size: 12px;
+    color: #000;
+    font-weight: 500;
+}
+
+#sellbtc .btn_sellbtc .btn_confirm {
+    background-color: #0059FF;
+    color: #fff;
+    margin-right: 20px;
+    font-weight: 500;
+}
+
+#sellbtc .btn_sellbtc .btn_dispute {
+    border:1px solid #9E9E9E;
+    color: #000;
+    font-weight: 500;
+}
+
+/*#selltips*/
+
+#selltips .sell-tip h4 {
+    color: #000;
+    font-size: 12px;
+    font-weight: 500;
+}
+
+#selltips .sell-tip ol {
+    margin-top: 20px;
+}
+
+#selltips .sell-tip ol li {
+    list-style: decimal;
+    margin-left: 15px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #000;
+}
+
+#sellbtc .sell-btc-right-row {
+    box-shadow: 0 0 10px 3px rgb(0 0 0 / 15%);
+    border-radius: 5px;
+}
+
+#sellbtc .sell-btc-right-row .sell-btc-right-row-top h4 {
+    color: #0059FF;
+    font-size: 30px;
+    font-weight: 400;
+    padding: 30px;
+}
+
+#sellbtc .warning-border {
+    margin: 0;
+    border-color: #C4C4C4;
+}
+
+#sellbtc #warning {
+    padding: 30px;
+}
+
+#warning p {
+    color: #4A4A4A;
+    font-weight: 500;
+    font-size: 13px;
+}
+
+#warning .sellbtc-contact {
+    padding: 15px 30px 30px 0;
+}
+
+/*#createAd*/
+
+#createAd {
+    padding: 50px;
+}
+
+#createAd .timeline-title h5 {
+    color: #000;
+    font-weight: 500;
+    font-size: 18px;
+}
+
+#createAd .form-group label {
+    color: #5A5A5A;
+    margin-bottom: 10px;
+}
+
+#createAd .crypto-icon img {
+    width: 25px !important;
+}
+
+#myProgress {
+  width: 100px;
+  background-color: grey;
+}
+
+#myBar {
+  width: 0%;
+  height: 5px;
+  background-color: green;
+}
+
+.sell-buy .nav-item {
+  width: 50%;
+}
+
+.text-black {
+  color: #000 !important;
+}
+
+.sell-buy {
+    box-shadow: 0 0 10px 3px rgb(0 0 0 / 15%);
+    border-radius: 5px;
+    padding: 0 30px 30px 30px;
+}
+
+.sell-buy .nav-item.active {
+  background-color: #C4C4C4;
+}
+
+.px-15 {
+  padding-right: 15px !important;
+  padding-left: 15px !important;
+}
+
+.left-bn,.right-bn {
+  border: 1px solid #8B8B8B;
+  border-radius: 0 !important;
+  background-color: #FFF !important;
+}
+
+.dropdown-menu.show {
+  width: 100%;
+}
+
+.text-cny {
+  color: #005A9B;
+}
+
+.mpq .form-group {
+  margin-bottom: 10px !important;
+}
+
+.pmt .form-control {
+  border-right: none !important;
+}
+
+::-webkit-input-placeholder { 
+  color: #000 !important;
+  font-weight: 500 !important; 
+}
+
+:-moz-placeholder { 
+  color: #000 !important;
+  font-weight: 500 !important; 
+}
+
+::-moz-placeholder { 
+  color: #000 !important;
+  font-weight: 500 !important; 
+}
+
+:-ms-input-placeholder { 
+  color: #000 !important;
+  font-weight: 500 !important; 
+}
+
+.input-right .input-group-text {
+  background-color: transparent !important;
+  border-left: none !important;
+  font-weight: 500 !important;
+  color: #000 !important;
+}
+
+.next-bn {
+  background-color: #0059FF !important;
+  color: #FFF !important;
+  font-weight: bold;
+  border-radius: 6px !important;
+}
+
+.my-dropdown-toggle .dropdown-toggle::after {
+  position: absolute !important;
+  right: 10% !important;
+  top: 40% !important;
+}
+
+.pmt .input-group-prepend .input-group-text {
+  background-color: transparent !important;
+  border: 1px solid #8B8B8B !important;
+}
+
+/*Timline*/
+
+.my-timeline .active {
+    color: #000;
+}
+
+.my-timeline {
+  margin: 0;
+  padding: 0;
+  list-style: none;  
+  counter-reset: step;
+  color: #666;
+}
+
+.my-timeline li {
+  float: left;    
+  text-align: center;
+  width: 215px;   
+  position: relative;  
+}
+
+.my-timeline li:before {
+  content: counter(step);
+  counter-increment: step;
+  line-height: 35px;
+  width: 35px;
+  height: 35px;
+  display: block;
+  border-radius: 100%;
+  background-color: #686A71 !important;
+  margin: 0 auto 15px auto;
+  color: #FFFFFF;
+}
+
+.my-timeline li:after {
+  content: '';
+  width: 100%;
+  height: 1px;
+  background: #DDD;
+  display: block;
+  position: absolute;
+  color: #000000;
+  top: 17.5px;
+  left: 50%;
+  z-index: -1;
+}
+
+.my-timeline li:last-child:after {
+  content: none;
+}
+
+.my-timeline .active:before {
+  background-color: #0059FF !important;  
+}
+.my-timeline li:first-child:after {
+  background: #C4C4C4;  
+}
+
+/*#crateAd-01*/
+
+#createAdsTop {
+    padding: 50px 0 20px 0;
+}
+
+#createAds {
+    margin-bottom: 50px;
+}
+
+#createAds .craeat-main-box {
+    position:relative;
+    box-shadow:0 0 10px 3px rgba(0,0,0,0.15);
+    padding:30px 20px;
+    border-radius:5px;
+}
+
+#createAds .craeat-main-box .table_container table {
+    border: 1px solid #777777;
+}
+
+#createAds h4 {
+    font-size:25px;
+    font-weight:bold;
+    color:#212833;
+    line-height:34px;
+}
+
+#createAds ul {
+    position:absolute;
+    right:25px;
+    top:30px;
+}
+
+#createAds ul li {
+    float:left;
+    width:140px;
+    height:30px;
+    line-height:30px;
+    text-align:center;
+    margin-left:10px;
+}
+
+#createAds ul li a {
+    display:inline-block;
+    width:100%;
+    border:2px solid #0059FF;
+    border-radius:5px;
+    color:#0059FF;
+    font-weight:bold;
+    font-size:13px;
+    
+}
+
+#createAds ul .on a {
+    background-color:#0059FF;
+    color:#fff;
+}
+
+#createAds .table_container {
+    overflow:auto;
+}
+
+#createAds table {
+    width:100%;
+    min-width:530px;
+    overflow-x:auto;
+    margin:50px 0px 0px 0px;
+}
+
+#createAds table thead th {
+    padding:10px;
+    color:#0059FF;
+    font-weight:400;
+}
+
+#createAds table thead th:nth-child(1) {
+    width:5%
+}
+
+#createAds table thead th:nth-child(2) {
+    width:15%
+}
+
+#createAds table tbody tr td {
+    padding:5px 10px;
+    color: #000;
+}
+
+#createAds table tbody .coin img {
+    float:left;
+    width:25px;
+    margin-right:10px;
+    margin-top:5px;
+}
+
+#createAds .btn-delete {
+    background-color: #686A71;
+    color: #FFF;
+}
+
+#createAds .banktransfer {
+    border: 1px solid #A8A8A8;
+    padding: 10px;
+}
+
+#createAds .banktransfer h4 {
+    color: #0059FF;
+    font-size: 18px;
+}
+
+#createAds .banktransfer form input {
+    border: none;
+    background-color: #C4C4C4;
+    padding: 0;
+}
+
+#createAds .banktransfer .save-btn {
+    border: 1px solid #4e4e4e;
+    color: #4e4e4e;
+}
+
+.hr-dash {
+  border-top: 1px dashed #C4C4C4;
+}
+
+.pwt .dropdown-toggle::after {
+  margin-left: 2.1em !important;
+}
+
+.pwt-title p {
+  color: #000;
+  font-weight: bold;
+}
+
+.pwt .dropdown button {
+  border: 1px solid #C4C4C4;
+  background-color: #FFF;
+  color: #000;
+  font-weight: bold;
+}
+
+.pwt .dropdown-menu a {
+  font-weight: bold;
+}
+
+#createAds .btn-ref {
+    background-color: #FFC700;
+    color: #4E4E4E;
+}
+
+#createAds .btn-ref img {
+    width: 20px;
+}
+
+.create-3 .info-title {
+    color: #6c6c6c;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.create-3 .tearm-details {
+    padding: 15px;
+    border: 1px solid #777;
+    color: #787878;
+}

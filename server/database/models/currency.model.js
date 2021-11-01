@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
+const { tableNames } = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
   class Currency extends Model {
@@ -11,8 +12,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      const { User, Currency } = models;
+      const { User, Currency, Upload } = models;
       Currency.belongsTo(User);
+      Currency.belongsTo(Upload, {
+        foreignKey: {
+          name: "image_url",
+        },
+      });
     }
 
     toPublic() {
@@ -39,13 +45,16 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM("fiat", "crypto"),
         defaultValue: "crypto",
       },
+      image_url: {
+        type: DataTypes.STRING,
+      },
       archived_at: DataTypes.DATE,
     },
     {
       sequelize,
       modelName: "Currency",
       underscored: true,
-      tableName: "tbl_currencies",
+      tableName: tableNames?.CURRENCY || "tbl_currencies",
       paranoid: true,
       deletedAt: "archived_at",
       /* indexes: [

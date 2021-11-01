@@ -14,9 +14,7 @@ const glob = require("glob");
 const util = require("util");
 const { Op } = require("sequelize");
 const permissions = require("../permissions");
-const {
-  roles: { admin, basic },
-} = require("../consts");
+
 // const wallets = require("../wallets");
 const env = process.env.NODE_ENV || "development";
 
@@ -33,7 +31,7 @@ const {
   // SMTP_ACCESS_TOKEN,
   SECRET_KEY,
   CLIENT_URL,
-  // ETHERSCAN_API_KEY,
+  TATUM_API_KEY,
   // MAINNET_API_KEY,
 } = process.env;
 /****************************************************
@@ -44,7 +42,6 @@ assert(SMTP_HOST, "SMTP_HOST env configuration is required.");
 assert(SECRET_KEY, "SECRET_KEY env configuration is required.");
 assert(PORT, "PORT env configuration is required.");
 assert(HOSTNAME, "HOSTNAME env configuration is required.");
-assert(CLIENT_URL, "CLIENT_URL env configuration is required.");
 
 /****************************************************
  * JWT helpers
@@ -141,6 +138,7 @@ const config = {
   client_url: CLIENT_URL,
   secret: SECRET_KEY,
   jwt: JWTHelpers().config,
+  tatum_api_key: TATUM_API_KEY
 };
 /****************************************************
  * Mailer helpers
@@ -328,6 +326,7 @@ module.exports = {
   config,
   jwt: JWTHelpers(),
   mailer: MailerHelpers(),
+  
   // wallets: wallets,
   /****************************************************
    * Generates private/public key pair
@@ -493,3 +492,14 @@ module.exports = {
     return user?.access_level === 3;    
   } */
 };
+
+function renameKey(Obj, from = [], to = []) {
+  from.forEach((key, idx) => {
+    if (key in Obj) {
+      let temp = Obj[key];
+      delete Obj[key];
+      Obj[to[idx]] = temp;
+    }
+  });
+  return Obj;
+}
