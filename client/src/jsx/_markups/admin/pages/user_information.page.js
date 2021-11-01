@@ -45,8 +45,7 @@ function UserInformation(props) {
 export default UserInformation;
 
 function UsersPermissionTable({ services, useService }) {
-  const { useAccountService } = services;
-  const account = useAccountService();
+  const { account } = services;
 
   let bulkServicePayload = {
     "order[updatedAt]": "DESC",
@@ -93,7 +92,7 @@ function UsersPermissionTable({ services, useService }) {
 
   function Permit({ key, row }) {
     const [permission, setPermission] = useState(row?.permission);
-    const _account = useAccountService();
+    const { account: _account } = services;
 
     let { dispatchRequest: _d } = useService({
       [SERVICE?.UPDATE]: _account?.updateUser,
@@ -215,11 +214,10 @@ function UsersPermissionTable({ services, useService }) {
 }
 
 function UsersMembershipTable({ useService, services }) {
-  const { useGroupService } = services;
-  const group = useGroupService();
+  const { account } = services;
 
   let service = useService({
-    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
+    [SERVICE?.BULK_RETRIEVE]: account.bulkRetrieveUser,
   });
 
   const { dispatchRequest } = service;

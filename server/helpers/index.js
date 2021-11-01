@@ -172,7 +172,7 @@ const MailerHelpers = () => {
   
   return {
     /*************************************
-     * Maps email templates litrals to specified transform mapping
+     * Maps email templates literals to specified transform mapping
      *************************************/
     emailTemplateTransformer: (options) => {
       let {

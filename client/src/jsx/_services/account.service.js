@@ -39,28 +39,6 @@ class AccountService extends Services {
     );
   };
 
-  //STATISTICS ---------------------------------------------------------------------
-
-  /**
-   * Statistics payload types definition
-   * @typedef {Object} statsPayload
-   * @property {"user_stats" | "withdrawal_stats" | "ticket_stats" | "admin_stats" | "security_stats" | "kyc_stats" | "deposit_stats"} type
-   */
-
-  /**
-   *@function bulkRetreieveStats - Gets account statistics (***Admins only**)
-   * @param {statsPayload} params
-   * @returns
-   */
-  bulkRetreieveStat = async (params) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`stats`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
 
   // USER --------------------------------------------------------------------------------
 
