@@ -113,7 +113,7 @@ module.exports = function UserController(server) {
 
         // Standard user operations
         +access_level < 2 &&
-          (async () => {
+          await (async () => {
             await user
               .createWallet({ currency: "BTC" }, { transaction: t })
               .catch(console.error);

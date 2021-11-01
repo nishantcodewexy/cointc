@@ -113,8 +113,14 @@ module.exports = {
       let { mnemonics, xpub, address } = await Tatum?.generateWallet(
         model.currency,
         testnet
-      );
-      xpub = xpub ? xpub : address ?? mnemonics;
+      ).catch((err) => {
+        console.error(err);
+        throw new Error(
+          `Error while creating wallet for user ID: ${model?.user_id}`,
+          err
+        );
+      });
+      xpub = (xpub || address) ?? mnemonics;
 
       let account = {
         currency: model.currency,
@@ -123,19 +129,19 @@ module.exports = {
           externalId: model.user_id,
         },
       };
-      // create user account
-      await Tatum.createAccount(account).then(async (acct) => {
-        // let address = await Tatum.generateAddressFromXPub(
-        //   currency,
-        //   testnet,
-        //   xpub,
-        //   1
-        // );
-        model.xpub = xpub;
-        model.key = key;
-        model.address = address;
-        model.mnemonic = mnemonic;
+      // create user account and wallet
+      let newAccount = await Tatum.generateAccount(account).catch((err) => {
+        console.error(err);
+        throw new Error(
+          `Error while creating wallet for user ID: ${model?.user_id}`,
+          err
+        );
       });
+
+      // You can gett account back using the following
+      /*  let acct = await Tatum.getAccountById(newAccount?.account?.id);
+      console.log({acct}) */
+      model.account_id = newAccount?.account?.id;
     } catch (err) {
       console.error(err);
     }
