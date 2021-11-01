@@ -10,7 +10,7 @@ const tatum = require("@tatumio/tatum")
   user_id = '086d48d9-24bf-4720-bf67-f41dd5d7553c'
  */
 
-
+    
 class OffChain{
     /**
      * 
