@@ -21,7 +21,7 @@ function CurrencyMgmt({ services, useService }) {
     [SERVICE?.CREATE]: currency.create,
     [SERVICE?.UPDATE]: currency.update,
     [SERVICE?.REMOVE]: currency.remove,
-    [SERVICE?.BULK_RETRIEVE]: currency.bulkRetrieveCurrency,
+    [SERVICE?.BULK_RETRIEVE]: currency.bulkRetrieve,
   });
   const { dispatchRequest } = service;
 
@@ -151,7 +151,7 @@ function CurrencyMgmt({ services, useService }) {
 
       <div style={{ marginBottom: 60 }}>
         <TableGenerator
-          {...{ service }}
+          {...{ service}}
           mapping={{
             id: "Currency ID",
             iso_code: "symbol",

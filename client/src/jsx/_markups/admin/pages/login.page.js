@@ -20,17 +20,6 @@ const LoginPage = ({ services, useService }) => {
     [SERVICE?.LOGIN]: account?.login,
   });
 
-  function notifyError(error) {
-    toast.error(error || "Request Error!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
-
   return (
     <Formik
       initialValues={{ email: "", password: "" }}
@@ -53,6 +42,7 @@ const LoginPage = ({ services, useService }) => {
       onSubmit={(values, { setSubmitting }) => {
         const { email, password } = values;
         setSubmitting(true);
+        
         try {
           let request = async () =>
             await dispatchRequest({
@@ -162,6 +152,18 @@ const LoginPage = ({ services, useService }) => {
     </Formik>
   );
 };
+
+
+function notifyError(error) {
+  toast.error(error || "Request Error!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}
 
 export default LoginPage;
 

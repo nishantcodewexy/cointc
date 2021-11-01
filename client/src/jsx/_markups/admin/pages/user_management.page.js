@@ -16,6 +16,7 @@ import { SERVICE } from "../../../_constants";
 function UserManagement({ services, useService }) {
   const { group } = services;
 
+  // register services
   let service = useService({
     [SERVICE?.RETRIEVE]: group.retrieveUser,
     [SERVICE?.UPDATE]: group.updateUser,
@@ -24,27 +25,7 @@ function UserManagement({ services, useService }) {
     [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
   });
 
-  function notifySuccess() {
-    toast.success("Success !", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
-
-  function notifyError(error) {
-    toast.error(error || "Request Error!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
+ 
 
   const { dispatchRequest } = service;
 
@@ -180,9 +161,7 @@ function UserManagement({ services, useService }) {
       <Row>
         <Col>
           <TableGenerator
-            mapping={{
-              id: "user_id",
-            }}
+           
             {...{ service }}
             omit="*"
             extras={[
@@ -254,7 +233,8 @@ function UserManagement({ services, useService }) {
                   toggledPayload: popOverTarget,
                 } = useToggler();
                 const handleClick = (event) => {
-                  onPopoverOpen(popOverTarget ? null : event.currentTarget);
+                  alert('Gomand')
+                  // onPopoverOpen(popOverTarget ? null : event.currentTarget);
                   // onPopoverOpen(popOverTarget ? null : event.target);
                 };
 
@@ -350,3 +330,24 @@ function UserManagement({ services, useService }) {
 }
 
 export default UserManagement;
+function notifySuccess() {
+  toast.success("Success !", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}
+
+function notifyError(error) {
+  toast.error(error || "Request Error!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}

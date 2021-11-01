@@ -89,7 +89,7 @@
     "yup": "^0.32.8"
   },
   "scripts": {
-    "dev": "react-scripts start",
+    "dev": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -116,8 +116,7 @@
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@types/react-redux": "^7.1.18",
-    "sass": "^1.42.1",
-    "serve": "^12.0.1"
+    "sass": "^1.42.1"
   },
   "proxy": "http://localhost:8080"
 }
