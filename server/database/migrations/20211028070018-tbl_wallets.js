@@ -13,6 +13,12 @@ module.exports = {
           defaultValue: Sequelize.UUIDV4,
         },
         account_id: Sequelize.STRING,
+        derivation_key: Sequelize.INTEGER,
+        address: Sequelize.STRING,
+        frozen: {
+          type: Sequelize.BOOLEAN,
+          defaultValue: false,
+        },
         asset: {
           type: Sequelize.ENUM(Object.keys(walletTypes)),
           allowNull: false /* 
@@ -35,6 +41,24 @@ module.exports = {
               queryInterface.renameColumn(table_name, "asset", "currency", {
                 transaction: t,
               }),
+            !("derivation_key" in d) &&
+              queryInterface.addColumn(
+                table_name,
+                "derivation_key",
+                { type: DataTypes.INTEGER },
+                {
+                  transaction: t,
+                }
+              ),
+            !("address" in d) &&
+              queryInterface.addColumn(
+                table_name,
+                "address",
+                { type: DataTypes.STRING },
+                {
+                  transaction: t,
+                }
+              ),
           ]);
         });
       }

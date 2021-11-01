@@ -6,7 +6,7 @@ module.exports = (server) => {
       wallet: { bulkRetrieve },
     },
     helpers: {
-      permissions: { isUser },
+      permissions: { isAdminOrError },
     },
   } = server.app;
 
@@ -16,7 +16,7 @@ module.exports = (server) => {
     config: {
       pre: [
         {
-          method: isUser,
+          method: isAdminOrError,
           assign: "user",
         },
       ],

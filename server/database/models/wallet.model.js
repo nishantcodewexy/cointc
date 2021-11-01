@@ -32,13 +32,16 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       account_id: DataTypes.STRING,
-      /*  key: DataTypes.STRING,
+      derivation_key: DataTypes.INTEGER,
       address: DataTypes.STRING,
-      secret: DataTypes.STRING, */
       currency: {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      frozen: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      }
     },
     {
       sequelize,

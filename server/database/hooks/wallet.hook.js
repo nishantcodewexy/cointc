@@ -98,52 +98,55 @@ const Tatum = require("@tatumio/tatum");
 //     return { mnemonic, xpub, key, address, tatum_account_id };
 //   }
 // }
+const testnet = process.env.NODE_ENV === "development";
 
 module.exports = {
   /**
    * @function  beforeValidate
-   * @param {Object} model
+   * @param {Object} instance
    * @param {Object} options
    */
-  async beforeValidate(model) {
-    try {
-      model.currency = model.currency.toUpperCase();
-      let testnet = process.env.NODE_ENV === "development";
+  async beforeValidate(instance) {
+    instance.currency = instance.currency.toUpperCase();
 
-      let { mnemonics, xpub, address } = await Tatum?.generateWallet(
-        model.currency,
-        testnet
-      ).catch((err) => {
-        console.error(err);
-        throw new Error(
-          `Error while creating wallet for user ID: ${model?.user_id}`,
-          err
-        );
-      });
-      xpub = (xpub || address) ?? mnemonics;
+    let { mnemonics, xpub, address } = await Tatum?.generateWallet(
+      instance.currency,
+      testnet
+    );
+    xpub = (xpub || address) ?? mnemonics;
 
-      let account = {
-        currency: model.currency,
-        xpub,
-        customer: {
-          externalId: model.user_id,
-        },
-      };
-      // create user account and wallet
-      let newAccount = await Tatum.generateAccount(account).catch((err) => {
-        console.error(err);
-        throw new Error(
-          `Error while creating wallet for user ID: ${model?.user_id}`,
-          err
-        );
-      });
+    let account = {
+      currency: instance.currency,
+      xpub,
+      customer: {
+        externalId: instance.user_id,
+      },
+    };
+    // create user account and wallet
+    let newAccount = await Tatum.generateAccount(account);
 
-      // You can gett account back using the following
-      /*  let acct = await Tatum.getAccountById(newAccount?.account?.id);
+    // You can gett account back using the following
+    /*  let acct = await Tatum.getAccountById(newAccount?.account?.id);
       console.log({acct}) */
-      model.account_id = newAccount?.account?.id;
-    } catch (err) {
-      console.error(err);
+    instance.account_id = newAccount?.account?.id;
+    instance.derivation_key = newAccount?.address?.derivationKey;
+    instance.address = newAccount?.address?.address;
+    instance.frozen = newAccount?.account?.frozen;
+  },
+
+  async afterFind(findResult, options) {
+    if (findResult && !Array.isArray(findResult)) findResult = [findResult];
+    for (let instance of findResult) {
+      let account_id = instance?.dataValues?.account_id;
+      let customerId = instance?.dataValues?.user_id;
+      let currency = instance?.dataValues?.currency;
+      let derivationKey = instance?.dataValues?.derivation_key;
+      let account = await Tatum.getAccountById(account_id);
+
+      instance.dataValues = {
+        ...instance.dataValues,
+        ...account,
+      };
     }
   },
   // prioryty 1

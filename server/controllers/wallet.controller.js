@@ -39,7 +39,7 @@ module.exports = function WalletController(server) {
       } = req;
 
       try {
-        const queryFilters = await filters({ query, searchFields: ["email"] });
+        const queryFilters = await filters({ query, searchFields: ["account_id"] });
         const options = {
           ...queryFilters,
         };
@@ -59,7 +59,7 @@ module.exports = function WalletController(server) {
     },
 
     // Fetch specific user wallet
-    async retrieve() {
+    async retrieve(req) {
       let {
         pre: { user },
         params: { address },
@@ -69,7 +69,7 @@ module.exports = function WalletController(server) {
         where = { address };
         result = await Wallet.findOne({
           where,
-        }).toPublic();
+        });
 
         return result
           ? { result }
@@ -78,7 +78,8 @@ module.exports = function WalletController(server) {
         console.error(err);
       }
     },
-    async retrieveMe() {
+
+    async retrieveMe(req) {
       let {
         pre: { user },
       } = req;
@@ -87,14 +88,10 @@ module.exports = function WalletController(server) {
         where = {
           user_id: user?.id,
         };
-        let attributes = [
-          [sequelize.fn("count", "address"), "count"],
-          [sequelize.fn("count" /* wallet balance */), "total_balance"],
-        ];
+
         result = await Wallet.findAll({
           where,
-          attributes,
-        }).toPublic();
+        })
 
         return { result };
       } catch (err) {
