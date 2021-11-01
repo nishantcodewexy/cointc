@@ -25,21 +25,23 @@ module.exports = function WalletController(server) {
     create: async (req) => {
       const {
         pre: user,
-        params: { asset },
+        params: { currency },
       } = req;
-      return await User.findByPk(user)
-        .createWallet({ asset })
-        .toPublic();
+      return await User.findByPk(user).createWallet({ asset: currency });
     },
+
     // RETRIEVE ----------------------------------------
-    bulkRetrieve: async (req) => {
+    async bulkRetrieve(req) {
       let {
         pre: { user },
         query,
       } = req;
 
       try {
-        const queryFilters = await filters({ query, searchFields: ["account_id"] });
+        const queryFilters = await filters({
+          query,
+          searchFields: ["account_id"],
+        });
         const options = {
           ...queryFilters,
         };
@@ -91,7 +93,7 @@ module.exports = function WalletController(server) {
 
         result = await Wallet.findAll({
           where,
-        })
+        });
 
         return { result };
       } catch (err) {
@@ -99,19 +101,9 @@ module.exports = function WalletController(server) {
       }
     },
 
-    // Fetch total user wallet balance
-    totalBalance: async (req) => {
-      let {
-        pre: { user },
-      } = req;
-      //TODO: Aggregate wallet amount
-    },
-    // Fetch specific user wallet balance
-    balanceOf: async (req) => {
-      let {
-        pre: { user },
-        payload: { address },
-      } = req;
-    },
+    async depositAsset(req) { },
+    async withdrawAsset(req) { },
+    
+    async transferAsset(req){}
   };
 };

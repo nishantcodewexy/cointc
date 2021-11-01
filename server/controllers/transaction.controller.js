@@ -1,18 +1,20 @@
 "use strict";
-
+const Tatum = require('@tatumio/tatum');
 /**
  * @description - KYC Controller helpers
  * @param {Object} server  - Hapi Server Instance
  * @returns
  */
-function KYCController(server) {
+function TransactionController(server) {
   const {
-    db: { KYC },
+    db: { Wallet },
     boom,
   } = server.app;
   return {
-    async fetch(req, h) {
-      const { params } = req;
+    async retrieveByAddress() { },
+    async retrieveByAccount(){},
+    async bulkRetrieve(req) {
+      const { query, params: {address} } = req;
       try {
         return null;
       } catch (error) {
@@ -23,4 +25,4 @@ function KYCController(server) {
   };
 }
 
-module.exports = KYCController;
+module.exports = TransactionController;
