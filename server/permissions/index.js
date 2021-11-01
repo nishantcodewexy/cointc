@@ -6,10 +6,10 @@ module.exports = {
       auth: {
         credentials: { user },
       },
-      query: { sudo = false },
+      query: { sudo = false, faker = false},
     } = req;   
 
-    return {...user, sudo};
+    return {...user, sudo, faker};
   },
 
   isBasicOrError: async (req) => {
