@@ -2,8 +2,7 @@
 const { Model } = require("sequelize");
 const _ = require("underscore");
 const { tableNames } = require("../../consts");
-const hooks = require('../hooks/wallet.hook');
-const walletServices = require("../../services/wallet")
+const hooks = require("../hooks/wallet.hook");
 
 module.exports = (sequelize, DataTypes) => {
   class Wallet extends Model {
@@ -16,7 +15,7 @@ module.exports = (sequelize, DataTypes) => {
       const { User, Wallet } = models;
       // User
       Wallet.belongsTo(User, {
-        foreignKey: "owner_id",
+        foreignKey: "user_id",
       });
     }
 
@@ -39,30 +38,29 @@ module.exports = (sequelize, DataTypes) => {
 
   Wallet.init(
     {
-      // owner_id: DataTypes.UUID,
-      // wallet_keystore: DataTypes.JSON,
-      // passphrase: DataTypes.STRING,
-      mnemonic: DataTypes.STRING,
-      mnemonic_index: {
-        type: DataTypes.INTEGER,
-        defaultValue: 0,
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
       },
-      xpub: DataTypes.STRING,
-      key: DataTypes.STRING,
+      account_id: DataTypes.STRING,
+      derivation_key: DataTypes.INTEGER,
       address: DataTypes.STRING,
-      secret: DataTypes.STRING,
       currency: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      
+      frozen: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+      }
     },
     {
       sequelize,
       modelName: "Wallet",
       underscored: true,
       tableName: tableNames?.WALLET || "tbl_wallets",
-      hooks
+      hooks,
     }
   );
   return Wallet;

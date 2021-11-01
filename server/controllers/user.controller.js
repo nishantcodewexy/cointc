@@ -112,22 +112,17 @@ module.exports = function UserController(server) {
         await user.createSecurity({}, { transaction: t });
 
         // Standard user operations
-        +access_level < 2 &&
-          (async () => {
-            await user
-              .createWallet({ currency: "BTC" }, { transaction: t })
-              .catch(console.error);
-
-            // Set referral link id any
-            if (others?.invite_code) {
-              const ref = await User.findOne({
-                where: {
-                  "profile.invite_code": invite_code,
-                },
-              });
-              ref && ref.addReferrer(user, { transaction: t });
-            }
-          })();
+        if (+access_level < 2) {
+          await user.createWallet({ currency: "BTC" }, { transaction: t });
+          if (others?.invite_code) {
+            const ref = await User.findOne({
+              where: {
+                "profile.invite_code": invite_code,
+              },
+            });
+            ref && ref.addReferrer(user, { transaction: t });
+          }
+        }
 
         //TODO Send mail to user
 

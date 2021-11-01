@@ -43,7 +43,7 @@ function retrieve(server) {
         .alphanum()
         .min(26)
         .max(35)
-        .optional()
+        .required()
         .error(
           boom.badData("Required input <address::string(26, 35)> is invalid")
         ),
