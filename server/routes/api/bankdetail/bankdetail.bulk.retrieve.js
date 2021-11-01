@@ -14,7 +14,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/bank-detail/bulk",
+    path: "/bank-detail",
     config: {
       pre: [
         {

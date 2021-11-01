@@ -15,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "DELETE",
-    path: "/currency/bulk",
+    path: "/currency",
     config: {
       response: {
         emptyStatusCode: 204

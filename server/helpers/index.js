@@ -404,6 +404,7 @@ module.exports = {
    *
    * @param {Object} args
    * @param {Object} args.query
+   * @param {Object} args.extras
    * @param {String[]} args.searchFields
    * @returns {Object}
    */

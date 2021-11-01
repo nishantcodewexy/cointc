@@ -15,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "PATCH",
-    path: "/currency/bulk",
+    path: "/currency",
     config: {
       pre: [
         [

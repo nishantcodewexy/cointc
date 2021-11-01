@@ -41,10 +41,18 @@ const AdvertController = (server) => {
       const {
         params: { id },
         payload: { force = false },
+        pre:{user}
       } = req;
 
+
       try {
-        let where = { id };
+        let where
+        if(user.isAdmin||user.isSuperAdmin){
+          where = { id };
+        }else{
+          where = { id,user_id:user.id }; 
+        }
+
         return { deleted: Boolean(await __destroy("Advert", where, force)) };
       } catch (error) {
         console.error(error);
@@ -70,6 +78,7 @@ const AdvertController = (server) => {
         query,
         pre: { user },
       } = req;
+      
       const queryFilters = await filters({
         query,
         searchFields: ["user_id"],

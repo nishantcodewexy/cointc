@@ -9,7 +9,13 @@ module.exports = {
       query: { sudo = false, faker = false},
     } = req;   
 
-    return {...user, sudo, faker};
+    return {
+      ...user, 
+      isAdmin:user?.isAdmin && sudo,
+      isSuperAdmin:user?.isSuperAdmin && sudo,
+      sudo, 
+      faker
+    };
   },
 
   isBasicOrError: async (req) => {
@@ -32,9 +38,10 @@ module.exports = {
       auth: {
         credentials: { user },
       },
+      query: { sudo = false},
     } = req;
     // if (!user) return false;
-    if (user?.access_level >= 2) return user;
+    if (user?.access_level >= 2 && sudo) return user;
     throw boom.forbidden("Unauthorized! User is not an administrator");
   },
 
@@ -43,9 +50,10 @@ module.exports = {
       auth: {
         credentials: { user },
       },
+      query: { sudo = false},
     } = req;
     // if (!user) return false;
-    if (user?.access_level >= 3) return user;
+    if (user?.access_level >= 3 && sudo) return user;
     throw boom.forbidden("Unauthorized! User is not an administrator");
   },
 };

@@ -24,7 +24,7 @@ const BankDetailController = (server) => {
       try {
         const queryOptions = {
           where: {
-            user_id: user.id,
+            ...(user?.isAdmin||user?.isSuperAdmin?{}:{user_id: user.id}),
             attributes: { exclude: ["user_id", "UserId"] },
           },
         };
@@ -78,7 +78,7 @@ const BankDetailController = (server) => {
       try {
         const queryOptions = {
           where: {
-            ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+            ...(user?.isAdmin || user?.isSuperAdmin ? {} : { user_id: user.id }),
             id,
           },
           validate: true,
@@ -142,7 +142,7 @@ const BankDetailController = (server) => {
         const queryOptions = {
           where: {
             id,
-            ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+            ...(user?.isAdmin||user?.isSuperAdmin ? {} : { user_id: user.id }),
           },
           force,
         };

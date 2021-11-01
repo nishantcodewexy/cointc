@@ -86,7 +86,7 @@ module.exports = function WalletController(server) {
       let where, result;
       try {
         where = {
-          user_id: user?.id,
+         ...(user?.isAdmin || user?.isSuperAdmin? {} :{ user_id: user?.id}),
         };
 
         result = await Wallet.findAll({
