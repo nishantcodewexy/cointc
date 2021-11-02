@@ -281,7 +281,11 @@ module.exports = function UserController(server) {
         } else {
           // update session user data
           const { profile, kyc, address } = payload;
-
+          await sequelize.transaction(async (t) => await Promise.all([
+            profile && user?.setProfile(profile),
+            kyc && user?.setKYC(kyc),
+            address && user.setAddresses(address)
+          ]));
           return boom.methodNotAllowed();
         }
       } catch (error) {
@@ -345,7 +349,6 @@ module.exports = function UserController(server) {
       }
     },
 
-  
     /**
      * @function remove - Remove single User
      * @param {Object} req
@@ -392,7 +395,6 @@ module.exports = function UserController(server) {
           ...queryFilters,
           // attributes: { exclude: ["password"] },
           include,
-        
         };
 
         if (sudo) {

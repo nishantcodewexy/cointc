@@ -32,14 +32,17 @@ module.exports = function WalletController(server) {
         .toPublic();
     },
     // RETRIEVE ----------------------------------------
-    bulkRetrieve: async (req) => {
+    find: async (req) => {
       let {
         pre: { user },
         query,
       } = req;
 
       try {
-        const queryFilters = await filters({ query, searchFields: ["account_id"] });
+        const queryFilters = await filters({
+          query,
+          searchFields: ["account_id"],
+        });
         const options = {
           ...queryFilters,
         };
@@ -58,8 +61,12 @@ module.exports = function WalletController(server) {
       }
     },
 
-    // Fetch specific user wallet
-    async retrieve(req) {
+    /**
+     * @function findByAddress - Find wallet by address
+     * @param {Object} req
+     * @returns
+     */
+    async findByAddress(req) {
       let {
         pre: { user },
         params: { address },
@@ -86,12 +93,12 @@ module.exports = function WalletController(server) {
       let where, result;
       try {
         where = {
-         ...(user?.isAdmin || user?.isSuperAdmin? {} :{ user_id: user?.id}),
+          ...(user?.isAdmin || user?.isSuperAdmin ? {} : { user_id: user?.id }),
         };
 
         result = await Wallet.findAll({
           where,
-        })
+        });
 
         return { result };
       } catch (err) {

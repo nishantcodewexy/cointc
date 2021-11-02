@@ -142,10 +142,11 @@ module.exports = {
       let currency = instance?.dataValues?.currency;
       let derivationKey = instance?.dataValues?.derivation_key;
       let account = await Tatum.getAccountById(account_id);
-
+      let user = await instance?.getUser();
       instance.dataValues = {
         ...instance.dataValues,
         ...account,
+        user: user?.dataValues,
       };
     }
   },

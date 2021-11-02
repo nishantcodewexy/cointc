@@ -177,17 +177,12 @@ function _updateSchema(server) {
         .error(boom.badData("<pname::string> is invalid")),
       mode: Joi.string()
         .optional()
-        .error(boom.badData("<mode::string> is invalid")),
-      is_verified: Joi.boolean().error(
-        boom.badData("<is_verified::bool> is invalid")
-      ),
+        .error(boom.badData("<mode::string> is invalid")),     
       payment_methods: Joi.any()
         .allow({})
         .optional()
         .error(boom.badData("<payment_methods::string> is invalid")),
-      suitability: Joi.number()
-        .integer()
-        .error(boom.badData("<suitability::integer> is invalid")),
+    
     })
       ?.optional()
       .error(boom.badData("<profile::object> is invalid")),

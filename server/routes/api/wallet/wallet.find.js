@@ -1,11 +1,9 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/wallet.schema");
-  const { params: paramsSchema } = Schema.retrieve(server);
   const {
     controllers: {
-      wallet: { retrieveMe },
+      wallet: { find },
     },
     helpers: {
       permissions: { isUser },
@@ -22,7 +20,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: retrieveMe,
+      handler: find,
       auth: "jwt",
     },
   };
