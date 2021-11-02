@@ -55,25 +55,34 @@ module.exports = (sequelize, DataTypes) => {
         index = 0;
       let generateFakeData = () => {
         let id = faker.datatype.uuid(),
-        mimetype = 
+        mimetype = faker.system.mimeType()
         
           
         return {
           id,
           mimetype,
           original: {
-            type: DataTypes.JSON,
-            defaultValue: {},
+            fieldname: faker.system.fileName(),
+            originalname: faker.system.fileName(),
+            filename:faker.system.fileName(),
+            mimetype,
+            destination: faker.system.filePath(),
+            path:faker.system.filePath(),
+            size: faker.datatype.number(10000000),
           },
           thumbnail: {
-            type: DataTypes.JSON,
-            defaultValue: {},
+            fieldname: faker.system.fileName(),
+            originalname: faker.system.fileName(),
+            filename:faker.system.fileName(),
+            mimetype,
+            destination: faker.system.filePath(),
+            path:faker.system.filePath(),
+            size: faker.datatype.number(10000000),
           },
-          description: DataTypes.STRING,
+          description: faker.lorem.sentence(),
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
           
-          created_by: null,
         };
       };
       if (count > 1) {

@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const { tableNames } = require("../../consts");
+const faker = require('faker')
 
 module.exports = (sequelize, DataTypes) => {
   class Policy extends Model {
@@ -16,6 +17,31 @@ module.exports = (sequelize, DataTypes) => {
           name: 'user_id'
         }
       })
+    }
+
+    static FAKE(count){
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        
+        
+          
+        return {
+          escrow_fee: faker.datatype.float(),
+          buyer_ad_fee: faker.datatype.float(),
+          seller_ad_fee: faker.datatype.float(),
+          min_confirmation_block: faker.datatype.number(),
+          
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
   Policy.init(

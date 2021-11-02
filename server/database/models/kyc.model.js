@@ -2,6 +2,7 @@
 const { Model } = require("sequelize");
 const _ = require("underscore");
 const { tableNames, KycStatusType } = require("../../consts");
+const faker = require("faker")
 
 module.exports = (sequelize, DataTypes) => {
   class KYC extends Model {
@@ -22,6 +23,36 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
       });
     }
+
+    static FAKE(count){
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let id = faker.datatype.uuid()
+        
+          
+        return {
+          id,
+          type: faker.helpers.randomize(["email", "id", "sms"]),
+          status: faker.helpers.randomize(Object.keys(KycStatusType)),
+          user_id: faker.datatype.uuid(),
+          archived_at: faker.datatype.datetime(),
+          document_id: faker.datatype.uuid(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+          
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
+    }
+
     toPublic() {
       return _.omit(this.toJSON(), []);
     }

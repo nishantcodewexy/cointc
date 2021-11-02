@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const { tableNames, currencies } = require("../../consts");
+const faker = require("faker")
 
 module.exports = (sequelize, DataTypes) => {
   class BankDetail extends Model {
@@ -16,6 +17,34 @@ module.exports = (sequelize, DataTypes) => {
       BankDetail.belongsTo(User, {
         foreignKey: "user_id",
       });
+    }
+
+    static FAKE(count){
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let id = faker.datatype.uuid()
+        
+          
+        return {
+          id,
+          account_no: faker.finance.account(10),
+          bank_name: faker.company.companyName(),
+          swift_code: faker.finance.iban(),      
+          currency: faker.helpers.randomize(Object.keys(currencies)),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+          
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
   BankDetail.init(

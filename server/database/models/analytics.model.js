@@ -1,6 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
 const { tableNames } = require("../../consts");
+const faker = require("faker")
+
 
 module.exports = (sequelize, DataTypes) => {
   class Analytics extends Model {
@@ -11,6 +13,42 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+    }
+
+    static FAKE(count){
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let id = faker.datatype.uuid()
+        
+          
+        return {
+          id,
+          user: {
+          },
+          wallet: { 
+
+           },
+          support_ticket: { 
+
+           },
+          kyc: { 
+
+           },
+          security: { 
+
+           }
+          
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
   Analytics.init(

@@ -3,6 +3,7 @@ const { Model } = require("sequelize");
 const _ = require("underscore");
 const hooks = require("../hooks/user.profile.hook");
 const { tableNames } = require("../../consts");
+const faker = require("faker")
 
 module.exports = (sequelize, DataTypes) => {
   class UserProfile extends Model {
@@ -22,9 +23,49 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "avatar_upload",
       });
     }
+
+
+    static FAKE(count){
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        
+        
+          
+        return {
+          profile_id: faker.datatype.uuid(),
+          user_id: faker.datatype.uuid(),
+          mode: faker.helpers.randomize(["standard"]),
+          invite_code: faker.lorem.sentence(),
+          email: faker.internet.email(),
+          suitability: faker.datatype.number(5),
+          date_of_birth: faker.datatype.datetime(),
+          phone: faker.phone.phoneNumber(),
+          payment_methods: {
+
+          },
+          pname: faker.name.firstName(),
+          lname: faker.name.lastName(),
+          oname: faker.name.middleName(),
+          archived_at: faker.datatype.datetime(),
+          
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
+    }
+
+
     toPublic() {
       return _.omit(this.toJSON(), []);
     }
+
   }
 
   UserProfile.init(
