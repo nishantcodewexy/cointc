@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
       });
     }
-
+    
     toPublic() {
       return _.omit(this.toJSON(), []);
     }

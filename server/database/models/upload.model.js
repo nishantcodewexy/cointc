@@ -1,7 +1,10 @@
 "use strict";
 const { Model } = require("sequelize");
 const del = require("del");
+const faker = require("faker");
 const { mimeTypes, FILE_UPLOAD_PATH, tableNames } = require("../../consts");
+
+
 
 module.exports = (sequelize, DataTypes) => {
   class Upload extends Model {
@@ -27,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       ]);
     }
 
+
     /**
      *
      * @param {Sting} filepath
@@ -41,6 +45,44 @@ module.exports = (sequelize, DataTypes) => {
       const { User, Upload } = models;
 
       Upload.belongsTo(User);
+    }
+
+
+
+    static FAKE(count){
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let id = faker.datatype.uuid(),
+        mimetype = 
+        
+          
+        return {
+          id,
+          mimetype,
+          original: {
+            type: DataTypes.JSON,
+            defaultValue: {},
+          },
+          thumbnail: {
+            type: DataTypes.JSON,
+            defaultValue: {},
+          },
+          description: DataTypes.STRING,
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+          
+          created_by: null,
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
 

@@ -2,6 +2,7 @@
 const { Model } = require("sequelize");
 const { countries, tableNames } = require("../../consts");
 
+
 module.exports = (sequelize, DataTypes) => {
   class ChatHistory extends Model {
     /**
