@@ -19,20 +19,23 @@ module.exports = {
     instance.password = await encrypt(instance.password);
   },
 
-  afterFind: async (findResult, options={trim: true}) => {
+  afterFind: async (findResult, options) => {
     if (!findResult) return;
-    let _array = [];
-    if (!Array.isArray(findResult)) _array = [findResult];
-    for (const instance of _array) {
+    let trim = options?.trim ?? true;
+    if (!Array.isArray(findResult)) findResult = [findResult];
+    for (const instance of findResult) {
       let profile = await instance.getProfile();
 
-      if (instance)
-        instance.dataValues = {
-          ...profile?.dataValues,
-          ...(options?.trim
-            ? _.omit(instance?.toJSON(), ["password"])
-            : instance?.dataValues),
-        };
+      // if (instance)
+      let compiled = {
+        ...profile?.toJSON(),
+        ...(trim
+          ? _.omit(instance?.toJSON(), ["password"])
+          : instance?.toJSON()),
+      };
+      instance.dataValues = {
+        ...compiled,
+      };
     }
   },
   // beforeDestroy:async (instance,options)=>{

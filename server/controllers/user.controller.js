@@ -255,7 +255,7 @@ module.exports = function UserController(server) {
                   if (suspend) {
                     userData = {
                       ...userData,
-                      active: !suspend
+                      active: !suspend,
                     };
                   }
                   let where = {
@@ -280,7 +280,9 @@ module.exports = function UserController(server) {
               });
         } else {
           // update session user data
-          const { profile } = payload;
+          const { profile, kyc, address } = payload;
+
+          return boom.methodNotAllowed();
         }
       } catch (error) {
         console.error(error);
@@ -389,6 +391,8 @@ module.exports = function UserController(server) {
           user: { fake, sudo, fake_count },
         },
       } = req;
+      let l = await User.findAll();
+      l;
       try {
         const queryFilters = await filters({
           query,
@@ -399,8 +403,9 @@ module.exports = function UserController(server) {
 
         const options = {
           ...queryFilters,
-          attributes: { exclude: ["password"] },
+          // attributes: { exclude: ["password"] },
           include,
+        
         };
 
         if (sudo) {
@@ -566,7 +571,7 @@ module.exports = function UserController(server) {
         let user = await User.findOne({
           where,
           logger: console.log,
-          trim: false
+          trim: false,
         });
 
         if (user) {
@@ -655,6 +660,6 @@ async function login(account, token) {
 
   return {
     token,
-    ...account,
+    user: { ...account.toPublic() },
   };
 }

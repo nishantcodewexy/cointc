@@ -33,36 +33,6 @@ module.exports = {
                     transaction: t,
                   }
                 ),
-              !("kyc_id" in d) &&
-                queryInterface.addColumn(
-                  table_name,
-                  "kyc_id", // new field name
-                  {
-                    type: Sequelize.UUID,
-                    references: {
-                      model: tableNames?.KYC || "tbl_kyc",
-                      key: "id",
-                    },
-                  },
-                  {
-                    transaction: t,
-                  }
-                ),
-              !("address_id" in d) &&
-                queryInterface.addColumn(
-                  table_name,
-                  "address_id", // new field name
-                  {
-                    type: Sequelize.UUID,
-                    references: {
-                      model: tableNames?.ADDRESS || "tbl_addresses",
-                      key: "id",
-                    },
-                  },
-                  {
-                    transaction: t,
-                  }
-                ),
               !("avatar_upload" in d) &&
                 queryInterface.addColumn(
                   table_name,
@@ -78,7 +48,6 @@ module.exports = {
                     transaction: t,
                   }
                 ),
-              
             ]);
           })
           .catch(console.error);

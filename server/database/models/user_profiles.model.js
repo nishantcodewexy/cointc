@@ -16,19 +16,10 @@ module.exports = (sequelize, DataTypes) => {
 
       Profile.belongsTo(User, {
         foreignKey: "user_id",
-        constraints: false,
-      });
-
-      Profile.belongsTo(KYC, {
-        foreignKey: "kyc_id",
       });
 
       Profile.belongsTo(Upload, {
         foreignKey: "avatar_upload",
-      });
-
-      Profile.belongsTo(Address, {
-        foreignKey: "address_id",
       });
     }
     toPublic() {
@@ -71,6 +62,8 @@ module.exports = (sequelize, DataTypes) => {
           max: 5,
         },
       },
+      date_of_birth: DataTypes.DATE,
+      phone: DataTypes.STRING,
       payment_methods: DataTypes.JSON,
       pname: { type: DataTypes.STRING, comment: "public name" },
       lname: { type: DataTypes.STRING, comment: "last name" },
@@ -91,24 +84,20 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  UserProfile.addHook("afterFind", async (foundResult) => {
-    if (!foundResult) return;
+  // UserProfile.addHook("afterFind", async (foundResult) => {
+  //   if (!foundResult) return;
 
-    // let consolidated = {};
-    if (!Array.isArray(foundResult)) foundResult = [foundResult];
-    for (const instance of foundResult) {
-      // Get address
-      instance.address = await instance.getAddress();
-      instance.kyc = await instance.getKYC();
+  //   // // let consolidated = {};
+  //   // if (!Array.isArray(foundResult)) foundResult = [foundResult];
+  //   // for (const instance of foundResult) {
+  //   //   // Get address
 
-      if (instance)
-        instance.dataValues = {
-          kyc: instance.kyc?.dataValues,
-          address: instance?.address?.dataValues,
-          ...instance?.dataValues,
-        };
-    }
-  });
+  //   //   if (instance)
+  //   //     instance.dataValues = {
+  //   //       ...instance?.dataValues,
+  //   //     };
+  //   // }
+  // });
 
   return UserProfile;
 };
