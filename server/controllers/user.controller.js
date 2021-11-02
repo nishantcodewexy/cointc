@@ -345,20 +345,7 @@ module.exports = function UserController(server) {
       }
     },
 
-    /**
-     * @function remove - Remove single User
-     * @param {Object} req
-     * @returns
-     */
-    async removeMe(req) {
-      let {
-        pre: { user },
-      } = req;
-      // only superadmins are allowed to permanently delete a user
-      let force = false;
-      let where = { id: user?.id };
-      return { deleted: Boolean(await __destroy("User", where, force)) };
-    },
+  
     /**
      * @function remove - Remove single User
      * @param {Object} req

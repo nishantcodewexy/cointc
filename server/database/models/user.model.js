@@ -201,6 +201,7 @@ module.exports = (sequelize, DataTypes) => {
       last_seen: DataTypes.DATE,
       login_at: DataTypes.DATE,
       verified: { type: DataTypes.BOOLEAN, defaultValue: false },
+      active: { type: DataTypes.BOOLEAN, defaultValue: true },
       access_level: {
         type: DataTypes.INTEGER,
         validate: {

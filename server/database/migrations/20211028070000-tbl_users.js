@@ -16,9 +16,9 @@ module.exports = {
                 {
                   type: Sequelize.UUID,
                   references: {
-                    model: tableNames?.USER || 'tbl_users',
-                    key: 'id'
-                  }
+                    model: tableNames?.USER || "tbl_users",
+                    key: "id",
+                  },
                 },
                 {
                   transaction: t,
@@ -53,6 +53,7 @@ module.exports = {
             notEmpty: true,
           },
         },
+        active: { type: Sequelize.BOOLEAN, defaultValue: true },
         permission: {
           type: Sequelize.BOOLEAN,
           defaultValue: true,

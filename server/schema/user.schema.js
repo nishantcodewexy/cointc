@@ -80,7 +80,7 @@ module.exports = function(server) {
         payload: Joi.alternatives().try(
           Joi.object(_update_schema),
           Joi.object({
-            data: Joi.array().items(_update_schema),
+            data: Joi.array().items(schema?.id),
           })
         ),
       };
