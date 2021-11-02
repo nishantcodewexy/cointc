@@ -46,7 +46,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: "crypto",
       },
       image_url: {
-        type: DataTypes.STRING,
+        type: DataTypes.UUID,
       },
       archived_at: DataTypes.DATE,
     },

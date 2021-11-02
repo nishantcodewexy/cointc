@@ -9,21 +9,7 @@ module.exports = {
       async function modifications(d) {
         try {
           await queryInterface.sequelize.transaction(async (t) => {
-            return await Promise.all([
-              !("image_url" in d) &&
-                queryInterface.addColumn(
-                  table_name,
-                  "image_url",
-                  {
-                    type: Sequelize.UUID,
-                    references: {
-                      model: tableNames?.UPLOAD || "tbl_uploads",
-                      key: "id",
-                    },
-                  },
-                  { transaction: t }
-                ),
-            ]);
+            return await Promise.all([]);
           });
         } catch (err) {
           console.error(err);
@@ -37,7 +23,13 @@ module.exports = {
           primaryKey: true,
           defaultValue: Sequelize.UUIDV4,
         },
-
+        image_url: {
+          type: Sequelize.UUID,
+          references: {
+            model: tableNames?.UPLOAD || "tbl_uploads",
+            key: "id",
+          },
+        },
         name: {
           type: Sequelize.STRING,
           unique: true,

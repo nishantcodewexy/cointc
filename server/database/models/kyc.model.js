@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       const { Upload, User } = models;
 
       KYC.belongsTo(Upload, {
-        foreignKey: "upload_id",
+        foreignKey: "document_id",
         as: "upload",
       });
 
