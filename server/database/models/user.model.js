@@ -30,6 +30,7 @@ module.exports = (sequelize, DataTypes) => {
         Order,
         Fee,
         Policy,
+        Referral,
       } = models;
 
       User.hasOne(User, {
@@ -38,6 +39,7 @@ module.exports = (sequelize, DataTypes) => {
           name: "created_by",
         },
       });
+
       User.hasMany(Wallet, {
         foreignKey: { name: "user_id", allowNull: false },
       });

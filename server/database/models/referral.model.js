@@ -11,31 +11,69 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       const { User, Referral } = models;
+
+      // User.belongsToMany(User, {
+      //   through: Referral,
+      //   as: "user_id",
+      //   // constraint: false,
+      //   onDelete: "CASCADE",
+      // });
+
+      // invitee
       User.belongsToMany(User, {
+        as: "user_referral",
         through: Referral,
-        as: "user_id",
-        constraint: false,
-        onDelete: "CASCADE",
+        foreignKey: "invited_id",
+        otherKey: "user_id",
       });
 
-      Referral.belongsTo(User, {
-        foreignKey: "referred_id",
-        constraint: false,
-      });
+      // Referral.belongsTo(User, {
+      //   through: Referral,
+      //   foreignKey: "referred_id",
+      //   onDelete: "CASCADE",
+      // });
+      Referral.belongsTo(User);
 
-      Referral.belongsTo(User, {
-        foreignKey: "user_id",
-        constraint: false,
-      });
+      // Referral.belongsTo(User, {
+      //   foreignKey: "user_id",
+      // });
+    }
+
+    static FAKE(count = 1) {
+      let rows = [],
+        result = {},
+        index = 0;
+
+      let generateFakeData = () => {
+        let id = faker.datatype.uuid();
+        return {
+          id,
+          commission_in_percent: 20,
+          user_id: faker.datatype.uuid(),
+          referred_id: faker.datatype.uuid(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+        };
+      };
+
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
   Referral.init(
     {
-      /* referrer_id: {
-      type: DataTypes.UUID,
-      allowNull: true
-    }, */
-      commission: {
+      id: {
+        primaryKey: true,
+        allowNull: false,
+        type: DataTypes.UUID,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      commission_in_percent: {
         type: DataTypes.DOUBLE,
         validate: {
           min: 0,

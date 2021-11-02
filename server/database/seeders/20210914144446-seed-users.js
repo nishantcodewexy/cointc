@@ -49,7 +49,7 @@ async function seedAdminUsers() {
         created_at: faker.date.recent(),
         updated_at: faker.date.recent(),
         access_level: 3,
-        verified: true
+        verified: true,
         // profile_id
       };
       userTableRecords.push(superadmin);
@@ -116,38 +116,68 @@ async function seedUsers() {
   const userTableRecords = [];
   const profileTableRecords = [];
   const securityTableRecords = [];
+  const referralTableRecords = [];
+  const ID = [];
+
+  let randID = () =>
+    ID?.length > 1 ? ID[Math.floor(Math.random() * (ID?.length + 1))] : ID[0];
 
   for (let i = 0; i < len; ++i) {
-    const id = faker.datatype.uuid();
-    const email = faker.internet.email();
+    const user_id = faker.datatype.uuid();
+    let email = faker.internet.email();
     let profile_id = faker.datatype.uuid();
+    ID.push(user_id);
+    let picked = randID();
 
-    userTableRecords.push({
-      id: id,
-      email,
-      password: faker.internet.password(),
-      access_level: 1,
-      created_at: faker.date.recent(),
-      updated_at: faker.date.recent(),
-      verified: faker.datatype.boolean(),
-    });
-
+    if (i === 5) {
+      email = "basic@mail.com";
+      const dummy = {
+        id: user_id,
+        email,
+        //password - p@55w0rd
+        password:
+          "$2a$10$IvL78DSLxzFjDjtwba5hcuZog4kc5XsooEBtmt0gZaWTmvwc7gO4u",
+        created_at: faker.date.recent(),
+        updated_at: faker.date.recent(),
+        access_level: 1,
+        verified: true,
+      };
+      userTableRecords.push(dummy);
+    }
+    if (ID.length && picked != user_id)
+      referralTableRecords.push({
+        id: faker.datatype.uuid(),
+        commission_in_percent: 20,
+        user_id: picked,
+        invited_id: user_id,
+      });
     profileTableRecords.push({
       profile_id,
       invite_code: nanoid(10),
       oname: faker.name.firstName(),
       lname: faker.name.lastName(),
       email,
-      user_id: id,
+      user_id: user_id,
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
     });
 
     securityTableRecords.push({
       id: faker.datatype.uuid(),
-      user_id: id,
+      user_id: user_id,
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
+    });
+    if (i == 5) continue;
+
+    userTableRecords.push({
+      id: user_id,
+      email,
+      password: faker.internet.password(),
+      access_level: 1,
+      created_at: faker.date.recent(),
+      updated_at: faker.date.recent(),
+      verified: faker.datatype.boolean(),
     });
   }
 
@@ -169,6 +199,11 @@ async function seedUsers() {
         this.queryInterface.bulkInsert(
           tableNames?.SECURITY || "tbl_user_securities",
           securityTableRecords,
+          { transaction: t }
+        ),
+        this.queryInterface.bulkInsert(
+          tableNames?.REFERRAL || "tbl_referrals",
+          referralTableRecords,
           { transaction: t }
         ),
       ])

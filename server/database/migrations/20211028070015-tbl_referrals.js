@@ -7,7 +7,12 @@ module.exports = {
     try {
           // Table field definitions
           let fields = {
-            commission: {
+            id: {
+              type: Sequelize.UUID,
+              primaryKey: true,
+              defaultValue: Sequelize.UUIDV4,
+            },
+            commission_in_percent: {
               type: Sequelize.DOUBLE,
               validate: {
                 min: 0,

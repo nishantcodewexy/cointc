@@ -179,7 +179,9 @@ module.exports = function UserController(server) {
     async create(req) {
       let {
         payload,
-        pre: { user },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
 
       try {
@@ -204,6 +206,9 @@ module.exports = function UserController(server) {
         let {
           payload,
           params: { id },
+          pre: {
+            user: { user, sudo },
+          },
         } = req;
 
         let target_user = await User.findByPk(id);
@@ -236,8 +241,7 @@ module.exports = function UserController(server) {
         const {
           payload,
           pre: {
-            user,
-            user: { fake, sudo, fake_count },
+            user: { user, fake, sudo, fake_count },
           },
         } = req;
         // allowed fields
@@ -281,11 +285,14 @@ module.exports = function UserController(server) {
         } else {
           // update session user data
           const { profile, kyc, address } = payload;
-          await sequelize.transaction(async (t) => await Promise.all([
-            profile && user?.setProfile(profile),
-            kyc && user?.setKYC(kyc),
-            address && user.setAddresses(address)
-          ]));
+          await sequelize.transaction(
+            async (t) =>
+              await Promise.all([
+                profile && user?.setProfile(profile),
+                kyc && user?.setKYC(kyc),
+                address && user.setAddresses(address),
+              ])
+          );
           return boom.methodNotAllowed();
         }
       } catch (error) {
@@ -306,37 +313,44 @@ module.exports = function UserController(server) {
       const {
         payload: { data = [], force = false },
         pre: {
-          user,
-          user: { fake, sudo, fake_count },
+          user: { user, fake, sudo, fake_count },
         },
       } = req;
+      let operation,
+        where,
+        error = null;
+
       try {
         if (sudo) {
           if (!data?.length)
             throw boom.badData("Expected an array of user IDs. None provided!");
-          return Boolean(
-            await sequelize.transaction(async (t) => {
+          operation = await sequelize.transaction(
+            async (t) =>
               await Promise.all([
                 data.map(async (id) => {
                   if (id === user?.id)
                     throw boom.methodNotAllowed(
                       "Cannot remove current user session data. Remove current user ID from data and try again or make request without sudo, force and data as request payloads!"
                     );
-                  let where = { id };
-                  await __destroy("User", where, force, { transaction: t });
+                  where = { id };
+                  return await User.destroy({ where, force, transaction: t });
                 }),
-              ]);
-            })
-          )
-            ? {
-                status: true,
-                message: `Successfully deleted ${data?.length} user records`,
-              }
-            : boom.internal({
-                status: false,
-                message: "Unable to complete operation",
-              });
+              ]).catch((err) => (error = err))
+          );
+        } else {
+          where = { id: user?.id };
+          operation = await __destroy("User", where, force).catch(
+            (err) => (error = err)
+          );
         }
+
+        return error == null
+          ? {
+              status: true,
+              message: `Success`,
+            }
+          : boom.internal(error.message, error);
+
         return Boolean(await __destroy("User", where, force))
           ? { status: true, message: "Successfully deleted a user record" }
           : boom.internal({
@@ -358,7 +372,9 @@ module.exports = function UserController(server) {
       let {
         payload: { force = false },
         params: { id },
-        pre: { user },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
       // only superadmins are allowed to permanently delete a user
       force = user?.isSuperAdmin ? force : false;
@@ -377,12 +393,10 @@ module.exports = function UserController(server) {
       const {
         query,
         pre: {
-          user,
-          user: { fake, sudo, fake_count },
+          user: { user, fake, sudo, fake_count },
         },
       } = req;
-      let l = await User.findAll();
-      l;
+
       try {
         const queryFilters = await filters({
           query,
@@ -426,8 +440,7 @@ module.exports = function UserController(server) {
       const {
         params: { id },
         pre: {
-          user,
-          user: { fake, sudo, fake_count },
+          user: { user, fake, sudo, fake_count },
         },
       } = req;
       try {
