@@ -25,10 +25,13 @@ module.exports = {
     if (!Array.isArray(findResult)) findResult = [findResult];
     for (const instance of findResult) {
       let profile = await instance.getProfile();
+      let addresses = await instance.getAddresses();
+      let kyc = await instance.getKyc();
 
-      // if (instance)
       let compiled = {
         ...profile?.toJSON(),
+        addresses,
+        kyc,
         ...(trim
           ? _.omit(instance?.toJSON(), ["password"])
           : instance?.toJSON()),

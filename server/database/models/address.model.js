@@ -34,10 +34,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       address_line: {
         type: DataTypes.STRING,
-      },
-      region: {
-        type: DataTypes.STRING,
-      },
+      },     
     },
     {
       sequelize,
