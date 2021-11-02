@@ -71,7 +71,6 @@ module.exports = (sequelize, DataTypes) => {
           max: 5,
         },
       },
-      is_verified: { type: DataTypes.BOOLEAN, defaultValue: false },
       payment_methods: DataTypes.JSON,
       pname: { type: DataTypes.STRING, comment: "public name" },
       lname: { type: DataTypes.STRING, comment: "last name" },

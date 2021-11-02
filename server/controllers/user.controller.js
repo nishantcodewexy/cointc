@@ -234,35 +234,54 @@ module.exports = function UserController(server) {
     async update(req) {
       try {
         const {
-          payload: { data, suspend = false },
+          payload,
           pre: {
             user,
             user: { fake, sudo, fake_count },
           },
         } = req;
-
         // allowed fields
         let fields = [];
+        if (sudo) {
+          let data = payload?.data || [];
+          let suspend = payload?.suspend || null;
 
-        return await sequelize.transaction(async (t) => {
-          return await Promise.all(
-            data.map(async ({ id, ...payload }) => {
-              if (suspend) {
-                payload = {
-                  ...payload,
-                  archived_at: new Date().toLocaleString(),
-                };
+          if (!data?.length)
+            throw boom.badData(`<data::array> cannot be empty`);
+          let error,
+            operation = await sequelize.transaction(async (t) => {
+              return await Promise.all(
+                data.map(async ({ id, ...userData }) => {
+                  if (suspend) {
+                    userData = {
+                      ...userData,
+                      active: !suspend
+                    };
+                  }
+                  let where = {
+                    id,
+                  };
+                  return await __update("User", userData, where, {
+                    transaction: t,
+                    fields,
+                  });
+                })
+              ).catch((err) => (error = err));
+            });
+          return Boolean(operation)
+            ? {
+                status: true,
+                message: `Successfully updated ${data?.length} user records`,
               }
-              let where = {
-                id,
-              };
-              return await __update("User", payload, where, {
-                transaction: t,
-                fields,
+            : boom.internal({
+                status: false,
+                message: "Unable to complete operation",
+                error: error,
               });
-            })
-          );
-        });
+        } else {
+          // update session user data
+          const { profile } = payload;
+        }
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -288,9 +307,7 @@ module.exports = function UserController(server) {
       try {
         if (sudo) {
           if (!data?.length)
-            throw boom.badRequest(
-              "Expected an array of user IDs. None provided!"
-            );
+            throw boom.badData("Expected an array of user IDs. None provided!");
           return Boolean(
             await sequelize.transaction(async (t) => {
               await Promise.all([
@@ -431,7 +448,7 @@ module.exports = function UserController(server) {
             ? await User.FAKE()
             : await User.findOne({
                 where: { id },
-              }).then(data => data?.toPublic());
+              });
 
           return target_user
             ? {
@@ -549,6 +566,7 @@ module.exports = function UserController(server) {
         let user = await User.findOne({
           where,
           logger: console.log,
+          trim: false
         });
 
         if (user) {
@@ -559,7 +577,7 @@ module.exports = function UserController(server) {
             ? {
                 id: user?.id,
               }
-            : (await decrypt(password, user.password))
+            : (await decrypt(password, user?.password))
             ? login(user, jwt.create(user))
             : boom.notFound("Incorrect password!");
         }
@@ -637,6 +655,6 @@ async function login(account, token) {
 
   return {
     token,
-    ...account?.toPublic(),
+    ...account,
   };
 }

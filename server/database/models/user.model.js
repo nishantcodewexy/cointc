@@ -137,7 +137,7 @@ module.exports = (sequelize, DataTypes) => {
           mode: null,
           invite_code: faker.random.alphaNumeric(10),
           suitability: faker.helpers.randomize([1, 2, 3, 4, 5]),
-          is_verified: faker.helpers.randomize([true, false]),
+          verified: faker.helpers.randomize([true, false]),
           payment_methods: null,
           pname: faker.internet.userName(),
           lname: faker.name.lastName,
@@ -200,6 +200,7 @@ module.exports = (sequelize, DataTypes) => {
       archived_at: DataTypes.DATE,
       last_seen: DataTypes.DATE,
       login_at: DataTypes.DATE,
+      verified: { type: DataTypes.BOOLEAN, defaultValue: false },
       access_level: {
         type: DataTypes.INTEGER,
         validate: {

@@ -78,18 +78,7 @@ module.exports = {
                     transaction: t,
                   }
                 ),
-              !("is_verified" in d) &&
-                queryInterface.addColumn(
-                  table_name,
-                  "is_verified", // new field name
-                  {
-                    type: Sequelize.BOOLEAN,
-                    defaultValue: true,
-                  },
-                  {
-                    transaction: t,
-                  }
-                ),
+              
             ]);
           })
           .catch(console.error);

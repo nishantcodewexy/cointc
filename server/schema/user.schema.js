@@ -65,7 +65,7 @@ module.exports = function(server) {
     updateByID() {
       const _update_schema = _updateSchema(server);
       return {
-        payload: Joi.object(_update_schema),
+        payload: Joi.object(_update_schema).allow({}),
         params: Joi.object({ id: schema.id?.required() }),
       };
     },
@@ -77,12 +77,12 @@ module.exports = function(server) {
     update() {
       const _update_schema = _updateSchema(server);
       return {
-        payload: Joi.object({
-          data: Joi.any().valid(
-            Joi.array().items(_update_schema),
-            Joi.object(_update_schema)
-          )
-        }),
+        payload: Joi.alternatives().try(
+          Joi.object(_update_schema),
+          Joi.object({
+            data: Joi.array().items(_update_schema),
+          })
+        ),
       };
     },
     // REMOVE ------------------------------------------------
@@ -168,27 +168,29 @@ function _updateSchema(server) {
     profile: Joi.object({
       lname: Joi.string()
         .optional()
-        .error(boom.badData("optional input <lname::string> is invalid")),
+        .error(boom.badData("<lname::string> is invalid")),
       oname: Joi.string()
         .optional()
-        .error(boom.badData("optional input <oname::string> is invalid")),
+        .error(boom.badData("<oname::string> is invalid")),
       pname: Joi.string()
         .optional()
-        .error(boom.badData("optional input <pname::string> is invalid")),
+        .error(boom.badData("<pname::string> is invalid")),
       mode: Joi.string()
         .optional()
-        .error(boom.badData("optional input <mode::string> is invalid")),
+        .error(boom.badData("<mode::string> is invalid")),
+      is_verified: Joi.boolean().error(
+        boom.badData("<is_verified::bool> is invalid")
+      ),
       payment_methods: Joi.any()
         .allow({})
         .optional()
-        .error(
-          boom.badData("optional input <payment_methods::string> is invalid")
-        ),
+        .error(boom.badData("<payment_methods::string> is invalid")),
+      suitability: Joi.number()
+        .integer()
+        .error(boom.badData("<suitability::integer> is invalid")),
     })
       ?.optional()
-      .error(
-        boom.badData("optional key <profile::string> is invalid or missing")
-      ),
+      .error(boom.badData("<profile::object> is invalid")),
   };
 }
 

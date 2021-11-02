@@ -49,6 +49,7 @@ async function seedAdminUsers() {
         created_at: faker.date.recent(),
         updated_at: faker.date.recent(),
         access_level: 3,
+        verified: true
         // profile_id
       };
       userTableRecords.push(superadmin);
@@ -62,7 +63,6 @@ async function seedAdminUsers() {
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
       email,
-      is_verified: faker.datatype.boolean()
     });
 
     securityTableRecords.push({
@@ -82,6 +82,7 @@ async function seedAdminUsers() {
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
       access_level: 2,
+      verified: faker.datatype.boolean(),
     });
   }
   await this.queryInterface.sequelize.transaction(
@@ -128,6 +129,7 @@ async function seedUsers() {
       access_level: 1,
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
+      verified: faker.datatype.boolean(),
     });
 
     profileTableRecords.push({
@@ -139,7 +141,6 @@ async function seedUsers() {
       user_id: id,
       created_at: faker.date.recent(),
       updated_at: faker.date.recent(),
-      is_verified: faker.datatype.boolean(),
     });
 
     securityTableRecords.push({

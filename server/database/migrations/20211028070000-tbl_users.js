@@ -62,6 +62,7 @@ module.exports = {
         updated_at: Sequelize.DATE,
         last_seen: Sequelize.DATE,
         login_at: Sequelize.DATE,
+        verified: { type: Sequelize.BOOLEAN, defaultValue: false },
         access_level: {
           type: Sequelize.INTEGER,
           validate: {

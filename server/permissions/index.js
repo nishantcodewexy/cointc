@@ -28,8 +28,8 @@ module.exports = {
       },
     } = req;
     let constraints = getQueryConstraints(req);
-    if (user?.access_level >= 2 && constraints?.sudo)
-      return { ...user, ...constraints };
+    if (user?.access_level >= 2)
+      return { ...user, ...constraints, sudo: true };
     throw boom.forbidden("Unauthorized! User is not an administrator");
   },
 
@@ -46,10 +46,11 @@ module.exports = {
       query,
     } = req;
     let constraints = getQueryConstraints(req);
-    if (user?.access_level >= 3 && constraints?.sudo)
+    if (user?.access_level >= 3)
       return {
         ...user,
         ...constraints,
+        sudo: true
       };
     throw boom.forbidden("Unauthorized! User is not an super administrator");
   },

@@ -47,7 +47,7 @@ module.exports = {
           unique: true,
         },
         type: {
-          type: Sequelize.ENUM("fiat", "crypto"),
+          type: Sequelize.ENUM(["fiat", "crypto"]),
           defaultValue: "crypto",
         },
         created_at: Sequelize.DATE,

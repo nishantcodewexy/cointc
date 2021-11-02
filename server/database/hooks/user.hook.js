@@ -1,4 +1,5 @@
 const { encrypt } = require("../../helpers");
+const _ = require("underscore");
 
 module.exports = {
   // prioryty 1
@@ -18,7 +19,7 @@ module.exports = {
     instance.password = await encrypt(instance.password);
   },
 
-  afterFind: async (findResult, options) => {
+  afterFind: async (findResult, options={trim: true}) => {
     if (!findResult) return;
     let _array = [];
     if (!Array.isArray(findResult)) _array = [findResult];
@@ -28,10 +29,11 @@ module.exports = {
       if (instance)
         instance.dataValues = {
           ...profile?.dataValues,
-          ...instance?.dataValues,
+          ...(options?.trim
+            ? _.omit(instance?.toJSON(), ["password"])
+            : instance?.dataValues),
         };
     }
-    console.log(findResult);
   },
   // beforeDestroy:async (instance,options)=>{
 
