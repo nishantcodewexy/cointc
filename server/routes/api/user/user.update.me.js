@@ -15,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "PUT",
-    path: "/user",
+    path: "/user/me",
     config: {
       pre: [
         {

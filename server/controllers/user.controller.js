@@ -1,8 +1,7 @@
 "use strict";
 const assert = require("assert");
-const faker = require("faker");
-const { login } = require("./security.controller");
 const dateFn = require("date-fns");
+const faker = require("faker");
 /**
  * @description - User controller
  * @param {Object} server  - Server instance
@@ -21,7 +20,7 @@ module.exports = function UserController(server) {
     },
     boom,
     config: { client_url },
-    helpers: { decrypt, mailer, jwt, paginator, filters },
+    helpers: { decrypt, mailer, jwt, generator, paginator, filters },
   } = server.app;
 
   async function modify(target_user, data, { profileFields, userFields }) {
@@ -162,6 +161,21 @@ module.exports = function UserController(server) {
      * @param {Object} req.pre - Request Prehandler object
      * @returns
      */
+    /**
+     * @function registerMe - registers or creates a new user record
+     * @param {Object} req - Request object
+     * @returns
+     */
+    async register(req) {
+      let { payload } = req;
+
+      try {
+        return createNew(payload);
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
     async create(req) {
       let {
         payload,
@@ -170,30 +184,6 @@ module.exports = function UserController(server) {
 
       try {
         return createNew(payload, user);
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
-      }
-    },
-
-    /**
-     * @function bulkCreate - Creates multiple user records (**Admin only**)
-     * @param {Object} req - Request object
-     * @param {Object} req.payload
-     * @param {Object[]} req.payload.data
-     * @returns
-     */
-    async bulkCreate(req) {
-      const {
-        payload: { data = [] },
-      } = req;
-
-      try {
-        return await sequelize.transaction(async (t) => {
-          return await Promise.all(
-            data?.map(async (user) => await createNew(user))
-          );
-        });
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -371,9 +361,18 @@ module.exports = function UserController(server) {
      * @returns
      */
     async bulkRetrieve(req) {
-      const { query } = req;
+      const {
+        query,
+        pre: {
+          user,
+          user: { fake, sudo, fake_count },
+        },
+      } = req;
       try {
-        const queryFilters = await filters({ query, searchFields: ["email"] });
+        const queryFilters = await filters({
+          query,
+          searchFields: ["email"],
+        });
 
         const include = filterAssociations(query?.include);
 
@@ -383,14 +382,21 @@ module.exports = function UserController(server) {
           include,
         };
 
-        let queryset = await User.findAndCountAll(options);
-        const { limit, offset } = queryFilters;
+        if (!sudo) {
+          return { result: fake ? await User.FAKE() : user?.dataValues};
+        } else {
+          let queryset = fake
+            ? await User.FAKE(fake_count)
+            : await User.findAndCountAll(options);
 
-        return paginator({
-          queryset,
-          limit,
-          offset,
-        });
+          const { limit, offset } = queryFilters;
+
+          return paginator({
+            queryset,
+            limit,
+            offset,
+          });
+        }
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -455,6 +461,85 @@ module.exports = function UserController(server) {
     },
 
     // OTHERS------------------------------------------------------------
+    async sendOTP(req, h) {
+      const {
+        payload: { id },
+      } = req;
+
+      try {
+        if (!id)
+          throw boom.badData("Required payload, <id::uuid> is not provided!");
+
+        let user = await User.findByPk(id);
+        if (!user) throw boom.notFound(`Account with id, ${id} not found!`);
+
+        let security = await user.getSecurity();
+        // generate OTP
+        let otp = generator.otp();
+        let otp_ttl = dfn.addMinutes(new Date(), 14);
+        let data = { otp, otp_ttl };
+
+        if (security) {
+          // if user created_at from now is less than a minute; don't create new otp
+          let now = new Date();
+          let former = new Date(security?.updatedAt);
+          let diff = dfn.differenceInSeconds(now, former, {
+            roundingMethod: "floor",
+          });
+          if (diff < 60)
+            return boom.badRequest(`Try again after ${60 - diff} secs`);
+          await security.update(data);
+        } else await user?.createSecurity(data);
+
+        // TODO: Send via email or SMS
+        return h
+          .response({
+            status: true,
+            message: "OTP sent successfully",
+            data: {
+              phone_number: user?.phone,
+              email: user?.email,
+            },
+          })
+          .code(200);
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
+      }
+    },
+
+    /**
+     * @function verifyOTP - Verifies user OTP code
+     * @param {Object} req
+     * @returns
+     */
+    async verifyOTP(req) {
+      const {
+        payload: { id, code },
+      } = req;
+
+      try {
+        if (!id || !code)
+          throw boom.badData(
+            "Required payload value, <id::uuid> or <code::string(5)> is not provided!"
+          );
+        // Find user
+        let user = await User.findByPk(id);
+        if (!user) throw boom.notFound(`Account with id, ${id} not found!`);
+
+        //  Check that otp exist and is valid
+        let security = await user.getSecurity();
+        let now = new Date();
+        let isValid = dfn.isBefore(now, security?.otp_ttl);
+
+        return security?.otp === code && isValid
+          ? login(user, jwt.create(user))
+          : boom.notFound("OTP code is incorrect. Try again!");
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
+      }
+    },
 
     /**
      * @function - Authenticates user
@@ -499,23 +584,6 @@ module.exports = function UserController(server) {
         return boom.boomify(error);
       }
     },
-
-    /**
-     * @function registerMe - registers or creates a new user record
-     * @param {Object} req - Request object
-     * @returns
-     */
-    async registerMe(req) {
-      let { payload } = req;
-
-      try {
-        return createNew(payload);
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
-      }
-    },
-
     async confirmByEmail(req) {
       let { email, token } = req.query;
       assert(email, boom.badRequest("Missing credential to confirm email"));
@@ -574,3 +642,13 @@ module.exports = function UserController(server) {
     },
   };
 };
+async function login(account, token) {
+  // Update the last_login
+  account.login_at = new Date();
+  await account?.save();
+
+  return {
+    token,
+    ...account?.toPublic(),
+  };
+}

@@ -5,7 +5,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      security: { sendOTP },
+      user: { sendOTP },
     },
     boom,
   } = server.app;

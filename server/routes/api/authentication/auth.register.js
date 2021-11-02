@@ -6,7 +6,7 @@ module.exports = (server) => {
 
   const {
     controllers: {
-      user: { registerMe },
+      user: { register },
     },
    
   } = server.app;
@@ -15,7 +15,7 @@ module.exports = (server) => {
     method: "POST",
     path: `/auth/register`,
     config: {     
-      handler: registerMe,
+      handler: register,
       validate: {
         payload: payloadSchema,
       },

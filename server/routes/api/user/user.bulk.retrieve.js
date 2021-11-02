@@ -6,17 +6,17 @@ module.exports = (server) => {
       user: { bulkRetrieve },
     },
     helpers: {
-      permissions: { isAdminOrError },
+      permissions: { isUser },
     },
   } = server.app;
 
   return {
     method: "GET",
-    path: "/user/bulk",
+    path: "/user",
     config: {
       pre: [
         {
-          method: isAdminOrError,
+          method: isUser,
           assign: "user",
         },
       ],

@@ -411,6 +411,7 @@ module.exports = {
   filters: async ({ query = {}, searchFields = [], extras = {} }) => {
     const q = query.q || "";
     const searchQuery = {};
+   
     const paranoid = query?.paranoid
       ? Boolean(JSON.parse(query?.paranoid))
       : true;

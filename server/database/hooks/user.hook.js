@@ -16,6 +16,21 @@ module.exports = {
   beforeCreate: async (instance, options) => {
     instance.password = await encrypt(instance.password);
   },
+
+  afterFind: async (findResult, options) => {
+    if (!findResult) return;
+
+    if (!Array.isArray(findResult)) findResult = [findResult];
+    for (const instance of findResult) {
+      let profile = await instance.getProfile();
+
+      if (instance)
+        instance.dataValues = {
+          ...profile?.dataValues,
+          ...instance?.dataValues,
+        };
+    }
+  },
   // beforeDestroy:async (instance,options)=>{
 
   // },
@@ -36,15 +51,15 @@ module.exports = {
   // afterDestroy:async (instance,options)=>{
 
   // },
-//   afterUpdate: async (instance, options) => {
-//     let profile = await instance.getProfile();
+  //   afterUpdate: async (instance, options) => {
+  //     let profile = await instance.getProfile();
 
-//     if (instance)
-//       instance.dataValues = {
-//         ...profile?.dataValues,
-//         ...instance?.dataValues,
-//       };
-//   },
+  //     if (instance)
+  //       instance.dataValues = {
+  //         ...profile?.dataValues,
+  //         ...instance?.dataValues,
+  //       };
+  //   },
   // afterSave:async (instance,options)=>{
 
   // },

@@ -23,7 +23,7 @@ module.exports = (server) => {
 
   return {
     method: "PUT",
-    path: "/user/bulk",
+    path: "/user",
     config: {
       pre: [
         {

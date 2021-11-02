@@ -15,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "DELETE",
-    path: `/user/bulk`,
+    path: `/user`,
     config: {
       pre: [
         {
