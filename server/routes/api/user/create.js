@@ -1,29 +1,29 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/user.schema");
-  const { payload: payloadSchema } = Schema.remove(server);
+  const Schema = require("../../../schema/user.schema")(server);
+  const { payload: payloadSchema } = Schema?.create();
 
   const {
     controllers: {
-      user: { removeMe },
+      user: { create },
     },
     helpers: {
-      permissions: { isUser },
+      permissions: { isAdminOrError },
     },
   } = server.app;
 
   return {
-    method: "DELETE",
-    path: "/user/me",
+    method: "POST",
+    path: "/user",
     config: {
       pre: [
         {
-          method: isUser,
+          method: isAdminOrError,
           assign: "user",
         },
       ],
-      handler: removeMe,
+      handler: create,
       auth: "jwt",
       validate: {
         payload: payloadSchema,

@@ -1,14 +1,12 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/user.schema");
-  const { params: paramsSchema, payload: payloadSchema } = Schema.remove(
-    server
-  );
+  const Schema = require("../../../schema/user.schema")(server);
+  const { params: paramsSchema, payload: payloadSchema } = Schema?.removeByID();
 
   const {
     controllers: {
-      user: { remove },
+      user: { removeByID },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -25,7 +23,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: remove,
+      handler: removeByID,
       auth: "jwt",
       validate: {
         params: paramsSchema,

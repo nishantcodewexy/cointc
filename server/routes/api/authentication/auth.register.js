@@ -1,8 +1,8 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/user.schema");
-  const { payload: payloadSchema } = Schema?.register(server);
+  const Schema = require("../../../schema/user.schema")(server);
+  const { payload: payloadSchema } = Schema?.register();
 
   const {
     controllers: {

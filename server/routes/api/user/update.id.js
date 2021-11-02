@@ -1,12 +1,12 @@
-const Joi = require("joi");
+"use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/user.schema");
-  const { payload: payloadSchema } = Schema.bulkRemove(server);
-
+  const Schema = require("../../../schema/user.schema")(server);
+  const { payload: payloadSchema, params: paramSchema } = Schema.updateByID();
+  
   const {
     controllers: {
-      user: { bulkRemove },
+      user: { updateByID },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -14,8 +14,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "DELETE",
-    path: `/user`,
+    method: "PUT",
+    path: "/user/{id}",
     config: {
       pre: [
         {
@@ -23,10 +23,11 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: bulkRemove,
+      handler: updateByID,
       auth: "jwt",
       validate: {
         payload: payloadSchema,
+        params: paramSchema,
       },
     },
   };

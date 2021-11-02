@@ -1,12 +1,11 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/user.schema");
-  const { payload: payloadSchema } = Schema?.create(server);
-
+  const Schema = require("../../../schema/user.schema")(server);
+  const { params: paramsSchema } = Schema.find();
   const {
     controllers: {
-      user: { create },
+      user: { findByID },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -14,8 +13,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "POST",
-    path: "/user",
+    method: "GET",
+    path: "/user/{id}",
     config: {
       pre: [
         {
@@ -23,10 +22,10 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: create,
+      handler: findByID,
       auth: "jwt",
       validate: {
-        payload: payloadSchema,
+        params: paramsSchema,
       },
     },
   };

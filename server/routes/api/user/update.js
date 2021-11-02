@@ -1,9 +1,12 @@
 "use strict";
-
+const Joi = require("joi");
 module.exports = (server) => {
+  const Schema = require("../../../schema/user.schema")(server);
+  const { payload: payloadSchema } = Schema.update();
+  
   const {
     controllers: {
-      user: { retrieveMe },
+      user: { update },
     },
     helpers: {
       permissions: { isUser },
@@ -11,8 +14,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "GET",
-    path: "/user/me",
+    method: "PUT",
+    path: "/user",
     config: {
       pre: [
         {
@@ -20,8 +23,9 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: retrieveMe,
+      handler: update,
       auth: "jwt",
+      validate: { payload: payloadSchema },
     },
   };
 };

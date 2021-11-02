@@ -1,12 +1,12 @@
-"use strict";
+const Joi = require("joi");
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/user.schema");
-  const { payload: payloadSchema } = Schema.updateMe(server);
+  const Schema = require("../../../schema/user.schema")(server);
+  const { payload: payloadSchema } = Schema.remove();
 
   const {
     controllers: {
-      user: { updateMe },
+      user: { remove },
     },
     helpers: {
       permissions: { isUser },
@@ -14,8 +14,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "PUT",
-    path: "/user/me",
+    method: "DELETE",
+    path: `/user`,
     config: {
       pre: [
         {
@@ -23,7 +23,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: updateMe,
+      handler: remove,
       auth: "jwt",
       validate: {
         payload: payloadSchema,

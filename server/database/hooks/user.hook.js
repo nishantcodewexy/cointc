@@ -14,14 +14,15 @@ module.exports = {
 
   // prioryty 4
   beforeCreate: async (instance, options) => {
+    if (!instance) return;
     instance.password = await encrypt(instance.password);
   },
 
   afterFind: async (findResult, options) => {
     if (!findResult) return;
-
-    if (!Array.isArray(findResult)) findResult = [findResult];
-    for (const instance of findResult) {
+    let _array = [];
+    if (!Array.isArray(findResult)) _array = [findResult];
+    for (const instance of _array) {
       let profile = await instance.getProfile();
 
       if (instance)
@@ -30,6 +31,7 @@ module.exports = {
           ...instance?.dataValues,
         };
     }
+    console.log(findResult);
   },
   // beforeDestroy:async (instance,options)=>{
 
