@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         BankDetail,
         Wallet,
         Address,
-        KYC,
+        Kyc,
         Security,
         Secession,
         Upload,
@@ -30,7 +30,6 @@ module.exports = (sequelize, DataTypes) => {
         Order,
         Fee,
         Policy,
-        Referral,
       } = models;
 
       User.hasOne(User, {
@@ -61,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: { name: "user_id", allowNull: false },
       });
 
-      User.hasOne(KYC, {
+      User.hasOne(Kyc, {
         as: "kyc",
         foreignKey: { name: "user_id", allowNull: false },
       });
@@ -114,7 +113,7 @@ module.exports = (sequelize, DataTypes) => {
     toPublic() {
       return _.omit(this.toJSON(), ["password"]);
     }
-    static FAKE(count = 1) {
+    static FAKE(count = 0) {
       let rows = [],
         result = {},
         index = 0;
@@ -168,7 +167,7 @@ module.exports = (sequelize, DataTypes) => {
           created_by: null,
         };
       };
-      if (count > 1) {
+      if (count > 0) {
         for (; index < count; ++index) {
           rows.push(generateFakeData());
         }

@@ -1,22 +1,26 @@
+"use strict";
+
 module.exports = (server) => {
   const {
     controllers: {
-      user: { archive },
+      bankdetail: { findByID },
     },
-    helpers: { jwt: {decodeUser} },
+    helpers: {
+      permissions: { isUser },
+    },
   } = server.app;
 
   return {
-    method: ["GET"],
-    path: `/account/statistics`,
+    method: "GET",
+    path: "/bank-detail/{id}",
     config: {
       pre: [
         {
-          method: decodeUser,
+          method: isUser,
           assign: "user",
         },
       ],
-      handler: ()=>{ },
+      handler: findByID,
       auth: "jwt",
     },
   };

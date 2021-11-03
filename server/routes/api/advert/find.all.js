@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-      advert: { bulkRetrieve },
+      advert: { findAll },
     },
     helpers: {
       permissions: {
@@ -14,7 +14,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/ad/bulk",
+    path: "/ad",
     config: {
       pre: [
         {
@@ -22,7 +22,7 @@ module.exports = (server) => {
           assign: 'user'
         }
       ],
-      handler: bulkRetrieve,
+      handler: findAll,
       auth: "jwt",
     },
   };

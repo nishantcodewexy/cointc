@@ -15,7 +15,7 @@ const BankDetailController = (server) => {
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
+    async findByID(req) {
       const {
         pre: { user },
         params: { id },
@@ -36,7 +36,7 @@ const BankDetailController = (server) => {
       }
     },
 
-    async bulkRetrieve(req) {
+    async find(req) {
       const {
         query,
         pre: { user },
@@ -68,7 +68,7 @@ const BankDetailController = (server) => {
 
     // UPDATE ---------------------------------------------------
 
-    async update(req) {
+    async updateByID(req) {
       const {
         payload,
         params: { id },
@@ -131,7 +131,7 @@ const BankDetailController = (server) => {
 
     // REMOVE ---------------------------------------------------
 
-    async remove(req) {
+    async removeByID(req) {
       try {
         const {
           payload: { force = false },
@@ -169,7 +169,7 @@ const BankDetailController = (server) => {
       }
     },
 
-    async bulkRemove(req) {
+    async remove(req) {
       const {
         payload: { data = [], force = false },
         pre: { user },
@@ -247,7 +247,7 @@ const BankDetailController = (server) => {
      * @function bulkRestore - bulk restore currency records
      * @param {Object} req
      */
-    async bulkRestore(req) {
+    async restoreByID(req) {
       const {
         payload: { data = [] },
         pre: { user },

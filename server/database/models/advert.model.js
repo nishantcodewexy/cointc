@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const { tableNames } = require("../../consts");
+const faker = require("faker");
 
 module.exports = (sequelize, DataTypes) => {
   class Advert extends Model {
@@ -22,6 +23,45 @@ module.exports = (sequelize, DataTypes) => {
           allowNull: false,
         },
       });
+    }
+
+    static FAKE(count = 0) {
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let user_id = faker.datatype.uuid();
+        return {
+          id: faker.datatype.uuid(),
+          user_id,
+          min_order_qty: faker.datatype.number(),
+          max_order_qty: faker.datatype.number(),
+          min_order_price: faker.datatype.float(),
+          max_order_price: faker.datatype.float(),
+          payment_methods: faker.helpers.randomize(["wechat", "alipay"]),
+          type: faker.helpers.randomize(["buy", "sell"]),
+          payment_time_limit: faker.datatype.number(),
+          price: faker.datatype.float(),
+          floating_price: faker.datatype.float(),
+          qty: faker.datatype.number(),
+          crypto: faker.finance.currencySymbol(),
+          fiat: faker.finance.currencyCode(),
+          remarks: faker.random.words(),
+          auto_reply_message: faker.random.words(),
+          trade_conditions: faker.random.words(),
+          published: faker.datatype.boolean(),
+          archived_at: faker.datatype.datetime(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+        };
+      };
+      if (count > 0) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
 
@@ -106,12 +146,12 @@ module.exports = (sequelize, DataTypes) => {
       crypto: {
         type: DataTypes.STRING,
         comment: "Kind of crypto currency",
-        allowNull: false
+        allowNull: false,
       },
       fiat: {
         type: DataTypes.STRING,
         comment: "Kind of fiat currency",
-        allowNull: false
+        allowNull: false,
       },
       remarks: DataTypes.STRING(255),
       auto_reply_message: {

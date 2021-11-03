@@ -2,7 +2,7 @@
 const { Model } = require("sequelize");
 const _ = require("underscore");
 const { tableNames, KycStatusType } = require("../../consts");
-
+const faker = require('faker')
 module.exports = (sequelize, DataTypes) => {
   class KYC extends Model {
     /**
@@ -11,19 +11,44 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { Upload, User } = models;
+      const { Upload, User, Kyc} = models;
 
-      KYC.belongsTo(Upload, {
+      Kyc.belongsTo(Upload, {
         foreignKey: "document_id",
         as: "upload",
       });
 
-      KYC.belongsTo(User, {
+      Kyc.belongsTo(User, {
         foreignKey: "user_id",
       });
     }
     toPublic() {
       return _.omit(this.toJSON(), []);
+    }
+    static FAKE(count = 0) {
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let user_id = faker.datatype.uuid();
+        return {
+          id: faker.datatype.uuid(),
+          document_id: faker.datatype.uuid(),
+          user_id,
+          archived_at: faker.datatype.datetime(),
+          status: faker.helpers.randomize(["PENDING", "ACCEPT", "DENY"]),
+          type: faker.helpers.randomize(["email", "id", "sms"]),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+        };
+      };
+      if (count > 0) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
 
@@ -48,7 +73,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "KYC",
+      modelName: "Kyc",
       underscored: true,
       tableName: tableNames?.KYC || "tbl_kyc",
       paranoid: true,

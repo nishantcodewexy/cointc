@@ -28,8 +28,7 @@ module.exports = {
       },
     } = req;
     let constraints = getQueryConstraints(req);
-    if (user?.access_level >= 2)
-      return { user, ...constraints, sudo: true };
+    if (user?.access_level >= 2) return { user, ...constraints, sudo: true };
     throw boom.forbidden("Unauthorized! User is not an administrator");
   },
 
@@ -50,7 +49,7 @@ module.exports = {
       return {
         user,
         ...constraints,
-        sudo: true
+        sudo: true,
       };
     throw boom.forbidden("Unauthorized! User is not an super administrator");
   },
@@ -63,10 +62,15 @@ function getQueryConstraints(req) {
     },
     query,
   } = req;
-  let sudo = query?.sudo ? Boolean(JSON.parse(query?.sudo)) : false;
+  let parse_sudo = query?.sudo
+  let sudo = query?.sudo && Boolean(JSON.parse(query.sudo)),
+    fake = query?.fake && Boolean(JSON.parse(query.fake)),
+    fake_count = query?.fake_count && JSON.parse(query.fake_count);
+
   sudo = sudo && user?.access_level > 1 ? true : false;
-  const fake = query?.fake ? Boolean(JSON.parse(query?.fake)) : false;
-  const fake_count = query?.fake_count ? JSON.parse(query?.fake_count) : 30;
+  fake = fake ?? false;
+  fake_count = fake_count ?? 30;
+
   return {
     sudo,
     fake,

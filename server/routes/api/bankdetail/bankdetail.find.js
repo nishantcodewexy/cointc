@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-        bankdetail: { bulkRetrieve },
+        bankdetail: { find },
     },
     helpers:{
       permissions:{
@@ -22,7 +22,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: bulkRetrieve,
+      handler: find,
       auth: "jwt",
     },
     

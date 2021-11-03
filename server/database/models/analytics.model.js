@@ -12,6 +12,43 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
     }
+
+    static FAKE(count = 0) {
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let user_id = faker.datatype.uuid();
+        return {
+          id: faker.datatype.uuid(),
+          user: {
+            recent: faker.datatype.number(),
+            total: faker.datatype.number(),
+            suspended: faker.datatype.number(),
+          },
+          wallet: { recent: faker.address.secondaryAddress },
+          support_ticket: {recent:faker.address.secondaryAddress,
+          total: faker.datatype.number(),
+        },
+          security: {recent:faker.address.secondaryAddress,
+          total: faker.datatype.number(),
+        },
+          kyc: {recent:faker.address.secondaryAddress,
+          total: faker.datatype.number(),
+        },
+          archived_at: faker.datatype.datetime(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+        };
+      };
+      if (count > 0) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
+    }
   }
   Analytics.init(
     {

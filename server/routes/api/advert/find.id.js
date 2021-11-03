@@ -5,7 +5,7 @@ module.exports = (server) => {
   const { params: paramsSchema } = Schema.retrieve(server);
   const {
     controllers: {
-      advert: { retrieve },
+      advert: { findByID },
     },
   } = server.app;
 
@@ -13,7 +13,7 @@ module.exports = (server) => {
     method: "GET",
     path: "/ad/{id}",
     config: {
-      handler: retrieve,
+      handler: findByID,
       auth: "jwt",
       validate: {
         params: paramsSchema,
