@@ -31,11 +31,7 @@ module.exports = function WalletController(server) {
     },
 
     // RETRIEVE ----------------------------------------
-<<<<<<< HEAD
-    async bulkRetrieve(req) {
-=======
     find: async (req) => {
->>>>>>> rf-models
       let {
         pre: { user },
         query,
