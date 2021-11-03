@@ -50,13 +50,17 @@ function UsersPermissionTable({ services, useService }) {
   let bulkServicePayload = {
     "order[updatedAt]": "DESC",
     "order[createdAt]": "DESC",
+    "fake": true,
+    " sudo": true,
     "options[paranoid]": false,
   };
 
   let service = useService({
-    [SERVICE?.BULK_RETRIEVE]: (_p = bulkServicePayload) =>
-      account.bulkRetrieveUser(_p),
-    [SERVICE?.UPDATE]: account?.updateUser,
+    [SERVICE?.RETRIEVE]: account.retrieveUser,
+    [SERVICE?.UPDATE]: account.updateUser,
+    [SERVICE?.DROP]: account.removeUser,
+    [SERVICE?.BULK_CREATE]: account.bulkCreateUser,
+    [SERVICE?.BULK_RETRIEVE]: account.bulkRetrieveUser,
   });
 
   const { dispatchRequest, addServiceHook } = service;
@@ -86,6 +90,10 @@ function UsersPermissionTable({ services, useService }) {
   useEffect(() => {
     dispatchRequest({
       type: SERVICE?.BULK_RETRIEVE,
+      payload: {
+        "fake": true,
+        "sudo": true
+      },
       toast: { success: notifySuccess, error: notifyError },
     });
   }, []);
@@ -312,9 +320,9 @@ function UsersMembershipTable({ useService, services }) {
             );
           },
           phone_number: ({ row }) => {
-            return row?.profile?.kyc?.phone ? (
-              <a href={`tel:${row?.profile?.kyc?.phone}`}>
-                {row?.profile?.kyc?.phone}
+            return row?.phone ? (
+              <a href={`tel:${row?.phone}`}>
+                {row?.phone}
               </a>
             ) : (
               "Not specified"

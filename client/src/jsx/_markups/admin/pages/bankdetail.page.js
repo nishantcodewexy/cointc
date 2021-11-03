@@ -29,7 +29,10 @@ function AdminBankDetails({ services, useService }) {
     dispatchRequest({
       type: SERVICE?.BULK_RETRIEVE,
       toast: { success: notifySuccess, error: notifyError },
-      /* payload: {}, */
+      payload: {
+        "sudo": true,
+        "fake": true,
+      },
     });
   }, []);
 

@@ -1,26 +1,64 @@
+import { useEffect} from "react";
 import { Card, Row, Col, Table } from "react-bootstrap";
 import PageTitle from "../layouts/PageTitle";
 // CONSTANTS
 import { SERVICE } from "../../../_constants";
+import { toast } from "react-toastify";
+import TableGenerator from "../components/TableGenerator.Component";
 
-function UserReferralMgmt() {
+function UserReferralMgmt({services, useService}) {
+  const { account } = services;
+
+  let service = useService({
+    [SERVICE?.BULK_RETRIEVE]: account.getReferrals,
+  });
+
+  const { dispatchRequest } = service;
+
+  useEffect(() => {
+    dispatchRequest({
+      type: SERVICE?.BULK_RETRIEVE,
+      payload: {
+        "order[updatedAt]": "DESC",
+        "order[createdAt]": "DESC",
+        "fake": true,
+        "sudo": true,
+        paranoid: false,
+      },
+      toast: { success: notifySuccess, error: notifyError },
+    });
+  }, []);
+  
   return (
     <>
-      <PageTitle activeMenu="User Referrals" motherMenu="User Management" />
-      <Row style={{ marginBottom: 60 }}>
+      {
+        <Row>
+         {console.log({...service})}
         <Col>
-          <Card
-            style={{
-              padding: 10,
+          <TableGenerator
+           
+            {...{ service }}
+            omit="*"
+            extras={[
+              "date",
+              "referrer_id",
+              'referree_id',
+              "commissions (%)"
+
+            ]}
+            transformers={{
+              email: ({ row }) => row?.user.email,
+              currency: ({row}) => row?.currency || " Not specified",
+              account_balance: ({row}) => row?.balance.accountBalance,
+              available_balance: ({row}) => row?.balance.availableBalance,
             }}
-          >
-            <UserReferralsTable />
-          </Card>
+          />
         </Col>
-      </Row>
+      </Row> }
     </>
   );
 }
+
 function UserReferralsTable() {
   const chackbox = document.querySelectorAll(".user_permission_single input");
   const motherChackBox = document.querySelector(".user_permission input");
@@ -105,3 +143,24 @@ function UserReferralsTable() {
 }
 
 export default UserReferralMgmt;
+function notifySuccess() {
+  toast.success("Success !", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}
+
+function notifyError(error) {
+  toast.error(error || "Request Error!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}

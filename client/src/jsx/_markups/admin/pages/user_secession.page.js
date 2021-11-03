@@ -94,6 +94,8 @@ function SecessionRequestTable({
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
         "options[paranoid]": false,
+        "sudo": true,
+        "fake": true,
       },
       toast: { success: notifySuccess, error: notifyError },
     });
