@@ -114,7 +114,7 @@ module.exports = {
       testnet
     );
     xpub = (xpub || address) ?? mnemonics;
-
+      
     let account = {
       currency: instance.currency,
       xpub,
