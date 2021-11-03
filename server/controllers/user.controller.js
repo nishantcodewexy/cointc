@@ -141,6 +141,7 @@ module.exports = function UserController(server) {
   }
 
   function filterAssociations(list = []) {
+    if (!Array.isArray(list)) list = [list];
     let valid = [];
     list.forEach((item) => {
       for (let assc in User.associations) {
