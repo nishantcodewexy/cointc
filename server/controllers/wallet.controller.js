@@ -25,12 +25,11 @@ module.exports = function WalletController(server) {
     create: async (req) => {
       const {
         pre: user,
-        params: { asset },
+        params: { currency },
       } = req;
-      return await User.findByPk(user)
-        .createWallet({ asset })
-        .toPublic();
+      return await User.findByPk(user).createWallet({ asset: currency });
     },
+
     // RETRIEVE ----------------------------------------
     find: async (req) => {
       let {
@@ -106,19 +105,9 @@ module.exports = function WalletController(server) {
       }
     },
 
-    // Fetch total user wallet balance
-    totalBalance: async (req) => {
-      let {
-        pre: { user },
-      } = req;
-      //TODO: Aggregate wallet amount
-    },
-    // Fetch specific user wallet balance
-    balanceOf: async (req) => {
-      let {
-        pre: { user },
-        payload: { address },
-      } = req;
-    },
+    async depositAsset(req) { },
+    async withdrawAsset(req) { },
+    
+    async transferAsset(req){}
   };
 };

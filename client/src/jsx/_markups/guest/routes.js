@@ -20,6 +20,8 @@ import { Mypage2 } from './components/my-page/Mypage2';
 import { Verification } from './components/verification/Verification';
 import { Frame01 } from './components/frame/Frame01';
 import { Sell_btc } from './components/trade/Sell_btc';
+import { Order_completed } from './components/trade/Order_completed';
+import { Order_completed2 } from './components/trade/Order_completed2';
 import { Wallet_th } from './components/wallet/Wallet_th';
 import { JoinForm } from './components/form/JoinForm';
 
@@ -44,6 +46,8 @@ const routes =[
   { url: "trade_crypto" , component:Trade_crypto ,title:''},
   { url: "trade" , component:Trade ,title:'P2P Trade'},
   { url: "sell_btc" , component:Sell_btc ,title:''},
+  { url: "order_completed" , component:Order_completed ,title:''},
+  { url: "order_completed2" , component:Order_completed2 ,title:''},
   { url: "support" , component:Support ,title:'Support'},
   { url: "affiliate" , component:Affiliate ,title:'Affiliate'},
   { url: "ad_create" , component:Ad_create ,title:'Create Ad'},

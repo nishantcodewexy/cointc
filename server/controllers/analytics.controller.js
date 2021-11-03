@@ -8,12 +8,17 @@ module.exports = function StatsController(server) {
       Sequelize: { Op },
       Security,
       User,
-      KYC,
+      Kyc,
     },
     helpers: { filters },
     boom,
   } = server.app;
   return {
+    /**
+     * @function userAnalytics
+     * @param {Object} req
+     * @returns
+     */
     async userAnalytics(req) {
       const { query } = req;
       const queryFilters = await filters({ query });
@@ -45,6 +50,12 @@ module.exports = function StatsController(server) {
         return boom.internal(err.message, err);
       }
     },
+
+    /**
+     * @function withdrawalAnalytics
+     * @param {Object} req
+     * @returns
+     */
     async withdrawalAnalytics(req) {
       const { query } = req;
       const queryFilters = await filters({ query });
@@ -74,12 +85,18 @@ module.exports = function StatsController(server) {
         return boom.internal(err.message, err);
       }
     },
+
+    /**
+     * @function depositAnalytics
+     * @param {Object} req
+     * @returns
+     */
     async depositAnalytics(req) {
       const { query } = req;
       const queryFilters = await filters({ query });
 
       try {
-        let userAnalytics = {
+        let analytics = {
           total: await User.count({
             where: { ...queryFilters?.where },
           }),
@@ -96,19 +113,25 @@ module.exports = function StatsController(server) {
           }),
         };
         return {
-          result: userAnalytics,
+          result: analytics,
         };
       } catch (err) {
         console.error(err);
         return boom.internal(err.message, err);
       }
     },
+
+    /**
+     * @function transactionAnalytics
+     * @param {Object} req 
+     * @returns 
+     */
     async transactionAnalytics(req) {
       const { query } = req;
       const queryFilters = await filters({ query });
 
       try {
-        let userAnalytics = {
+        let analytics = {
           total: await User.count({
             where: { ...queryFilters?.where },
           }),
@@ -125,19 +148,25 @@ module.exports = function StatsController(server) {
           }),
         };
         return {
-          result: userAnalytics,
+          result: analytics,
         };
       } catch (err) {
         console.error(err);
         return boom.internal(err.message, err);
       }
     },
+
+    /**
+     * @function supportTicketAnalytics
+     * @param {Object} req
+     * @returns
+     */
     async supportTicketAnalytics(req) {
       const { query } = req;
       const queryFilters = await filters({ query });
 
       try {
-        let userAnalytics = {
+        let analytics = {
           total: await User.count({
             where: { ...queryFilters?.where },
           }),
@@ -154,32 +183,38 @@ module.exports = function StatsController(server) {
           }),
         };
         return {
-          result: userAnalytics,
+          result: analytics,
         };
       } catch (err) {
         console.error(err);
         return boom.internal(err.message, err);
       }
     },
+
+    /**
+     * @function kycAnalytics - Compute Kyc analytics
+     * @param {Object} req
+     * @returns
+     */
     async kycAnalytics(req) {
       const { query } = req;
       const queryFilters = await filters({ query });
 
       try {
-        let kycAnalytics = {
-          total: await KYC.count({
+        let analytics = {
+          total: await Kyc.count({
             where: { ...queryFilters?.where },
           }),
-          accepted: await KYC.count({
+          accepted: await Kyc.count({
             where: { ...queryFilters?.where, status: KycStatusType?.ACCEPT },
           }),
-          denied: await KYC.count({
+          denied: await Kyc.count({
             where: { ...queryFilters?.where, status: KycStatusType?.DENY },
           }),
-          pending: await KYC.count({
+          pending: await Kyc.count({
             where: { ...queryFilters?.where, status: KycStatusType?.PENDING },
           }),
-          recently_added: await KYC.count({
+          recently_added: await Kyc.count({
             where: {
               ...queryFilters?.where,
               created_at: {
@@ -189,13 +224,19 @@ module.exports = function StatsController(server) {
           }),
         };
         return {
-          result: kycAnalytics,
+          result: analytics,
         };
       } catch (err) {
         console.error(err);
         return boom.internal(err.message, err);
       }
     },
+
+    /**
+     * @function securityAnalytics
+     * @param {Object} req
+     * @returns
+     */
     async securityAnalytics(req) {
       const { query } = req;
       const queryFilters = await filters({ query });

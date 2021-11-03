@@ -38,7 +38,6 @@
     "static/media/style.css": "./static/media/themify.f0a89cef.woff2",
     "static/media/affiliateTop.35336bda.png": "./static/media/affiliateTop.35336bda.png",
     "static/media/bnb.bc0968a0.png": "./static/media/bnb.bc0968a0.png",
-    "static/media/btc.8ad74a3c.png": "./static/media/btc.8ad74a3c.png",
     "static/media/comment-icon.abeb9ead.png": "./static/media/comment-icon.abeb9ead.png",
     "static/media/eos.d4334691.png": "./static/media/eos.d4334691.png",
     "static/media/eth.472126f2.png": "./static/media/eth.472126f2.png",
@@ -63,9 +62,16 @@
     "static/media/xrp.2b9aae6e.png": "./static/media/xrp.2b9aae6e.png"
   },
   "entrypoints": [
+<<<<<<< HEAD
+    "static/js/runtime-main.a6078329.js",
+    "static/css/4.f4c56af9.chunk.css",
+    "static/js/4.e0468809.chunk.js",
+    "static/js/main.9344f36e.chunk.js"
+=======
     "static/js/runtime-main.8670ab7b.js",
     "static/css/4.f4c56af9.chunk.css",
     "static/js/4.a33ebf72.chunk.js",
     "static/js/main.7268d017.chunk.js"
+>>>>>>> rf-models
   ]
 }
