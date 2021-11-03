@@ -9,18 +9,19 @@ const Boom = require("@hapi/boom");
 const cwd = path.join(__dirname);
 const Qs = require("qs");
 const Inert = require("@hapi/inert");
-const fs = require('fs');
-
+const fs = require("fs");
 
 // setup
 
-const UPLOAD_PATH = consts.FILE_UPLOAD_PATH
-
+const UPLOAD_PATH = consts.FILE_UPLOAD_PATH;
 
 // create folder for upload if not exist
 if (!fs.existsSync(UPLOAD_PATH)) fs.mkdirSync(UPLOAD_PATH);
 
 const { hostname, port, jwt, server_url } = helpers.config;
+const {
+  mailer: { setupMailer },
+} = helpers;
 
 // create an hapi server instance
 const HapiServer = Hapi.server({
@@ -94,6 +95,7 @@ HapiServer.auth.strategy("jwt", "jwt", jwt);
  *  Hapi server app options
  **************************************/
 HapiServer.app["config"] = helpers.config;
+HapiServer.app["mailer"] = setupMailer();
 HapiServer.app["db"] = database;
 HapiServer.app["consts"] = consts;
 HapiServer.app["helpers"] = helpers;
@@ -110,7 +112,7 @@ controllers.forEach((file) => {
   let routeBase = path.basename(file, ".controller.js");
   // console.log("controller base name",routeBase)
   let filePath = require(file);
-  
+
   HapiServer.app["controllers"][routeBase] = filePath(HapiServer);
 });
 
@@ -124,7 +126,6 @@ exports.init = async () => {
 
 exports.start = async function() {
   await HapiServer.start().then(() => {
-    
     console.log(`Server is running on ${server_url}`);
   });
   return HapiServer;

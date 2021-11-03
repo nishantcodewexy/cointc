@@ -11,6 +11,7 @@
     "makemigrations": "sequelize-cli migration:create --name ",
     "migrate": "sequelize-cli db:migrate",
     "db-drop": "sequelize-cli db:drop",
+    "db-reset": "sequelize-cli db:drop && sequelize-cli db:create",
     "db-create": "sequelize-cli db:create",
     "db-seed": "sequelize-cli db:seed:all",
     "db-undo": "sequelize-cli db:seed:undo",

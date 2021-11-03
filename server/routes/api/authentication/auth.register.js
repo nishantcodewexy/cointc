@@ -1,12 +1,12 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/user.schema");
-  const { payload: payloadSchema } = Schema?.register(server);
+  const Schema = require("../../../schema/user.schema")(server);
+  const { payload: payloadSchema } = Schema?.register();
 
   const {
     controllers: {
-      user: { registerMe },
+      user: { register },
     },
    
   } = server.app;
@@ -15,7 +15,7 @@ module.exports = (server) => {
     method: "POST",
     path: `/auth/register`,
     config: {     
-      handler: registerMe,
+      handler: register,
       validate: {
         payload: payloadSchema,
       },

@@ -30,7 +30,7 @@ module.exports = function SupportTicketController(server) {
         let result = await SupportTicket.findOne({
           where: {
             id,
-            ...(!user?.isAdmin && { user_id: user.id }),
+            ...(user?.isAdmin||user?.isSuperAdmin ? {} : { user_id: user.id }),
           },
           attributes: { exclude: ["user_id", "UserId", "deleted_at"] },
         });
@@ -164,7 +164,7 @@ module.exports = function SupportTicketController(server) {
 
       return await SupportTicket.destroy({
         where: {
-          ...(!user?.isAdmin && {
+          ...(user?.isAdmin || user?.isSuperAdmin?{} : {
             user_id: user.id,
           }),
           id,

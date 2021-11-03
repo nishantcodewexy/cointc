@@ -85,10 +85,10 @@ module.exports = function SecessionController(server) {
     async retrieve(req) {
       const {
         params: { id },
-        pre: { isAdmin },
+        pre: { user },
       } = req;
 
-      if (!isAdmin) throw boom.forbidden();
+      
 
       return await Secession.findByPk(id);
     },
@@ -134,10 +134,14 @@ module.exports = function SecessionController(server) {
       const {
         payload,
         params: { id },
+        pre:{user}
       } = req;
 
       return await Secession.update(payload, {
-        where: { id },
+        where: { 
+          id,
+          ...(user?.isAdmin||user?.isSuperUser?{}:{user_id:user.id})
+         },
       });
     },
   };

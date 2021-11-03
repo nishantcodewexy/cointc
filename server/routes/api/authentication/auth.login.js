@@ -1,8 +1,8 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/user.schema");
-  const { payload: payloadSchema } = Schema.authenticate(server);
+  const Schema = require("../../../schema/user.schema")(server);
+  const { payload: payloadSchema } = Schema?.login();
 
   const {
     controllers: {
@@ -12,7 +12,7 @@ module.exports = (server) => {
 
   return {
     method: "POST",
-    path: "/auth/authenticate",
+    path: "/auth/login",
     config: {
       handler: authenticate,
       validate: {

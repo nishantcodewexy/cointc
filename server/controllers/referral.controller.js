@@ -2,7 +2,12 @@
 
 function ReferralController(server) {
   const {
-    db: { Referral, Profile, User, Sequelize: {Op}},
+    db: {
+      Referral,
+      Profile,
+      User,
+      Sequelize: { Op },
+    },
     boom,
     helpers: { filters, paginator },
   } = server.app;
@@ -10,11 +15,8 @@ function ReferralController(server) {
   return {
     async create(req) {
       const {
-        auth: {
-          credentials: { user },
-        },
+        pre: { user },
         payload: { referral_code },
-        pre: { isAdmin },
       } = req;
 
       try {
@@ -40,7 +42,7 @@ function ReferralController(server) {
     },
 
     // Delete Order
-    async bulkDestroy(req) {
+    async remove(req) {
       const {
         pre: { isAdmin },
       } = req;
@@ -64,43 +66,73 @@ function ReferralController(server) {
     },
 
     // fetch all Orders
-    async list(req) {
+    async find(req) {
       const {
         query,
-        pre: { isAdmin },
-        auth: {
-          credentials: { user },
+        pre: {
+          user: { user, sudo, fake, fake_count },
         },
       } = req;
 
       try {
-        if (isAdmin) {
-          const filterResults = await filters({ query, searchFields: [] });
+        let queryFilters = await filters({
+            query,
+            searchFields: ["email"],
+            ...(!sudo && {
+              extras: {
+                user_id: user?.id,
+              },
+            }),
+          }),
+          options = {
+            ...queryFilters,
+          },
+          queryset;
 
-          const queryset = Referral.findAndCountAll(filterResults);
+        queryset = fake
+          ? await Referral.FAKE(fake_count)
+          : await Referral.findAndCountAll(options);
 
-          return await paginator({
-            queryset,
-            limit: filterResults.limit,
-            offset: filterResults.offset,
-          });
-        } else {
-          const filterResults = await filters({
-            query: {},
-            extra: {
-              referrer_id: user.id,
+        return await paginator({
+          queryset,
+          limit: queryFilters.limit,
+          offset: queryFilters.offset,
+        });
+      } catch (error) {
+        console.error(error);
+        throw boom.boomify(error);
+      }
+    },
+
+    async findByUserID(req) {
+      const {
+        query,
+        params: { user_id },
+        pre: {
+          user: { user, fake, fake_count },
+        },
+      } = req;
+
+      try {
+        let queryFilters = await filters({
+            query,
+            searchFields: ["email"],
+            extras: {
+              user_id,
             },
-          });
+          }),
+          options = {
+            ...queryFilters,
+          },
+          queryset = fake
+            ? await Referral.FAKE(fake_count)
+            : await Referral.findAndCountAll(options);
 
-          const queryset = Referral.findAndCountAll(filterResults);
-
-          const { count } = await paginator({
-            queryset,
-            limit: filterResults.limit,
-            offset: filterResults.offset,
-          });
-          return count;
-        }
+        return await paginator({
+          queryset,
+          limit: queryFilters.limit,
+          offset: queryFilters.offset,
+        });
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);

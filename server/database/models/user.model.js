@@ -3,7 +3,7 @@ const { Model } = require("sequelize");
 const _ = require("underscore");
 const hooks = require("../hooks/user.hook");
 const { tableNames } = require("../../consts");
-
+const faker = require("faker");
 // debugger;
 const uppercaseFirst = (str) => `${str[0].toUpperCase()}${str.substr(1)}`;
 
@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         BankDetail,
         Wallet,
         Address,
-        KYC,
+        Kyc,
         Security,
         Secession,
         Upload,
@@ -38,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
           name: "created_by",
         },
       });
+
       User.hasMany(Wallet, {
         foreignKey: { name: "user_id", allowNull: false },
       });
@@ -59,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: { name: "user_id", allowNull: false },
       });
 
-      User.hasOne(KYC, {
+      User.hasOne(Kyc, {
         as: "kyc",
         foreignKey: { name: "user_id", allowNull: false },
       });
@@ -112,6 +113,68 @@ module.exports = (sequelize, DataTypes) => {
     toPublic() {
       return _.omit(this.toJSON(), ["password"]);
     }
+    static FAKE(count = 0) {
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let id = faker.datatype.uuid(),
+          access_level = faker.helpers.randomize([1, 2, 3]);
+        return {
+          id,
+          user_id: id,
+          email: faker.internet.email(),
+          permission: faker.datatype.boolean(),
+          archived_at: faker.datatype.datetime(),
+          last_seen: faker.datatype.datetime(),
+          login_at: faker.datatype.datetime(),
+          access_level,
+          online: faker.helpers.randomize([true, false]),
+          isBasic: access_level === 1,
+          isAdmin: access_level === 2,
+          isSuperAdmin: access_level === 3,
+          profile_id: faker.datatype.uuid(),
+          mode: null,
+          invite_code: faker.random.alphaNumeric(10),
+          suitability: faker.helpers.randomize([1, 2, 3, 4, 5]),
+          verified: faker.helpers.randomize([true, false]),
+          active: faker.helpers.randomize([true, false]),
+          payment_methods: null,
+          pname: faker.internet.userName(),
+          lname: faker.name.lastName,
+          oname: faker.name.findName,
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+          phone: faker.phone.phoneNumber("0##########"),
+          kyc: [
+            {
+              id: faker.datatype.uuid(),
+              type: faker.helpers.randomize(["email", "id", "sms"]),
+              status: faker.helpers.randomize(["PENDING", "ACCEPT", "DENY"]),
+              user_id: id,
+              archived_at: faker.datatype.datetime(),
+              document_id: faker.datatype.uuid(),
+            },
+          ],
+          avatar_upload: null,
+          addresses: [
+            {
+              id: faker.datatype.uuid(),
+              country: faker.address.country(),
+              address_line: faker.address.secondaryAddress,
+            },
+          ],
+          created_by: null,
+        };
+      };
+      if (count > 0) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
+    }
 
     // getProfile(options) {
     //   if (!this.role) return Promise.resolve(null);
@@ -154,6 +217,8 @@ module.exports = (sequelize, DataTypes) => {
       archived_at: DataTypes.DATE,
       last_seen: DataTypes.DATE,
       login_at: DataTypes.DATE,
+      verified: { type: DataTypes.BOOLEAN, defaultValue: false },
+      active: { type: DataTypes.BOOLEAN, defaultValue: true },
       access_level: {
         type: DataTypes.INTEGER,
         validate: {
@@ -170,7 +235,7 @@ module.exports = (sequelize, DataTypes) => {
           return this.get("updateAt") > Date.now() - 7 * 24 * 60 * 60 * 1000;
         },
       },
-      
+
       isBasic: {
         type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["access_level"]),
         get() {
@@ -206,21 +271,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  User.addHook("afterFind", async (findResult) => {
-    if (!findResult) return;
-
-    if (!Array.isArray(findResult)) findResult = [findResult];
-    for (const instance of findResult) {
-      if (!(instance instanceof User)) return;
-      let profile = await instance.getProfile();
-
-      if (instance)
-        instance.dataValues = {
-          ...profile?.dataValues,
-          ...instance?.dataValues,
-        };
-    }
-  });
-  
   return User;
 };

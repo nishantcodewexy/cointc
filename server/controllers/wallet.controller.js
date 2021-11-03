@@ -31,7 +31,11 @@ module.exports = function WalletController(server) {
     },
 
     // RETRIEVE ----------------------------------------
+<<<<<<< HEAD
     async bulkRetrieve(req) {
+=======
+    find: async (req) => {
+>>>>>>> rf-models
       let {
         pre: { user },
         query,
@@ -60,8 +64,12 @@ module.exports = function WalletController(server) {
       }
     },
 
-    // Fetch specific user wallet
-    async retrieve(req) {
+    /**
+     * @function findByAddress - Find wallet by address
+     * @param {Object} req
+     * @returns
+     */
+    async findByAddress(req) {
       let {
         pre: { user },
         params: { address },
@@ -88,7 +96,7 @@ module.exports = function WalletController(server) {
       let where, result;
       try {
         where = {
-          user_id: user?.id,
+          ...(user?.isAdmin || user?.isSuperAdmin ? {} : { user_id: user?.id }),
         };
 
         result = await Wallet.findAll({

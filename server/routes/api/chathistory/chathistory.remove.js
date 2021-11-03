@@ -6,7 +6,7 @@ module.exports = (server) => {
       chathistory: { remove },
     },
     helpers: {
-      permissions: { isUser },
+      permissions: { isAdminOrError },
     },
   } = server.app;
 
@@ -17,7 +17,7 @@ module.exports = (server) => {
       pre: [
         [
           {
-            method: isUser,
+            method: isAdminOrError,
             assign: "user",
           },
         ],

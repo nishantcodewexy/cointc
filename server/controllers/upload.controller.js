@@ -30,7 +30,7 @@ module.exports = function UploadController(server) {
       const upload = await Upload.findOne({
         where: {
           id,
-          ...(!user?.isAdmin && { user_id: user.id }),
+          ...( user?.isAdmin || user?.isSuperAdmin ? {} : { user_id: user.id }),
         },
         attributes: {
           exclude: [
@@ -55,11 +55,11 @@ module.exports = function UploadController(server) {
       } = req;
 
       try {
-        let extend = query.extend;
+        
         const filterResults = await filters({
           query,
           extra: {
-            ...(!(user?.isAdmin && !!extend) && { user_id: user?.id }),
+            ...(user?.isAdmin || user.isSuperAdmin? {} : { user_id: user?.id }),
           },
         });
 
@@ -152,7 +152,7 @@ module.exports = function UploadController(server) {
       const result = await Upload.destroy({
         where: {
           id,
-          ...(!user?.isAdmin && { user_id: user.id }),
+          ...(user?.isAdmin || user?.isSuperAdmin?{} : { user_id: user.id }),
         },
       });
 
@@ -177,7 +177,7 @@ module.exports = function UploadController(server) {
           id: {
             [Op.in]: payload,
           },
-          ...(!user?.isAdmin && { user_id: user.id }),
+          ...(user?.isAdmin || user?.isSuperAdmin ?{} : { user_id: user.id }),
         },
       });
 

@@ -15,20 +15,24 @@ const BankDetailController = (server) => {
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
+    async findByID(req) {
       const {
-        pre: { user },
+        pre: {
+          user: { user, fake, sudo },
+        },
         params: { id },
       } = req;
 
       try {
         const queryOptions = {
           where: {
-            user_id: user.id,
+            ...(sudo && { user_id: user.id }),
             attributes: { exclude: ["user_id", "UserId"] },
           },
         };
-        let result = await BankDetail.findByPk(id, queryOptions);
+        let result = fake
+          ? await BankDetail.FAKE()
+          : await BankDetail.findByPk(id, queryOptions);
         return result ? { result } : boom.notFound("Record not found");
       } catch (error) {
         console.error(error);
@@ -36,23 +40,28 @@ const BankDetailController = (server) => {
       }
     },
 
-    async bulkRetrieve(req) {
+    async find(req) {
       const {
         query,
-        pre: { user },
+        pre: {
+          user: { user, fake, fake_count, sudo },
+        },
       } = req;
 
       try {
         const queryFilters = await filters({
           query,
           searchFields: ["bank_name", "currency", "country"],
+          extras: { ...(!sudo ? { user_id: user?.id } : null) },
         });
 
         const queryOptions = {
           ...queryFilters,
         };
 
-        const queryset = await BankDetail.findAndCountAll(queryOptions);
+        const queryset = fake
+          ? await BankDetail.FAKE(fake_count)
+          : await BankDetail.findAndCountAll(queryOptions);
         const { limit, offset } = queryFilters;
 
         return paginator({
@@ -68,7 +77,7 @@ const BankDetailController = (server) => {
 
     // UPDATE ---------------------------------------------------
 
-    async update(req) {
+    async updateByID(req) {
       const {
         payload,
         params: { id },
@@ -78,7 +87,9 @@ const BankDetailController = (server) => {
       try {
         const queryOptions = {
           where: {
-            ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+            ...(user?.isAdmin || user?.isSuperAdmin
+              ? {}
+              : { user_id: user.id }),
             id,
           },
           validate: true,
@@ -131,7 +142,7 @@ const BankDetailController = (server) => {
 
     // REMOVE ---------------------------------------------------
 
-    async remove(req) {
+    async removeByID(req) {
       try {
         const {
           payload: { force = false },
@@ -142,7 +153,9 @@ const BankDetailController = (server) => {
         const queryOptions = {
           where: {
             id,
-            ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+            ...(user?.isAdmin || user?.isSuperAdmin
+              ? {}
+              : { user_id: user.id }),
           },
           force,
         };
@@ -169,7 +182,7 @@ const BankDetailController = (server) => {
       }
     },
 
-    async bulkRemove(req) {
+    async remove(req) {
       const {
         payload: { data = [], force = false },
         pre: { user },
@@ -247,7 +260,7 @@ const BankDetailController = (server) => {
      * @function bulkRestore - bulk restore currency records
      * @param {Object} req
      */
-    async bulkRestore(req) {
+    async restoreByID(req) {
       const {
         payload: { data = [] },
         pre: { user },

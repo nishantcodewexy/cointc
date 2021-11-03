@@ -2,6 +2,8 @@
 const { Model } = require("sequelize");
 const _ = require("underscore");
 const { tableNames } = require("../../consts");
+const faker = require('faker')
+
 
 module.exports = (sequelize, DataTypes) => {
   class Security extends Model {
@@ -16,6 +18,33 @@ module.exports = (sequelize, DataTypes) => {
       Security.belongsTo(User, {
         foreignKey: "user_id",
       });
+    }
+
+    static FAKE(count){
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        
+        
+          
+        return {
+          id: faker.datatype.uuid(),
+          otp: faker.company.suffixes(),
+          otp_ttl: faker.datatype.datetime(),
+          two_factor: faker.datatype.boolean(),
+          verify_token: faker.random.alphaNumeric(50),
+          verify_token_ttl: faker.datatype.datetime(),
+          
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
 

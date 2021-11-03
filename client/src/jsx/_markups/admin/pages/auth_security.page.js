@@ -69,7 +69,7 @@ function AuthSecurityMgmt({ services, useService }) {
             user_name: ({ row }) => {
               return (
                 <>
-                  {row?.lname}, {row?.oname}
+                  {row?.lname}
                 </>
               );
             },
@@ -88,8 +88,8 @@ function AuthSecurityMgmt({ services, useService }) {
             otp: ({ row }) => {
               return (
                 <>
-                  {console.log({otp:row?.security?.otp})}
-                  {row?.security?.otp || (
+                  {console.log({ otp: row })}
+                  {row?.two_factor || (
                     <small className="badge badge-danger">2fa disabled</small>
                   )}
                 </>

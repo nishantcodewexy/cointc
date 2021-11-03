@@ -80,11 +80,10 @@ function SecessionRequestTable({
   notifySuccess,
   notifyError,
 }) {
-  const { useGroupService } = services;
-  const group = useGroupService();
+  const { account } = services;
 
   let service = useService({
-    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
+    [SERVICE?.BULK_RETRIEVE]: account.bulkRetrieveUser,
   });
   const { dispatchRequest } = service;
 

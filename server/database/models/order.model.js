@@ -2,6 +2,7 @@
 const { Model } = require("sequelize");
 const hooks = require("../hooks/order.hook");
 const { tableNames } = require("../../consts");
+const faker = require('faker')
 
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
@@ -16,6 +17,41 @@ module.exports = (sequelize, DataTypes) => {
       Order.belongsTo(Advert, {
         foreignKey: "advert_id",
       });
+    }
+
+    static FAKE(count){
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        
+        
+          
+        return {
+          id:`ORD-${Date.now().toString()}`,
+          total_amount: faker.datatype.float(),
+          total_quantity: faker.datatype.number(),
+          appeal: faker.lorem.sentence(),
+          remark: faker.lorem.sentence(),
+          status: faker.helpers.randomize(["unpaid",
+          "paid",
+          "released",
+          "completed",
+          "disputed",
+          "canceled"]),
+          rating: faker.datatype.number(5),
+          archived_at: faker.datatype.datetime(),
+          trx_id: faker.datatype.uuid(),
+          
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
 

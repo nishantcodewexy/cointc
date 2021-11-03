@@ -169,10 +169,10 @@ const MailerHelpers = () => {
     assert(emailTemplates[name], `Email template: ${name} not found!`);
     return emailTemplates[name];
   }
-
+  
   return {
     /*************************************
-     * Maps email templates litrals to specified transform mapping
+     * Maps email templates literals to specified transform mapping
      *************************************/
     emailTemplateTransformer: (options) => {
       let {
@@ -184,6 +184,8 @@ const MailerHelpers = () => {
         text,
         ...rest
       } = options;
+
+
 
       const htmlContent = htmlTemplate && hasEmailTemplate(htmlTemplate.name);
       const textContent = textTemplate && hasEmailTemplate(textTemplate.name);
@@ -402,12 +404,14 @@ module.exports = {
    *
    * @param {Object} args
    * @param {Object} args.query
+   * @param {Object} args.extras
    * @param {String[]} args.searchFields
    * @returns {Object}
    */
   filters: async ({ query = {}, searchFields = [], extras = {} }) => {
     const q = query.q || "";
     const searchQuery = {};
+   
     const paranoid = query?.paranoid
       ? Boolean(JSON.parse(query?.paranoid))
       : true;
