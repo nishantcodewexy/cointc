@@ -2,6 +2,7 @@
 const { Model } = require("sequelize");
 const { tableNames } = require("../../consts");
 const faker = require("faker");
+const { currencies, walletTypes } = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
   class Advert extends Model {
@@ -34,28 +35,26 @@ module.exports = (sequelize, DataTypes) => {
         return {
           id: faker.datatype.uuid(),
           user_id,
-          min_order_qty: faker.datatype.number(),
-          max_order_qty: faker.datatype.number(),
-          min_order_price: faker.datatype.float(),
-          max_order_price: faker.datatype.float(),
+          min_order_qty: faker.datatype.number(20),
+          max_order_qty: faker.datatype.number(100),
+          min_order_price: faker.datatype.float(2),
+          max_order_price: faker.datatype.float(2),
           payment_methods: faker.helpers.randomize(["wechat", "alipay"]),
           type: faker.helpers.randomize(["buy", "sell"]),
           payment_time_limit: faker.datatype.number(),
           price: faker.datatype.float(),
           floating_price: faker.datatype.float(),
           qty: faker.datatype.number(),
-          crypto: faker.finance.currencySymbol(),
-          fiat: faker.finance.currencyCode(),
-          remarks: faker.random.words(),
-          auto_reply_message: faker.random.words(),
-          trade_conditions: faker.random.words(),
+          crypto: faker.helpers.randomize(Object.values(walletTypes)),
+          fiat: faker.helpers.randomize(Object.values(currencies)),
+          remarks: faker.lorem.sentence(),
+          auto_reply_message: faker.lorem.sentence(),
+          trade_conditions: faker.lorem.sentence(),
           published: faker.datatype.boolean(),
-          archived_at: faker.datatype.datetime(),
-          createdAt: faker.datatype.datetime(),
-          updatedAt: faker.datatype.datetime(),
+          archived_at: null,
         };
       };
-      if (count > 0) {
+      if (count > 1) {
         for (; index < count; ++index) {
           rows.push(generateFakeData());
         }

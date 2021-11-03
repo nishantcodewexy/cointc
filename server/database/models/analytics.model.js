@@ -1,6 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
 const { tableNames } = require("../../consts");
+const faker = require("faker")
+
 
 module.exports = (sequelize, DataTypes) => {
   class Analytics extends Model {

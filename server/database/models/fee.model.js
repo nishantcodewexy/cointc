@@ -1,6 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
 const { tableNames } = require('../../consts');
+const faker = require('faker')
+const {currencies,walletTypes} = require('../../consts')
 
 module.exports = (sequelize, DataTypes) => {
   class Fee extends Model {
@@ -15,6 +17,30 @@ module.exports = (sequelize, DataTypes) => {
           name: 'user_id'
         }
       })
+    }
+
+    static FAKE(count){
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        
+        
+          
+        return {
+          fiat: faker.helpers.randomize(Object.keys(currencies)),
+          crypto: faker.helpers.randomize(Object.keys(walletTypes)),
+          rate: faker.datatype.float(),
+          
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
 

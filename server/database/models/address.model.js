@@ -2,7 +2,8 @@
 const { Model } = require("sequelize");
 const _ = require("underscore");
 const { countries, tableNames } = require("../../consts");
-const faker = require('faker');
+const faker = require("faker");
+
 
 module.exports = (sequelize, DataTypes) => {
   class Address extends Model {
@@ -18,7 +19,34 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
       });
     }
+    
 
+    static FAKE(count){
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let id = faker.datatype.uuid()
+        
+          
+        return {
+          id,
+          country: faker.address.countryCode(),
+          address_line: faker.address.streetAddress(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+          
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
+    }
+    
     toPublic() {
       return _.omit(this.toJSON(), []);
     }
