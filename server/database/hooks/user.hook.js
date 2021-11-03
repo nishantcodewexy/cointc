@@ -26,7 +26,7 @@ module.exports = {
     for (const instance of findResult) {
       let profile = await instance.getProfile();
       let addresses = await instance.getAddresses();
-      // let kyc = await instance.getKyc();
+      // let security = await instance.getKyc();
 
       let compiled = {
         ...profile?.toJSON(),
