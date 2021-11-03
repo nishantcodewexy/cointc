@@ -16,7 +16,7 @@ class AccountService extends Services {
   login = async (data) => {
     return await this.decorate(
       async () =>
-        await this.axios("auth/authenticate", {
+        await this.axios("auth/login", {
           method: "POST",
           data,
         })
