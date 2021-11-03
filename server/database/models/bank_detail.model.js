@@ -27,8 +27,8 @@ module.exports = (sequelize, DataTypes) => {
         return {
           id: faker.datatype.uuid(),
           account_no: faker.finance.iban(),
-          bank_name: faker.finance.account,
-          swift_code: faker.finance.bic,
+          bank_name: faker.finance.account(),
+          swift_code: faker.finance.bic(),
           currency: faker.helpers.randomize(Object.keys(currencies)),
           archived_at: faker.datatype.datetime(),
           createdAt: faker.datatype.datetime(),
