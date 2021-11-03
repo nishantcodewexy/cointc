@@ -3,6 +3,7 @@ const { Model } = require("sequelize");
 const { tableNames } = require("../../consts");
 const faker = require("faker");
 const { currencies, walletTypes } = require("../../consts");
+const User = require("./user.model");
 
 module.exports = (sequelize, DataTypes) => {
   class Advert extends Model {
@@ -46,12 +47,15 @@ module.exports = (sequelize, DataTypes) => {
           floating_price: faker.datatype.float(),
           qty: faker.datatype.number(),
           crypto: faker.helpers.randomize(Object.values(walletTypes)),
-          fiat: faker.helpers.randomize(Object.values(currencies)),
+          fiat: faker.finance.currencyCode,
           remarks: faker.lorem.sentence(),
           auto_reply_message: faker.lorem.sentence(),
           trade_conditions: faker.lorem.sentence(),
           published: faker.datatype.boolean(),
           archived_at: null,
+          createdAt:  faker.datatype.datetime(),
+          updatedAt:  faker.datatype.datetime(),
+          user: User(sequelize, DataTypes).FAKE(),
         };
       };
       if (count > 1) {
