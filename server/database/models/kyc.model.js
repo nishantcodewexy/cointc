@@ -4,6 +4,7 @@ const _ = require("underscore");
 const { tableNames, KycStatusType } = require("../../consts");
 const faker = require("faker");
 const hooks = require("../hooks/kyc.hook");
+const User = require("./user.model");
 
 module.exports = (sequelize, DataTypes) => {
   class KYC extends Model {
@@ -25,13 +26,13 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static FAKE(count) {
+    static FAKE(count = 0) {
       let rows = [],
         result = {},
         index = 0;
+
       let generateFakeData = () => {
         let id = faker.datatype.uuid();
-
         return {
           id,
           type: faker.helpers.randomize(["email", "id", "sms"]),
@@ -41,9 +42,10 @@ module.exports = (sequelize, DataTypes) => {
           document_id: faker.datatype.uuid(),
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
+          user: User(sequelize, DataTypes).FAKE(),
         };
       };
-      if (count > 1) {
+      if (count > 0) {
         for (; index < count; ++index) {
           rows.push(generateFakeData());
         }
@@ -54,31 +56,6 @@ module.exports = (sequelize, DataTypes) => {
 
     toPublic() {
       return _.omit(this.toJSON(), []);
-    }
-    static FAKE(count = 0) {
-      let rows = [],
-        result = {},
-        index = 0;
-      let generateFakeData = () => {
-        let user_id = faker.datatype.uuid();
-        return {
-          id: faker.datatype.uuid(),
-          document_id: faker.datatype.uuid(),
-          user_id,
-          archived_at: faker.datatype.datetime(),
-          status: faker.helpers.randomize(["PENDING", "ACCEPT", "DENY"]),
-          type: faker.helpers.randomize(["email", "id", "sms"]),
-          createdAt: faker.datatype.datetime(),
-          updatedAt: faker.datatype.datetime(),
-        };
-      };
-      if (count > 0) {
-        for (; index < count; ++index) {
-          rows.push(generateFakeData());
-        }
-        result = { count, rows };
-      } else result = { ...generateFakeData() };
-      return result;
     }
   }
 
