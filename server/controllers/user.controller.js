@@ -113,6 +113,9 @@ module.exports = function UserController(server) {
         // Standard user operations
         if (+access_level < 2) {
           await user.createWallet({ currency: "BTC" }, { transaction: t });
+          await user.createKyc({ type: "id" }, { transaction: t });
+          // await user.createAddress({ }, { transaction: t });
+
           if (others?.invite_code) {
             const ref = await User.findOne({
               where: {
@@ -179,7 +182,9 @@ module.exports = function UserController(server) {
     async create(req) {
       let {
         payload,
-        pre: { user },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
 
       try {
@@ -204,6 +209,9 @@ module.exports = function UserController(server) {
         let {
           payload,
           params: { id },
+          pre: {
+            user: { user, sudo },
+          },
         } = req;
 
         let target_user = await User.findByPk(id);
@@ -236,39 +244,54 @@ module.exports = function UserController(server) {
         const {
           payload,
           pre: {
-            user,
-            user: { fake, sudo, fake_count },
+            user: { user, fake, sudo, fake_count },
           },
         } = req;
         // allowed fields
         let fields = [];
         if (sudo) {
-          let data = payload?.data || [];
-          let suspend = payload?.suspend || null;
+          let {
+            active = null,
+            suitability = null,
+            kyc_status = null,
+            ids = [],
+          } = payload;
 
-          if (!data?.length)
-            throw boom.badData(`<data::array> cannot be empty`);
+          fields = ["active", "suitability"];
+          if (!ids?.length) throw boom.badData(`<ids::array> cannot be empty`);
+
           let error,
+            userData = {
+              ...(active ?? { active }),
+              ...(suitability ?? { suitability }),
+            },
             operation = await sequelize.transaction(async (t) => {
               return await Promise.all(
-                data.map(async ({ id, ...userData }) => {
-                  if (suspend) {
-                    userData = {
-                      ...userData,
-                      active: !suspend,
-                    };
-                  }
-                  let where = {
-                    id,
-                  };
-                  return await __update("User", userData, where, {
-                    transaction: t,
-                    fields,
-                  });
+                ids.map(async (id) => {
+                  // if kyc status is specified
+                  await Promise.all([
+                    kyc_status != null &&
+                      (await __update(
+                        "KYC",
+                        { status: kyc_status },
+                        {
+                          where: { user_id: id },
+                          transaction: t,
+                          fields: ["status"],
+                        }
+                      )),
+                    Object.keys(userData).length &&
+                      (await __update("User", userData, {
+                        where: { id },
+                        transaction: t,
+                        fields,
+                      })),
+                  ]);
                 })
               ).catch((err) => (error = err));
             });
-          return Boolean(operation)
+
+          return (error = null
             ? {
                 status: true,
                 message: `Successfully updated ${data?.length} user records`,
@@ -277,15 +300,18 @@ module.exports = function UserController(server) {
                 status: false,
                 message: "Unable to complete operation",
                 error: error,
-              });
+              }));
         } else {
           // update session user data
           const { profile, kyc, address } = payload;
-          await sequelize.transaction(async (t) => await Promise.all([
-            profile && user?.setProfile(profile),
-            kyc && user?.setKYC(kyc),
-            address && user.setAddresses(address)
-          ]));
+          await sequelize.transaction(
+            async (t) =>
+              await Promise.all([
+                profile && user?.setProfile(profile),
+                kyc && user?.setKYC(kyc),
+                address && user.setAddresses(address),
+              ])
+          );
           return boom.methodNotAllowed();
         }
       } catch (error) {
@@ -306,37 +332,44 @@ module.exports = function UserController(server) {
       const {
         payload: { data = [], force = false },
         pre: {
-          user,
-          user: { fake, sudo, fake_count },
+          user: { user, fake, sudo, fake_count },
         },
       } = req;
+      let operation,
+        where,
+        error = null;
+
       try {
         if (sudo) {
           if (!data?.length)
             throw boom.badData("Expected an array of user IDs. None provided!");
-          return Boolean(
-            await sequelize.transaction(async (t) => {
+          operation = await sequelize.transaction(
+            async (t) =>
               await Promise.all([
                 data.map(async (id) => {
                   if (id === user?.id)
                     throw boom.methodNotAllowed(
                       "Cannot remove current user session data. Remove current user ID from data and try again or make request without sudo, force and data as request payloads!"
                     );
-                  let where = { id };
-                  await __destroy("User", where, force, { transaction: t });
+                  where = { id };
+                  return await User.destroy({ where, force, transaction: t });
                 }),
-              ]);
-            })
-          )
-            ? {
-                status: true,
-                message: `Successfully deleted ${data?.length} user records`,
-              }
-            : boom.internal({
-                status: false,
-                message: "Unable to complete operation",
-              });
+              ]).catch((err) => (error = err))
+          );
+        } else {
+          where = { id: user?.id };
+          operation = await __destroy("User", where, force).catch(
+            (err) => (error = err)
+          );
         }
+
+        return error == null
+          ? {
+              status: true,
+              message: `Success`,
+            }
+          : boom.internal(error.message, error);
+
         return Boolean(await __destroy("User", where, force))
           ? { status: true, message: "Successfully deleted a user record" }
           : boom.internal({
@@ -358,7 +391,9 @@ module.exports = function UserController(server) {
       let {
         payload: { force = false },
         params: { id },
-        pre: { user },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
       // only superadmins are allowed to permanently delete a user
       force = user?.isSuperAdmin ? force : false;
@@ -377,12 +412,10 @@ module.exports = function UserController(server) {
       const {
         query,
         pre: {
-          user,
-          user: { fake, sudo, fake_count },
+          user: { user, fake, sudo, fake_count },
         },
       } = req;
-      let l = await User.findAll();
-      l;
+
       try {
         const queryFilters = await filters({
           query,
@@ -426,8 +459,7 @@ module.exports = function UserController(server) {
       const {
         params: { id },
         pre: {
-          user,
-          user: { fake, sudo, fake_count },
+          user: { user, fake, sudo, fake_count },
         },
       } = req;
       try {

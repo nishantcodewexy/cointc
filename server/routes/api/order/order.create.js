@@ -12,7 +12,7 @@ module.exports = (server) => {
       permissions: { isUser },
     },
   } = server.app;
-
+  
   return {
     method: "POST",
     path: "/order",

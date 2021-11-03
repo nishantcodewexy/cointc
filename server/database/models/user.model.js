@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
         BankDetail,
         Wallet,
         Address,
-        KYC,
+        Kyc,
         Security,
         Secession,
         Upload,
@@ -38,6 +38,7 @@ module.exports = (sequelize, DataTypes) => {
           name: "created_by",
         },
       });
+
       User.hasMany(Wallet, {
         foreignKey: { name: "user_id", allowNull: false },
       });
@@ -59,7 +60,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: { name: "user_id", allowNull: false },
       });
 
-      User.hasOne(KYC, {
+      User.hasOne(Kyc, {
         as: "kyc",
         foreignKey: { name: "user_id", allowNull: false },
       });
@@ -112,7 +113,7 @@ module.exports = (sequelize, DataTypes) => {
     toPublic() {
       return _.omit(this.toJSON(), ["password"]);
     }
-    static FAKE(count = 1) {
+    static FAKE(count = 0) {
       let rows = [],
         result = {},
         index = 0;
@@ -133,7 +134,6 @@ module.exports = (sequelize, DataTypes) => {
           isAdmin: access_level === 2,
           isSuperAdmin: access_level === 3,
           profile_id: faker.datatype.uuid(),
-
           mode: null,
           invite_code: faker.random.alphaNumeric(10),
           suitability: faker.helpers.randomize([1, 2, 3, 4, 5]),
@@ -146,13 +146,28 @@ module.exports = (sequelize, DataTypes) => {
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
           phone: faker.phone.phoneNumber("0##########"),
-          kyc_id: null,
+          kyc: [
+            {
+              id: faker.datatype.uuid(),
+              type: faker.helpers.randomize(["email", "id", "sms"]),
+              status: faker.helpers.randomize(["PENDING", "ACCEPT", "DENY"]),
+              user_id: id,
+              archived_at: faker.datatype.datetime(),
+              document_id: faker.datatype.uuid(),
+            },
+          ],
           avatar_upload: null,
-          address_id: null,
+          addresses: [
+            {
+              id: faker.datatype.uuid(),
+              country: faker.address.country(),
+              address_line: faker.address.secondaryAddress,
+            },
+          ],
           created_by: null,
         };
       };
-      if (count > 1) {
+      if (count > 0) {
         for (; index < count; ++index) {
           rows.push(generateFakeData());
         }

@@ -3,28 +3,25 @@
 module.exports = (server) => {
   const {
     controllers: {
-        bankdetail: { bulkRetrieve },
+      referral: { findByUserID },
     },
-    helpers:{
-      permissions:{
-        isAdminOrError,
-      }
-    }
+    helpers: {
+      permissions: { isAdminOrError },
+    },
   } = server.app;
 
   return {
     method: "GET",
-    path: "/bank-detail",
+    path: "/referral/{user_id}",
     config: {
       pre: [
         {
-          method:isAdminOrError,
+          method: isAdminOrError,
           assign: "user",
         },
       ],
-      handler: bulkRetrieve,
+      handler: findByUserID,
       auth: "jwt",
     },
-    
   };
 };

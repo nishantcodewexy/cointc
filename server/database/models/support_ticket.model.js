@@ -5,6 +5,7 @@ const {
   TicketPriorityType,
   TicketStatusType,
 } = require("../../consts");
+const faker = require("faker")
 
 module.exports = (sequelize, DataTypes) => {
   class SupportTicket extends Model {
@@ -24,6 +25,33 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "assigned_to",
       });
       SupportTicket.belongsTo(User);
+    }
+
+    static FAKE(count){
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        
+        
+          
+        return {
+          id: faker.datatype.uuid(),
+          priority: faker.helpers.randomize(Object.keys(TicketPriorityType)),
+          subject: faker.lorem.sentence(),
+          description: faker.lorem.sentences(),
+          status: faker.helpers.randomize(Object.keys(TicketStatusType)),
+          archived_at: faker.datatype.datetime(),
+          
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
 

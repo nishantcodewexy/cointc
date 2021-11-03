@@ -41,16 +41,15 @@ const AdvertController = (server) => {
       const {
         params: { id },
         payload: { force = false },
-        pre:{user}
+        pre: { user },
       } = req;
 
-
       try {
-        let where
-        if(user.isAdmin||user.isSuperAdmin){
+        let where;
+        if (user.isAdmin || user.isSuperAdmin) {
           where = { id };
-        }else{
-          where = { id,user_id:user.id }; 
+        } else {
+          where = { id, user_id: user.id };
         }
 
         return { deleted: Boolean(await __destroy("Advert", where, force)) };
@@ -61,7 +60,7 @@ const AdvertController = (server) => {
     },
 
     // RETRIEVE ------------------------------------------------
-    async retrieve(req) {
+    async findByID(req) {
       const {
         params: { id },
       } = req;
@@ -73,16 +72,92 @@ const AdvertController = (server) => {
      * @function bulkRetrieve - Retrieves multiple advert records
      * @param {Object} req
      */
-    async bulkRetrieve(req) {
+    async findAll(req) {
       const {
         query,
-        pre: { user },
+        pre: {
+          user: { user, fake, fake_count, sudo },
+        },
       } = req;
-      
+
       const queryFilters = await filters({
         query,
         searchFields: ["user_id"],
-       /*  extras: {
+        /*  extras: {
+          user_id: { [Op?.ne]: user?.id },
+        }, */
+      });
+      const options = {
+        ...queryFilters,
+        logging: console.log,
+        include: User,
+      };
+
+      try {
+        let queryset = fake ? await Advert.FAKE(fake_count) : await Advert.findAndCountAll(options).catch((err) => {
+          throw boom.badData(err.message, err);
+        });
+        const { limit, offset } = queryFilters;
+
+        return paginator({
+          queryset,
+          limit,
+          offset,
+        });
+      } catch (err) {
+        console.error(err);
+        return boom.isBoom ? err : boom.internal(err.message, err);
+      }
+    },
+    async update(req) {
+      const {
+        query,
+        pre: {
+          user: { user, fake, fake_count, sudo },
+        },
+      } = req;
+
+      const queryFilters = await filters({
+        query,
+        searchFields: ["user_id"],
+        /*  extras: {
+          user_id: { [Op?.ne]: user?.id },
+        }, */
+      });
+      const options = {
+        ...queryFilters,
+        logging: console.log,
+        include: User,
+      };
+
+      try {
+        let queryset = await Advert.findAndCountAll(options).catch((err) => {
+          throw boom.badData(err.message, err);
+        });
+        const { limit, offset } = queryFilters;
+
+        return paginator({
+          queryset,
+          limit,
+          offset,
+        });
+      } catch (err) {
+        console.error(err);
+        return boom.isBoom ? err : boom.internal(err.message, err);
+      }
+    },
+    async updateByID(req) {
+      const {
+        query,
+        pre: {
+          user: { user, fake, fake_count, sudo },
+        },
+      } = req;
+
+      const queryFilters = await filters({
+        query,
+        searchFields: ["user_id"],
+        /*  extras: {
           user_id: { [Op?.ne]: user?.id },
         }, */
       });

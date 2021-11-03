@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const del = require("del");
+const faker = require("faker");
 const { mimeTypes, FILE_UPLOAD_PATH, tableNames } = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
@@ -41,6 +42,48 @@ module.exports = (sequelize, DataTypes) => {
       const { User, Upload } = models;
 
       Upload.belongsTo(User);
+    }
+    static FAKE(count = 0) {
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let id = faker.datatype.uuid(),
+          mimetype = faker.system.mimeType();
+
+        return {
+          id,
+          mimetype,
+          original: {
+            fieldname: faker.system.fileName(),
+            originalname: faker.system.fileName(),
+            filename: faker.system.fileName(),
+            mimetype,
+            destination: faker.system.filePath(),
+            path: faker.system.filePath(),
+            size: faker.datatype.number(10000000),
+          },
+          thumbnail: {
+            fieldname: faker.system.fileName(),
+            originalname: faker.system.fileName(),
+            filename: faker.system.fileName(),
+            mimetype,
+            destination: faker.system.filePath(),
+            path: faker.system.filePath(),
+            size: faker.datatype.number(10000000),
+          },
+          description: faker.lorem.sentence(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
 

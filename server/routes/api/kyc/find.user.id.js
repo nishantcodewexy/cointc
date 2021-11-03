@@ -1,23 +1,26 @@
 "use strict";
+const Joi = require("joi");
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/bankdetail.schema");
-  const { params: paramsSchema, payload: payloadSchema } = Schema?.update(
-    server
-  );
-
   const {
     controllers: {
-      bankdetail: { update },
+      kyc: { findAll, findByUserID },
     },
+    boom,
     helpers: {
       permissions: { isUser },
     },
   } = server.app;
 
+  const paramsSchema = Joi.object({
+    user_id: Joi.string().uuid().required(),
+  });
+
+  // .allow("email", "id", "phone", "payment_methods").optional()
+
   return {
-    method: "PUT",
-    path: "/bank-detail/{id}",
+    method: "GET",
+    path: "/kyc/user/{user_id}",
     config: {
       pre: [
         {
@@ -25,12 +28,11 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: update,
-      auth: "jwt",
+      handler: findByUserID,
       validate: {
         params: paramsSchema,
-        payload: payloadSchema,
       },
+      auth: "jwt",
     },
   };
 };

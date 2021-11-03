@@ -1,8 +1,9 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
-const { tableNames } = require("../../consts");
+const { tableNames,walletTypes } = require("../../consts");
 const hooks = require("../hooks/wallet.hook");
+const faker = require("faker")
 
 module.exports = (sequelize, DataTypes) => {
   class Wallet extends Model {
@@ -17,6 +18,33 @@ module.exports = (sequelize, DataTypes) => {
       Wallet.belongsTo(User, {
         foreignKey: "user_id",
       });
+    }
+
+    static FAKE(count){
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        
+        
+          
+        return {
+          id: faker.datatype.uuid(),
+          account_id: faker.datatype.uuid(),
+          derivation_key: faker.datatype.number(10),
+          address: faker.finance.bitcoinAddress(),
+          currency: faker.helpers.randomize(Object.keys(walletTypes)),
+          frozen: faker.datatype.boolean()
+          
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
 
     

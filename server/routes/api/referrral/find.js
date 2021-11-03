@@ -1,23 +1,30 @@
+"use strict";
+
 module.exports = (server) => {
   const {
     controllers: {
-      user: { archive },
+      referral: { find },
     },
-    helpers: { jwt: {decodeUser} },
+    helpers:{
+      permissions:{
+        isUser,
+      }
+    }
   } = server.app;
 
   return {
-    method: ["GET"],
-    path: `/account/statistics`,
+    method: "GET",
+    path: "/referral",
     config: {
       pre: [
         {
-          method: decodeUser,
+          method:isUser,
           assign: "user",
         },
       ],
-      handler: ()=>{ },
+      handler: find,
       auth: "jwt",
     },
+    
   };
 };

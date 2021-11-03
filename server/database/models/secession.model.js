@@ -1,6 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const { tableNames } = require("../../consts");
+const faker = require("faker")
 
 module.exports = (sequelize, DataTypes) => {
   class Secession extends Model {
@@ -14,6 +15,33 @@ module.exports = (sequelize, DataTypes) => {
       const { User, Secession } = models;
 
       Secession.belongsTo(User);
+    }
+
+    static FAKE(count){
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        
+        
+          
+        return {
+          id: faker.datatype.uuid(),
+          access_level: faker.helpers.randomize([1,2,3]),
+          status: faker.helpers.randomize(["accepted", "denied", "pending"]),
+          description: faker.lorem.sentence(),
+          approval_date: faker.datatype.datetime(),
+          archived_at: faker.datatype.datetime(),
+          
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
   Secession.init(
