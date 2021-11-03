@@ -40,18 +40,18 @@ module.exports = (sequelize, DataTypes) => {
       // });
     }
 
-    static FAKE(count){
+    static FAKE(count) {
       let rows = [],
         result = {},
         index = 0;
       let generateFakeData = () => {
-        
-        
-          
         return {
           id: faker.datatype.uuid(),
           commission_in_percent: faker.datatype.float(),
-          
+          user_id: faker.datatype.uuid(),
+          referred_id: faker.datatype.uuid(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
         };
       };
       if (count > 1) {
