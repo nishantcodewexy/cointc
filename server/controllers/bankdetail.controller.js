@@ -17,18 +17,22 @@ const BankDetailController = (server) => {
      */
     async findByID(req) {
       const {
-        pre: { user },
+        pre: {
+          user: { user, fake, sudo },
+        },
         params: { id },
       } = req;
 
       try {
         const queryOptions = {
           where: {
-            ...(user?.isAdmin||user?.isSuperAdmin?{}:{user_id: user.id}),
+            ...(sudo && { user_id: user.id }),
             attributes: { exclude: ["user_id", "UserId"] },
           },
         };
-        let result = await BankDetail.findByPk(id, queryOptions);
+        let result = fake
+          ? await BankDetail.FAKE()
+          : await BankDetail.findByPk(id, queryOptions);
         return result ? { result } : boom.notFound("Record not found");
       } catch (error) {
         console.error(error);
@@ -39,20 +43,25 @@ const BankDetailController = (server) => {
     async find(req) {
       const {
         query,
-        pre: { user },
+        pre: {
+          user: { user, fake, fake_count, sudo },
+        },
       } = req;
 
       try {
         const queryFilters = await filters({
           query,
           searchFields: ["bank_name", "currency", "country"],
+          extras: { ...(!sudo ? { user_id: user?.id } : null) },
         });
 
         const queryOptions = {
           ...queryFilters,
         };
 
-        const queryset = await BankDetail.findAndCountAll(queryOptions);
+        const queryset = fake
+          ? await BankDetail.FAKE(fake_count)
+          : await BankDetail.findAndCountAll(queryOptions);
         const { limit, offset } = queryFilters;
 
         return paginator({
@@ -78,7 +87,9 @@ const BankDetailController = (server) => {
       try {
         const queryOptions = {
           where: {
-            ...(user?.isAdmin || user?.isSuperAdmin ? {} : { user_id: user.id }),
+            ...(user?.isAdmin || user?.isSuperAdmin
+              ? {}
+              : { user_id: user.id }),
             id,
           },
           validate: true,
@@ -142,7 +153,9 @@ const BankDetailController = (server) => {
         const queryOptions = {
           where: {
             id,
-            ...(user?.isAdmin||user?.isSuperAdmin ? {} : { user_id: user.id }),
+            ...(user?.isAdmin || user?.isSuperAdmin
+              ? {}
+              : { user_id: user.id }),
           },
           force,
         };
