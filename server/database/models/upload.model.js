@@ -3,7 +3,6 @@ const { Model } = require("sequelize");
 const del = require("del");
 const faker = require("faker");
 const { mimeTypes, FILE_UPLOAD_PATH, tableNames } = require("../../consts");
-const faker = require("faker");
 
 module.exports = (sequelize, DataTypes) => {
   class Upload extends Model {
