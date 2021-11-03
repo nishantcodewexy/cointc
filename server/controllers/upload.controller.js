@@ -20,7 +20,7 @@ module.exports = function UploadController(server) {
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
+    async findByID(req) {
       const {
         params: { id },
 
@@ -48,7 +48,7 @@ module.exports = function UploadController(server) {
       }
       return upload;
     },
-    async bulkRetrieve(req) {
+    async findAll(req) {
       const {
         query,
         pre: { user },
@@ -143,7 +143,7 @@ module.exports = function UploadController(server) {
 
     //   REMOVE ---------------------------------------------------
 
-    async remove(req) {
+    async removeByID(req) {
       const {
         params: { id },
         pre: { user },
@@ -166,7 +166,7 @@ module.exports = function UploadController(server) {
      * @param {Object} req
      * @returns
      */
-    async bulkRemove(req) {
+    async remove(req) {
       const {
         pre: { user },
         payload,

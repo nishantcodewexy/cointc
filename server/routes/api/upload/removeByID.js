@@ -1,20 +1,18 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
   const {
     controllers: {
-      upload: { bulkRemove },
+      upload: { removeByID },
     },
     helpers: {
       permissions: { isUser },
     },
   } = server.app;
 
-  const schema = Joi.array().items(Joi.string().uuid());
-
   return {
     method: "DELETE",
-    path: "/upload",
+    path: "/upload/{id}",
     config: {
       pre: [
         [
@@ -24,11 +22,8 @@ module.exports = (server) => {
           },
         ],
       ],
-      handler: bulkRemove,
+      handler: removeByID,
       auth: "jwt",
-      validate: {
-        payload: schema,
-      },
     },
   };
 };
