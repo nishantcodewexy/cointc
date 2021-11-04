@@ -65,7 +65,7 @@ const ChatHistoryController = (server) => {
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
+    async findByID(req) {
       const {
         params: { id },
       } = req;
@@ -93,7 +93,7 @@ const ChatHistoryController = (server) => {
      * @param {Object} req
      * @returns
      */
-    async bulkRetrieve(req) {
+    async find(req) {
       try {
         const { query } = req;
         const queryFilters = await filters({
@@ -122,7 +122,7 @@ const ChatHistoryController = (server) => {
     // UPDATE ----------------------------------------------------------
 
     // REMOVE ----------------------------------------------------------
-    async remove(req) {
+    async removeByID(req) {
       const {
         params: { id },
       } = req;

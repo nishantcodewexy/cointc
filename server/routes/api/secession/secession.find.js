@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-      chathistory: { retrieve },
+      secession: { find },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -12,7 +12,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/chat-history/{id}",
+    path: "/secession",
     config: {
       pre: [
         {
@@ -20,7 +20,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: retrieve,
+      handler: find,
       auth: "jwt",
     },
   };

@@ -2,22 +2,22 @@
 module.exports = (server) => {
   const {
     controllers: {
-      wallet: { balanceOf },
+      security: { find },
     },
-    helpers: { jwt: {decodeUser} },
+    helpers: { permissions: {isUser} },
   } = server.app;
 
   return {
-    method: ["GET"],
-    path: "/wallet/balanceOf",
+    method: "GET",
+    path: "/security",
     config: {
       pre: [
         {
-          method: decodeUser,
+          method: isUser,
           assign: "user",
         },
       ],
-      handler: balanceOf,
+      handler: find,
       auth: "jwt",
     },
   };

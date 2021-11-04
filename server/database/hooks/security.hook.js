@@ -14,29 +14,22 @@ module.exports = {
   // },
 
   // prioryty 4
-  async beforeCreate(instance, options) {
+  /*   async beforeCreate(instance, options) {
     if (!instance) return;
     instance.password = await encrypt(instance.password);
-  },
+  }, */
 
   async afterFind(findResult, options) {
     if (!findResult) return;
-    let trim = options?.trim ?? true;
     if (!Array.isArray(findResult)) findResult = [findResult];
 
     for (const instance of findResult) {
       if (instance instanceof this) {
-        let profile = await instance.getProfile();
-        // let addresses = await instance.getAddresses();
-        // let security = await instance.getKyc();
+        let user = await instance.getUser();
 
         let compiled = {
-          ...profile?.toJSON(),
-          /* addresses, */
-          /*  kyc, */
-          ...(trim
-            ? _.omit(instance?.toJSON(), ["password"])
-            : instance?.toJSON()),
+          user: user?.toJSON(),
+          ...instance?.toJSON(),
         };
         instance.dataValues = {
           ...compiled,

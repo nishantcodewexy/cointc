@@ -3,24 +3,24 @@
 module.exports = (server) => {
   const {
     controllers: {
-      chathistory: { bulkRetrieve },
+      support_ticket: { findByID },
     },
     helpers: {
-      permissions: { isAdminOrError },
+      permissions: { isUser },
     },
   } = server.app;
 
   return {
     method: "GET",
-    path: "/chat-history",
+    path: "/ticket/{id}",
     config: {
       pre: [
         {
-          method: isAdminOrError,
+          method: isUser,
           assign: "user",
         },
       ],
-      handler: bulkRetrieve,
+      handler: findByID,
       auth: "jwt",
     },
   };

@@ -44,7 +44,7 @@ const AdvertController = (server) => {
       const {
         params: { id },
         payload: { force = false },
-        pre: { user },
+        pre: { user:{user} },
       } = req;
 
       try {
@@ -75,7 +75,7 @@ const AdvertController = (server) => {
      * @function bulkRetrieve - Retrieves multiple advert records
      * @param {Object} req
      */
-    async findAll(req) {
+    async find(req) {
       const {
         query,
         pre: {
@@ -91,7 +91,7 @@ const AdvertController = (server) => {
         const options = {
           ...queryFilters,
           logging: console.log,
-          include: User,
+          // include: User,
           // attributes: { include: [["User", "user"]] },
         };
 

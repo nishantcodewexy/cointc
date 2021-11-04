@@ -1,21 +1,21 @@
 "use strict";
+const Joi = require("joi");
 
 module.exports = (server) => {
-/*   const Schema = require("../../_schema/currency.schema");
-  const { payload: payloadSchema } = Schema.bulkRetrieve(server);
- */
   const {
     controllers: {
-      currency: { retrieve },
+      security: { findByUserID },
     },
     helpers: {
       permissions: { isUser },
     },
   } = server.app;
 
+  const schema = Joi.object({});
+
   return {
-    method: "GET",
-    path: "/currency/{id}",
+    method: ["GET"],
+    path: "/security/{user_id}",
     config: {
       pre: [
         {
@@ -23,7 +23,10 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: retrieve,
+      handler: findByUserID,
+      validate: {
+        params: schema,
+      },
       auth: "jwt",
     },
   };

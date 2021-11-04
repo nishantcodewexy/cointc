@@ -15,12 +15,12 @@ function ReferralController(server) {
   return {
     async create(req) {
       const {
-        pre: { user },
+        pre: { user: {user, sudo} },
         payload: { referral_code },
       } = req;
 
       try {
-        if (!isAdmin) throw boom.forbidden();
+        if (!sudo) throw boom.forbidden();
 
         const userProfile = await Profile.findOne({
           where: {
@@ -41,17 +41,16 @@ function ReferralController(server) {
       }
     },
 
-    // Delete Order
     async remove(req) {
       const {
-        pre: { isAdmin },
+        pre: { user: {user, sudo} },
       } = req;
 
       // only allow action if it admin
-      if (!isAdmin) throw boom.forbidden();
+      if (!sudo) throw boom.forbidden();
 
       try {
-        const data = req.payload;
+        const {data} = req.payload;
 
         return await Referral.destroy({
           where: {

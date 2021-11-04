@@ -4,7 +4,7 @@ let Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      support_ticket: { transferTo },
+      support_ticket: { transferByID },
     },
     boom,
     helpers: {
@@ -13,10 +13,10 @@ module.exports = (server) => {
   } = server.app;
 
   const schema = Joi.object({
-    id: Joi.string()
+    /* id: Joi.string()
       .uuid()
       .required()
-      .error(boom.badData(`Required data <id::uuid> is missing or invalid`)),
+      .error(boom.badData(`Required data <id::uuid> is missing or invalid`)), */
     to: Joi.string()
       .uuid()
       .required()
@@ -25,7 +25,7 @@ module.exports = (server) => {
 
   return {
     method: "POST",
-    path: "/ticket/transfer",
+    path: "/ticket/transfer/{id}",
     config: {
       pre: [
         {
@@ -33,7 +33,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: transferTo,
+      handler: transferByID,
       auth: "jwt",
       validate: {
         payload: schema,

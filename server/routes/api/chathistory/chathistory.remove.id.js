@@ -1,12 +1,9 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/currency.schema");
-  const { payload: payloadSchema } = Schema.bulkCreate(server);
-
   const {
     controllers: {
-      currency: { bulkCreate },
+      chathistory: { removeByID },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -14,8 +11,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "POST",
-    path: "/currency/bulk",
+    method: "DELETE",
+    path: "/chat-history/{id}",
     config: {
       pre: [
         [
@@ -25,11 +22,8 @@ module.exports = (server) => {
           },
         ],
       ],
-      handler: bulkCreate,
+      handler: removeByID,
       auth: "jwt",
-      validate: {
-        payload: payloadSchema,
-      },
     },
   };
 };

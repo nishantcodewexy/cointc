@@ -1,35 +1,35 @@
 "use strict";
 const Joi = require("joi");
-
 module.exports = (server) => {
   const {
     controllers: {
-      wallet: { getByAddress },
+      secession: { updateByID },
     },
     helpers: {
-      jwt: { decodeUser },
+      permissions: { isUser },
     },
   } = server.app;
 
   const schema = Joi.object({
-    address: Joi.string().required(),
+    level: Joi.number().greater(0),
+    status: Joi.string().valid("pending", "accept", "deny"),
   });
 
   return {
-    method: ["GET"],
-    path: "/wallet/{address}",
+    method: "PUT",
+    path: "/secession/{id}",
     config: {
       pre: [
         {
-          method: decodeUser,
+          method: isUser,
           assign: "user",
         },
       ],
-      handler: getByAddress,
-      validate: {
-        params: schema,
-      },
+      handler: updateByID,
       auth: "jwt",
+      validate: {
+        payload: schema,
+      },
     },
   };
 };

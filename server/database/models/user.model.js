@@ -4,8 +4,8 @@ const _ = require("underscore");
 const hooks = require("../hooks/user.hook");
 const { tableNames } = require("../../consts");
 const faker = require("faker");
-// debugger;
-const uppercaseFirst = (str) => `${str[0].toUpperCase()}${str.substr(1)}`;
+const Profile = require("./profile.model");
+// const uppercaseFirst = (str) => `${str[0].toUpperCase()}${str.substr(1)}`;
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -135,36 +135,9 @@ module.exports = (sequelize, DataTypes) => {
           isSuperAdmin: access_level === 3,
           profile_id: faker.datatype.uuid(),
           mode: null,
-          invite_code: faker.random.alphaNumeric(10),
-          suitability: faker.helpers.randomize([1, 2, 3, 4, 5]),
-          verified: faker.helpers.randomize([true, false]),
-          active: faker.helpers.randomize([true, false]),
-          payment_methods: null,
-          pname: faker.internet.userName(),
-          lname: faker.name.lastName,
-          oname: faker.name.findName,
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
-          phone: faker.phone.phoneNumber("0##########"),
-          kyc: [
-            {
-              id: faker.datatype.uuid(),
-              type: faker.helpers.randomize(["email", "id", "sms"]),
-              status: faker.helpers.randomize(["PENDING", "ACCEPT", "DENY"]),
-              user_id: id,
-              archived_at: faker.datatype.datetime(),
-              document_id: faker.datatype.uuid(),
-            },
-          ],
-          avatar_upload: null,
-          addresses: [
-            {
-              id: faker.datatype.uuid(),
-              country: faker.address.country(),
-              address_line: faker.address.secondaryAddress,
-            },
-          ],
-          created_by: null,
+          ...Profile(sequelize, DataTypes).FAKE(),
         };
       };
       if (count > 0) {

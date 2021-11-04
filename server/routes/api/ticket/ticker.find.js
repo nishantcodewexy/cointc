@@ -3,24 +3,24 @@
 module.exports = (server) => {
   const {
     controllers: {
-      advert: { find },
+      support_ticket: { find },
     },
     helpers: {
       permissions: {
         isUser
-      }
-    }
+      },
+    },
   } = server.app;
 
   return {
     method: "GET",
-    path: "/ad",
+    path: "/ticket",
     config: {
       pre: [
         {
           method: isUser,
-          assign: 'user'
-        }
+          assign: "user",
+        },
       ],
       handler: find,
       auth: "jwt",

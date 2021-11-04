@@ -2,12 +2,13 @@
 
 module.exports = (server) => {
   const Schema = require("../../../schema/currency.schema");
-  const { payload: payloadSchema, params: paramsSchema} = Schema.update(server);
-
+  const { payload: payloadSchema } = Schema.bulkUpdate(server);
+  
   const {
     controllers: {
       currency: { update },
     },
+
     helpers: {
       permissions: { isAdminOrError },
     },
@@ -15,7 +16,7 @@ module.exports = (server) => {
 
   return {
     method: "PUT",
-    path: "/currency/{id}",
+    path: "/currency",
     config: {
       pre: [
         [
@@ -29,7 +30,6 @@ module.exports = (server) => {
       auth: "jwt",
       validate: {
         payload: payloadSchema,
-        params: paramsSchema
       },
     },
   };

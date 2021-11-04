@@ -1,20 +1,18 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
   const {
     controllers: {
-      secession: { bulkRemove },
+      chathistory: { findByID },
     },
     helpers: {
       permissions: { isAdminOrError },
     },
   } = server.app;
 
-  const schema = Joi.array().items(Joi.string().uuid());
-
   return {
-    method: "DELETE",
-    path: "/secession/bulk",
+    method: "GET",
+    path: "/chat-history/{id}",
     config: {
       pre: [
         {
@@ -22,11 +20,8 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: bulkRemove,
+      handler: findByID,
       auth: "jwt",
-      validate: {
-        payload: schema,
-      },
     },
   };
 };

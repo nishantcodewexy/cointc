@@ -1,23 +1,18 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
   const {
     controllers: {
-      secession: { update },
+      security: { update },
     },
     helpers: {
       permissions: { isUser },
     },
   } = server.app;
 
-  const schema = Joi.object({
-    level: Joi.number().greater(0),
-    status: Joi.string().valid("pending", "accept", "deny"),
-  });
-
   return {
-    method: "PUT",
-    path: "/secession/{id}",
+    method: ["PUT"],
+    path: "/security",
     config: {
       pre: [
         {
@@ -27,9 +22,6 @@ module.exports = (server) => {
       ],
       handler: update,
       auth: "jwt",
-      validate: {
-        payload: schema,
-      },
     },
   };
 };

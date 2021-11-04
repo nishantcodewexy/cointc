@@ -2,11 +2,11 @@
 
 module.exports = (server) => {
   const Schema = require("../../../schema/currency.schema");
-  const { payload: payloadSchema } = Schema.bulkRestore(server);
+  const { payload: payloadSchema, params: paramsSchema} = Schema.update(server);
 
   const {
     controllers: {
-      currency: { bulkRestore },
+      currency: { updateByID },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -14,8 +14,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "PATCH",
-    path: "/currency",
+    method: "PUT",
+    path: "/currency/{id}",
     config: {
       pre: [
         [
@@ -25,10 +25,11 @@ module.exports = (server) => {
           },
         ],
       ],
-      handler: bulkRestore,
+      handler: updateByID,
       auth: "jwt",
       validate: {
         payload: payloadSchema,
+        params: paramsSchema
       },
     },
   };

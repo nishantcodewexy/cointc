@@ -1,7 +1,8 @@
 "use strict";
+
 module.exports = (server) => {
   const Schema = require("../../../schema/currency.schema");
-  const {payload: payloadSchema, params: paramsSchema} = Schema.remove(server);
+  const { payload: payloadSchema } = Schema.bulkRemove(server);
 
   const {
     controllers: {
@@ -14,8 +15,11 @@ module.exports = (server) => {
 
   return {
     method: "DELETE",
-    path: "/currency/{id}",
+    path: "/currency",
     config: {
+      response: {
+        emptyStatusCode: 204
+      },
       pre: [
         [
           {
@@ -28,7 +32,6 @@ module.exports = (server) => {
       auth: "jwt",
       validate: {
         payload: payloadSchema,
-        params: paramsSchema,
       },
     },
   };
