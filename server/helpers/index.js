@@ -483,14 +483,14 @@ module.exports = {
       result: rows,
     };
   },
-  validateAndFilterAssociation(list = [], Model) {
+  validateAndFilterAssociation(list = [], allow = [], Model) {
     if (!Array.isArray(list)) list = [list];
     let valid = [];
     list.forEach((item) => {
       for (let assc in Model.associations) {
         let isSame = assc?.toLowerCase() === item?.toLowerCase();
 
-        if (isSame) {
+        if (isSame && allow.includes(assc)) {
           valid.push(assc);
           break;
         }
