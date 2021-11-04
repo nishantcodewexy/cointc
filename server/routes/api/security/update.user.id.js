@@ -1,12 +1,9 @@
 "use strict";
 
 module.exports = (server) => {
-/*   const Schema = require("../../_schema/currency.schema");
-  const { payload: payloadSchema } = Schema.bulkRetrieve(server);
- */
   const {
     controllers: {
-      currency: { bulkRetrieve },
+      security: { updateByUserID },
     },
     helpers: {
       permissions: { isUser },
@@ -14,8 +11,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "GET",
-    path: "/currency/bulk",
+    method: ["PUT"],
+    path: "/security/{user_id}",
     config: {
       pre: [
         {
@@ -23,7 +20,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: bulkRetrieve,
+      handler: updateByUserID,
       auth: "jwt",
     },
   };

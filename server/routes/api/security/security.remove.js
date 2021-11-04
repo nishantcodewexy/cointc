@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-      support_ticket: { retrieve },
+      security: { remove },
     },
     helpers: {
       permissions: { isUser },
@@ -11,8 +11,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "GET",
-    path: "/ticket/{id}",
+    method: ["DELETE"],
+    path: "/security",
     config: {
       pre: [
         {
@@ -20,7 +20,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: retrieve,
+      handler: remove,
       auth: "jwt",
     },
   };

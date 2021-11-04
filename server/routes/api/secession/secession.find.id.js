@@ -1,27 +1,26 @@
 "use strict";
-const Joi = require("joi");
+
 module.exports = (server) => {
   const {
     controllers: {
-      support_ticket: { remove },
+      secession: { findByID },
     },
     helpers: {
-      permissions: { isUser },
+      permissions: { isAdminOrError },
     },
   } = server.app;
 
-
   return {
-    method: "DELETE",
-    path: "/ticket/{id}",
+    method: "GET",
+    path: "/secession/{id}",
     config: {
       pre: [
         {
-          method: isUser,
+          method: isAdminOrError,
           assign: "user",
         },
       ],
-      handler: remove,
+      handler: findByID,
       auth: "jwt",
     },
   };

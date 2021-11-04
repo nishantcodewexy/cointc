@@ -2,8 +2,9 @@
 const { Model } = require("sequelize");
 const _ = require("underscore");
 const { tableNames } = require("../../consts");
-const faker = require('faker')
-
+const faker = require("faker");
+const hooks = require("../hooks/security.hook");
+const User = require('./user.model');
 
 module.exports = (sequelize, DataTypes) => {
   class Security extends Model {
@@ -20,22 +21,19 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static FAKE(count){
+    static FAKE(count) {
       let rows = [],
         result = {},
         index = 0;
       let generateFakeData = () => {
-        
-        
-          
         return {
           id: faker.datatype.uuid(),
-          otp: faker.company.suffixes(),
+          otp: faker.datatype.float(5),
           otp_ttl: faker.datatype.datetime(),
           two_factor: faker.datatype.boolean(),
           verify_token: faker.random.alphaNumeric(50),
           verify_token_ttl: faker.datatype.datetime(),
-          
+          user: User(sequelize, DataTypes).FAKE(),
         };
       };
       if (count > 1) {
@@ -70,6 +68,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Security",
       underscored: true,
+      hooks,
       tableName: tableNames?.SECURITY || "tbl_user_securities",
     }
   );

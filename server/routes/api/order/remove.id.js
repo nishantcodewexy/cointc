@@ -7,7 +7,7 @@ module.exports = (server) => {
   );
   const {
     controllers: {
-      order: { remove },
+      order: { removeByID },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -24,7 +24,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: remove,
+      handler: removeByID,
       auth: "jwt",
       validate: {
         params: paramsSchema,

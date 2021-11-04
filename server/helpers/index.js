@@ -138,7 +138,7 @@ const config = {
   client_url: CLIENT_URL,
   secret: SECRET_KEY,
   jwt: JWTHelpers().config,
-  tatum_api_key: TATUM_API_KEY
+  tatum_api_key: TATUM_API_KEY,
 };
 /****************************************************
  * Mailer helpers
@@ -169,7 +169,7 @@ const MailerHelpers = () => {
     assert(emailTemplates[name], `Email template: ${name} not found!`);
     return emailTemplates[name];
   }
-  
+
   return {
     /*************************************
      * Maps email templates literals to specified transform mapping
@@ -184,8 +184,6 @@ const MailerHelpers = () => {
         text,
         ...rest
       } = options;
-
-
 
       const htmlContent = htmlTemplate && hasEmailTemplate(htmlTemplate.name);
       const textContent = textTemplate && hasEmailTemplate(textTemplate.name);
@@ -328,7 +326,7 @@ module.exports = {
   config,
   jwt: JWTHelpers(),
   mailer: MailerHelpers(),
-  
+
   // wallets: wallets,
   /****************************************************
    * Generates private/public key pair
@@ -411,7 +409,7 @@ module.exports = {
   filters: async ({ query = {}, searchFields = [], extras = {} }) => {
     const q = query.q || "";
     const searchQuery = {};
-   
+
     const paranoid = query?.paranoid
       ? Boolean(JSON.parse(query?.paranoid))
       : true;
@@ -485,16 +483,21 @@ module.exports = {
       result: rows,
     };
   },
-  /* 
-  isBasic(user) {
-    return user?.access_level === 1;
+  validateAndFilterAssociation(list = [], Model) {
+    if (!Array.isArray(list)) list = [list];
+    let valid = [];
+    list.forEach((item) => {
+      for (let assc in Model.associations) {
+        let isSame = assc?.toLowerCase() === item?.toLowerCase();
+
+        if (isSame) {
+          valid.push(assc);
+          break;
+        }
+      }
+    });
+    return valid?.length ? valid : null;
   },
-  isAdmin(user) {
-    return user?.access_level === 2;
-  },
-  isSuperAdmin() {
-    return user?.access_level === 3;    
-  } */
 };
 
 function renameKey(Obj, from = [], to = []) {

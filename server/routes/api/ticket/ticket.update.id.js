@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      support_ticket: { update },
+      support_ticket: { updateByID },
     },
     consts: { TicketPriorityType, TicketStatusType },
     helpers: {
@@ -31,7 +31,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: update,
+      handler: updateByID,
       auth: "jwt",
       validate: {
         payload: schema,

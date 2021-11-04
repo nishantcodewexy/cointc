@@ -16,26 +16,32 @@ module.exports = function SupportTicketController(server) {
 
   return {
     /**
-     * @function get - Get a single support ticket record
+     * @function findByID - Get a single support ticket record
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
+    async findByID(req) {
       const {
         query,
-        pre: { user },
+        pre: {
+          user: { user, sudo, fake },
+        },
         params: { id },
       } = req;
       try {
-        let result = await SupportTicket.findOne({
-          where: {
-            id,
-            ...(user?.isAdmin||user?.isSuperAdmin ? {} : { user_id: user.id }),
-          },
-          attributes: { exclude: ["user_id", "UserId", "deleted_at"] },
-        });
+        let result = fake
+          ? SupportTicket.FAKE()
+          : await SupportTicket.findOne({
+              where: {
+                id,
+                ...(!sudo && { user_id: user.id }),
+              },
+              attributes: { exclude: ["user_id", "UserId"] },
+            });
 
-        return result ? { result } : boom.notFound("Support ticket not found!");
+        return result
+          ? { result }
+          : boom.notFound(`Support ticket with ID: ${id} not found!`);
       } catch (err) {
         console.error(err);
         boom.internal(err.message, err);
@@ -43,28 +49,32 @@ module.exports = function SupportTicketController(server) {
     },
 
     /**
-     * @function bulkRetrieve
+     * @function find
      * @param {Object} req
      * @returns
      */
-    async bulkRetrieve(req) {
+    async find(req) {
       const {
         query,
-        pre: { user },
+        pre: {
+          user: { user, sudo, fake, fake_count },
+        },
       } = req;
 
       try {
         const filterResults = await filters({
           query,
           searchFields: ["description"],
-          ...(!user?.isAdmin && {
+          ...(!sudo && {
             extra: {
               user_id: user?.id,
             },
           }),
         });
 
-        const queryset = await SupportTicket.findAndCountAll(filterResults);
+        const queryset = fake
+          ? SupportTicket.FAKE(fake_count)
+          : await SupportTicket.findAndCountAll(filterResults);
 
         return paginator({
           queryset,
@@ -77,16 +87,18 @@ module.exports = function SupportTicketController(server) {
       }
     },
 
-    async update(req) {
+    async updateByID(req) {
       const {
-        pre: { user },
+        pre: {
+          user: { user, sudo },
+        },
         payload,
         params: { id },
       } = req;
 
       let target = await SupportTicket.findByPk(id, {
         where: {
-          ...(!user?.isSuperAdmin && {
+          ...(!sudo && {
             user_id: user.id,
           }),
         },
@@ -97,14 +109,22 @@ module.exports = function SupportTicketController(server) {
       return { result, message: "Update successful" };
     },
 
-    async transferTo(req) {
+    /**
+     * @function transferByID - Transfer support ticket from one admin to another
+     * @param {Object} req
+     * @returns
+     */
+    async transferByID(req) {
       const {
-        pre: { user },
-        payload: { id, to },
+        params: { id },
+        pre: {
+          user: { sudo, user, fake },
+        },
+        payload: { to },
       } = req;
 
       // Only an admin can transfer a support ticket to another admin
-      if (!user?.access_level > 1)
+      if (!sudo)
         return boom.methodNotAllowed(`Only admins can perform this action!`);
 
       // find the target user
@@ -138,7 +158,9 @@ module.exports = function SupportTicketController(server) {
     async create(req) {
       const {
         payload,
-        pre: { user },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
       try {
         const object = await SupportTicket.create({
@@ -156,15 +178,18 @@ module.exports = function SupportTicketController(server) {
         throw boom.boomify(error);
       }
     },
-    async remove(req) {
+
+    async removeByID(req) {
       const {
-        pre: { user },
+        pre: {
+          user: { user, sudo },
+        },
         params: { id },
       } = req;
 
       return await SupportTicket.destroy({
         where: {
-          ...(user?.isAdmin || user?.isSuperAdmin?{} : {
+          ...(!sudo && {
             user_id: user.id,
           }),
           id,

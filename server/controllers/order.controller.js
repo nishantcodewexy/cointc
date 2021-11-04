@@ -51,15 +51,19 @@ function OrderController(server) {
     // REMOVE ---------------------------------------------------------
 
     /**
-     * @function remove - remove a single record
+     * @function removeByID - remove a single record
      * @param {Object} req
      * @returns
      */
-    async remove(req) {
+    async removeByID(req) {
       const {
         params: { id },
         payload: { force = false },
-        pre: { user },
+        pre: {
+          user: {
+            user: { user, sudo },
+          },
+        },
       } = req;
 
       try {
@@ -73,7 +77,7 @@ function OrderController(server) {
 
     // RETRIEVE ---------------------------------------------------------
     /**
-     * @function retrieve
+     * @function findByID
      * @param {Object} req
      * @returns
      */
@@ -114,10 +118,12 @@ function OrderController(server) {
 
         const options = {
           ...queryFilters,
-          include: [{ model: Advert }, User],
+          // include: [{ model: Advert }, User],
         };
 
-        const queryset = fake ? await Order.FAKE(fake_count) : await Order.findAndCountAll(options);
+        const queryset = fake
+          ? await Order.FAKE(fake_count)
+          : await Order.findAndCountAll(options);
         const { limit, offset } = queryFilters;
         return await paginator({
           queryset,

@@ -17,7 +17,9 @@ module.exports = function SecessionController(server) {
       const {
         payload,
         auth: {
-          credentials: { user },
+          credentials: {
+            user: { user },
+          },
         },
       } = req;
 
@@ -30,50 +32,42 @@ module.exports = function SecessionController(server) {
 
     // RETRIEVE ---------------------------------------------------------------
     /**
-     * @function bulkRetrieve - retrieves multiple currency record
+     * @function find - find multiple records
      * @param {Object} req
      * @returns
      */
-    async bulkRetrieve(req) {
+    async find(req) {
       const {
         query,
-        pre: { isAdmin },
-        auth: {
-          credentials: { user },
+        pre: {
+          user: { user, sudo, fake, fake_count },
         },
       } = req;
-
-      if (isAdmin) {
+      try {
         const filterResults = await filters({
           query,
           searchFields: ["status", "description"],
-        });
-
-        const queryset = Secession.findAndCountAll(filterResults);
-
-        return await paginator({
-          queryset,
-          limit: filterResults.limit,
-          offset: filterResults.offset,
-        });
-      } else {
-        const filterResults = await filters({
-          query,
-          extra: {
-            user_id: user.id,
-            archived_at: {
-              [Op.is]: null,
+          ...(!sudo && {
+            extra: {
+              user_id: user?.id,
+              archived_at: {
+                [Op.is]: null,
+              },
             },
-          },
+          }),
         });
-
-        const queryset = Secession.findAndCountAll(filterResults);
+        const result = fake
+          ? Secession.FAKE(fake_count)
+          : await Secession.findAndCountAll(filterResults);
 
         return await paginator({
-          queryset,
+          queryset: result,
           limit: filterResults.limit,
           offset: filterResults.offset,
         });
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
       }
     },
 
@@ -82,38 +76,39 @@ module.exports = function SecessionController(server) {
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
+    async findByID(req) {
       const {
         params: { id },
-        pre: { user },
+        pre: {
+          user: { user, fake },
+        },
       } = req;
 
-      
-
-      return await Secession.findByPk(id);
+      return { result: fake ? Secession.FAKE() : await Secession.findByPk(id) };
     },
 
     // DELETE ---------------------------------------------------------------
 
-    async remove(req) {
+    async removeByID(req) {
       const {
         params: { id },
-        pre: { isAdmin },
+        pre: { user: {user, sudo} },
       } = req;
 
-      if (!isAdmin) throw boom.forbidden();
+      if (!sudo) throw boom.forbidden();
 
       return await Secession.destroy({
         where: { id },
       });
     },
-    async bulkRemove(req) {
+
+    async remove(req) {
       const {
-        pre: { isAdmin },
+        pre: { user: {user, sudo} },
         payload,
       } = req;
 
-      if (!isAdmin) throw boom.forbidden();
+      if (!sudo) throw boom.forbidden();
 
       return await Secession.destroy({
         where: {
@@ -130,19 +125,25 @@ module.exports = function SecessionController(server) {
      * @param {Object} req
      * @returns
      */
-    async update(req) {
+    async updateByID(req) {
       const {
         payload,
         params: { id },
-        pre:{user}
+        pre: { user: {user, sudo} },
       } = req;
 
-      return await Secession.update(payload, {
-        where: { 
+      let result= await Secession.update(payload, {
+        where: {
           id,
-          ...(user?.isAdmin||user?.isSuperUser?{}:{user_id:user.id})
-         },
+          ...(!sudo && { user_id: user?.id }),
+        },
       });
+
+      return {
+        id,
+        status: Boolean(result),
+        result
+      }
     },
   };
 };

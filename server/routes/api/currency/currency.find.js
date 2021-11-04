@@ -1,26 +1,29 @@
 "use strict";
 
 module.exports = (server) => {
+/*   const Schema = require("../../_schema/currency.schema");
+  const { payload: payloadSchema } = Schema.bulkRetrieve(server);
+ */
   const {
     controllers: {
-      secession: { bulkRetrieve },
+      currency: { find },
     },
     helpers: {
-      permissions: { isAdminOrError },
+      permissions: { isUser },
     },
   } = server.app;
 
   return {
     method: "GET",
-    path: "/secession/bulk",
+    path: "/currency/bulk",
     config: {
       pre: [
         {
-          method: isAdminOrError,
+          method: isUser,
           assign: "user",
         },
       ],
-      handler: bulkRetrieve,
+      handler: find,
       auth: "jwt",
     },
   };

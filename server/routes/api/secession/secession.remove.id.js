@@ -1,9 +1,9 @@
 "use strict";
-
+const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      chathistory: { remove },
+      secession: { removeByID },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -12,17 +12,15 @@ module.exports = (server) => {
 
   return {
     method: "DELETE",
-    path: "/chat-history/{id}",
+    path: "/secession/{id}",
     config: {
       pre: [
-        [
-          {
-            method: isAdminOrError,
-            assign: "user",
-          },
-        ],
+        {
+          method: isAdminOrError,
+          assign: "user",
+        },
       ],
-      handler: remove,
+      handler: removeByID,
       auth: "jwt",
     },
   };

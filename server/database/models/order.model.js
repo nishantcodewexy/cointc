@@ -44,8 +44,8 @@ module.exports = (sequelize, DataTypes) => {
           rating: faker.datatype.number(5),
           archived_at: faker.datatype.datetime(),
           trx_id: faker.datatype.uuid(),
-          User: User(sequelize, DataTypes).FAKE(),
-          Advert: Advert(sequelize, DataTypes).FAKE(),
+          user: User(sequelize, DataTypes).FAKE(),
+          advert: Advert(sequelize, DataTypes).FAKE(),
         };
       };
       if (count > 1) {

@@ -3,24 +3,24 @@
 module.exports = (server) => {
   const {
     controllers: {
-      wallet: { getAll },
+      chathistory: { find },
     },
     helpers: {
-      jwt: { decodeUser },
+      permissions: { isAdminOrError },
     },
   } = server.app;
 
   return {
-    method: ["GET"],
-    path: "/wallets",
+    method: "GET",
+    path: "/chat-history",
     config: {
       pre: [
         {
-          method: decodeUser,
+          method: isAdminOrError,
           assign: "user",
         },
       ],
-      handler: getAll,
+      handler: find,
       auth: "jwt",
     },
   };

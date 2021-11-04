@@ -2,11 +2,13 @@
 
 module.exports = (server) => {
   const Schema = require("../../../schema/currency.schema");
-  const { payload: payloadSchema } = Schema.bulkRemove(server);
+  const { params: paramsSchema } = Schema.restore(
+    server
+  );
 
   const {
     controllers: {
-      currency: { bulkRemove },
+      currency: { restoreByID },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -14,12 +16,9 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "DELETE",
-    path: "/currency",
+    method: "PATCH",
+    path: "/currency/{id}",
     config: {
-      response: {
-        emptyStatusCode: 204
-      },
       pre: [
         [
           {
@@ -28,10 +27,10 @@ module.exports = (server) => {
           },
         ],
       ],
-      handler: bulkRemove,
+      handler: restoreByID,
       auth: "jwt",
       validate: {
-        payload: payloadSchema,
+        params: paramsSchema,
       },
     },
   };
