@@ -2,11 +2,9 @@
 const boom = require("@hapi/boom");
 
 function OrderController(server) {
-  const {   __destroy } = require("./utils")(
-    server
-  );
+  const { __destroy } = require("./utils")(server);
   const {
-    db: { Order, Advert },
+    db: { Order, Advert, User },
     helpers: { filters, paginator },
   } = server.app;
 
@@ -20,7 +18,9 @@ function OrderController(server) {
      */
     async create(req) {
       const {
-        pre: { user },
+        pre: {
+          user: { user, fake },
+        },
         payload,
       } = req;
 
@@ -33,9 +33,11 @@ function OrderController(server) {
         if (ad) {
           // create order using the user info
           return {
-            result: await user.createOrder({
-              ...payload,
-            }),
+            result: fake
+              ? await Order.FAKE()
+              : await user.createOrder({
+                  ...payload,
+                }),
           };
         } else
           return boom.notFound(
@@ -75,10 +77,16 @@ function OrderController(server) {
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
-      const { id } = req.params;
+    async findByID(req) {
+      const {
+        params: { id },
+        pre: {
+          user: { user, fake },
+        },
+      } = req;
       try {
-        return { result: await Order.findByPk(id) };
+        let result = fake ? await Order.FAKE() : await Order.findByPk(id);
+        return { result };
       } catch (error) {
         console.error(error);
         throw boom.internal(error.message, error);
@@ -90,10 +98,12 @@ function OrderController(server) {
      * @param {Object} req
      * @returns
      */
-    async bulkRetrieve(req) {
+    async find(req) {
       const {
         query,
-        pre: { user },
+        pre: {
+          user: { user, fake, fake_count },
+        },
       } = req;
 
       try {
@@ -101,10 +111,13 @@ function OrderController(server) {
           query,
           searchFields: ["appeal", "remark", "status"],
         });
+
         const options = {
           ...queryFilters,
+          include: [{ model: Advert }, User],
         };
-        const queryset = await Order.findAndCountAll(options);
+
+        const queryset = fake ? await Order.FAKE(fake_count) : await Order.findAndCountAll(options);
         const { limit, offset } = queryFilters;
         return await paginator({
           queryset,

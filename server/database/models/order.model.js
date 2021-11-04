@@ -2,7 +2,9 @@
 const { Model } = require("sequelize");
 const hooks = require("../hooks/order.hook");
 const { tableNames } = require("../../consts");
-const faker = require('faker')
+const faker = require("faker");
+const User = require("./user.model");
+const Advert = require("./advert.model");
 
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
@@ -13,36 +15,37 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      const { Order, Advert } = models;
+      const { Order, Advert, User } = models;
       Order.belongsTo(Advert, {
         foreignKey: "advert_id",
       });
+      Order.belongsTo(User);
     }
 
-    static FAKE(count){
+    static FAKE(count) {
       let rows = [],
         result = {},
         index = 0;
       let generateFakeData = () => {
-        
-        
-          
         return {
-          id:`ORD-${Date.now().toString()}`,
+          id: `ORD-${Date.now().toString()}`,
           total_amount: faker.datatype.float(),
           total_quantity: faker.datatype.number(),
           appeal: faker.lorem.sentence(),
           remark: faker.lorem.sentence(),
-          status: faker.helpers.randomize(["unpaid",
-          "paid",
-          "released",
-          "completed",
-          "disputed",
-          "canceled"]),
+          status: faker.helpers.randomize([
+            "unpaid",
+            "paid",
+            "released",
+            "completed",
+            "disputed",
+            "canceled",
+          ]),
           rating: faker.datatype.number(5),
           archived_at: faker.datatype.datetime(),
           trx_id: faker.datatype.uuid(),
-          
+          User: User(sequelize, DataTypes).FAKE(),
+          Advert: Advert(sequelize, DataTypes).FAKE(),
         };
       };
       if (count > 1) {

@@ -21,14 +21,17 @@ const AdvertController = (server) => {
     async create(req) {
       const {
         payload,
-        pre: { user },
+        pre: {
+          user: { user, sudo, fake },
+        },
       } = req;
       try {
         return {
-          result: await user.createAdvert(payload).catch((err) => {
-            console.error(err);
-            throw boom.badData(err.message, err);
-          }),
+          result: fake
+            ? await Advert.FAKE()
+            : await user.createAdvert(payload).catch((err) => {
+                throw boom.badData(err.message, err);
+              }),
         };
       } catch (err) {
         console.error(err);
@@ -80,23 +83,24 @@ const AdvertController = (server) => {
         },
       } = req;
 
-      const queryFilters = await filters({
-        query,
-        searchFields: ["user_id"],
-        /*  extras: {
-          user_id: { [Op?.ne]: user?.id },
-        }, */
-      });
-      const options = {
-        ...queryFilters,
-        logging: console.log,
-        include: User,
-      };
-
       try {
-        let queryset = fake ? await Advert.FAKE(fake_count) : await Advert.findAndCountAll(options).catch((err) => {
-          throw boom.badData(err.message, err);
+        const queryFilters = await filters({
+          query,
+          searchFields: ["user_id"],
         });
+        const options = {
+          ...queryFilters,
+          logging: console.log,
+          include: User,
+          // attributes: { include: [["User", "user"]] },
+        };
+
+        let queryset = fake
+          ? await Advert.FAKE(fake_count)
+          : await Advert.findAndCountAll(options).catch((err) => {
+              throw boom.badData(err.message, err);
+            });
+
         const { limit, offset } = queryFilters;
 
         return paginator({
@@ -109,6 +113,11 @@ const AdvertController = (server) => {
         return boom.isBoom ? err : boom.internal(err.message, err);
       }
     },
+    /**
+     * @function update
+     * @param {Object} req
+     * @returns
+     */
     async update(req) {
       const {
         query,
@@ -146,6 +155,12 @@ const AdvertController = (server) => {
         return boom.isBoom ? err : boom.internal(err.message, err);
       }
     },
+
+    /**
+     * @function updateByID
+     * @param {Object} req
+     * @returns
+     */
     async updateByID(req) {
       const {
         query,
