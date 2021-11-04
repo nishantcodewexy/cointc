@@ -1,6 +1,6 @@
 "use strict";
 const assert = require("assert");
-// const dateFn = require("date-fns");
+const dfn = require("date-fns");
 const faker = require("faker");
 /**
  * @description - User controller
@@ -15,7 +15,6 @@ module.exports = function UserController(server) {
     db: {
       User,
       sequelize,
-      Analytics,
       Sequelize: { Op },
     },
     boom,
@@ -181,7 +180,7 @@ module.exports = function UserController(server) {
             user: { user, sudo },
           },
         } = req;
-
+        let fields = ["permission"];
         return sudo
           ? {
               id,
@@ -216,11 +215,12 @@ module.exports = function UserController(server) {
             user: { user, fake, sudo, fake_count },
           },
         } = req;
-        let fields, result;
+        let fields = ["active"],
+          result;
 
         if (sudo) {
           let { ids = [], ...data } = payload;
-          fields = ["active"];
+          fields = [...fields, "permission"];
           if (!ids?.length) throw boom.badData(`<ids::array> cannot be empty`);
 
           if (!data) return boom.methodNotAllowed("Nothing to update");
@@ -304,7 +304,7 @@ module.exports = function UserController(server) {
     },
 
     /**
-     * @function remove - Remove single User
+     * @function remove - Remove single record by ID
      * @param {Object} req
      * @returns
      */
@@ -462,6 +462,7 @@ module.exports = function UserController(server) {
             data: {
               phone_number: user?.phone,
               email: user?.email,
+              id,
             },
           })
           .code(200);
@@ -534,6 +535,9 @@ module.exports = function UserController(server) {
           return security?.two_factor
             ? {
                 id: user?.id,
+                status: true,
+                message:
+                  "2FA enabled. Send OTP using the user ID to complete the authentication ",
               }
             : (await decrypt(password, user?.password))
             ? login(user, jwt.create(user))

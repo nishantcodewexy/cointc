@@ -2,10 +2,12 @@
 
 module.exports = (server) => {
   const Schema = require("../../../schema/advert.schema");
-  const { params: paramsSchema } = Schema.retrieve(server);
+  const { payload: payloadSchema } = Schema.remove(
+    server
+  );
   const {
     controllers: {
-      advert: { findByID },
+      advert: { remove },
     },
     helpers: {
       permissions: { isUser },
@@ -13,8 +15,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "GET",
-    path: "/ad/{id}",
+    method: "DELETE",
+    path: "/ad",
     config: {
       pre: [
         {
@@ -22,10 +24,10 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: findByID,
+      handler: remove,
       auth: "jwt",
       validate: {
-        params: paramsSchema,
+        payload: payloadSchema,
       },
     },
   };

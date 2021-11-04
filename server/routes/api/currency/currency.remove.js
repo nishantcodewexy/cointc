@@ -2,7 +2,7 @@
 
 module.exports = (server) => {
   const Schema = require("../../../schema/currency.schema");
-  const { payload: payloadSchema } = Schema.bulkRemove(server);
+  const { payload: payloadSchema } = Schema.remove(server);
 
   const {
     controllers: {

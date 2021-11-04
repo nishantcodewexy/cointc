@@ -25,7 +25,7 @@ const SecurityController = (server) => {
       try {
         const queryFilters = await filters({
           query,
-          searchFields: ["email"],
+          searchFields: ["user_id"],
         });
 
         const options = {
@@ -54,6 +54,41 @@ const SecurityController = (server) => {
       }
     },
 
+    /**
+     * @function findByID
+     * @describe finds record with matching user ID
+     * @param {Object} req
+     */
+    async findByID(req) {
+      const {
+        query,
+        params: { id },
+        pre: {
+          user: { user, fake, sudo, fake_count },
+        },
+      } = req;
+
+      try {
+        const queryFilters = await filters({
+          query,
+          searchFields: ["email"],
+          extras: {
+            id,
+          },
+        });
+        const options = {
+          ...queryFilters,
+        };
+        return {
+          result: fake
+            ? await Security.FAKE()
+            : await Security?.findOne(options),
+        };
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
+      }
+    },
     /**
      * @function findByUserID
      * @describe finds record with matching user ID

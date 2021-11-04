@@ -95,18 +95,21 @@ module.exports = function SupportTicketController(server) {
         payload,
         params: { id },
       } = req;
+      let where = {
+        id,
+        ...(!sudo && {
+          user_id: user.id,
+        }),
+      };
+      // let target = await SupportTicket.findByPk(id, {
+      //   where:,
+      // });
+      // if (!target) return boom.notFound(`Ticket id, ${id} not found`);
 
-      let target = await SupportTicket.findByPk(id, {
-        where: {
-          ...(!sudo && {
-            user_id: user.id,
-          }),
-        },
-      });
-      if (!target) return boom.notFound(`Ticket id, ${id} not found`);
-
-      let result = await target.update(payload);
-      return { result, message: "Update successful" };
+      let result = await SupportTicket.update(payload, {
+        where,
+      }).then(([count]) => Boolean(count));
+      return { status: Boolean(result), id };
     },
 
     /**
@@ -187,14 +190,46 @@ module.exports = function SupportTicketController(server) {
         params: { id },
       } = req;
 
-      return await SupportTicket.destroy({
-        where: {
-          ...(!sudo && {
-            user_id: user.id,
-          }),
-          id,
+      return {
+        id,
+        status: Boolean(
+          await SupportTicket.destroy({
+            where: {
+              ...(!sudo && {
+                user_id: user.id,
+              }),
+              id,
+            },
+          })
+        ),
+      };
+    },
+
+    async remove(req) {
+      const {
+        pre: {
+          user: { user, sudo },
         },
-      });
+        payload,
+      } = req;
+
+      if (sudo) {
+        let { ids = [], ...data } = payload;
+      }
+
+      return {
+        id,
+        status: Boolean(
+          await SupportTicket.destroy({
+            where: {
+              ...(!sudo && {
+                user_id: user.id,
+              }),
+              id,
+            },
+          })
+        ),
+      };
     },
   };
 };

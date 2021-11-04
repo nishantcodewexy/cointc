@@ -23,7 +23,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: update,
+      handler: update, 
       auth: "jwt",
       validate: { payload: payloadSchema },
     },

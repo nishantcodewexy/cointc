@@ -52,7 +52,7 @@ const BankDetailController = (server) => {
         const queryFilters = await filters({
           query,
           searchFields: ["bank_name", "currency", "country"],
-          extras: { ...(!sudo ? { user_id: user?.id } : null) },
+          extras: { ...(!sudo && { user_id: user?.id }) },
         });
 
         const queryOptions = {
@@ -170,14 +170,8 @@ const BankDetailController = (server) => {
         return {
           result: await BankDetail.destroy(queryOptions)
             .then((count) => ({
-              [id]: Boolean(count),
-              ...(() =>
-                !count
-                  ? {
-                      info:
-                        "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
-                    }
-                  : null)(),
+              id,
+              status: Boolean(count),
             }))
             .catch((err) => {
               throw boom.badData(err.message, err);
@@ -213,10 +207,6 @@ const BankDetailController = (server) => {
               return await BankDetail.destroy(queryOptions).then((count) => ({
                 status: ((total += count), Boolean(count)),
                 id,
-                ...(!count && {
-                  info:
-                    "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
-                }),
               }));
             })
           ).catch((err) => {
