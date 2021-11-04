@@ -31,7 +31,6 @@ module.exports = function UserController(server) {
     },
   } = server.app;
 
- 
   /**
    * @function createNew - Creates a new user record
    * @param {Object} payload - Payload object
@@ -343,9 +342,16 @@ module.exports = function UserController(server) {
         const queryFilters = await filters({
           query,
           searchFields: ["email"],
+          extras: {
+            ...(!sudo && { id: user?.id }),
+          },
         });
 
-        const include = validateAndFilterAssociation(query?.include, User);
+        const include = validateAndFilterAssociation(
+          query?.include,
+          ["security"],
+          User
+        );
 
         const options = {
           ...queryFilters,
@@ -366,7 +372,10 @@ module.exports = function UserController(server) {
             offset,
           });
         }
-        return { result: fake ? await User.FAKE() : user?.dataValues };
+
+        return {
+          result: fake ? await User.FAKE() : await User.findOne(options),
+        };
       } catch (error) {
         console.error(error);
         return boom.boomify(error);

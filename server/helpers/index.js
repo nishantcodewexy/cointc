@@ -483,14 +483,21 @@ module.exports = {
       result: rows,
     };
   },
-  validateAndFilterAssociation(list = [], Model) {
-    if (!Array.isArray(list)) list = [list];
+  /**
+   * @function validateAndFilterAssociation - Validates and filter allowed reference model associations from a model
+   * @param {Array} include - List of models to validate
+   * @param {Array} allow - Allowed reference models
+   * @param {Object} Model - Model to get association from
+   * @returns
+   */
+  validateAndFilterAssociation(include = [], allow = [], Model) {
+    if (!Array.isArray(include)) include = [include];
     let valid = [];
-    list.forEach((item) => {
+    include.forEach((item) => {
       for (let assc in Model.associations) {
         let isSame = assc?.toLowerCase() === item?.toLowerCase();
 
-        if (isSame) {
+        if (isSame && allow.includes(assc)) {
           valid.push(assc);
           break;
         }
