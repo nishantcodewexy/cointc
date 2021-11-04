@@ -54,12 +54,12 @@ function create(server) {
       crypto: Joi.string()
         .required()
         .error(
-          boom.badRequest(`Required input <crypto_currency::string> is invalid`)
+          boom.badRequest(`Required input <crypto::string> is invalid`)
         ),
       fiat: Joi.string()
         .required()
         .error(
-          boom.badRequest(`Required input <fiat_currency::string> is invalid`)
+          boom.badRequest(`Required input <fiat::string> is invalid`)
         ),
       payment_time_limit: Joi.string()
         .valid("-1", Joi.string().isoDate())
@@ -168,15 +168,15 @@ function update(server) {
       qty: Joi.number()
         .optional()
         .error(boom.badRequest(`optional input <qty::number> is invalid`)),
-      crypto_currency: Joi.string()
+      crypto: Joi.string()
         .optional()
         .error(
-          boom.badRequest(`optional input <crypto_currency::string> is invalid`)
+          boom.badRequest(`optional input <crypto::string> is invalid`)
         ),
-      fiat_currency: Joi.string()
+      fiat: Joi.string()
         .optional()
         .error(
-          boom.badRequest(`optional input <fiat_currency::string> is invalid`)
+          boom.badRequest(`optional input <fiat::string> is invalid`)
         ),
       payment_time_limit: Joi.string()
         .valid("-1", Joi.string().isoDate())

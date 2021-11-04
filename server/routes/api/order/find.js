@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-      upload: { retrieve },
+      order: { find },
     },
     helpers: {
       permissions: { isUser },
@@ -12,7 +12,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/upload/{id}",
+    path: "/order",
     config: {
       pre: [
         {
@@ -20,7 +20,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: retrieve,
+      handler: find,
       auth: "jwt",
     },
   };

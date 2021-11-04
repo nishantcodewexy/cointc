@@ -5,7 +5,7 @@ module.exports = (server) => {
   const { params: paramsSchema } = Schema.retrieve(server);
   const {
     controllers: {
-      order: { retrieve },
+      order: { findByID },
     },
     helpers: {
       permissions: { isUser },
@@ -22,7 +22,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: retrieve,
+      handler: findByID,
       auth: "jwt",
       validate: {
         params: paramsSchema,
