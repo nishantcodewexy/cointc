@@ -1,13 +1,19 @@
 "use strict";
 
 const SecurityController = (server) => {
+  const { __update, __destroy } = require("./utils")(server);
   const {
-    db: { Security },
+    db: { Security, sequelize },
     boom,
     helpers: { paginator, filters },
   } = server.app;
 
   return {
+    /**
+     * @function find
+     * @describe finds multiple records or current session's user record
+     * @param {Object} req
+     */
     async find(req) {
       const {
         query,
@@ -21,12 +27,9 @@ const SecurityController = (server) => {
           query,
           searchFields: ["email"],
         });
-        // const include = filterAssociations(query?.include);
 
         const options = {
           ...queryFilters,
-          // attributes: { exclude: ["password"] },
-          //  include,
         };
 
         if (sudo) {
@@ -50,9 +53,54 @@ const SecurityController = (server) => {
         return boom.internal(err.message, err);
       }
     },
-    async findByUserID(req) {},
+
+    /**
+     * @function findByUserID
+     * @describe finds record with matching user ID
+     * @param {Object} req
+     */
+    async findByUserID(req) {
+      const {
+        query,
+        params: { user_id },
+        pre: {
+          user: { user, fake, sudo, fake_count },
+        },
+      } = req;
+
+      try {
+        const queryFilters = await filters({
+          query,
+          searchFields: ["email"],
+          extras: {
+            user_id: user_id,
+          },
+        });
+        const options = {
+          ...queryFilters,
+        };
+        return {
+          result: fake
+            ? await Security.FAKE()
+            : await Security?.findOne(options),
+        };
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
+      }
+    },
+
+    /**
+     * @function create - create new record
+     * @param {Object} req
+     */
     async create(req) {},
 
+    /**
+     * @function update
+     * @describe update multiple records or current session's user record
+     * @param {Object} req
+     */
     async update(req) {
       try {
         const {
@@ -61,13 +109,13 @@ const SecurityController = (server) => {
             user: { user, fake, sudo, fake_count },
           },
         } = req;
-        let fields, result;
+        let fields = ["two_factor"],
+          result;
 
         if (sudo) {
           let { ids = [], ...data } = payload;
-          fields = ["two_factor"];
-          if (!ids?.length) throw boom.badData(`<ids::array> cannot be empty`);
 
+          if (!ids?.length) throw boom.badData(`<ids::array> cannot be empty`);
           if (!data) return boom.methodNotAllowed("Nothing to update");
 
           result = await sequelize.transaction(async (t) => {
@@ -86,11 +134,48 @@ const SecurityController = (server) => {
           });
         } else {
           // update session user data
+
           result = await Security?.update(payload, {
             where: { user_id: user?.id },
             fields,
           });
         }
+        return {
+          result,
+        };
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
+
+    /**
+     * @function updateByUserID
+     * @describe update record using the user ID
+     * @param {Object} req
+     */
+    async updateByUserID(req) {
+      try {
+        const {
+          payload,
+          params: { user_id },
+          pre: {
+            user: { user, fake, sudo, fake_count },
+          },
+        } = req;
+        let fields = ["two_factor"],
+          result;
+
+        if (!sudo)
+          return boom.methodNotAllowed(
+            `Only admins can perform this operation`
+          );
+        // update session user data
+        result = await Security?.update(payload, {
+          where: { user_id },
+          fields,
+        });
+
         return {
           status: Boolean(result),
           result,
@@ -101,13 +186,10 @@ const SecurityController = (server) => {
       }
     },
 
-    async updateByUserID(req) {},
-
     /**
-     * @function remove - remove mulitple records
-     * @param {Object} req  - request object
-     * @param {Object} req.payload  - request body
-     * @returns
+     * @function remove
+     * @describe remove multiple records or current session's user record
+     * @param {Object} req
      */
     async remove(req) {
       const {
@@ -154,9 +236,9 @@ const SecurityController = (server) => {
     },
 
     /**
-     * @function remove - Remove single User
+     * @function removeByID
+     * @describe find record by ID and remove if found
      * @param {Object} req
-     * @returns
      */
     async removeByID(req) {
       let {
@@ -173,7 +255,31 @@ const SecurityController = (server) => {
       return { status: Boolean(result), result };
     },
 
-    async removeByUserID(req) {},
+    /**
+     * @function removeByUserID
+     * @describe find record by user ID and remove if found
+     * @param {Object} req
+     */
+    async removeByUserID(req) {
+      let {
+        payload: { force = false },
+        params: { user_id },
+        pre: {
+          user: { user, sudo },
+        },
+      } = req;
+
+      try {
+        // only superadmins are allowed to permanently delete a user
+        force = user?.isSuperAdmin ? force : false;
+        let where = { user_id };
+        let result = await __destroy("Security", where, force);
+        return { status: Boolean(result), result };
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
+      }
+    },
   };
 };
 

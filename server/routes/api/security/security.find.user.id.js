@@ -11,7 +11,9 @@ module.exports = (server) => {
     },
   } = server.app;
 
-  const schema = Joi.object({});
+  const schema = Joi.object({
+    user_id: Joi.string().uuid(),
+  });
 
   return {
     method: ["GET"],
