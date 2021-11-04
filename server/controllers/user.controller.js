@@ -20,34 +20,18 @@ module.exports = function UserController(server) {
     },
     boom,
     config: { client_url },
-    helpers: { decrypt, mailer, jwt, generator, paginator, filters },
+    helpers: {
+      decrypt,
+      mailer,
+      jwt,
+      generator,
+      paginator,
+      filters,
+      validateAndFilterAssociation,
+    },
   } = server.app;
 
-  async function modify(target_user, data, { profileFields, userFields }) {
-    try {
-      let target_user_profile = await target_user.getProfile();
-
-      const { profile, ...others } = data;
-
-      let _updatedUser = await target_user.update(others, {
-        returning: true,
-        ...(userFields && { fields: userFields }),
-        logging: console.log,
-      });
-      let _updatedProfile = await target_user_profile.update(profile, {
-        returning: true,
-        ...(profileFields && { fields: profileFields }),
-        logging: console.log,
-      });
-
-      return {
-        ..._updatedUser?.dataValues,
-        ..._updatedProfile?.dataValues,
-      };
-    } catch (err) {
-      console.error(err);
-    }
-  }
+ 
   /**
    * @function createNew - Creates a new user record
    * @param {Object} payload - Payload object
@@ -138,22 +122,6 @@ module.exports = function UserController(server) {
       console.error(err);
       return boom.internal(err.message, err);
     }
-  }
-
-  function filterAssociations(list = []) {
-    if (!Array.isArray(list)) list = [list];
-    let valid = [];
-    list.forEach((item) => {
-      for (let assc in User.associations) {
-        let isSame = assc?.toLowerCase() === item?.toLowerCase();
-
-        if (isSame) {
-          valid.push(assc);
-          break;
-        }
-      }
-    });
-    return valid?.length ? valid : null;
   }
 
   return {
@@ -377,7 +345,7 @@ module.exports = function UserController(server) {
           searchFields: ["email"],
         });
 
-        const include = filterAssociations(query?.include);
+        const include = validateAndFilterAssociation(query?.include, User);
 
         const options = {
           ...queryFilters,
