@@ -1,5 +1,7 @@
 "use strict";
 
+
+
 const AddressController = (server) => {
   const { __update, __destroy } = require("./utils")(server);
   const {
@@ -8,6 +10,81 @@ const AddressController = (server) => {
     helpers: { paginator, filters },
   } = server.app;
   return {
+    
+    /**
+     * @function bulkRetrieve - Retrieves multiple advert records
+     * @param {Object} req
+     */
+     async find(req) {
+      const {
+        query,
+        pre: {
+          user: { user, fake, fake_count, sudo },
+        },
+      } = req;
+
+      try {
+        const queryFilters = await filters({
+          query,
+          searchFields: ["address_line"],
+          extras:{
+            ...(sudo?{}:{user_id:user.id})
+          }
+        });
+        const options = {
+          ...queryFilters,
+          logging: console.log,
+          // include: User,
+          // attributes: { include: [["User", "user"]] },
+        };
+        
+        let queryset = fake
+          ? await Address.FAKE(fake_count)
+          : await Address.findAndCountAll(options).catch((err) => {
+              throw boom.badData(err.message, err);
+            });
+        
+        const { limit, offset } = queryFilters;
+
+        return paginator({
+          queryset,
+          limit,
+          offset,
+        });
+      } catch (err) {
+        console.error(err);
+        return boom.isBoom ? err : boom.internal(err.message, err);
+      }
+    },
+    /**
+     * @function get - Gets currency collection
+     * @param {Object} req
+     * @returns
+     */
+     async findByID(req) {
+      const {
+        pre: {
+          user: { user, fake, sudo },
+        },
+        params: { id },
+      } = req;
+
+      try {
+        const queryOptions = {
+          where: {
+            ...(sudo && { user_id: user.id }),
+            attributes: { exclude: ["user_id", "UserId"] },
+          },
+        };
+        let result = fake
+          ? await Address.FAKE()
+          : await Address.findByPk(id, queryOptions);
+        return result ? { result } : boom.notFound("Record not found");
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
     /**
      * @function find
      * @describe finds multiple records or current session's user record
@@ -264,6 +341,7 @@ const AddressController = (server) => {
       }
     },
   };
+
 };
 
 module.exports = AddressController;

@@ -158,6 +158,9 @@ function OrderController(server) {
             ...(!sudo && { user_id: user?.id }),
           };
 
+          const {status} = payload
+          
+        
         result = await Order.update(payload, {
           where,
           fields,
