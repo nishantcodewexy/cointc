@@ -2,7 +2,7 @@
 
 module.exports = (server) => {
   const Schema = require("../../../schema/order.schema");
-  const { params: paramsSchema } = Schema.retrieve(server);
+  const { params: paramsSchema } = Schema.find(server);
   const {
     controllers: {
       order: { findByID },

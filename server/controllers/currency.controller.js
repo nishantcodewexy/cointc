@@ -18,7 +18,9 @@ function CurrencyController(server) {
     async create(req) {
       const {
         payload,
-        pre: { user: {user} },
+        pre: {
+          user: { user },
+        },
       } = req;
 
       const queryOptions = {
@@ -93,7 +95,9 @@ function CurrencyController(server) {
     async update(req) {
       const {
         payload: { data = [], paranoid = true },
-        pre: { user:{user} },
+        pre: {
+          user: { user },
+        },
       } = req;
 
       try {
@@ -162,14 +166,8 @@ function CurrencyController(server) {
         return {
           result: await Currency.destroy(queryOptions)
             .then((count) => ({
-              [id]: Boolean(count),
-              ...(() =>
-                !count
-                  ? {
-                      info:
-                        "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
-                    }
-                  : null)(),
+              id,
+              status: Boolean(count),
             }))
             .catch((err) => {
               throw boom.badData(err.message, err);
@@ -188,7 +186,7 @@ function CurrencyController(server) {
      */
     async remove(req) {
       const {
-        payload: { data = [], force = false },
+        payload: { ids = [], force = false },
         pre: {
           user: { user, sudo, fake },
         },
@@ -199,24 +197,18 @@ function CurrencyController(server) {
       try {
         let result = await sequelize.transaction(async (t) =>
           Promise.all(
-            data?.map(async (id) => {
+            ids?.map(async (id) => {
               let queryOptions = {
                 where: {
                   id,
-                  ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+                  ...(user?.isAdmin && { user_id: user.id }),
                 },
                 transaction: t,
                 force,
               };
-              return await Currency.destroy(queryOptions).then((count) => ({
-                [id]: ((total += count), Boolean(count)),
-                ...(() =>
-                  !count
-                    ? {
-                        info:
-                          "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
-                      }
-                    : null)(),
+              return await Currency.destroy(queryOptions).then((result) => ({
+                id,
+                status: ((total += result), Boolean(result)),
               }));
             })
           ).catch((err) => {
@@ -257,7 +249,7 @@ function CurrencyController(server) {
             id,
           },
         };
-        let result = await Currency.findOne(queryOptions).catch((err) => {
+        let result = fake ? Currency.FAKE() : await Currency.findOne(queryOptions).catch((err) => {
           throw boom.badData(err.message, err);
         });
 

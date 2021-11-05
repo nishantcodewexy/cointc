@@ -1,11 +1,9 @@
-"use strict";
+const Joi = require("joi");
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/advert.schema");
-  const { params: paramsSchema } = Schema.retrieve(server);
   const {
     controllers: {
-      advert: { findByID },
+      address: { find },
     },
     helpers: {
       permissions: { isUser },
@@ -14,7 +12,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/ad/{id}",
+    path: "/address",
     config: {
       pre: [
         {
@@ -22,11 +20,8 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: findByID,
+      handler: find,
       auth: "jwt",
-      validate: {
-        params: paramsSchema,
-      },
     },
   };
 };

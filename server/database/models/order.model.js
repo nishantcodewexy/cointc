@@ -39,7 +39,7 @@ module.exports = (sequelize, DataTypes) => {
             "released",
             "completed",
             "disputed",
-            "canceled",
+            "cancelled",
           ]),
           rating: faker.datatype.number(5),
           archived_at: faker.datatype.datetime(),
@@ -89,7 +89,7 @@ module.exports = (sequelize, DataTypes) => {
           "released",
           "completed",
           "disputed",
-          "canceled"
+          "cancelled"
         ),
         defaultValue: "unpaid",
       },
@@ -97,7 +97,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         validate: {
           isInt: true,
-          min: 1,
+          min: 0,
           max: 5,
         },
         allowNull: true,

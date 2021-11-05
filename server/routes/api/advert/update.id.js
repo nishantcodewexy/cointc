@@ -2,10 +2,15 @@
 
 module.exports = (server) => {
   const Schema = require("../../../schema/advert.schema");
-  const { params: paramsSchema } = Schema.retrieve(server);
+  const { params: paramsSchema, payload: payloadSchema } = Schema.update(
+    server
+  );
   const {
     controllers: {
       advert: { updateByID },
+    },
+    helpers: {
+      permissions: { isAdminOrError },
     },
   } = server.app;
 
@@ -13,10 +18,12 @@ module.exports = (server) => {
     method: "PUT",
     path: "/ad/{id}",
     config: {
+      pre: [{ method: isAdminOrError, assign: "user" }],
       handler: updateByID,
       auth: "jwt",
       validate: {
         params: paramsSchema,
+        payload: payloadSchema,
       },
     },
   };

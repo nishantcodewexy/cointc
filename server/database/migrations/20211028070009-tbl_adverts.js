@@ -75,13 +75,14 @@ module.exports = {
           comment:
             "Advert type where a buyer ad requires a seller to initiate an order. A seller ad requires a buyer to inititate an order",
         },
-        payment_time_limit: {
+        payment_ttl_mins: {
           type: Sequelize.INTEGER,
           defaultValue: -1,
           validate: {
             isInt: true,
           },
-          comment: "Time limit within which buyer should complete trade",
+          comment:
+            "Time limit in minutes within which order should be completed",
         },
         price: {
           validate: {

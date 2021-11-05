@@ -1,11 +1,13 @@
 "use strict";
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/advert.schema");
-  const { params: paramsSchema } = Schema.retrieve(server);
+  const Schema = require("../../../schema/order.schema");
+  const { params: paramsSchema, payload: payloadSchema } = Schema.update(
+    server
+  );
   const {
     controllers: {
-      advert: { findByID },
+      order: { updateByID },
     },
     helpers: {
       permissions: { isUser },
@@ -13,8 +15,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "GET",
-    path: "/ad/{id}",
+    method: "PUT",
+    path: "/order/{id}",
     config: {
       pre: [
         {
@@ -22,10 +24,11 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: findByID,
+      handler: updateByID,
       auth: "jwt",
       validate: {
         params: paramsSchema,
+        payload: payloadSchema,
       },
     },
   };

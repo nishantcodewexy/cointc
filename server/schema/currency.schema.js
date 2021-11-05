@@ -88,23 +88,15 @@ function bulkUpdate(server) {
 // REMOVE ------------------------------------------------
 
 function remove(server) {
-  return {
-    payload: Joi.object({
-      force: Joi.boolean()
-        .default(false)
-        .optional()
-        .error(new Error("Optional input <force::boolean> is invalid")),
-    }),
-
-    params: update(server)?.params,
-  };
-}
-
-function bulkRemove(server) {
   const { boom } = server.app;
   return {
+    params: Joi.object({
+      id: Joi.string()
+        .uuid()
+        .error(boom.badRequest(`Required input [<id::uuid>] is missing or invalid`)),
+    }),
     payload: Joi.object({
-      data: Joi.array()
+      ids: Joi.array()
         .items(
           Joi.string()
             .uuid()
@@ -148,7 +140,6 @@ module.exports = {
   remove,
   bulkCreate,
   bulkUpdate,
-  bulkRemove,
   restore,
   bulkRestore,
 };

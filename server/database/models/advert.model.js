@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
           max_order_price: faker.datatype.float(2),
           payment_methods: faker.helpers.randomize(["wechat", "alipay"]),
           type: faker.helpers.randomize(["buy", "sell"]),
-          payment_time_limit: faker.datatype.number(),
+          payment_ttl_mins: faker.datatype.number(),
           price: faker.datatype.float(),
           floating_price: faker.datatype.float(),
           qty: faker.datatype.number(),
@@ -121,13 +121,13 @@ module.exports = (sequelize, DataTypes) => {
         comment:
           "Advert type where a buyer ad requires a seller to initiate an order. A seller ad requires a buyer to inititate an order",
       },
-      payment_time_limit: {
+      payment_ttl_mins: {
         type: DataTypes.INTEGER,
         defaultValue: -1,
         validate: {
           isInt: true,
         },
-        comment: "Time limit within which buyer should complete trade",
+        comment: "Time limit in minutes within which order should be completed",
       },
       price: {
         validate: {
