@@ -95,11 +95,21 @@ module.exports = (sequelize, DataTypes) => {
       },
       iso_code: {
         type: DataTypes.STRING,
+        comment: "Currency code",
         unique: true,
+        set(value) {
+          this.setDataValue("iso_code", String(value)?.toUpperCase());
+        },
       },
       type: {
-        type: DataTypes.ENUM("fiat", "crypto"),
-        defaultValue: "crypto",
+        type: DataTypes.ENUM("FIAT", "CRYPTO"),
+        comment: "Currency type",
+        get() {
+          return String(this.get("type"))?.toUpperCase();
+        },
+        set(value) {
+          this.setDataValue("type", String(value)?.toUpperCase());
+        },
       },
       image_url: {
         type: DataTypes.UUID,
