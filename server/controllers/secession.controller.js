@@ -22,20 +22,10 @@ module.exports = function SecessionController(server) {
         query:{fake=false}
       } = req;
 
-<<<<<<< HEAD
-      if(fake) return await Secession.FAKE()
-
-      const { id, level, status, description } = await Secession.create({
-        ...payload,
-        user_id: user.id,
-      });
-      return { id, level, status, description };
-=======
       const result = await user.createSecession(payload);
       return {
         result,
       };
->>>>>>> 84148ebec72df2195154996b20e295a50476c0e6
     },
 
     // RETRIEVE ---------------------------------------------------------------
