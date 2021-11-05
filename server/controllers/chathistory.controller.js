@@ -68,9 +68,13 @@ const ChatHistoryController = (server) => {
     async retrieve(req) {
       const {
         params: { id },
+        user: { user, fake=false, sudo },
       } = req;
 
       try {
+
+        if(fake) return await ChatHistory.FAKE()
+
         const chathistory = await ChatHistory.findOne({
           where: {
             id,
@@ -95,7 +99,11 @@ const ChatHistoryController = (server) => {
      */
     async bulkRetrieve(req) {
       try {
-        const { query } = req;
+        const { query,user: { fake, fake_count } } = req;
+
+        if(fake) return await ChatHistory.FAKE(fake_count)
+
+        
         const queryFilters = await filters({
           query,
           searchFields: ["browser"],

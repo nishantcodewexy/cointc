@@ -19,7 +19,10 @@ module.exports = function SecessionController(server) {
         auth: {
           credentials: { user },
         },
+        query:{fake=false}
       } = req;
+
+      if(fake) return await Secession.FAKE()
 
       const { id, level, status, description } = await Secession.create({
         ...payload,
@@ -42,6 +45,7 @@ module.exports = function SecessionController(server) {
           credentials: { user },
         },
       } = req;
+      
 
       if (isAdmin) {
         const filterResults = await filters({

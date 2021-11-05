@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
 
       Secession.belongsTo(User);
     }
-
+    
     static FAKE(count){
       let rows = [],
         result = {},
