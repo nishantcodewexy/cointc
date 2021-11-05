@@ -67,7 +67,6 @@ function update(server) {
         .valid(
           "unpaid",
           "paid",
-          "released",
           "completed",
           "disputed",
           "cancelled"
