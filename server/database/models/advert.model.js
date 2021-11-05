@@ -160,11 +160,20 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         comment: "Kind of crypto currency",
         allowNull: false,
+        get() {
+          return String(this.get("crypto"))?.toUpperCase();
+        },
       },
       fiat: {
         type: DataTypes.STRING,
         comment: "Kind of fiat currency",
         allowNull: false,
+        get() {
+          return String(this.get("fiat"))?.toUpperCase();
+        },
+        set(value) {
+          this.setDataValue("fiat", String(value)?.toUpperCase());
+        }
       },
       remarks: DataTypes.STRING(255),
       auto_reply_message: {

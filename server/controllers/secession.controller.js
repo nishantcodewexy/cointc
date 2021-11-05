@@ -42,6 +42,7 @@ module.exports = function SecessionController(server) {
         },
       } = req;
       try {
+        // validate and get query filters
         const queryFilters = await filters({
           query,
           searchFields: ["status", "description"],
@@ -51,18 +52,18 @@ module.exports = function SecessionController(server) {
             },
           }),
         });
-
+        // define model includes
         const include = validateAndFilterAssociation(
           query?.include,
           ["user"],
           Secession
         );
-        
+        // define query options
         const options = {
           ...queryFilters,
-          // attributes: { exclude: ["password"] },
           include,
         };
+
         const result = fake
           ? Secession.FAKE(fake_count)
           : await Secession.findAndCountAll(options);
