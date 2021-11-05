@@ -4,7 +4,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      kyc: { findAll },
+      kyc: { find },
     },
     helpers: {
       permissions: { isUser },
@@ -34,7 +34,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: findAll,
+      handler: find,
       auth: "jwt",
       validate: { query: querySchema },
     },

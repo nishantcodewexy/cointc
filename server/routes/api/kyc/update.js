@@ -5,7 +5,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      kyc: { updateAll },
+      kyc: { update },
     },
     boom,
     helpers: {
@@ -46,7 +46,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: updateAll,
+      handler: update,
       validate: {
         payload: payloadSchema,
       },

@@ -18,7 +18,9 @@ function CurrencyController(server) {
     async create(req) {
       const {
         payload,
-        pre: { user },
+        pre: {
+          user: { user },
+        },
       } = req;
 
       const queryOptions = {
@@ -41,58 +43,19 @@ function CurrencyController(server) {
       }
     },
 
-    /**
-     * @function bulkCreate - Bulk create currency (**Admin only**)
-     * @param {Object} req - Request object
-     * @param {Object} req.payload
-     * @param {Array} req.payload.data
-     * @returns
-     */
-    async bulkCreate(req) {
-      const {
-        payload: { data = [] },
-        pre: { user },
-      } = req;
-
-      try {
-        return {
-          result: await sequelize
-            .transaction(async (t) => {
-              return await Promise.all(
-                data.map(async (currency_data) => {
-                  const queryOptions = {
-                    transaction: t,
-                    validate: true,
-                    fields: ["id", "type", "iso_code", "name"],
-                    returning: ["id", "type", "iso_code", "name"],
-                  };
-
-                  return await user.createCurrency(currency_data, queryOptions);
-                })
-              );
-            })
-            .catch((err) => {
-              throw boom.badData(err.message, err);
-            }),
-        };
-      } catch (thrown) {
-        console.error(thrown.message, thrown);
-        if (boom.isBoom) return thrown;
-        return boom.internal(thrown.message, thrown);
-      }
-    },
-
     // UPDATE------------------------------------------------------------
     /**
-     * @function update - Updates single currency
+     * @function updateByID - Updates single currency
      * @param {Object} req
      * @returns
      */
-    async update(req) {
+    async updateByID(req) {
       const {
         payload,
         params: { id },
-        pre: { user },
+        pre: {
+          user: { user, sudo, fake },
+        },
       } = req;
 
       try {
@@ -123,15 +86,18 @@ function CurrencyController(server) {
         return boom.forbidden(error);
       }
     },
+
     /**
-     * @function bulkUpdate - Updates single currency
+     * @function update - Updates single currency
      * @param {Object} req
      * @returns
      */
-    async bulkUpdate(req) {
+    async update(req) {
       const {
         payload: { data = [], paranoid = true },
-        pre: { user },
+        pre: {
+          user: { user },
+        },
       } = req;
 
       try {
@@ -175,15 +141,17 @@ function CurrencyController(server) {
 
     // REMOVE------------------------------------------------------------
     /**
-     * @function remove - Removes a single currency record
+     * @function removeByID - Removes a currency record by ID
      * @param {Object} req
      * @returns
      */
-    async remove(req) {
+    async removeByID(req) {
       try {
         const {
           payload: { force = false },
-          pre: { user },
+          pre: {
+            user: { user, fake, sudo },
+          },
           params: { id },
         } = req;
 
@@ -198,14 +166,8 @@ function CurrencyController(server) {
         return {
           result: await Currency.destroy(queryOptions)
             .then((count) => ({
-              [id]: Boolean(count),
-              ...(() =>
-                !count
-                  ? {
-                      info:
-                        "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
-                    }
-                  : null)(),
+              id,
+              status: Boolean(count),
             }))
             .catch((err) => {
               throw boom.badData(err.message, err);
@@ -216,15 +178,18 @@ function CurrencyController(server) {
         return boom.boomify(error);
       }
     },
+
     /**
-     * @function bulkRemove - Remove Multiple currency record
+     * @function remove - Remove Multiple currency record
      * @param {Object} req
      * @returns
      */
-    async bulkRemove(req) {
+    async remove(req) {
       const {
-        payload: { data = [], force = false },
-        pre: { user },
+        payload: { ids = [], force = false },
+        pre: {
+          user: { user, sudo, fake },
+        },
       } = req;
       let total = 0;
       // user.removeCurrencies
@@ -232,24 +197,18 @@ function CurrencyController(server) {
       try {
         let result = await sequelize.transaction(async (t) =>
           Promise.all(
-            data?.map(async (id) => {
+            ids?.map(async (id) => {
               let queryOptions = {
                 where: {
                   id,
-                  ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+                  ...(user?.isAdmin && { user_id: user.id }),
                 },
                 transaction: t,
                 force,
               };
-              return await Currency.destroy(queryOptions).then((count) => ({
-                [id]: ((total += count), Boolean(count)),
-                ...(() =>
-                  !count
-                    ? {
-                        info:
-                          "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
-                      }
-                    : null)(),
+              return await Currency.destroy(queryOptions).then((result) => ({
+                id,
+                status: ((total += result), Boolean(result)),
               }));
             })
           ).catch((err) => {
@@ -269,15 +228,17 @@ function CurrencyController(server) {
     // RETRIEVE------------------------------------------------------------
 
     /**
-     * @function get - Gets single currency
+     * @function findByID - Gets single currency
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
+    async findByID(req) {
       try {
         const {
           query,
-          pre: { user },
+          pre: {
+            user: { user, sudo, fake },
+          },
           params: { id },
         } = req;
         // let where = id ? { id } : null;
@@ -288,7 +249,7 @@ function CurrencyController(server) {
             id,
           },
         };
-        let result = await Currency.findOne(queryOptions).catch((err) => {
+        let result = fake ? Currency.FAKE() : await Currency.findOne(queryOptions).catch((err) => {
           throw boom.badData(err.message, err);
         });
 
@@ -300,12 +261,17 @@ function CurrencyController(server) {
     },
 
     /**
-     * @function bulkList - Get multiple Currencies (**Only Admins**)
+     * @function find - Get multiple Currencies
      * @param {Object} req
      * @returns
      */
-    async bulkRetrieve(req) {
-      let { query } = req;
+    async find(req) {
+      let {
+        query,
+        pre: {
+          user: { user, sudo, fake, fake_count },
+        },
+      } = req;
 
       try {
         const queryFilters = await filters({
@@ -315,19 +281,23 @@ function CurrencyController(server) {
 
         const queryOptions = {
           ...queryFilters,
-          attributes: [
-            "id",
-            "name",
-            "iso_code",
-            "type",
-            "user_id",
-            "created_at",
-            "updated_at",
-            "archived_at",
-          ],
+          ...(!sudo && { attributes: { exclude: ["user_id"] } }),
+          // attributes: [
+          //   "id",
+          //   "name",
+          //   "iso_code",
+          //   "type",
+          //   "user_id",
+          //   "created_at",
+          //   "updated_at",
+          //   "archived_at",
+          // ],
         };
 
-        let queryset = await Currency.findAndCountAll(queryOptions);
+        let queryset = fake
+          ? await Currency.FAKE(fake_count)
+          : await Currency.findAndCountAll(queryOptions);
+
         const { limit, offset } = queryFilters;
 
         return paginator({
@@ -342,27 +312,33 @@ function CurrencyController(server) {
     },
 
     // RESTORE------------------------------------------------------------
-
-    async restore(req) {
+    /**
+     * @function restoreByID - Restore record by ID
+     * @param {Object} req
+     * @returns
+     */
+    async restoreByID(req) {
       const {
         params: { id },
-        pre: { user },
+        pre: {
+          user: { user, sudo, fake },
+        },
       } = req;
 
       try {
+        let result = fake
+          ? Currency.FAKE()
+          : await Currency.restore({
+              where: {
+                id,
+                ...(user?.isAdmin && { user_id: user.id }),
+              },
+            });
+
         return {
-          result: await Currency.restore({
-            where: {
-              id,
-              ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
-            },
-          })
-            .then((count) => ({
-              [id]: Boolean(count),
-            }))
-            .catch((err) => {
-              throw boom.badData(err.message, err);
-            }),
+          status: Boolean(result),
+          id,
+          message: "restored one record",
         };
       } catch (err) {
         console.error(err);
@@ -371,29 +347,35 @@ function CurrencyController(server) {
     },
 
     /**
-     * @function bulkRestore - bulk restore currency records
+     * @function restore - bulk restore currency records
      * @param {Object} req
      */
-    async bulkRestore(req) {
+    async restore(req) {
       const {
         payload: { data = [] },
-        pre: { user },
+        pre: {
+          user: { user, fake },
+        },
       } = req;
 
       try {
         return {
           result: await sequelize.transaction(async (t) =>
             Promise.all(
-              data?.map(
-                async (id) =>
-                  await Currency.restore({
-                    where: {
+              data?.map(async (id) =>
+                fake
+                  ? { id, status: true }
+                  : await Currency.restore({
+                      where: {
+                        id,
+                        ...(() =>
+                          user?.isAdmin ? { user_id: user.id } : {})(),
+                        returning: true,
+                      },
+                    }).then((count) => ({
                       id,
-                      ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
-                    },
-                  }).then((count) => ({
-                    [id]: Boolean(count),
-                  }))
+                      status: Boolean(count),
+                    }))
               )
             ).catch((err) => {
               throw boom.badData(err.message, err);

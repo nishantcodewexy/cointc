@@ -1,6 +1,6 @@
 "use strict";
 const assert = require("assert");
-const dateFn = require("date-fns");
+const dfn = require("date-fns");
 const faker = require("faker");
 /**
  * @description - User controller
@@ -15,39 +15,21 @@ module.exports = function UserController(server) {
     db: {
       User,
       sequelize,
-      Analytics,
       Sequelize: { Op },
     },
     boom,
     config: { client_url },
-    helpers: { decrypt, mailer, jwt, generator, paginator, filters },
+    helpers: {
+      decrypt,
+      mailer,
+      jwt,
+      generator,
+      paginator,
+      filters,
+      validateAndFilterAssociation,
+    },
   } = server.app;
 
-  async function modify(target_user, data, { profileFields, userFields }) {
-    try {
-      let target_user_profile = await target_user.getProfile();
-
-      const { profile, ...others } = data;
-
-      let _updatedUser = await target_user.update(others, {
-        returning: true,
-        ...(userFields && { fields: userFields }),
-        logging: console.log,
-      });
-      let _updatedProfile = await target_user_profile.update(profile, {
-        returning: true,
-        ...(profileFields && { fields: profileFields }),
-        logging: console.log,
-      });
-
-      return {
-        ..._updatedUser?.dataValues,
-        ..._updatedProfile?.dataValues,
-      };
-    } catch (err) {
-      console.error(err);
-    }
-  }
   /**
    * @function createNew - Creates a new user record
    * @param {Object} payload - Payload object
@@ -140,22 +122,6 @@ module.exports = function UserController(server) {
     }
   }
 
-  function filterAssociations(list = []) {
-    if (!Array.isArray(list)) list = [list];
-    let valid = [];
-    list.forEach((item) => {
-      for (let assc in User.associations) {
-        let isSame = assc?.toLowerCase() === item?.toLowerCase();
-
-        if (isSame) {
-          valid.push(assc);
-          break;
-        }
-      }
-    });
-    return valid?.length ? valid : null;
-  }
-
   return {
     // CREATE------------------------------------------------------------
     /**
@@ -214,19 +180,20 @@ module.exports = function UserController(server) {
             user: { user, sudo },
           },
         } = req;
-
-        let target_user = await User.findByPk(id);
-        if (!target_user) return boom.notFound(`User with id ${id} not found`);
-
-        let userFields = ["permission"];
-        let profileFields = ["is_verified", "suitability"];
-
-        return {
-          result: await modify(target_user, payload, {
-            userFields,
-            profileFields,
-          }),
-        };
+        let fields = ["permission"];
+        return sudo
+          ? {
+              id,
+              result: User.update(payload, {
+                where: { id },
+                returning: true,
+                fields,
+                logging: console.log,
+              }),
+            }
+          : boom.methodNotAllowed(
+              `User with ID ${user?.id} is not an administrator`
+            );
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -248,73 +215,40 @@ module.exports = function UserController(server) {
             user: { user, fake, sudo, fake_count },
           },
         } = req;
-        // allowed fields
-        let fields = [];
-        if (sudo) {
-          let {
-            active = null,
-            suitability = null,
-            kyc_status = null,
-            ids = [],
-          } = payload;
+        let fields = ["active"],
+          result;
 
-          fields = ["active", "suitability"];
+        if (sudo) {
+          let { ids = [], ...data } = payload;
+          fields = [...fields, "permission"];
           if (!ids?.length) throw boom.badData(`<ids::array> cannot be empty`);
 
-          let error,
-            userData = {
-              ...(active ?? { active }),
-              ...(suitability ?? { suitability }),
-            },
-            operation = await sequelize.transaction(async (t) => {
-              return await Promise.all(
-                ids.map(async (id) => {
-                  // if kyc status is specified
-                  await Promise.all([
-                    kyc_status != null &&
-                      (await __update(
-                        "KYC",
-                        { status: kyc_status },
-                        {
-                          where: { user_id: id },
-                          transaction: t,
-                          fields: ["status"],
-                        }
-                      )),
-                    Object.keys(userData).length &&
-                      (await __update("User", userData, {
-                        where: { id },
-                        transaction: t,
-                        fields,
-                      })),
-                  ]);
-                })
-              ).catch((err) => (error = err));
-            });
+          if (!data) return boom.methodNotAllowed("Nothing to update");
 
-          return (error = null
-            ? {
-                status: true,
-                message: `Successfully updated ${data?.length} user records`,
-              }
-            : boom.internal({
-                status: false,
-                message: "Unable to complete operation",
-                error: error,
-              }));
+          result = await sequelize.transaction(async (t) => {
+            return await Promise.all(
+              ids.map(
+                async (id) =>
+                  await Promise.all([
+                    __update("User", data, {
+                      where: { id },
+                      transaction: t,
+                      fields,
+                    }),
+                  ])
+              )
+            );
+          });
         } else {
           // update session user data
-          const { profile, kyc, address } = payload;
-          await sequelize.transaction(
-            async (t) =>
-              await Promise.all([
-                profile && user?.setProfile(profile),
-                kyc && user?.setKYC(kyc),
-                address && user.setAddresses(address),
-              ])
-          );
-          return boom.methodNotAllowed();
+          result = await user?.update(payload, {
+            fields,
+          });
         }
+        return {
+          status: Boolean(result),
+          result,
+        };
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -329,22 +263,19 @@ module.exports = function UserController(server) {
      * @param {Array} req.payload.data  - array of ids
      * @returns
      */
-    async remove(req, h) {
+    async remove(req) {
       const {
         payload: { data = [], force = false },
         pre: {
           user: { user, fake, sudo, fake_count },
         },
       } = req;
-      let operation,
-        where,
-        error = null;
-
+      let result, where;
       try {
         if (sudo) {
           if (!data?.length)
             throw boom.badData("Expected an array of user IDs. None provided!");
-          operation = await sequelize.transaction(
+          result = await sequelize.transaction(
             async (t) =>
               await Promise.all([
                 data.map(async (id) => {
@@ -359,24 +290,13 @@ module.exports = function UserController(server) {
           );
         } else {
           where = { id: user?.id };
-          operation = await __destroy("User", where, force).catch(
-            (err) => (error = err)
-          );
+          result = await user.destroy({ force });
         }
 
-        return error == null
-          ? {
-              status: true,
-              message: `Success`,
-            }
-          : boom.internal(error.message, error);
-
-        return Boolean(await __destroy("User", where, force))
-          ? { status: true, message: "Successfully deleted a user record" }
-          : boom.internal({
-              status: false,
-              message: "Unable to complete operation",
-            });
+        return {
+          status: Boolean(result),
+          result,
+        };
       } catch (err) {
         console.error(err);
         return boom.internal(err.message, err);
@@ -384,7 +304,7 @@ module.exports = function UserController(server) {
     },
 
     /**
-     * @function remove - Remove single User
+     * @function remove - Remove single record by ID
      * @param {Object} req
      * @returns
      */
@@ -399,7 +319,8 @@ module.exports = function UserController(server) {
       // only superadmins are allowed to permanently delete a user
       force = user?.isSuperAdmin ? force : false;
       let where = { id };
-      return { deleted: Boolean(await __destroy("User", where, force)) };
+      let result = await __destroy("User", where, force);
+      return { status: Boolean(result), result };
     },
 
     // RETRIEVE------------------------------------------------------------
@@ -421,9 +342,16 @@ module.exports = function UserController(server) {
         const queryFilters = await filters({
           query,
           searchFields: ["email"],
+          extras: {
+            ...(!sudo && { id: user?.id }),
+          },
         });
 
-        const include = filterAssociations(query?.include);
+        const include = validateAndFilterAssociation(
+          query?.include,
+          ["security"],
+          User
+        );
 
         const options = {
           ...queryFilters,
@@ -444,7 +372,10 @@ module.exports = function UserController(server) {
             offset,
           });
         }
-        return { result: fake ? await User.FAKE() : user?.dataValues };
+
+        return {
+          result: fake ? await User.FAKE() : await User.findOne(options),
+        };
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -531,6 +462,7 @@ module.exports = function UserController(server) {
             data: {
               phone_number: user?.phone,
               email: user?.email,
+              id,
             },
           })
           .code(200);
@@ -603,6 +535,9 @@ module.exports = function UserController(server) {
           return security?.two_factor
             ? {
                 id: user?.id,
+                status: true,
+                message:
+                  "2FA enabled. Send OTP using the user ID to complete the authentication ",
               }
             : (await decrypt(password, user?.password))
             ? login(user, jwt.create(user))

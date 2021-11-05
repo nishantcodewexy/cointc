@@ -20,7 +20,7 @@ module.exports = (server) => {
 
   return {
     method: "GET",
-    path: "/kyc/user/{user_id}",
+    path: "/kyc/with/{user_id}",
     config: {
       pre: [
         {

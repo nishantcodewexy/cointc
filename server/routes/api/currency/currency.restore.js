@@ -2,9 +2,7 @@
 
 module.exports = (server) => {
   const Schema = require("../../../schema/currency.schema");
-  const { params: paramsSchema } = Schema.restore(
-    server
-  );
+  const { payload: payloadSchema } = Schema.bulkRestore(server);
 
   const {
     controllers: {
@@ -17,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "PATCH",
-    path: "/currency/{id}",
+    path: "/currency",
     config: {
       pre: [
         [
@@ -30,7 +28,7 @@ module.exports = (server) => {
       handler: restore,
       auth: "jwt",
       validate: {
-        params: paramsSchema,
+        payload: payloadSchema,
       },
     },
   };

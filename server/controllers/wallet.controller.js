@@ -24,7 +24,7 @@ module.exports = function WalletController(server) {
   return {
     create: async (req) => {
       const {
-        pre: user,
+        pre: {user: {user, sudo}},
         params: { currency },
       } = req;
       return await User.findByPk(user).createWallet({ asset: currency });
@@ -33,7 +33,7 @@ module.exports = function WalletController(server) {
     // RETRIEVE ----------------------------------------
     find: async (req) => {
       let {
-        pre: { user },
+        pre: { user : {user, sudo, fake, fake_count}},
         query,
       } = req;
 
@@ -41,12 +41,15 @@ module.exports = function WalletController(server) {
         const queryFilters = await filters({
           query,
           searchFields: ["account_id"],
+          extras: {
+            ...(!sudo && {user_id: user?.id})
+          }
         });
         const options = {
           ...queryFilters,
         };
 
-        let queryset = await Wallet.findAndCountAll(options);
+        let queryset = fake ? Wallet.FAKE(fake_count) : await Wallet.findAndCountAll(options);
         const { limit, offset } = queryFilters;
 
         return paginator({
@@ -67,39 +70,19 @@ module.exports = function WalletController(server) {
      */
     async findByAddress(req) {
       let {
-        pre: { user },
+        pre: { user: {sudo, fake}},
         params: { address },
       } = req;
       let where, result;
       try {
         where = { address };
-        result = await Wallet.findOne({
+        result = fake ? Wallet.FAKE() : await Wallet.findOne({
           where,
         });
 
         return result
           ? { result }
           : boom.notFound(`Wallet address: ${address} not found!`);
-      } catch (err) {
-        console.error(err);
-      }
-    },
-
-    async retrieveMe(req) {
-      let {
-        pre: { user },
-      } = req;
-      let where, result;
-      try {
-        where = {
-          ...(user?.isAdmin || user?.isSuperAdmin ? {} : { user_id: user?.id }),
-        };
-
-        result = await Wallet.findAll({
-          where,
-        });
-
-        return { result };
       } catch (err) {
         console.error(err);
       }

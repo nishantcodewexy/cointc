@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-      advert: { findAll },
+      advert: { find },
     },
     helpers: {
       permissions: {
@@ -22,7 +22,7 @@ module.exports = (server) => {
           assign: 'user'
         }
       ],
-      handler: findAll,
+      handler: find,
       auth: "jwt",
     },
   };

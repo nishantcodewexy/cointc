@@ -52,7 +52,7 @@ const BankDetailController = (server) => {
         const queryFilters = await filters({
           query,
           searchFields: ["bank_name", "currency", "country"],
-          extras: { ...(!sudo ? { user_id: user?.id } : null) },
+          extras: { ...(!sudo && { user_id: user?.id }) },
         });
 
         const queryOptions = {
@@ -81,7 +81,9 @@ const BankDetailController = (server) => {
       const {
         payload,
         params: { id },
-        pre: { user },
+        pre: {
+          user: { user },
+        },
       } = req;
 
       try {
@@ -100,7 +102,8 @@ const BankDetailController = (server) => {
           result: await BankDetail.update(payload, queryOptions)
             .then(([count, [updated]]) => ({
               updated,
-              [id]: Boolean(count),
+              id,
+              status: Boolean(count),
             }))
             .catch((err) => {
               throw boom.badData(err.message, err);
@@ -117,7 +120,9 @@ const BankDetailController = (server) => {
     async create(req) {
       const {
         payload,
-        pre: { user },
+        pre: {
+          user: { user },
+        },
       } = req;
 
       const queryOptions = {
@@ -146,7 +151,9 @@ const BankDetailController = (server) => {
       try {
         const {
           payload: { force = false },
-          pre: { user },
+          pre: {
+            user: { user },
+          },
           params: { id },
         } = req;
 
@@ -163,14 +170,8 @@ const BankDetailController = (server) => {
         return {
           result: await BankDetail.destroy(queryOptions)
             .then((count) => ({
-              [id]: Boolean(count),
-              ...(() =>
-                !count
-                  ? {
-                      info:
-                        "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
-                    }
-                  : null)(),
+              id,
+              status: Boolean(count),
             }))
             .catch((err) => {
               throw boom.badData(err.message, err);
@@ -185,7 +186,9 @@ const BankDetailController = (server) => {
     async remove(req) {
       const {
         payload: { data = [], force = false },
-        pre: { user },
+        pre: {
+          user: { user },
+        },
       } = req;
       let total = 0;
 
@@ -202,14 +205,8 @@ const BankDetailController = (server) => {
                 force,
               };
               return await BankDetail.destroy(queryOptions).then((count) => ({
-                [id]: ((total += count), Boolean(count)),
-                ...(() =>
-                  !count
-                    ? {
-                        info:
-                          "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
-                      }
-                    : null)(),
+                status: ((total += count), Boolean(count)),
+                id,
               }));
             })
           ).catch((err) => {
@@ -229,10 +226,12 @@ const BankDetailController = (server) => {
 
     // RESTORE------------------------------------------------------------
 
-    async restore(req) {
+    async restoreByID(req) {
       const {
         params: { id },
-        pre: { user },
+        pre: {
+          user: { user },
+        },
       } = req;
 
       try {
@@ -244,7 +243,8 @@ const BankDetailController = (server) => {
             },
           })
             .then((count) => ({
-              [id]: Boolean(count),
+              id,
+              status: Boolean(count),
             }))
             .catch((err) => {
               throw boom.badData(err.message, err);
@@ -257,13 +257,15 @@ const BankDetailController = (server) => {
     },
 
     /**
-     * @function bulkRestore - bulk restore currency records
+     * @function restore - bulk restore currency records
      * @param {Object} req
      */
-    async restoreByID(req) {
+    async restore(req) {
       const {
         payload: { data = [] },
-        pre: { user },
+        pre: {
+          user: { user },
+        },
       } = req;
 
       try {
@@ -278,7 +280,8 @@ const BankDetailController = (server) => {
                       ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
                     },
                   }).then((count) => ({
-                    [id]: Boolean(count),
+                    id,
+                    status: Boolean(count),
                   }))
               )
             ).catch((err) => {

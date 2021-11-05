@@ -18,7 +18,7 @@ function KycController(server) {
      */
     async create(req) {
       const {
-        pre: { user },
+        pre: { user:{user} },
         payload,
       } = req;
 
@@ -55,7 +55,7 @@ function KycController(server) {
       const {
         params: { id },
         payload: { force = false },
-        pre: { user },
+        pre: { user:{user} },
       } = req;
 
       try {
@@ -96,12 +96,14 @@ function KycController(server) {
               where: {
                 user_id,
               },
-            });
-        return found
-          ? {
-              result: found,
-            }
-          : boom.notFound(`Kyc with User ID; ${user_id} not found!`);
+          });
+        const { limit, offset } = queryFilters;
+        return await paginator({
+          queryset: found,
+          limit,
+          offset,
+        });
+        
       } catch (error) {
         console.error(error);
         throw boom.internal(error.message, error);
@@ -150,7 +152,7 @@ function KycController(server) {
      * @param {Object} req
      * @returns
      */
-    async findAll(req) {
+    async find(req) {
       const {
         query,
         pre: {
@@ -187,7 +189,7 @@ function KycController(server) {
      * @param {Object} req
      * @returns
      */
-    async updateAll(req) {
+    async update(req) {
       const {
         payload,
         pre: {

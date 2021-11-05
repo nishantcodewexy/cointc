@@ -24,17 +24,17 @@ module.exports = function UploadController(server) {
       const {
         params: { id },
 
-        pre: { user },
+        pre: { user: {user, sudo} },
       } = req;
 
       const upload = await Upload.findOne({
         where: {
           id,
-          ...( user?.isAdmin || user?.isSuperAdmin ? {} : { user_id: user.id }),
+          ...( !sudo &&{ user_id: user.id }),
         },
         attributes: {
           exclude: [
-            "deleted_at",
+           
             "user_id",
             "UserId",
             "updated_at",
@@ -48,10 +48,11 @@ module.exports = function UploadController(server) {
       }
       return upload;
     },
-    async findAll(req) {
+
+    async find(req) {
       const {
         query,
-        pre: { user },
+        pre: { user : {user, sudo}},
       } = req;
 
       try {
@@ -59,7 +60,7 @@ module.exports = function UploadController(server) {
         const filterResults = await filters({
           query,
           extra: {
-            ...(user?.isAdmin || user.isSuperAdmin? {} : { user_id: user?.id }),
+            ...(!sudo && { user_id: user?.id }),
           },
         });
 
@@ -94,7 +95,7 @@ module.exports = function UploadController(server) {
     async create(req) {
       const {
         payload: { file },
-        pre: { user },
+        pre: { user: {user, sudo} },
       } = req;
 
       const fileOptions = {
@@ -146,13 +147,13 @@ module.exports = function UploadController(server) {
     async removeByID(req) {
       const {
         params: { id },
-        pre: { user },
+        pre: { user: {user, sudo} },
       } = req;
 
       const result = await Upload.destroy({
         where: {
           id,
-          ...(user?.isAdmin || user?.isSuperAdmin?{} : { user_id: user.id }),
+          ...(!sudo && { user_id: user.id }),
         },
       });
 
@@ -168,7 +169,7 @@ module.exports = function UploadController(server) {
      */
     async remove(req) {
       const {
-        pre: { user },
+        pre: { user: {user, sudo} },
         payload,
       } = req;
 
@@ -177,7 +178,7 @@ module.exports = function UploadController(server) {
           id: {
             [Op.in]: payload,
           },
-          ...(user?.isAdmin || user?.isSuperAdmin ?{} : { user_id: user.id }),
+          ...(!sudo &&  { user_id: user.id }),
         },
       });
 

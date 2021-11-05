@@ -7,12 +7,21 @@ module.exports = (server) => {
     controllers: {
       advert: { findByID },
     },
+    helpers: {
+      permissions: { isUser },
+    },
   } = server.app;
 
   return {
     method: "GET",
     path: "/ad/{id}",
     config: {
+      pre: [
+        {
+          method: isUser,
+          assign: "user",
+        },
+      ],
       handler: findByID,
       auth: "jwt",
       validate: {

@@ -34,7 +34,12 @@ function create(server) {
         .error(
           boom.badRequest(`Required input <max_order_price::number> is invalid`)
         ),
-      payment_methods: Joi.string()
+      payment_methods: Joi.any()
+        .allow(
+          Joi.object().allow({}),
+          Joi.array().items(Joi.object()),
+          Joi.string()
+        )
         .required()
         .error(
           boom.badRequest(
@@ -53,20 +58,19 @@ function create(server) {
         .error(boom.badRequest(`Required input <qty::number> is invalid`)),
       crypto: Joi.string()
         .required()
-        .error(
-          boom.badRequest(`Required input <crypto::string> is invalid`)
-        ),
+        .error(boom.badRequest(`Required input <crypto::string> is invalid`)),
       fiat: Joi.string()
+        .label("Fiat currency")
         .required()
-        .error(
-          boom.badRequest(`Required input <fiat::string> is invalid`)
-        ),
-      payment_time_limit: Joi.string()
-        .valid("-1", Joi.string().isoDate())
+        .error(boom.badRequest(`Required input <fiat::string> is invalid`)),
+      payment_ttl_mins: Joi.number()
+        .integer()
+        .allow(-1)
+        .label("Payment time to live")
         .optional()
         .error(
           boom.badRequest(
-            `Optional input <payment_time_limit::string> is invalid`
+            `Optional input <payment_time_limit::number> is invalid`
           )
         ),
       floating_price: Joi.number()
@@ -100,18 +104,7 @@ function create(server) {
     }),
   };
 }
-/**
- * @function bulkCreate - Schema validator for creating bulk currency entities
- * @param {Object} server - Hapi server instance
- * @returns
- */
-function bulkCreate(server) {
-  return {
-    payload: Joi.object({
-      data: Joi.array().items(create(server)?.payload),
-    }),
-  };
-}
+
 
 // UPDATE ------------------------------------------------
 
@@ -131,6 +124,14 @@ function update(server) {
         .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
     }),
     payload: Joi.object({
+      ids: Joi.array().items(
+        Joi.string()
+          .uuid()
+          .error(boom.badRequest(`Required input <id::uuid> is invalid`))
+      ),
+      id: Joi.string()
+        .uuid()
+        .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
       min_order_qty: Joi.number()
         .optional()
         .error(
@@ -151,17 +152,16 @@ function update(server) {
         .error(
           boom.badRequest(`optional input <max_order_price::number> is invalid`)
         ),
-      payment_methods: Joi.string()
+      payment_methods: Joi.any()
+        .allow(
+          Joi.object().allow({}),
+          Joi.array().items(Joi.object()),
+          Joi.string()
+        )
         .optional()
         .error(
-          boom.badRequest(
-            `optional input <payment_method::array[string]> is invalid`
-          )
+          boom.badRequest(`optional input <payment_method::any> is invalid`)
         ),
-      // type: Joi.string()
-      //   .pattern(patterns.ad_type)
-      //   .required()
-      //   .error(boom.badRequest(`Required input <type::string> is invalid`)),
       price: Joi.number()
         .optional()
         .error(boom.badRequest(`optional input <price::number> is invalid`)),
@@ -170,20 +170,18 @@ function update(server) {
         .error(boom.badRequest(`optional input <qty::number> is invalid`)),
       crypto: Joi.string()
         .optional()
-        .error(
-          boom.badRequest(`optional input <crypto::string> is invalid`)
-        ),
+        .error(boom.badRequest(`optional input <crypto::string> is invalid`)),
       fiat: Joi.string()
         .optional()
-        .error(
-          boom.badRequest(`optional input <fiat::string> is invalid`)
-        ),
-      payment_time_limit: Joi.string()
-        .valid("-1", Joi.string().isoDate())
+        .error(boom.badRequest(`optional input <fiat::string> is invalid`)),
+      payment_ttl_mins: Joi.number()
+        .integer()
+        .allow(-1)
+        .label("Payment time to live")
         .optional()
         .error(
           boom.badRequest(
-            `Optional input <payment_time_limit::string> is invalid`
+            `Optional input <payment_ttl_mins::number> is invalid`
           )
         ),
       floating_price: Joi.number()
@@ -214,7 +212,9 @@ function update(server) {
         .error(
           boom.badRequest(`Optional input <published::string> is invalid`)
         ),
-    }),
+    })
+      .xor("id", "ids")
+      .without("id", "ids"),
   };
 }
 
@@ -227,16 +227,13 @@ function bulkUpdate(server) {
   const { boom } = server.app;
   return {
     payload: Joi.object({
-      data: Joi.array().items(update(server)?.payload),
-      paranoid: Joi.boolean()
-        .optional()
-        .error(boom.badRequest(`Optional input <paranoid::bool> is invalid`)),
+      ids: Joi.array().items(update(server)?.payload),
     }),
   };
 }
 // RETRIEVE ------------------------------------------------
 
-function retrieve(server) {
+function findByID(server) {
   return {
     params: update(server)?.params,
   };
@@ -246,27 +243,19 @@ function retrieve(server) {
 function remove(server) {
   const { boom } = server.app;
   return {
+    params: Joi.object({
+      id: Joi.string()
+        .uuid()
+        .error(boom.badRequest(`Required input [<id::uuid>] is invalid`)),
+    }),
     payload: Joi.object({
-      force: Joi.boolean()
-        .default(false)
-        .optional()
-        .error(boom.badData("Optional input <force::boolean> is invalid")),
-    }).optional(),
-
-    params: retrieve(server)?.params,
-  };
-}
-
-function bulkRemove(server) {
-  const { boom } = server.app;
-  return {
-    payload: Joi.object({
-      data: Joi.array()
+      ids: Joi.array()
         .items(
           Joi.string()
             .uuid()
             .error(boom.badRequest(`Required input [<id::uuid>] is invalid`))
         )
+        .optional()
         .error(boom.badRequest(`Required input <data::Array> is invalid`)),
       force: Joi.boolean()
         .default(false)
@@ -302,10 +291,8 @@ module.exports = {
   create,
   update,
   remove,
-  bulkCreate,
   bulkUpdate,
-  bulkRemove,
   restore,
   bulkRestore,
-  retrieve,
+  retrieve: findByID,
 };

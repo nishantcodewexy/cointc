@@ -136,18 +136,20 @@ module.exports = {
 
   async afterFind(findResult, options) {
     if (findResult && !Array.isArray(findResult)) findResult = [findResult];
-    for (let instance of findResult) {
-      let account_id = instance?.dataValues?.account_id;
-      let customerId = instance?.dataValues?.user_id;
-      let currency = instance?.dataValues?.currency;
-      let derivationKey = instance?.dataValues?.derivation_key;
-      let account = await Tatum.getAccountById(account_id);
-      let user = await instance?.getUser();
-      instance.dataValues = {
-        ...instance.dataValues,
-        ...account,
-        user: user?.dataValues,
-      };
+    for (const instance of findResult) {
+      if (instance instanceof this) {
+        let account_id = instance?.dataValues?.account_id;
+        let customerId = instance?.dataValues?.user_id;
+        let currency = instance?.dataValues?.currency;
+        let derivationKey = instance?.dataValues?.derivation_key;
+        let account = await Tatum.getAccountById(account_id);
+        let user = await instance?.getUser();
+        instance.dataValues = {
+          ...instance.dataValues,
+          ...account,
+          user: user?.dataValues,
+        };
+      }
     }
   },
   // prioryty 1

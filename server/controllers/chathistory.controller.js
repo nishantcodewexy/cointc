@@ -65,7 +65,7 @@ const ChatHistoryController = (server) => {
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
+    async findByID(req) {
       const {
         params: { id },
         user: { user, fake=false, sudo },
@@ -97,7 +97,7 @@ const ChatHistoryController = (server) => {
      * @param {Object} req
      * @returns
      */
-    async bulkRetrieve(req) {
+    async find(req) {
       try {
         const { query,user: { fake, fake_count } } = req;
 
@@ -130,7 +130,7 @@ const ChatHistoryController = (server) => {
     // UPDATE ----------------------------------------------------------
 
     // REMOVE ----------------------------------------------------------
-    async remove(req) {
+    async removeByID(req) {
       const {
         params: { id },
       } = req;

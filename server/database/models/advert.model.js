@@ -3,6 +3,7 @@ const { Model } = require("sequelize");
 const { tableNames } = require("../../consts");
 const faker = require("faker");
 const { currencies, walletTypes } = require("../../consts");
+const hooks = require("../hooks/advert.hook");
 const User = require("./user.model");
 
 module.exports = (sequelize, DataTypes) => {
@@ -16,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       const { Advert, Order, User } = models;
-      Advert.belongsTo(User);
+      Advert.belongsTo(User, { foreignKey: "user_id" });
 
       Advert.hasMany(Order, {
         as: "orders",
@@ -42,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
           max_order_price: faker.datatype.float(2),
           payment_methods: faker.helpers.randomize(["wechat", "alipay"]),
           type: faker.helpers.randomize(["buy", "sell"]),
-          payment_time_limit: faker.datatype.number(),
+          payment_ttl_mins: faker.datatype.number(),
           price: faker.datatype.float(),
           floating_price: faker.datatype.float(),
           qty: faker.datatype.number(),
@@ -53,8 +54,8 @@ module.exports = (sequelize, DataTypes) => {
           trade_conditions: faker.lorem.sentence(),
           published: faker.datatype.boolean(),
           archived_at: null,
-          createdAt:  faker.datatype.datetime(),
-          updatedAt:  faker.datatype.datetime(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
           user: User(sequelize, DataTypes).FAKE(),
         };
       };
@@ -120,13 +121,13 @@ module.exports = (sequelize, DataTypes) => {
         comment:
           "Advert type where a buyer ad requires a seller to initiate an order. A seller ad requires a buyer to inititate an order",
       },
-      payment_time_limit: {
+      payment_ttl_mins: {
         type: DataTypes.INTEGER,
         defaultValue: -1,
         validate: {
           isInt: true,
         },
-        comment: "Time limit within which buyer should complete trade",
+        comment: "Time limit in minutes within which order should be completed",
       },
       price: {
         validate: {
@@ -183,26 +184,9 @@ module.exports = (sequelize, DataTypes) => {
       tableName: tableNames?.ADVERT || "tbl_adverts",
       paranoid: true,
       deletedAt: "archived_at",
+      hooks,
     }
   );
 
-  Advert.addHook("afterFind", async (findResult, options) => {
-    if (!findResult) return;
-    if (!Array.isArray(findResult)) findResult = [findResult];
-    for (const instance of findResult) {
-      if (!(instance instanceof Advert)) return;
-
-      let orders = await instance.getOrders();
-      let completed_orders = await instance.getOrders({
-        where: { status: "completed" },
-      });
-      if (instance)
-        instance.dataValues = {
-          total_orders: orders.length,
-          total_completed_orders: completed_orders.length,
-          ...instance?.dataValues,
-        };
-    }
-  });
   return Advert;
 };

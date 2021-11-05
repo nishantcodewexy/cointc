@@ -63,7 +63,7 @@ module.exports = function(server) {
      * @returns
      */
     updateByID() {
-      const _update_schema = _updateSchema(server);
+      const _update_schema = _sudo_update_schema(server);
       return {
         payload: Joi.object(_update_schema).allow({}),
         params: Joi.object({ id: schema.id?.required() }),
@@ -75,13 +75,18 @@ module.exports = function(server) {
      * @returns
      */
     update() {
-      const _update_schema = _updateSchema(server);
+      const _update_schema = _sudo_update_schema(server);
       return {
         payload: Joi.alternatives().try(
-          Joi.object(_update_schema),
-          Joi.object({
-            ids: Joi.array().items(schema?.id),
-          })
+          Joi.object().keys({
+            active: Joi.boolean(),
+          }),
+          Joi.object()
+            .keys({
+              ids: Joi.array().items(schema?.id),
+              ..._update_schema,
+            })
+            .or("active", "ids", "suitability")
         ),
       };
     },
@@ -162,30 +167,11 @@ module.exports = function(server) {
   };
 };
 
-function _updateSchema(server) {
+function _sudo_update_schema(server) {
   const { boom } = server.app;
   return {
-    profile: Joi.object({
-      lname: Joi.string()
-        .optional()
-        .error(boom.badData("<lname::string> is invalid")),
-      oname: Joi.string()
-        .optional()
-        .error(boom.badData("<oname::string> is invalid")),
-      pname: Joi.string()
-        .optional()
-        .error(boom.badData("<pname::string> is invalid")),
-      mode: Joi.string()
-        .optional()
-        .error(boom.badData("<mode::string> is invalid")),     
-      payment_methods: Joi.any()
-        .allow({})
-        .optional()
-        .error(boom.badData("<payment_methods::string> is invalid")),
-    
-    })
-      ?.optional()
-      .error(boom.badData("<profile::object> is invalid")),
+    active: Joi.boolean(),
+    suitability: Joi.number(),
   };
 }
 
@@ -203,17 +189,20 @@ function _getSchema(server) {
       .error(boom.badData("<force::boolean> is invalid")),
     email: Joi.string()
       .email({ minDomainSegments: 2 })
+      .label("Email address")
       .error(boom.badData("<email::string> is invalid")),
     password: Joi.string()
       .pattern(patterns.password)
       .error(boom.badData("<password::string> is invalid")),
     repeat_password: Joi.ref("password"),
     invite_code: Joi.string()
+      .label("Invitation code")
       .allow("", null)
       .error(boom.badRequest("<invite_code::string> is invalid")),
     access_level: Joi.number()
       .max(3)
       .default(1)
+      .label("Access Level")
       .error(boom.badData("<access_level::number> is invalid")),
   };
 }

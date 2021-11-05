@@ -3,7 +3,7 @@
 module.exports = (server) => {
   const {
     controllers: {
-      upload: { findAll },
+      upload: { find },
     },
     helpers: {
       permissions: { isUser },
@@ -22,7 +22,7 @@ module.exports = (server) => {
         },
         
       ],
-      handler: findAll,
+      handler: find,
       auth: "jwt",
     },
     
