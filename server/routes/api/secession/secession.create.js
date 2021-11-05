@@ -12,6 +12,7 @@ module.exports = (server) => {
 
   const schema = Joi.object({
     description: Joi.string(),
+    access_level: Joi.number().integer().min(1).max(3)
   });
 
   return {

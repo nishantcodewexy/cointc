@@ -7,7 +7,7 @@ module.exports = function SecessionController(server) {
       Sequelize: { Op },
     },
     boom,
-    helpers: { filters, paginator },
+    helpers: { filters, paginator, validateAndFilterAssociation },
   } = server.app;
 
   return {
@@ -16,14 +16,13 @@ module.exports = function SecessionController(server) {
     async create(req) {
       const {
         payload,
-        auth: {
-          credentials: {
-            user: { user },
-          },
+        pre: {
+          user: { user, sudo },
         },
         query:{fake=false}
       } = req;
 
+<<<<<<< HEAD
       if(fake) return await Secession.FAKE()
 
       const { id, level, status, description } = await Secession.create({
@@ -31,6 +30,12 @@ module.exports = function SecessionController(server) {
         user_id: user.id,
       });
       return { id, level, status, description };
+=======
+      const result = await user.createSecession(payload);
+      return {
+        result,
+      };
+>>>>>>> 84148ebec72df2195154996b20e295a50476c0e6
     },
 
     // RETRIEVE ---------------------------------------------------------------
@@ -47,26 +52,35 @@ module.exports = function SecessionController(server) {
         },
       } = req;
       try {
-        const filterResults = await filters({
+        const queryFilters = await filters({
           query,
           searchFields: ["status", "description"],
           ...(!sudo && {
             extra: {
               user_id: user?.id,
-              archived_at: {
-                [Op.is]: null,
-              },
             },
           }),
         });
+
+        const include = validateAndFilterAssociation(
+          query?.include,
+          ["user"],
+          Secession
+        );
+        
+        const options = {
+          ...queryFilters,
+          // attributes: { exclude: ["password"] },
+          include,
+        };
         const result = fake
           ? Secession.FAKE(fake_count)
-          : await Secession.findAndCountAll(filterResults);
+          : await Secession.findAndCountAll(options);
 
         return await paginator({
           queryset: result,
-          limit: filterResults.limit,
-          offset: filterResults.offset,
+          limit: queryFilters.limit,
+          offset: queryFilters.offset,
         });
       } catch (err) {
         console.error(err);
@@ -95,7 +109,9 @@ module.exports = function SecessionController(server) {
     async removeByID(req) {
       const {
         params: { id },
-        pre: { user: {user, sudo} },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
 
       if (!sudo) throw boom.forbidden();
@@ -107,7 +123,9 @@ module.exports = function SecessionController(server) {
 
     async remove(req) {
       const {
-        pre: { user: {user, sudo} },
+        pre: {
+          user: { user, sudo },
+        },
         payload,
       } = req;
 
@@ -132,10 +150,12 @@ module.exports = function SecessionController(server) {
       const {
         payload,
         params: { id },
-        pre: { user: {user, sudo} },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
 
-      let result= await Secession.update(payload, {
+      let result = await Secession.update(payload, {
         where: {
           id,
           ...(!sudo && { user_id: user?.id }),
@@ -145,8 +165,8 @@ module.exports = function SecessionController(server) {
       return {
         id,
         status: Boolean(result),
-        result
-      }
+        result,
+      };
     },
   };
 };

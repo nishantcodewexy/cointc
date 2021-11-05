@@ -181,15 +181,17 @@ module.exports = function UserController(server) {
           },
         } = req;
         let fields = ["permission"];
+        let result = await User.update(payload, {
+          where: { id },
+          returning: true,
+          fields,
+          logging: console.log,
+        }).then(([count]) => count);
+        
         return sudo
           ? {
               id,
-              result: User.update(payload, {
-                where: { id },
-                returning: true,
-                fields,
-                logging: console.log,
-              }),
+              status: Boolean(result),
             }
           : boom.methodNotAllowed(
               `User with ID ${user?.id} is not an administrator`

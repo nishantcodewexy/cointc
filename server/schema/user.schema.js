@@ -171,6 +171,7 @@ function _sudo_update_schema(server) {
   const { boom } = server.app;
   return {
     active: Joi.boolean(),
+    permission: Joi.boolean(),
     suitability: Joi.number(),
   };
 }
