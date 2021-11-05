@@ -2,10 +2,12 @@
 
 module.exports = (server) => {
   const Schema = require("../../../schema/order.schema");
-  const { params: paramsSchema } = Schema.find(server);
+  const { params: paramsSchema, payload: payloadSchema } = Schema.update(
+    server
+  );
   const {
     controllers: {
-      order: { findByID },
+      order: { updateByID },
     },
     helpers: {
       permissions: { isUser },
@@ -13,7 +15,7 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "GET",
+    method: "PUT",
     path: "/order/{id}",
     config: {
       pre: [
@@ -22,10 +24,11 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: findByID,
+      handler: updateByID,
       auth: "jwt",
       validate: {
         params: paramsSchema,
+        payload: payloadSchema,
       },
     },
   };

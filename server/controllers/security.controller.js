@@ -71,7 +71,7 @@ const SecurityController = (server) => {
       try {
         const queryFilters = await filters({
           query,
-          searchFields: ["email"],
+          searchFields: ["user_id"],
           extras: {
             id,
           },

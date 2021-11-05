@@ -98,7 +98,7 @@ function OrderController(server) {
     },
 
     /**
-     * @function bulkRetrieve
+     * @function find
      * @param {Object} req
      * @returns
      */
@@ -130,6 +130,44 @@ function OrderController(server) {
           limit,
           offset,
         });
+      } catch (error) {
+        console.error(error);
+        throw boom.boomify(error);
+      }
+    },
+
+    /**
+     * @function updateByID
+     * @param {Object} req
+     * @returns
+     */
+    async updateByID(req) {
+      const {
+        params: { id },
+        payload,
+        pre: {
+          user: { user, sudo, fake, fake_count },
+        },
+      } = req;
+
+      try {
+        let fields = ["status", "rating", "trx_id", "appeal", "remark"],
+          result,
+          where = {
+            id,
+            ...(!sudo && { user_id: user?.id }),
+          };
+
+        result = await Order.update(payload, {
+          where,
+          fields,
+          returning: true,
+        }).then(([count]) => count);
+
+        return {
+          id,
+          status: Boolean(result),
+        };
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);
