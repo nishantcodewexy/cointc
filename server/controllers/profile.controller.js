@@ -149,20 +149,19 @@ const ProfileController = (server) => {
           if (!ids?.length) throw boom.badData(`<ids::array> cannot be empty`);
           if (!data) return boom.methodNotAllowed("Nothing to update");
           fields = [...fields, "suitability", "verified"];
-          result = await sequelize.transaction(async (t) => {
-            return await Promise.all(
-              ids.map(
-                async (id) =>
-                  await Promise.all([
-                    __update("Profile", data, {
-                      where: { id },
-                      transaction: t,
-                      fields,
-                    }),
-                  ])
+          return await sequelize.transaction(
+            async (t) =>
+              await Promise.all(
+                ids.map(async (id) => ({
+                  id,
+                  ...(await __update("Profile", data, {
+                    where: { profile_id: id },
+                    transaction: t,
+                    fields,
+                  })),
+                }))
               )
-            );
-          });
+          );
         } else {
           // update session user data
           fields = [
@@ -179,10 +178,11 @@ const ProfileController = (server) => {
           result = await Profile?.update(payload, {
             where: { user_id: user?.id },
             fields,
-          });
+          }).then(([count]) => count);
         }
         return {
-          result,
+          id: user?.id,
+          status: Boolean(result),
         };
       } catch (error) {
         console.error(error);

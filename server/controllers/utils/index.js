@@ -24,8 +24,7 @@ module.exports = (server) => {
         logging: console.log,
       });
       return {
-        status: Boolean(affectedRowCount),
-        result: affectedRow || null,
+        status: Boolean(affectedRowCount),       
       };
     },
 

@@ -54,7 +54,7 @@ module.exports = {
             "released",
             "completed",
             "disputed",
-            "canceled"
+            "cancelled"
           ),
           defaultValue: "unpaid",
         },
@@ -62,7 +62,7 @@ module.exports = {
           type: Sequelize.INTEGER,
           validate: {
             isInt: true,
-            min: 1,
+            min: 0,
             max: 5,
           },
           allowNull: true,

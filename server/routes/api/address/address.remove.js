@@ -1,11 +1,9 @@
-"use strict";
+const Joi = require("joi");
 
 module.exports = (server) => {
-  const Schema = require("../../../schema/order.schema");
-  const { params: paramsSchema } = Schema.find(server);
   const {
     controllers: {
-      order: { findByID },
+      address: { remove },
     },
     helpers: {
       permissions: { isUser },
@@ -13,8 +11,8 @@ module.exports = (server) => {
   } = server.app;
 
   return {
-    method: "GET",
-    path: "/order/{id}",
+    method: "DELETE",
+    path: "/address",
     config: {
       pre: [
         {
@@ -22,11 +20,8 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: findByID,
+      handler: remove,
       auth: "jwt",
-      validate: {
-        params: paramsSchema,
-      },
     },
   };
 };
