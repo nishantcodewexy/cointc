@@ -1,5 +1,7 @@
 "use strict";
 
+
+
 const AddressController = (server) => {
   const {
     db: { Address, User },
@@ -7,6 +9,81 @@ const AddressController = (server) => {
     helpers: { paginator, filters },
   } = server.app;
   return {
+    
+    /**
+     * @function bulkRetrieve - Retrieves multiple advert records
+     * @param {Object} req
+     */
+     async find(req) {
+      const {
+        query,
+        pre: {
+          user: { user, fake, fake_count, sudo },
+        },
+      } = req;
+
+      try {
+        const queryFilters = await filters({
+          query,
+          searchFields: ["address_line"],
+          extras:{
+            ...(sudo?{}:{user_id:user.id})
+          }
+        });
+        const options = {
+          ...queryFilters,
+          logging: console.log,
+          // include: User,
+          // attributes: { include: [["User", "user"]] },
+        };
+        
+        let queryset = fake
+          ? await Address.FAKE(fake_count)
+          : await Address.findAndCountAll(options).catch((err) => {
+              throw boom.badData(err.message, err);
+            });
+        
+        const { limit, offset } = queryFilters;
+
+        return paginator({
+          queryset,
+          limit,
+          offset,
+        });
+      } catch (err) {
+        console.error(err);
+        return boom.isBoom ? err : boom.internal(err.message, err);
+      }
+    },
+    /**
+     * @function get - Gets currency collection
+     * @param {Object} req
+     * @returns
+     */
+     async findByID(req) {
+      const {
+        pre: {
+          user: { user, fake, sudo },
+        },
+        params: { id },
+      } = req;
+
+      try {
+        const queryOptions = {
+          where: {
+            ...(sudo && { user_id: user.id }),
+            attributes: { exclude: ["user_id", "UserId"] },
+          },
+        };
+        let result = fake
+          ? await Address.FAKE()
+          : await Address.findByPk(id, queryOptions);
+        return result ? { result } : boom.notFound("Record not found");
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
     /**
      * @function remove - remove mulitple records
      * @param {Object} req  - request object
@@ -77,7 +154,33 @@ const AddressController = (server) => {
       return { status: Boolean(result), result };
     },
     async removeByUserID(req) {},
+    /**
+     * @function create - Creates a single advert
+     * @param {Object} req
+     * @returns
+     */
+    async create(req) {
+      const {
+        payload,
+        pre: {
+          user: { user, fake },
+        },
+      } = req;
+      try {
+        return {
+          result: fake
+            ? await Address.FAKE()
+            : await user.createAddress(payload).catch((err) => {
+                throw boom.badData(err.message, err);
+              }),
+        };
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
+      }
+    },
   };
+
 };
 
 module.exports = AddressController;
