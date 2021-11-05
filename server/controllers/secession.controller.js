@@ -19,7 +19,6 @@ module.exports = function SecessionController(server) {
         pre: {
           user: { user, sudo },
         },
-        query:{fake=false}
       } = req;
 
       const result = await user.createSecession(payload);

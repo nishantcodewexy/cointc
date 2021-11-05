@@ -90,7 +90,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
-      block_account_id: DataTypes.UUID,
+      blocked_account_id: DataTypes.UUID,
       appeal: DataTypes.STRING,
       remark: DataTypes.STRING,
       status: {
