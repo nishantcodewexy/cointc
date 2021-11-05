@@ -16,18 +16,15 @@ module.exports = function SecessionController(server) {
     async create(req) {
       const {
         payload,
-        auth: {
-          credentials: {
-            user: { user },
-          },
+        pre: {
+          user: { user, sudo },
         },
       } = req;
 
-      const { id, level, status, description } = await Secession.create({
-        ...payload,
-        user_id: user.id,
-      });
-      return { id, level, status, description };
+      const result = await user.createSecession(payload);
+      return {
+        result,
+      };
     },
 
     // RETRIEVE ---------------------------------------------------------------
@@ -53,11 +50,13 @@ module.exports = function SecessionController(server) {
             },
           }),
         });
+
         const include = validateAndFilterAssociation(
           query?.include,
           ["user"],
           Secession
         );
+        
         const options = {
           ...queryFilters,
           // attributes: { exclude: ["password"] },
