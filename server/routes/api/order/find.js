@@ -21,7 +21,7 @@ module.exports = (server) => {
         },
       ],
       handler: find,
-      auth: "jwt",
+      // auth: "jwt",
     },
   };
 };
