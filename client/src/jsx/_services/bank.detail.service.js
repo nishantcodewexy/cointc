@@ -4,7 +4,7 @@ import Services from "./Services";
  * Class of all Group services
  * @class
  */
-export default class BankDetailServices extends Services {
+export default class BankDetailervices extends Services {
   constructor(init) {
     super(init);
     this._name = "BANK_DETAIL";
@@ -14,7 +14,7 @@ export default class BankDetailServices extends Services {
   create = async (data) => {
     return await this.decorate(
       async () =>
-        await this.axios(`bank-details`, {
+        await this.axios(`bank-detail`, {
           method: "POST",
           data,
         })
@@ -24,7 +24,7 @@ export default class BankDetailServices extends Services {
   bulkRetrieve = async (params) => {
     return await this.decorate(
       async () =>
-        await this.axios(`bank-details`, {
+        await this.axios(`bank-detail`, {
           method: "GET",
           params,
         })
@@ -34,7 +34,7 @@ export default class BankDetailServices extends Services {
   retrieve = async ({ id, params }) => {
     return await this.decorate(
       async () =>
-        await this.axios(`bank-details/${id}`, {
+        await this.axios(`bank-detail/${id}`, {
           method: "GET",
           params,
         })
@@ -45,7 +45,7 @@ export default class BankDetailServices extends Services {
     console.log({ data });
     return await this.decorate(
       async () =>
-        await this.axios(`bank-details/${id}`, {
+        await this.axios(`bank-detail/${id}`, {
           method: "PUT",
           data,
         })
@@ -55,7 +55,7 @@ export default class BankDetailServices extends Services {
   remove = async ({ id, ...data }) => {
     return await this.decorate(
       async () =>
-        await this.axios(`bank-details/${id}`, {
+        await this.axios(`bank-detail/${id}`, {
           method: "DELETE",
           data,
         })
@@ -65,7 +65,7 @@ export default class BankDetailServices extends Services {
   bulkRemove = async (data) => {
     return await this.decorate(
       async () =>
-        await this.axios(`bank-details`, {
+        await this.axios(`bank-detail`, {
           method: "DELETE",
           data,
         })

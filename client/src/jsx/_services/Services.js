@@ -31,6 +31,8 @@ export default class Services {
     this.axios = axios.create(config);
   }
 
+
+  // ================ OUR TOKEN AND HEADER ===============
   getHeaders = () => this.headers;
   getToken = () => this.token;
 

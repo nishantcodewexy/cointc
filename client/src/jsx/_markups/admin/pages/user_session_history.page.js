@@ -31,7 +31,10 @@ function UserSessionHistoryTable({ useService, services }) {
   const { dispatchRequest } = service;
 
   useEffect(() => {
-    dispatchRequest({ type: SERVICE?.BULK_RETRIEVE });
+    dispatchRequest({ type: SERVICE?.BULK_RETRIEVE, payload: {
+      "sudo": true,
+      "fake": true,
+    }});
   }, []);
 
   return (

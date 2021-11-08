@@ -15,12 +15,10 @@ import { SERVICE } from "../../../_constants";
 
 
 function UserBalance({ services, useService }) {
-  const { group } = services;
+  const { wallet } = services;
 
-  // register services
   let service = useService({
-    // [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
-    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveBankDetail,
+    [SERVICE?.BULK_RETRIEVE]: wallet.getWallet,
   });
 
   const { dispatchRequest } = service;
@@ -31,6 +29,8 @@ function UserBalance({ services, useService }) {
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
+        "fake": true,
+        "sudo": true,
         paranoid: false,
       },
       toast: { success: notifySuccess, error: notifyError },
@@ -48,27 +48,17 @@ function UserBalance({ services, useService }) {
             {...{ service }}
             omit="*"
             extras={[
-              "Email",
-              "Currency",
-              'SpotWallet',
-              "LocketBalance"
+              "email",
+              "currency",
+              'account_balance',
+              "available_balance"
 
             ]}
             transformers={{
-              Email: ({ row }) => row?.email,
-              Currency: ({row}) => row?.currency,
-              SpotWallet: ({row}) => row?.spotwallet,
-              LocketBalance: ({row}) => row?.locketbalance
-              // currency: ({ row }) => row?.currency
-              // created_at: ({ row }) => {
-              //   let time = moment(row?.created_at);
-         
-              //   return time.isValid() ? (
-              //     <Moment format="MMM Do, Y, hh:mm A">{time}</Moment>
-              //   ) : (
-              //     "unknown"
-              //   );
-              // },
+              email: ({ row }) => row?.user?.email || "",
+              currency: ({row}) => row?.currency || " Not specified",
+              account_balance: ({row}) => row?.balance?.accountBalance || "",
+              available_balance: ({row}) => row?.balance?.availableBalance || "",
             }}
           />
         </Col>
