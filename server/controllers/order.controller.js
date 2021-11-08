@@ -24,7 +24,7 @@ function OrderController(server) {
         payload,
       } = req;
 
-      const { advert_id } = payload;
+      const { advert_id,total_quantity } = payload;
       if (!advert_id) throw boom.badRequest("Missing advert_id in request");
 
       try {
@@ -32,12 +32,23 @@ function OrderController(server) {
         let ad = await Advert.findByPk(advert_id);
         if (ad) {
           // create order using the user info
+          let result;
+
+          if(fake){
+            result = await Order.FAKE()
+          }else if(ad.publish && ad.current_qty >= total_quantity){
+           result = await user.createOrder({
+              ...payload,
+            })
+          }else{
+            return boom.notFound(
+              "Not permitted"
+            );
+          }
+
           return {
-            result: fake
-              ? await Order.FAKE()
-              : await user.createOrder({
-                  ...payload,
-                }),
+            
+            result
           };
         } else
           return boom.notFound(
@@ -89,6 +100,28 @@ function OrderController(server) {
         },
       } = req;
       try {
+        let result = fake ? await Order.FAKE() : await Order.findByPk(id);
+        return { result };
+      } catch (error) {
+        console.error(error);
+        throw boom.internal(error.message, error);
+      }
+    },
+    // RETRIEVE ---------------------------------------------------------
+    /**
+     * @function findByID
+     * @param {Object} req
+     * @returns
+     */
+    async confirmByID(req) {
+      const {
+        params: { id },
+        pre: {
+          user: { user, fake },
+        },
+      } = req;
+      try {
+
         let result = fake ? await Order.FAKE() : await Order.findByPk(id);
         return { result };
       } catch (error) {

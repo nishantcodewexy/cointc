@@ -28,7 +28,22 @@ module.exports = {
   // },
 
   // prioryty 5
-  // afterCreate:async (instance,options)=>{
+  afterCreate:async (instance,options)=>{
+    const {crypto,type,user_id} = instance.advert
+    let wallet,sellersId;
+    // get sellers wallet
+    if(type == "buy"){
+      sellersId = instance.user_id
+    }else{
+      sellersId = user_id
+    }
+    // get wallet by sellersId
+    // freeze amount in sellers wallet
+    
+    
+    // compute current_qty in advert
+
+  },
   async afterFind(findResult, options) {
     if (!findResult) return;
     if (!Array.isArray(findResult)) findResult = [findResult];
@@ -45,7 +60,7 @@ module.exports = {
       }
     }
   },
-  // },
+  
   // afterDestroy:async (instance,options)=>{
 
   // },

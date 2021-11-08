@@ -4,7 +4,6 @@ const { tableNames } = require("../../consts");
 const faker = require("faker");
 const { currencies, walletTypes } = require("../../consts");
 const hooks = require("../hooks/advert.hook");
-const User = require("./user.model");
 
 module.exports = (sequelize, DataTypes) => {
   class Advert extends Model {

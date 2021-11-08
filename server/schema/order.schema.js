@@ -6,6 +6,19 @@ const Joi = require("joi");
  * @param {Object} server - Hapi server instance
  * @returns {Object} validator
  */
+function confirm(server) {
+  const { boom } = server.app;
+
+  return {
+    params: Joi.string().uuid().required()
+    .error(boom.badData(`Id is required`))
+  };
+}
+/**
+ * @function create - Schema validator for creating a single currency entity
+ * @param {Object} server - Hapi server instance
+ * @returns {Object} validator
+ */
 function create(server) {
   const { boom } = server.app;
 
@@ -155,4 +168,5 @@ module.exports = {
   remove,
   restore,
   find,
+  confirm
 };
