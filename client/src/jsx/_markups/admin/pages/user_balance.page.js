@@ -55,10 +55,10 @@ function UserBalance({ services, useService }) {
 
             ]}
             transformers={{
-              email: ({ row }) => row?.user.email,
+              email: ({ row }) => row?.user?.email || "",
               currency: ({row}) => row?.currency || " Not specified",
-              account_balance: ({row}) => row?.balance.accountBalance,
-              available_balance: ({row}) => row?.balance.availableBalance,
+              account_balance: ({row}) => row?.balance?.accountBalance || "",
+              available_balance: ({row}) => row?.balance?.availableBalance || "",
             }}
           />
         </Col>

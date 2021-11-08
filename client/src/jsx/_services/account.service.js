@@ -163,5 +163,48 @@ class AccountService extends Services {
         })
     );
   };
+
+  getKYC = async (params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`/kyc`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  updateKYC = async ({id, data}) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`/kyc/${id}`, {
+          method: "PUT",
+          data,
+        })
+    );
+  }
+  // findAdverts = async ({id, data}) => {
+  //   return await this.decorate(
+  //     async () =>
+  //       await this.axios(`/advert/${id}`, {
+  //         method: "Get",
+  //         data,
+  //       })
+  //   );
+  // }
+
+
+  findAdvert = async (id, ...params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`advert/${id}`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+ 
+
 }
+
 export default AccountService;

@@ -51,7 +51,7 @@ function UsersPermissionTable({ services, useService }) {
     "order[updatedAt]": "DESC",
     "order[createdAt]": "DESC",
     "fake": true,
-    " sudo": true,
+    " sudo": true,    
     "options[paranoid]": false,
   };
 
@@ -118,8 +118,8 @@ function UsersPermissionTable({ services, useService }) {
       // TODO: Make Permission change request
       _d({
         type: SERVICE?.UPDATE,
-        payload: { id: row?.id, data: { permission } },
-        reload: false,
+        payload: { id: row?.id, data: { permission: !permission } },
+        reload: true,
         toast: { success: notifySuccess, error: notifyError },
       });
       setPermission(value);
@@ -204,16 +204,16 @@ function UsersPermissionTable({ services, useService }) {
             );
           },
           phone_number: ({ row }) => {
-            return row?.profile?.kyc?.phone ? (
-              <a href={`tel:${row?.profile?.kyc?.phone}`}>
-                {row?.profile?.kyc?.phone}
+            return row?.phone ? (
+              <a href={`tel:${row?.phone}`}>
+                {row?.phone}
               </a>
             ) : (
               "Not specified"
             );
           },
           country: ({ row }) => {
-            return <>{row?.address?.country || "Not specified"}</>;
+            return <>{row?.country || "Not specified"}</>;
           },
         }}
       />

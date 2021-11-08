@@ -11,53 +11,23 @@ export default class AnalyticsServices extends Services {
     return this;
   }
   //ANALYTICS ---------------------------------------------------------------------
-  bulkRetrieve = async (params) => {
+
+  getADS = async (params) => {
     return await this.decorate(
       async () =>
-        await this.axios(`bank-details`, {
+        await this.axios(`ad`, {
           method: "GET",
           params,
         })
     );
   };
 
-  retrieve = async ({ id, params }) => {
+  getOrders = async (params) => {
     return await this.decorate(
       async () =>
-        await this.axios(`bank-details/${id}`, {
+        await this.axios(`order`, {
           method: "GET",
           params,
-        })
-    );
-  };
-
-  update = async ({ id, ...data }) => {
-    console.log({ data });
-    return await this.decorate(
-      async () =>
-        await this.axios(`bank-details/${id}`, {
-          method: "PUT",
-          data,
-        })
-    );
-  };
-
-  remove = async ({ id, ...data }) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`bank-details/${id}`, {
-          method: "DELETE",
-          data,
-        })
-    );
-  };
-
-  bulkRemove = async (data) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`bank-details`, {
-          method: "DELETE",
-          data,
         })
     );
   };

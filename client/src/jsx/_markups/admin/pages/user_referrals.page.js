@@ -5,6 +5,8 @@ import PageTitle from "../layouts/PageTitle";
 import { SERVICE } from "../../../_constants";
 import { toast } from "react-toastify";
 import TableGenerator from "../components/TableGenerator.Component";
+import Moment from "react-moment";
+import moment from "moment";
 
 function UserReferralMgmt({services, useService}) {
   const { account } = services;
@@ -19,8 +21,6 @@ function UserReferralMgmt({services, useService}) {
     dispatchRequest({
       type: SERVICE?.BULK_RETRIEVE,
       payload: {
-        "order[updatedAt]": "DESC",
-        "order[createdAt]": "DESC",
         "fake": true,
         "sudo": true,
         paranoid: false,
@@ -43,14 +43,21 @@ function UserReferralMgmt({services, useService}) {
               "date",
               "referrer_id",
               'referree_id',
-              "commissions (%)"
+              "commissions"
 
             ]}
             transformers={{
-              email: ({ row }) => row?.user.email,
-              currency: ({row}) => row?.currency || " Not specified",
-              account_balance: ({row}) => row?.balance.accountBalance,
-              available_balance: ({row}) => row?.balance.availableBalance,
+              date: ({ row }) => {
+                let time = moment(row?.createdAt);
+                return time.isValid() ? (
+                  <Moment format="MMM Do, Y, hh:mm A">{time}</Moment>
+                ) : (
+                  "unknown"
+                );
+              },
+              referrer_id: ({row}) => row?.referred_id || " Not specified",
+              referree_id: ({row}) => row?.user_id,
+              commissions: ({row}) => row?.commission_in_percent,
             }}
           />
         </Col>
@@ -143,6 +150,7 @@ function UserReferralsTable() {
 }
 
 export default UserReferralMgmt;
+
 function notifySuccess() {
   toast.success("Success !", {
     position: "top-right",
