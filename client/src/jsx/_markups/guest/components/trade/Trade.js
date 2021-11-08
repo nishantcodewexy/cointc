@@ -17,182 +17,6 @@ import axios from 'axios';
 import { SERVICE } from "../../../../_constants";
 
 
-// ============================== first method
-axios.get('/api/ad', {
-
-}, {
-    headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        // Authorization: `Bearer ${}` 
-    }
-})
-    .then(function (response) {
-        console.log(response);
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
-
-// fetch('https://mywebsite.com/endpoint/', {
-//     method: 'GET',
-//     headers: {
-//         Accept: 'application/json',
-//         'Content-Type': 'application/json',
-//     },
-//     body: JSON.stringify({
-//         firstParam: 'yourValue',
-//         secondParam: 'yourOtherValue',
-//     }),
-// });
-
-// ================================ fifth method ================
-// function HeaderPostAction() {
-
-//     axios({
-//           method: 'get',    
-//           url: 'advert/',
-//           data: {},
-//           headers: {
-//              "Content-Type": "application/x-www-form-urlencoded",    
-//              "Cache-Control": "no-cache",
-//              "Postman-Token": "42e6c291-9a09-c29f-f28f-11872e2490a5"
-//           }
-//        }).then(function(response) {
-//           console.log("Heade With Authentication :" + response);    
-//        })
-//        .catch(function(error) {
-//           console.log("Post Error : " + error);    
-//        });
-//  }
-
-
-// =========================================== Second method
-// fetch("https://examples.com/example.json")
-//  .then(response => {
-//    if (!response.ok) {
-//      throw Error(response.statusText)
-//    }
-//    return response.json()
-//  })
-//  .then(data => {
-//    console.log(data)
-//  })
-//  .catch(error => console.error(error))  
-
-//   const getAdvertData = async () => {
-//       try{
-//           const data = await axios.get(
-//             ""
-//           );
-//           console.log(data.data)
-//         //   setAdvert(data.data)
-//       }catch (e){
-//           console.log(e)
-//       }
-//   }
-
-
-
-// ========================================= THIRD METHOD
-
-function Advert({ services, useService }) {
-    const { account } = services;
-
-    let service = useService({
-        [SERVICE?.ADVERT_FIND]: account.findAdvert
-    });
-
-    const { dispatchRequest } = service;
-
-    useEffect(() => {
-        dispatchRequest({
-            type: SERVICE?.ADVERT_FIND,
-            payload: {
-                "fake": true,
-                "sudo": true,
-            },
-            // toast: { success: notifySuccess, error: notifyError },
-        });
-    }, []);
-
-    return (
-        <>
-            {
-                <Row>
-                    {console.log(service)
-                    }
-                    <Col>
-                        <TableGenerator
-
-                            {...{ service }}
-                            omit="*"
-                            extras={[
-                                "email",
-                                "currency",
-                                'account_balance',
-                                "available_balance"
-
-                            ]}
-                            transformers={{
-                                email: ({ row }) => row?.user?.email || "",
-                                currency: ({ row }) => row?.currency || " Not specified",
-                                account_balance: ({ row }) => row?.balance?.accountBalance || "",
-                                available_balance: ({ row }) => row?.balance?.availableBalance || "",
-                            }}
-                        />
-                    </Col>
-                </Row>}
-        </>
-    );
-}
-
-export default Advert;
-// 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 function BankTooltip() {
     const [show, setShow] = useState(true);
     const target = useRef(null);
@@ -460,7 +284,6 @@ const TradeModel = function (props) {
     const button_text = props.button_text;
     const button_class = props.button_class;
     const isPopup = props.isPopup;
-
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -896,7 +719,31 @@ const SellTabContent = function (props) {
     )
 }
 
-export const Trade = () => {
+export const Trade = ({ services, useService }) => {
+
+    
+    const { account } = services;
+
+ 
+    let service = useService({
+        [SERVICE?.ADVERT_FIND]: services?.account.findAdvert
+    });
+    
+    useEffect(() => {
+        
+    
+        const { dispatchRequest } = service;
+        dispatchRequest({
+            type: SERVICE?.ADVERT_FIND, 
+            payload: {
+                "fake": true,
+            },
+        });
+
+        console.log({service})
+    }, []);
+
+
     const [activeTab, setActiveTab] = useState("buy-tab");
     const [activeBuyTab, setActiveBuyTab] = useState("buy-btc-tab");
     const [activeSellTab, setActiveSellTab] = useState("sell-btc-tab");

@@ -194,10 +194,10 @@ class AccountService extends Services {
   // }
 
 
-  findAdvert = async (id, ...params) => {
+  findAdvert = async (params) => {
     return await this.decorate(
       async () =>
-        await this.axios(`advert/${id}`, {
+        await this.axios(`ad/`, {
           method: "GET",
           params,
         })

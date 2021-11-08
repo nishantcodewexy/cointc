@@ -177,6 +177,9 @@ function TableGenerator({
   return (
     <Card style={{ position: "relative" }}>
       <div style={{ display: "flex", flexDirection: "column" }}>
+        {
+          console.log(count, limit)
+        }
         {tableData.rows.length ? (
           <>
             <Table

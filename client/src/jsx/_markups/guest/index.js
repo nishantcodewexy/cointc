@@ -1,5 +1,10 @@
+import React, { useState, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
+import { useSelector } from "react-redux";
+
 import routes from "./routes";
+import useService from "../../_hooks/service.hook";
+import Services from "../../_services";
 
 import WOW from 'wowjs';
 import './app-assets/css/bootstrap.min.css';
@@ -20,55 +25,70 @@ import { Footer2 } from './components/footer/Footer2';
 // import Error404 from "../pages/error404";
 
 function GuestMarkup() {
-  const wow = new WOW.WOW( {
-      boxClass:     'wow',
-      animateClass: 'animated',
-    }
+  const session = useSelector((state) => state?.session);
+  // const notice = useSelector((state) => state?.notice);
+  const [services, setServices] = useState(null);
+
+  useEffect(() => {
+    setServices(
+      new Services({
+        token: session?.user?.token || "",
+        baseURL: "/api",
+      })
+    );
+  }, [session]);
+
+  const wow = new WOW.WOW({
+    boxClass: 'wow',
+    animateClass: 'animated',
+  }
   );
   wow.init();
 
-  const  cur_loc = window.location.pathname;
+  const cur_loc = window.location.pathname;
   var Custom_Header = null;
   var Custom_Footer = null
-  if(cur_loc==='/'){
+  if (cur_loc === '/') {
     Custom_Header = <Header />;
-  }else if(cur_loc==='/affiliate'||cur_loc==='/support'||cur_loc==='/my-page' || cur_loc==='/my-page-2'){
+  } else if (cur_loc === '/affiliate' || cur_loc === '/support' || cur_loc === '/my-page' || cur_loc === '/my-page-2') {
     Custom_Header = <Header3 />;
-  }else if(cur_loc==='/frame01'){
+  } else if (cur_loc === '/frame01') {
     Custom_Header = null;
-  }else{
+  } else {
     Custom_Header = <Header2 />;
   }
 
-  if(cur_loc === '/'){
+  if (cur_loc === '/') {
     Custom_Footer = <Footer />;
-  }else if(cur_loc === '/frame01'){
+  } else if (cur_loc === '/frame01') {
     Custom_Footer = null;
-  }else{
+  } else {
     Custom_Footer = <Footer2 />;
   }
 
-  
 
-  return (
+
+  return services ? (
     <>
-    <div class="wrap">
-    {Custom_Header}
-    <Switch>
-     
-     {routes.map((data, i) => (
-       <Route
-         key={i}
-         exact
-         path={`/${data.url}`}
-         component={data.component}
-         title={data.title}
-       />
-     ))}
-   </Switch>
-   {Custom_Footer}
-   </div>
-   </>
+      <div class="wrap">
+        {Custom_Header}
+        <Switch>
+
+          {routes.map((data, i) => (
+            <Route
+              key={i}
+              exact
+              path={`/${data.url}`}
+              component={() => <data.component {...{ services, useService }} />}
+              title={data.title}
+
+            />
+          ))}
+        </Switch>
+        {Custom_Footer}
+      </div>
+    </>) : (
+    "Initializing services..."
   );
 }
 
