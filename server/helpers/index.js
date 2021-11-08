@@ -497,7 +497,7 @@ module.exports = {
       for (let assc in Model.associations) {
         let isSame = assc?.toLowerCase() === item?.toLowerCase();
 
-        if (isSame && allow.includes(assc)) {
+        if (isSame && allow.includes(assc?.toLowerCase())) {
           valid.push(assc);
           break;
         }

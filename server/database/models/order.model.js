@@ -5,6 +5,12 @@ const { tableNames } = require("../../consts");
 const faker = require("faker");
 const User = require("./user.model");
 const Advert = require("./advert.model");
+const STATUS = {
+  pending: "PENDING",
+  completed: "COMPLETED",
+  disputed: "DISPUTED",
+  cancelled: "CANCELLED",
+};
 
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
@@ -31,16 +37,12 @@ module.exports = (sequelize, DataTypes) => {
           id: `ORD-${Date.now().toString()}`,
           total_amount: faker.datatype.float(),
           total_quantity: faker.datatype.number(),
+          advert_user_confirm: faker.datatype.number(),
+          order_user_confirm: faker.datatype.number(),
+          block_account_id: faker.datatype.uuid(),
           appeal: faker.lorem.sentence(),
           remark: faker.lorem.sentence(),
-          status: faker.helpers.randomize([
-            "unpaid",
-            "paid",
-            "released",
-            "completed",
-            "disputed",
-            "cancelled",
-          ]),
+          status: faker.helpers.randomize(Object.values(STATUS)),
           rating: faker.datatype.number(5),
           archived_at: faker.datatype.datetime(),
           trx_id: faker.datatype.uuid(),
@@ -80,18 +82,20 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 1,
       },
+      advert_user_confirm: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      order_user_confirm: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      blocked_account_id: DataTypes.UUID,
       appeal: DataTypes.STRING,
       remark: DataTypes.STRING,
       status: {
-        type: DataTypes.ENUM(
-          "unpaid",
-          "paid",
-          "released",
-          "completed",
-          "disputed",
-          "cancelled"
-        ),
-        defaultValue: "unpaid",
+        type: DataTypes.ENUM(Object.values(STATUS)),
+        defaultValue: STATUS.pending,
       },
       rating: {
         type: DataTypes.INTEGER,

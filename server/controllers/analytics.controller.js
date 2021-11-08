@@ -59,7 +59,7 @@ module.exports = function StatsController(server) {
     async withdrawalAnalytics(req) {
       const { query } = req;
       const queryFilters = await filters({ query });
-
+      
       try {
         let userAnalytics = {
           total: await User.count({

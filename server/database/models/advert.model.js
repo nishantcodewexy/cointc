@@ -46,9 +46,10 @@ module.exports = (sequelize, DataTypes) => {
           payment_ttl_mins: faker.datatype.number(),
           price: faker.datatype.float(),
           floating_price: faker.datatype.float(),
-          qty: faker.datatype.number(),
+          initial_qty: faker.datatype.number(),
+          current_qty: faker.datatype.number(),
+          fiat: faker.finance.currencyCode(),
           crypto: faker.helpers.randomize(Object.values(walletTypes)),
-          fiat: faker.finance.currencyCode,
           remarks: faker.lorem.sentence(),
           auto_reply_message: faker.lorem.sentence(),
           trade_conditions: faker.lorem.sentence(),
@@ -139,7 +140,15 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DOUBLE,
         comment: "(80 - 200%) Price = market_price * currency * floating_price",
       },
-      qty: {
+      initial_qty: {
+        allowNull: false,
+        type: DataTypes.INTEGER,
+        defaultValue: 1,
+        validate: {
+          isInt: true,
+        },
+      },
+      current_qty: {
         allowNull: false,
         type: DataTypes.INTEGER,
         defaultValue: 1,
@@ -151,11 +160,20 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         comment: "Kind of crypto currency",
         allowNull: false,
+        get() {
+          return String(this.get("crypto"))?.toUpperCase();
+        },
       },
       fiat: {
         type: DataTypes.STRING,
         comment: "Kind of fiat currency",
         allowNull: false,
+        get() {
+          return String(this.get("fiat"))?.toUpperCase();
+        },
+        set(value) {
+          this.setDataValue("fiat", String(value)?.toUpperCase());
+        }
       },
       remarks: DataTypes.STRING(255),
       auto_reply_message: {
