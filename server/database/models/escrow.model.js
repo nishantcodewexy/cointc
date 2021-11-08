@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const { tableNames } = require("../../consts");
-const faker = require("faker")
+const faker = require("faker");
 
 module.exports = (sequelize, DataTypes) => {
   class Escrow extends Model {
@@ -15,38 +15,35 @@ module.exports = (sequelize, DataTypes) => {
 
       Order.hasOne(Escrow, {
         foreignKey: {
-          name: 'order_id'
-        }
+          name: "order_id",
+        },
       });
 
       Escrow.belongsTo(User, {
-        foreignKey: 'buyer_id'
+        foreignKey: "buyer_id",
       });
 
       Escrow.belongsTo(User, {
-        foreignKey: 'seller_id'
+        foreignKey: "seller_id",
       });
-
     }
 
-    static FAKE(count){
+    static FAKE(count) {
       let rows = [],
         result = {},
         index = 0;
       let generateFakeData = () => {
-        let id = faker.datatype.uuid()
-        
-          
+        let id = faker.datatype.uuid();
+
         return {
           id,
-          order_id:faker.datatype.uuid(),
+          order_id: faker.datatype.uuid(),
           fiat_amount_in_hold: faker.datatype.float(),
           seller_id: faker.datatype.uuid(),
           buyer_id: faker.datatype.uuid(),
           fee: faker.datatype.float(),
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
-          
         };
       };
       if (count > 1) {

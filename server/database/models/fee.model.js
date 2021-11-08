@@ -1,8 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
-const { tableNames } = require('../../consts');
-const faker = require('faker')
-const {currencies,walletTypes} = require('../../consts')
+const { tableNames } = require("../../consts");
+const faker = require("faker");
+const { currencies, walletTypes } = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
   class Fee extends Model {
@@ -11,27 +11,23 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({User, Fee}) {
+    static associate({ User, Fee }) {
       Fee.belongsTo(User, {
         foreignKey: {
-          name: 'user_id'
-        }
-      })
+          name: "user_id",
+        },
+      });
     }
 
-    static FAKE(count){
+    static FAKE(count) {
       let rows = [],
         result = {},
         index = 0;
       let generateFakeData = () => {
-        
-        
-          
         return {
           fiat: faker.helpers.randomize(Object.keys(currencies)),
           crypto: faker.helpers.randomize(Object.keys(walletTypes)),
           rate: faker.datatype.float(),
-          
         };
       };
       if (count > 1) {

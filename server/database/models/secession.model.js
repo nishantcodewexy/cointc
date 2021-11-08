@@ -23,6 +23,7 @@ module.exports = (sequelize, DataTypes) => {
         result = {},
         index = 0;
       let generateFakeData = () => {
+        const { User } = sequelize?.models;
         return {
           id: faker.datatype.uuid(),
           access_level: faker.helpers.randomize([1, 2, 3]),
@@ -30,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
           description: faker.lorem.sentence(),
           approval_date: faker.datatype.datetime(),
           archived_at: faker.datatype.datetime(),
-          user: User(sequelize, DataTypes).FAKE(),
+          user: User.FAKE(),
         };
       };
       if (count > 1) {

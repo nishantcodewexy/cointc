@@ -4,7 +4,6 @@ const { tableNames } = require("../../consts");
 const faker = require("faker");
 const { currencies, walletTypes } = require("../../consts");
 const hooks = require("../hooks/advert.hook");
-const User = require("./user.model");
 
 module.exports = (sequelize, DataTypes) => {
   class Advert extends Model {
@@ -34,6 +33,7 @@ module.exports = (sequelize, DataTypes) => {
         index = 0;
       let generateFakeData = () => {
         let user_id = faker.datatype.uuid();
+        let { User } = sequelize?.models;
         return {
           id: faker.datatype.uuid(),
           user_id,
@@ -57,7 +57,7 @@ module.exports = (sequelize, DataTypes) => {
           archived_at: null,
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
-          user: User(sequelize, DataTypes).FAKE(),
+          user: User.FAKE(),
         };
       };
       if (count > 1) {

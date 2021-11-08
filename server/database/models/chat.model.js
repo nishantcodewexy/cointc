@@ -2,7 +2,7 @@
 const { Model } = require("sequelize");
 const hooks = require("../hooks/chat.hook");
 const { tableNames } = require("../../consts");
-const faker = require("faker")
+const faker = require("faker");
 
 module.exports = (sequelize, DataTypes) => {
   class Chat extends Model {
@@ -21,15 +21,13 @@ module.exports = (sequelize, DataTypes) => {
       return [to.replace(/-/g, ""), from.replace(/-/g, "")].sort().join("-");
     }
 
-
-    static FAKE(count){
+    static FAKE(count) {
       let rows = [],
         result = {},
         index = 0;
       let generateFakeData = () => {
-        let id = faker.datatype.uuid()
-        
-          
+        let id = faker.datatype.uuid();
+
         return {
           id,
           to: faker.datatype.uuid(),
@@ -37,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
           inboxHash: faker.datatype.uuid(),
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
-          
         };
       };
       if (count > 1) {

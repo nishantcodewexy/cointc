@@ -4,7 +4,6 @@ const _ = require("underscore");
 const { tableNames, KycStatusType } = require("../../consts");
 const faker = require("faker");
 const hooks = require("../hooks/kyc.hook");
-const User = require("./user.model");
 
 module.exports = (sequelize, DataTypes) => {
   class KYC extends Model {
@@ -33,6 +32,7 @@ module.exports = (sequelize, DataTypes) => {
 
       let generateFakeData = () => {
         let id = faker.datatype.uuid();
+        let { User } = sequelize?.models;
         return {
           id,
           type: faker.helpers.randomize(["email", "id", "sms"]),
@@ -42,7 +42,7 @@ module.exports = (sequelize, DataTypes) => {
           document_id: faker.datatype.uuid(),
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
-          user: User(sequelize, DataTypes).FAKE(),
+          user: User.FAKE(),
         };
       };
       if (count > 0) {

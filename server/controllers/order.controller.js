@@ -4,7 +4,7 @@ const boom = require("@hapi/boom");
 function OrderController(server) {
   const { __destroy } = require("./utils")(server);
   const {
-    db: { Order, Advert, User },
+    db: { Order, Advert, Kyc },
     helpers: { filters, paginator },
   } = server.app;
 
@@ -24,6 +24,18 @@ function OrderController(server) {
         payload,
       } = req;
 
+      // Check if user's KYC has been approved first
+      let approvedKyc = Kyc.findOne({
+        where: {
+          user_id: user?.id,
+          status: "ACCEPT",
+        },
+      });
+
+      if (!approvedKyc)
+        return boom.methodNotAllowed(
+          `Please complete KYC in order to proceed`
+        );
       const { advert_id } = payload;
       if (!advert_id) throw boom.badRequest("Missing advert_id in request");
 
@@ -158,9 +170,8 @@ function OrderController(server) {
             ...(!sudo && { user_id: user?.id }),
           };
 
-          const {status} = payload
-          
-        
+        const { status } = payload;
+
         result = await Order.update(payload, {
           where,
           fields,

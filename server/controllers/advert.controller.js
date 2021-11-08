@@ -3,7 +3,7 @@
 const AdvertController = (server) => {
   const { __destroy } = require("./utils")(server);
   const {
-    db: { Advert, User, sequelize },
+    db: { Advert, Kyc, sequelize },
     boom,
     helpers: { filters, paginator },
   } = server.app;
@@ -22,13 +22,23 @@ const AdvertController = (server) => {
         },
       } = req;
       try {
-        return {
-          result: fake
-            ? await Advert.FAKE()
-            : await user.createAdvert(payload).catch((err) => {
-                throw boom.badData(err.message, err);
-              }),
-        };
+        // Check if user's KYC has been approved first
+        let approvedKyc = Kyc.findOne({
+          where: {
+            user_id: user?.id,
+            status: "ACCEPT",
+          },
+        });
+
+        if (!approvedKyc)
+          return boom.methodNotAllowed(`Please complete your KYC in order to proceed`)
+          return {
+            result: fake
+              ? await Advert.FAKE()
+              : await user.createAdvert(payload).catch((err) => {
+                  throw boom.badData(err.message, err);
+                }),
+          };
       } catch (err) {
         console.error(err);
         return boom.internal(err.message, err);

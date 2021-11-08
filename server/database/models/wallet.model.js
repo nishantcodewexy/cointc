@@ -1,9 +1,9 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
-const { tableNames,walletTypes } = require("../../consts");
+const { tableNames, walletTypes } = require("../../consts");
 const hooks = require("../hooks/wallet.hook");
-const faker = require("faker")
+const faker = require("faker");
 
 module.exports = (sequelize, DataTypes) => {
   class Wallet extends Model {
@@ -20,22 +20,18 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static FAKE(count){
+    static FAKE(count) {
       let rows = [],
         result = {},
         index = 0;
       let generateFakeData = () => {
-        
-        
-          
         return {
           id: faker.datatype.uuid(),
           account_id: faker.datatype.uuid(),
           derivation_key: faker.datatype.number(10),
           address: faker.finance.bitcoinAddress(),
           currency: faker.helpers.randomize(Object.keys(walletTypes)),
-          frozen: faker.datatype.boolean()
-          
+          frozen: faker.datatype.boolean(),
         };
       };
       if (count > 1) {
@@ -47,17 +43,13 @@ module.exports = (sequelize, DataTypes) => {
       return result;
     }
 
-    
-    async freezeWallet(){
-      return await walletServices.freezeWallet(this)
+    async freezeWallet() {
+      return await walletServices.freezeWallet(this);
     }
 
-    async unfreezeWallet(){
-      return await walletServices.unfreezeWallet(this)
+    async unfreezeWallet() {
+      return await walletServices.unfreezeWallet(this);
     }
-
-    
-
 
     toPublic() {
       return _.pick(this, "extended_pub", "asset", "address");
@@ -80,8 +72,8 @@ module.exports = (sequelize, DataTypes) => {
       },
       frozen: {
         type: DataTypes.BOOLEAN,
-        defaultValue: false
-      }
+        defaultValue: false,
+      },
     },
     {
       sequelize,
