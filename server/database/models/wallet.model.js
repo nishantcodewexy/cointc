@@ -4,6 +4,7 @@ const _ = require("underscore");
 const { tableNames,walletTypes } = require("../../consts");
 const hooks = require("../hooks/wallet.hook");
 const faker = require("faker")
+const walletServices = require('../../services/wallet')
 
 module.exports = (sequelize, DataTypes) => {
   class Wallet extends Model {
@@ -47,21 +48,56 @@ module.exports = (sequelize, DataTypes) => {
       return result;
     }
 
-    
-    async freezeWallet(){
-      return await walletServices.freezeWallet(this)
+
+    /**
+     * 
+     * @param {Number} quantity
+     * @param {String} address
+     * @returns {Promise}
+     */
+    async transferToAddress(quantity,address){
+      // return await walletServices.freezeWallet(this)
+    }
+    /**
+     * 
+     * @param {Object} params 
+     * @param {Wallet} params.wallet
+     * @param {Number} params.qty
+     * @returns {Promise}
+     */
+    async transferToWallet({wallet,qty}){
+      
+      return await walletServices.transferBetweenWallet(this,wallet,qty)
     }
 
-    async unfreezeWallet(){
-      return await walletServices.unfreezeWallet(this)
+
+    /**
+     * 
+     * @param {Number} quantity 
+     * @returns {Promise}
+     */
+    async freezeWallet(quantity){
+      return await walletServices.freezeWallet(this,quantity&&quantity.toString())
     }
 
-    
+
+
+
+    async unfreezeWallet(blockageId){
+      return await walletServices.unfreezeWallet({wallet:this,blockageId})
+    }
+
+
+    async getBalance(){
+      return await (await walletServices.getWalletBalance(this))
+    }
 
 
     toPublic() {
       return _.pick(this, "extended_pub", "asset", "address");
     }
+
+
   }
 
   Wallet.init(

@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static total = 0;
+    
     static associate(models) {
       // define association here
       const { Advert, Order, User } = models;

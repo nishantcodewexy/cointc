@@ -22,12 +22,53 @@ const AdvertController = (server) => {
         },
       } = req;
       try {
+
+
+        let result;
+
+        if(fake){
+          result = await Advert.FAKE()
+        }else{
+          
+
+          // check if advert is a buy advert
+          // verify that seller has sufficient balance
+          if(payload.type === "sell"){
+            let sellersWallet = Wallet.findOne({
+              where:{
+                user_id:user.id,
+                currency:payload.crypto
+              }
+            })
+
+            /**
+             * @typedef {Object} Balance
+             * @property {String} availableBalance
+             * @property {String} accountBalance
+             */
+
+            /**
+             * @type {Balance}
+             */
+            let {availableBalance} = await sellersWallet.getBalance()
+            
+            if(parseFloat(availableBalance) < parseFloat(payload.qty)){
+              throw boom.badRequest("insufficient balance")
+            }
+          }
+          
+          payload.initial_qty = payload.qty
+          payload.current_qty = payload.qty
+          delete payload.qty
+
+
+          result = await user.createAdvert(payload).catch((err) => {
+            throw boom.badData(err.message, err);
+          })
+        }
+
         return {
-          result: fake
-            ? await Advert.FAKE()
-            : await user.createAdvert(payload).catch((err) => {
-                throw boom.badData(err.message, err);
-              }),
+          result
         };
       } catch (err) {
         console.error(err);

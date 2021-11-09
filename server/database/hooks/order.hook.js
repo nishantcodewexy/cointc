@@ -1,4 +1,14 @@
+const STATUS = {
+  pending: "PENDING",
+  completed: "COMPLETED",
+  disputed: "DISPUTED",
+  cancelled: "CANCELLED",
+};
+const {Model} = require('sequelize')
+
+
 module.exports = {
+  
   // prioryty 1
   // beforeBulkCreate:async (instances,options)=>{
 
@@ -11,9 +21,49 @@ module.exports = {
   // },
 
   // prioryty 4
-  // beforeCreate:async (instance,options)=>{
-  //     console.log("this is called",instance)
-  // },
+  /**
+   * 
+   * @param {Model} instance 
+   * @param {Object} options 
+   */
+  beforeCreate:async (instance,options)=>{
+    const {Wallet,} = instance?.sequelize?.models
+
+    /**
+     * @type {Model}
+     */
+    const advert = await instance?.getAdvert()
+
+    
+
+    const {crypto} = advert
+
+    let wallet,currency,quantity;
+    // get sellers wallet
+    currency = crypto
+    quantity = instance?.total_quantity
+    
+    
+
+    // get wallet by sellersId
+    /**
+     * @type {Model}
+     */
+    wallet = await Wallet.findOne({
+      where:{
+        user_id:instance.blocked_account_id,
+        currency
+      }
+    })
+
+    // freeze amount in sellers wallet
+    let {id:blockageId} = await wallet.freezeWallet(quantity)
+
+    // set blockage id
+    instance.blockage_id = blockageId
+
+
+  },
   // beforeDestroy:async (instance,options)=>{
 
   // },
@@ -28,20 +78,29 @@ module.exports = {
   // },
 
   // prioryty 5
+  /**
+   * 
+   * @param {Model} instance 
+   * @param {Object} options 
+   */
   afterCreate:async (instance,options)=>{
-    const {crypto,type,user_id} = instance.advert
-    let wallet,sellersId;
-    // get sellers wallet
-    if(type == "buy"){
-      sellersId = instance.user_id
-    }else{
-      sellersId = user_id
-    }
-    // get wallet by sellersId
-    // freeze amount in sellers wallet
     
+    /**
+     * @type {Model}
+     */
+    const advert = await instance?.getAdvert()
+
     
+
     // compute current_qty in advert
+    /**
+     * @type {Array}
+     */
+    const orders = await advert?.getOrders()
+
+    const totalOrderQuantity = orders.filter((value)=>value.status != STATUS.cancelled).reduce((previousValue, currentValue)=>currentValue.total_quantity+previousValue,0)
+    advert.current_qty = advert.initial_qty - totalOrderQuantity
+    advert.save()
 
   },
   async afterFind(findResult, options) {

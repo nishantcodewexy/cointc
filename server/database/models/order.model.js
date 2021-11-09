@@ -39,7 +39,6 @@ module.exports = (sequelize, DataTypes) => {
           total_quantity: faker.datatype.number(),
           advert_user_confirm: faker.datatype.number(),
           order_user_confirm: faker.datatype.number(),
-          block_account_id: faker.datatype.uuid(),
           appeal: faker.lorem.sentence(),
           remark: faker.lorem.sentence(),
           status: faker.helpers.randomize(Object.values(STATUS)),
@@ -91,6 +90,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: false,
       },
       blocked_account_id: DataTypes.UUID,
+      blockage_id: DataTypes.UUID,
       appeal: DataTypes.STRING,
       remark: DataTypes.STRING,
       status: {

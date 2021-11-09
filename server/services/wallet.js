@@ -37,23 +37,45 @@ async function getWalletBalance(wallet) {
  * 
  * @param {Object} wallet 
  * @param {String} wallet.tatum_account_id
+ * @param {Number} quantity
  * @returns {Promise<void>}
  */
-async function freezeWallet(wallet) {
-    await tatum.freezeAccount(wallet.tatum_account_id)
+async function freezeWallet(wallet,quantity) {
+    
+    if(quantity){
+        /**
+         * @type {tatum.BlockAmount}
+         */
+        let blockAmount  = {}
+        blockAmount.amount = quantity
+        blockAmount.type = "ORDER"
+        tatum.blockAmount(wallet.tatum_account_id)
+    }else{
+        await tatum.freezeAccount(wallet.tatum_account_id)
+
+    }
     
 }
 
+
 /**
  * 
- * @param {Object} wallet 
- * @param {String} wallet.account_id
+ * @param {Object} params
+ * @param {Object} params.wallet 
+ * @param {String} params.wallet.account_id
+ * @param {String} params.blockageId
  * @returns {Promise<void>}
  */
-async function unfreezeWallet(wallet) {
-    await tatum.unfreezeAccount(wallet.account_id)
+async function unfreezeWallet({wallet,blockageId}) {
+    if(blockageId){
+        return tatum.deleteBlockedAmount(blockageId)
+    }else if(wallet){
+
+        return await tatum.deleteBlockedAmountForAccount(wallet.account_id)
+    }
     
 }
+
 
 
 /**
@@ -70,18 +92,42 @@ async function getUserTatumAccounts({user,pageSize,offset}){
     return data
 }
 
+/**
+ * 
+ * @param {Object} wallet
+ * @param {Object} wallet.tatum_account_id
+ * @returns {Promise<tatum.Address[]>}
+ */
+async function getWalletAddress(wallet){
+    return await tatum.getDepositAddressesForAccount(wallet.tatum_account_id)
+}
+
+
+
+
 
 
 /**
  * 
- * @param {Object} wallet
- * @param {String} wallet.tatum_account_id
- * @param {tatum.TransferBtcBasedOffchainKMS} body 
- * @returns {Promise<tatum.SignatureId>}
+ * @param {Object} from
+ * @param {String} from.tatum_account_id
+ * @param {Object} to
+ * @param {String} to.tatum_account_id
+ * @param {Number} qty
+ * @returns {Promise<{reference: string}>}
  */
-async function transferBtc(wallet,body) {
-    body.senderAccountId = wallet.tatum_account_id
-    return await tatum.offchainTransferBtcKMS(body)
+async function transferBetweenWallet(from,to,qty) {
+    
+    /**
+     * @type {tatum.CreateTransaction}
+     */
+    let body = {}
+
+    body.amount = qty
+    body.senderAccountId = from.tatum_account_id
+    body.recipientAccountId =  to.tatum_account_id
+    return await tatum.storeTransaction(body)
+    
 }
 
 
@@ -157,7 +203,8 @@ module.exports = {
     getTransactionsByUser,
     getTransactionsByWallet,
     createAddressFromWallet,
-    transferBtc
+    transferBetweenWallet,
+    getWalletAddress
 }
 
 

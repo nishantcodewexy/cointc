@@ -12,5 +12,6 @@
     "client-build": "yarn --cwd ./client build && mkdir -p ./server/views && cp -u -r ./client/build/* -t ./server/views",
     "client-test": "yarn --cwd ./client dev test",
     "install-all": "yarn --cwd server && yarn --cwd client"
-  }
+  },
+  "dependencies": {}
 }
