@@ -11,7 +11,8 @@ const ENUMS = {
   BULK_CREATE: "bulk.create",
   BULK_UPDATE: "bulk.update",
   BULK_DROP: "bulk.drop",
-  ADVERT_FIND: "advert.find"
+  ADVERT_FIND: "advert.find",
+  BULK_ORDER: "bulk.find"
 };
 
 export default ENUMS;

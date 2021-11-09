@@ -204,6 +204,16 @@ class AccountService extends Services {
     );
   };
  
+  bulkOrder = async (params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`order`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+ 
 
 }
 

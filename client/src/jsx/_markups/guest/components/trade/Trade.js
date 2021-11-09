@@ -239,11 +239,11 @@ export const Trade = ({ services, useService }) => {
                     <div class="row">
                         <div class="col-12">
                             <ul class="buy_sell clear">{trade_types.map(type =>
-                                <li className={(_activeTradeTypeTab === type ? "on" : "") + ' text-capitalize'}><a href="#" onClick={() => _setActiveTradeTypeTab(type)}>{type}</a></li>
+                                <li key={type} className={(_activeTradeTypeTab === type ? "on" : "") + ' text-capitalize'}><a href="#" onClick={() => _setActiveTradeTypeTab(type)}>{type}</a></li>
                             )}
                             </ul>
                             <ul class="coin_name clear">{currencies.map(currency =>
-                                <li className={_activeCurrencyTab === currency ? "on" : ""}><a href="#" onClick={() => _setActiveCurrencyTab(currency)}>{currency?.toUpperCase()}</a></li>
+                                <li key={currency} className={_activeCurrencyTab === currency ? "on" : ""}><a href="#" onClick={() => _setActiveCurrencyTab(currency)}>{currency?.toUpperCase()}</a></li>
                             )}
                             </ul>
                         </div>
@@ -296,19 +296,19 @@ export const Trade = ({ services, useService }) => {
                             <RenderTabContent data={_activeTabData} />
                         </div>
 
-                        <div className={"tab-pane " + (activeTab === "buy-tab" ? "active" : "")}>
+                        {/*  <div className={"tab-pane " + (activeTab === "buy-tab" ? "active" : "")}>
                             <BuyTabContent valueFromParent={activeBuyTab} />
                         </div>
                         <div className={"tab-pane " + (activeTab === "sell-tab" ? "active" : "")}>
                             <SellTabContent valueFromParent={activeSellTab} />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
             </section>
         </div>
     )
 }
-
+/* 
 function BuyTabContent(props) {
 
     //    btc_ads = temp1.filter(order => String(order?.crypto).toLowerCase() == "btc")
@@ -346,10 +346,9 @@ function SellTabContent(props) {
         </>
     )
 }
-
+ */
 
 function RenderTabContent({ data }) {
-    console.log({ data })
     return <div class="tab-content">
         <div className="" id="buy-btc-tab-pane" role="tabpanel" aria-labelledby="buy-btc-tab">
             <div class="row">
@@ -367,12 +366,12 @@ function RenderTabContent({ data }) {
                             </thead>
                             <tbody>
                                 {data.map(item => <tr>
-                                    <td class="user">
+                                    <td class="user" key={item?.id}>
                                         <p>
                                             <span>{item.user?.pname[0]}</span>
                                             {/* <span></span> */}
                                             {item.user?.pname} <i class="fas fa-check-circle"></i>
-                                          
+
                                             {/* <span>{item.user?.verified === true ? <i class="fas fa-check-circle"></i> : ''}</span> */}
                                         </p>
                                         <ul class="clear">
@@ -400,7 +399,7 @@ function RenderTabContent({ data }) {
                                         <span class="icon_method02"></span>
                                         <span class="icon_method03"></span>
                                     </td>
-                                    
+
                                     <td class="price">
                                         {/* {data.price} */}
                                         {item.price}

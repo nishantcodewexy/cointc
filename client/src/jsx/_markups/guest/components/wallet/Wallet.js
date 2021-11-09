@@ -10,6 +10,7 @@ import btc_icon from '../../app-assets/images/coin/btc.png';
 import qr_code_icon from '../../app-assets/images/page/wallet/qr-code.png';
 
 
+
 import { Wallet_deposit } from './Wallet_deposit';
 
 function Wallet_deposit_modal() {
