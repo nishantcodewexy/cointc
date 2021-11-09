@@ -1,4 +1,5 @@
 "use strict";
+const Joi = require("joi");
 
 module.exports = (server) => {
   const {
@@ -10,6 +11,10 @@ module.exports = (server) => {
     },
   } = server.app;
 
+
+  const schema = Joi.object({
+    id: Joi.string().uuid(),
+  });
   return {
     method: "GET",
     path: "/secession/{id}",
@@ -22,6 +27,9 @@ module.exports = (server) => {
       ],
       handler: findByID,
       auth: "jwt",
+      validate: {
+        params: schema,
+      },
     },
   };
 };

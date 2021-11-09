@@ -1,18 +1,23 @@
 "use strict";
 
+const Joi = require("joi");
+
 module.exports = (server) => {
   const {
     controllers: {
-      security: { removeByUserID },
+      security: { removeByID },
     },
     helpers: {
       permissions: { isUser },
     },
   } = server.app;
 
+  const params = Joi.object({
+    id: Joi.string().uuid(),
+  });
   return {
     method: ["DELETE"],
-    path: "/security/{user_id}",
+    path: "/security/{id}",
     config: {
       pre: [
         {
@@ -20,8 +25,11 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: removeByUserID,
+      handler: removeByID,
       auth: "jwt",
+      validate: {
+        params,
+      },
     },
   };
 };

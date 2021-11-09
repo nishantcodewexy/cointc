@@ -1,18 +1,23 @@
 "use strict";
+const Joi = require('joi');
 
 module.exports = (server) => {
   const {
     controllers: {
-      security: { updateByUserID },
+      security: { updateByID },
     },
     helpers: {
       permissions: { isUser },
     },
   } = server.app;
 
+  const params = Joi.object({
+    id: Joi.string().uuid(),
+  });
+
   return {
     method: ["PUT"],
-    path: "/security/{user_id}",
+    path: "/security/{id}",
     config: {
       pre: [
         {
@@ -20,8 +25,11 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: updateByUserID,
+      handler: updateByID,
       auth: "jwt",
+      validate: {
+        params,
+      },
     },
   };
 };

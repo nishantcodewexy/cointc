@@ -62,18 +62,15 @@ function getQueryConstraints(req) {
     },
     query,
   } = req;
-  let parse_sudo = query?.sudo
+
   let sudo = query?.sudo && Boolean(JSON.parse(query.sudo)),
-    fake = query?.fake && Boolean(JSON.parse(query.fake)),
-    fake_count = query?.fake_count && JSON.parse(query.fake_count);
+    fake = query?.fake && Boolean(JSON.parse(query.fake));
 
   sudo = sudo && user?.access_level > 1 ? true : false;
   fake = fake ?? false;
-  fake_count = fake_count ?? 30;
 
   return {
     sudo,
     fake,
-    fake_count,
   };
 }

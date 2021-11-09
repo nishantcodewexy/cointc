@@ -10,11 +10,13 @@ module.exports = (server) => {
     },
   } = server.app;
 
-  const schema = Joi.object({
+  const payload = Joi.object({
     level: Joi.number().greater(0),
     status: Joi.string().valid("pending", "accept", "deny"),
   });
-
+  const params = Joi.object({
+    id: Joi.string().uuid(),
+  });
   return {
     method: "PUT",
     path: "/secession/{id}",
@@ -28,7 +30,8 @@ module.exports = (server) => {
       handler: updateByID,
       auth: "jwt",
       validate: {
-        payload: schema,
+        payload,
+        params,
       },
     },
   };

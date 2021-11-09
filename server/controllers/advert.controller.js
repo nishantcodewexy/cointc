@@ -31,14 +31,16 @@ const AdvertController = (server) => {
         });
 
         if (!approvedKyc)
-          return boom.methodNotAllowed(`Please complete your KYC in order to proceed`)
-          return {
-            result: fake
-              ? await Advert.FAKE()
-              : await user.createAdvert(payload).catch((err) => {
-                  throw boom.badData(err.message, err);
-                }),
-          };
+          return boom.methodNotAllowed(
+            `Please complete your KYC in order to proceed`
+          );
+        return {
+          result: fake
+            ? await Advert.FAKE()
+            : await user.createAdvert(payload).catch((err) => {
+                throw boom.badData(err.message, err);
+              }),
+        };
       } catch (err) {
         console.error(err);
         return boom.internal(err.message, err);
@@ -141,14 +143,14 @@ const AdvertController = (server) => {
     },
 
     /**
-     * @function bulkRetrieve - Retrieves multiple advert records
+     * @function find - Retrieves multiple advert records
      * @param {Object} req
      */
     async find(req) {
       const {
         query,
         pre: {
-          user: { user, fake, fake_count, sudo },
+          user: { user, fake, sudo },
         },
       } = req;
 
@@ -156,21 +158,23 @@ const AdvertController = (server) => {
         const queryFilters = await filters({
           query,
           searchFields: ["user_id"],
+          extras: {
+            ...(!sudo && { user_id: user?.id }),
+          },
         });
         const options = {
           ...queryFilters,
-          logging: console.log,
+          // logging: console.log,
           // include: User,
           // attributes: { include: [["User", "user"]] },
         };
+        const { limit, offset } = queryFilters;
 
         let queryset = fake
-          ? await Advert.FAKE(fake_count)
+          ? await Advert.FAKE(limit)
           : await Advert.findAndCountAll(options).catch((err) => {
               throw boom.badData(err.message, err);
             });
-
-        const { limit, offset } = queryFilters;
 
         return paginator({
           queryset,
@@ -191,7 +195,7 @@ const AdvertController = (server) => {
       const {
         payload,
         pre: {
-          user: { user, fake, fake_count, sudo },
+          user: { user, fake, sudo },
         },
       } = req;
 
@@ -241,12 +245,13 @@ const AdvertController = (server) => {
             where: { user_id: user?.id, id },
             fields,
           });
-        }
 
-        return {
-          status: Boolean(result),
-          result,
-        };
+          return {
+            status: Boolean(result),
+            id,
+            result,
+          };
+        }
       } catch (err) {
         console.error(err);
         return boom.isBoom ? err : boom.internal(err.message, err);
@@ -263,14 +268,30 @@ const AdvertController = (server) => {
         payload,
         params: { id },
         pre: {
-          user: { user, fake, fake_count, sudo },
+          user: { user, sudo },
         },
       } = req;
 
       try {
-        let fields = ["published"],
-          result = await Advert(payload, {
-            where: { id },
+        let fields = sudo
+            ? ["published"]
+            : [
+                "published",
+                "min_order_qty",
+                "max_order_qty",
+                "min_order_price",
+                "max_order_price",
+                "payment_methods",
+                "payment_ttl_mins",
+                "price",
+                "floating_price",
+                "qty",
+                "remarks",
+                "auto_reply_message",
+                "trade_conditions",
+              ],
+          result = await Advert.update(payload, {
+            where: { id, ...(!sudo && { user_id: user?.id }) },
             fields,
           });
 

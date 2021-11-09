@@ -24,48 +24,44 @@ module.exports = function UploadController(server) {
       const {
         params: { id },
 
-        pre: { user: {user, sudo} },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
 
-      const upload = await Upload.findOne({
+      const result = await Upload.findOne({
         where: {
           id,
-          ...( !sudo &&{ user_id: user.id }),
+          ...(!sudo && { user_id: user.id }),
         },
         attributes: {
-          exclude: [
-           
-            "user_id",
-            "UserId",
-            "updated_at",
-            "updatedAt",
-          ],
+          exclude: ["user_id", "UserId", "updated_at", "updatedAt"],
         },
       });
 
-      if (!Upload) {
-        throw boom.notFound(`Upload not found!`);
+      if (!result) {
+        throw boom.notFound(`Upload with ID: ${id} not found!`);
       }
-      return upload;
+      return {result};
     },
 
     async find(req) {
       const {
         query,
-        pre: { user : {user, sudo}},
+        pre: {
+          user: { user, sudo, fake },
+        },
       } = req;
 
       try {
-        
-        const filterResults = await filters({
+        const queryFilters = await filters({
           query,
           extra: {
             ...(!sudo && { user_id: user?.id }),
           },
         });
-
-        const queryset = Upload.findAndCountAll({
-          ...filterResults,
+        const options = {
+          ...queryFilters,
           attributes: [
             "id",
             "mimetype",
@@ -74,11 +70,17 @@ module.exports = function UploadController(server) {
             "description",
             "created_at",
           ],
-        });
+        };
+        const { limit, offset } = queryFilters;
+
+        const queryset = fake
+          ? Upload.FAKE(limit)
+          : await Upload.findAndCountAll(options);
+        
         return await paginator({
           queryset,
-          limit: filterResults.limit,
-          offset: filterResults.offset,
+          limit,
+          offset,
         });
       } catch (error) {
         console.error(error);
@@ -95,7 +97,9 @@ module.exports = function UploadController(server) {
     async create(req) {
       const {
         payload: { file },
-        pre: { user: {user, sudo} },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
 
       const fileOptions = {
@@ -147,7 +151,9 @@ module.exports = function UploadController(server) {
     async removeByID(req) {
       const {
         params: { id },
-        pre: { user: {user, sudo} },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
 
       const result = await Upload.destroy({
@@ -169,7 +175,9 @@ module.exports = function UploadController(server) {
      */
     async remove(req) {
       const {
-        pre: { user: {user, sudo} },
+        pre: {
+          user: { user, sudo },
+        },
         payload,
       } = req;
 
@@ -178,7 +186,7 @@ module.exports = function UploadController(server) {
           id: {
             [Op.in]: payload,
           },
-          ...(!sudo &&  { user_id: user.id }),
+          ...(!sudo && { user_id: user.id }),
         },
       });
 

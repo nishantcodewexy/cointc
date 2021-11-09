@@ -10,6 +10,10 @@ module.exports = (server) => {
     },
   } = server.app;
 
+  const schema = Joi.object({
+    id: Joi.string().uuid(),
+  });
+  
   return {
     method: "DELETE",
     path: "/secession/{id}",
@@ -22,6 +26,9 @@ module.exports = (server) => {
       ],
       handler: removeByID,
       auth: "jwt",
+      validate: {
+        params: schema,
+      },
     },
   };
 };

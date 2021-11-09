@@ -59,10 +59,15 @@ function CurrencyController(server) {
       } = req;
 
       try {
+        if (!sudo)
+          return boom.methodNotAllowed(
+            `Only authorized users can access this route`
+          );
+
         const queryOptions = {
           where: {
             id,
-            ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+            user_id: user?.id,
           },
           validate: true,
           returning: true,
@@ -74,8 +79,8 @@ function CurrencyController(server) {
           result: await user
             .updateCurrency(payload, queryOptions)
             .then(([count, [updated]]) => ({
-              updated,
-              [id]: Boolean(count),
+              id,
+              status: Boolean(count),
             }))
             .catch((err) => {
               throw boom.badData(err.message, err);
@@ -94,22 +99,27 @@ function CurrencyController(server) {
      */
     async update(req) {
       const {
-        payload: { data = [], paranoid = true },
+        payload: { ids = [], paranoid = true },
         pre: {
-          user: { user },
+          user: { user, sudo },
         },
       } = req;
+
+      if (!sudo)
+        return boom.methodNotAllowed(
+          `Only authorized users can access this route`
+        );
 
       try {
         return {
           result: await sequelize.transaction(
             async (t) =>
               await Promise.all(
-                data?.map(async ({ id, ...newData }) => {
+                ids?.map(async ({ id, ...newData }) => {
                   let queryOptions = {
                     where: {
                       id,
-                      ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+                      user_id: user.id,
                     },
                     validate: true,
                     /* returning: ["id", "name", "iso_code", "type", "user_id"], */
@@ -119,11 +129,8 @@ function CurrencyController(server) {
                   };
                   return await Currency.update(newData, queryOptions)
                     .then(([count]) => ({
-                      [id]: Boolean(count),
-                      ...(() =>
-                        !count
-                          ? { extra: `Record might have been deleted` }
-                          : null)(),
+                      status: Boolean(count),
+                      id,
                     }))
                     .catch((err) => {
                       throw boom.badData(err.message, err);
@@ -154,11 +161,15 @@ function CurrencyController(server) {
           },
           params: { id },
         } = req;
+        if (!sudo)
+          return boom.methodNotAllowed(
+            `Only authorized users can access this route`
+          );
 
         const queryOptions = {
           where: {
             id,
-            ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+            user_id: user.id,
           },
           force,
         };
@@ -191,8 +202,11 @@ function CurrencyController(server) {
           user: { user, sudo, fake },
         },
       } = req;
-      let total = 0;
-      // user.removeCurrencies
+
+      if (!sudo)
+        return boom.methodNotAllowed(
+          `Only authorized users can access this route`
+        );
 
       try {
         let result = await sequelize.transaction(async (t) =>
@@ -201,14 +215,14 @@ function CurrencyController(server) {
               let queryOptions = {
                 where: {
                   id,
-                  ...(user?.isAdmin && { user_id: user.id }),
+                  user_id: user.id,
                 },
                 transaction: t,
                 force,
               };
               return await Currency.destroy(queryOptions).then((result) => ({
                 id,
-                status: ((total += result), Boolean(result)),
+                status: Boolean(result),
               }));
             })
           ).catch((err) => {
@@ -233,14 +247,15 @@ function CurrencyController(server) {
      * @returns
      */
     async findByID(req) {
+      const {
+        query,
+        pre: {
+          user: { user, fake },
+        },
+        params: { id },
+      } = req;
+
       try {
-        const {
-          query,
-          pre: {
-            user: { user, sudo, fake },
-          },
-          params: { id },
-        } = req;
         // let where = id ? { id } : null;
         //TODO: Only admins are allowed to see who created the currency
         const queryOptions = {
@@ -249,11 +264,15 @@ function CurrencyController(server) {
             id,
           },
         };
-        let result = fake ? Currency.FAKE() : await Currency.findOne(queryOptions).catch((err) => {
-          throw boom.badData(err.message, err);
-        });
+        let result = fake
+          ? Currency.FAKE()
+          : await Currency.findOne(queryOptions).catch((err) => {
+              throw boom.badData(err.message, err);
+            });
 
-        return result ? { result } : boom.notFound("Record not found");
+        return result
+          ? { result }
+          : boom.notFound(`Currency ID: ${id} not found!`);
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -266,10 +285,10 @@ function CurrencyController(server) {
      * @returns
      */
     async find(req) {
-      let {
+      const {
         query,
         pre: {
-          user: { user, sudo, fake, fake_count },
+          user: { user, sudo, fake },
         },
       } = req;
 
@@ -294,11 +313,10 @@ function CurrencyController(server) {
           // ],
         };
 
-        let queryset = fake
-          ? await Currency.FAKE(fake_count)
-          : await Currency.findAndCountAll(queryOptions);
-
         const { limit, offset } = queryFilters;
+        let queryset = fake
+          ? await Currency.FAKE(limit)
+          : await Currency.findAndCountAll(queryOptions);
 
         return paginator({
           queryset,
@@ -368,8 +386,7 @@ function CurrencyController(server) {
                   : await Currency.restore({
                       where: {
                         id,
-                        ...(() =>
-                          user?.isAdmin ? { user_id: user.id } : {})(),
+                        ...(user?.isAdmin && { user_id: user.id }),
                         returning: true,
                       },
                     }).then((count) => ({
