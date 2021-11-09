@@ -41,19 +41,19 @@ function BankTooltip() {
     return (
     <>
     <ul className={"nav nav-tabs"} id="myTab" role="tablist">
-    <li className="nav-item">
+    <li class="nav-item">
             <a className={"nav-link font-weight-bold " +(activeSubTab === "buy-btc-tab" ? "active" : "")} id="buy-btc-tab" href="#" onClick={(e) => onClickCallback(e, 'buy-btc-tab')}>BTC</a>
         </li>
-        <li className="nav-item">
+        <li class="nav-item">
             <a className={"nav-link font-weight-bold " +(activeSubTab === "buy-eth-tab" ? "active" : "")} id="buy-eth-tab" href="#" onClick={(e) => onClickCallback(e, 'buy-eth-tab')}>ETH</a>
         </li>
-        <li className="nav-item">
+        <li class="nav-item">
             <a className={"nav-link font-weight-bold " +(activeSubTab === "buy-usdt-tab" ? "active" : "")} id="buy-usdt-tab" href="#"  onClick={(e) => onClickCallback(e, 'f')}>USDT</a>
         </li>
-        {/* <li className="nav-item">
+        {/* <li class="nav-item">
             <a className={"nav-link font-weight-bold " +(activeSubTab === "buy-xrp-tab" ? "active" : "")} id="buy-xrp-tab" href="#" onClick={props.handleChildTab1('buy-btc-tab')}>XRP</a>
         </li>
-        <li className="nav-item">
+        <li class="nav-item">
             <a className={"nav-link font-weight-bold " +(activeSubTab === "buy-eos-tab" ? "active" : "")} id="buy-eos-tab" href="#" onClick={props.handleChildTab1('buy-btc-tab')}>EOS</a>
         </li> */}
     </ul>
@@ -68,19 +68,19 @@ function SellTabLinks() {
     return (
     <>
     <ul className={"nav nav-tabs"} id="myTab" role="tablist">
-        <li className="nav-item">
+        <li class="nav-item">
             <a className={"nav-link font-weight-bold " +(activeSubTab === "sell-btc-tab" ? "active" : "")} id="sell-btc-tab" href="#" onClick={() => this.props.handleSubTab('s')}>BTC</a>
         </li>
-        <li className="nav-item">
+        <li class="nav-item">
             <a className={"nav-link font-weight-bold " +(activeSubTab === "sell-eth-tab" ? "active" : "")} id="sell-eth-tab" href="#">ETH</a>
         </li>
-        <li className="nav-item">
+        <li class="nav-item">
             <a className={"nav-link font-weight-bold " +(activeSubTab === "sell-usdt-tab" ? "active" : "")} id="sell-usdt-tab" href="#">USDT</a>
         </li>
-        <li className="nav-item">
+        <li class="nav-item">
             <a className={"nav-link font-weight-bold " +(activeSubTab === "sell-xrp-tab" ? "active" : "")} id="sell-xrp-tab" href="#" >XRP</a>
         </li>
-        <li className="nav-item">
+        <li class="nav-item">
             <a className={"nav-link font-weight-bold " +(activeSubTab === "sell-eos-tab" ? "active" : "")} id="sell-eos-tab" href="#" >EOS</a>
         </li>
     </ul>
@@ -92,15 +92,15 @@ const BuyTabContent = function (props) {
     var activeSubTab=props.valueFromParent;
     return(
         <>
-        <div className="tab-content mt-4">
+        <div class="tab-content mt-4">
             <div className={"tab-pane " +(activeSubTab === "buy-btc-tab" ? "active" : "")} id="buy-btc-tab-pane" role="tabpanel" aria-labelledby="buy-btc-tab">
-                <div className="container overflow-x-auto">
-                    <div className="row align-items-center justify-content-center py-3">
-                        <div className="col-md-10 py-3">
-                            <div className="row">
-                                <div className="col-md-6 d-flex justify-content-around">
-                                    <div className="coin pay-menus">
-                                        <div className="coin-title">
+                <div class="container overflow-x-auto">
+                    <div class="row align-items-center justify-content-center py-3">
+                        <div class="col-md-10 py-3">
+                            <div class="row">
+                                <div class="col-md-6 d-flex justify-content-around">
+                                    <div class="coin pay-menus">
+                                        <div class="coin-title">
                                             <p>Money</p>
                                         </div>
                                         <Dropdown>
@@ -115,8 +115,8 @@ const BuyTabContent = function (props) {
                                         </Dropdown>
                                     </div>
 
-                                    <div className="coin pay-menus">
-                                        <div className="coin-title">
+                                    <div class="coin pay-menus">
+                                        <div class="coin-title">
                                             <p>Payment Method</p>
                                         </div>
                                         <Dropdown>
@@ -131,184 +131,184 @@ const BuyTabContent = function (props) {
                                         </Dropdown>
                                     </div>
                                 </div>
-                                <div className="col-md-6 d-flex justify-content-end align-items-end">
-                                    <div className="ad-bn">
-                                        <a className="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
-                                        <a href="/ad_create" className="btn btn-outline-primary">+  Creat an AD</a>
+                                <div class="col-md-6 d-flex justify-content-end align-items-end">
+                                    <div class="ad-bn">
+                                        <a class="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
+                                        <a href="/ad_create" class="btn btn-outline-primary">+  Creat an AD</a>
                                     </div>
                                 </div>
                             </div>
 
-                            <table id="dtBasicExample" className="table mt-3" cellspacing="0" width="100%">
+                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th className="th-sm">User</th>
-                                        <th className="th-sm">Available/Limited</th>
-                                        <th className="th-sm">Payment</th>
-                                        <th className="th-sm">Price</th>
-                                        <th className="th-sm">Transaction</th>
+                                        <th class="th-sm">User</th>
+                                        <th class="th-sm">Available/Limited</th>
+                                        <th class="th-sm">Payment</th>
+                                        <th class="th-sm">Price</th>
+                                        <th class="th-sm">Transaction</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                                 <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary" data-toggle="modal" data-target="#trd-info">Buy BTC</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary" data-toggle="modal" data-target="#trd-info">Buy BTC</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-outline-limited">Limited</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-outline-limited">Limited</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy BTC</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy BTC</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
-                                                <a href="#" className="mr-1"><img src={bank_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                            <div class="price-icon">
+                                                <a href="#" class="mr-1"><img src={bank_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy BTC</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy BTC</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy BTC</a></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <nav aria-label="Page navigation example">
-                                <ul className="pagination d-flex justify-content-end">
-                                    <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">Next</a></li>
+                                <ul class="pagination d-flex justify-content-end">
+                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -316,13 +316,13 @@ const BuyTabContent = function (props) {
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "buy-eth-tab" ? "active" : "")} id="buy-eth-tab-pane" role="tabpanel" aria-labelledby="buy-eth-tab">
-                <div className="container overflow-x-auto">
-                    <div className="row align-items-center justify-content-center py-3">
-                        <div className="col-md-10 py-3">
-                            <div className="row">
-                                <div className="col-md-6 d-flex justify-content-around">
-                                    <div className="coin">
-                                        <div className="coin-title">
+                <div class="container overflow-x-auto">
+                    <div class="row align-items-center justify-content-center py-3">
+                        <div class="col-md-10 py-3">
+                            <div class="row">
+                                <div class="col-md-6 d-flex justify-content-around">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Money</p>
                                         </div>
                                         <Dropdown>
@@ -337,8 +337,8 @@ const BuyTabContent = function (props) {
                                         </Dropdown>
                                     </div>
 
-                                    <div className="coin">
-                                        <div className="coin-title">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Payment Method</p>
                                         </div>
                                         <Dropdown>
@@ -353,184 +353,184 @@ const BuyTabContent = function (props) {
                                         </Dropdown>
                                     </div>
                                 </div>
-                                <div className="col-md-6 d-flex justify-content-end align-items-end">
-                                    <div className="ad-bn">
-                                        <a className="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
-                                        <a href="/ad_create" className="btn btn-outline-primary">+  Creat an AD</a>
+                                <div class="col-md-6 d-flex justify-content-end align-items-end">
+                                    <div class="ad-bn">
+                                        <a class="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
+                                        <a href="/ad_create" class="btn btn-outline-primary">+  Creat an AD</a>
                                     </div>
                                 </div>
                             </div>
 
-                            <table id="dtBasicExample" className="table mt-3" cellspacing="0" width="100%">
+                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th className="th-sm">User</th>
-                                        <th className="th-sm">Available/Limited</th>
-                                        <th className="th-sm">Payment</th>
-                                        <th className="th-sm">Price</th>
-                                        <th className="th-sm">Transaction</th>
+                                        <th class="th-sm">User</th>
+                                        <th class="th-sm">Available/Limited</th>
+                                        <th class="th-sm">Payment</th>
+                                        <th class="th-sm">Price</th>
+                                        <th class="th-sm">Transaction</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy ETH</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy ETH</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-outline-limited">Limited</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-outline-limited">Limited</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy ETH</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy ETH</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy ETH</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy ETH</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
-                                                <a href="#" className="mr-1"><img src={bank_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                            <div class="price-icon">
+                                                <a href="#" class="mr-1"><img src={bank_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy ETH</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy ETH</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy ETH</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy ETH</a></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <nav aria-label="Page navigation example">
-                                <ul className="pagination d-flex justify-content-end">
-                                    <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">Next</a></li>
+                                <ul class="pagination d-flex justify-content-end">
+                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -538,13 +538,13 @@ const BuyTabContent = function (props) {
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "buy-usdt-tab" ? "active" : "")} id="buy-usdt-tab-pane" role="tabpanel" aria-labelledby="buy-usdt-tab">
-                <div className="container overflow-x-auto">
-                    <div className="row align-items-center justify-content-center py-3">
-                        <div className="col-md-10 py-3">
-                            <div className="row">
-                                <div className="col-md-6 d-flex justify-content-around">
-                                    <div className="coin">
-                                        <div className="coin-title">
+                <div class="container overflow-x-auto">
+                    <div class="row align-items-center justify-content-center py-3">
+                        <div class="col-md-10 py-3">
+                            <div class="row">
+                                <div class="col-md-6 d-flex justify-content-around">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Money</p>
                                         </div>
                                         <Dropdown>
@@ -559,8 +559,8 @@ const BuyTabContent = function (props) {
                                         </Dropdown>
                                     </div>
 
-                                    <div className="coin">
-                                        <div className="coin-title">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Payment Method</p>
                                         </div>
                                         <Dropdown>
@@ -575,184 +575,184 @@ const BuyTabContent = function (props) {
                                         </Dropdown>
                                     </div>
                                 </div>
-                                <div className="col-md-6 d-flex justify-content-end align-items-end">
-                                    <div className="ad-bn">
-                                        <a className="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
-                                        <a href="/ad_create" className="btn btn-outline-primary">+  Creat an AD</a>
+                                <div class="col-md-6 d-flex justify-content-end align-items-end">
+                                    <div class="ad-bn">
+                                        <a class="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
+                                        <a href="/ad_create" class="btn btn-outline-primary">+  Creat an AD</a>
                                     </div>
                                 </div>
                             </div>
 
-                            <table id="dtBasicExample" className="table mt-3" cellspacing="0" width="100%">
+                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th className="th-sm">User</th>
-                                        <th className="th-sm">Available/Limited</th>
-                                        <th className="th-sm">Payment</th>
-                                        <th className="th-sm">Price</th>
-                                        <th className="th-sm">Transaction</th>
+                                        <th class="th-sm">User</th>
+                                        <th class="th-sm">Available/Limited</th>
+                                        <th class="th-sm">Payment</th>
+                                        <th class="th-sm">Price</th>
+                                        <th class="th-sm">Transaction</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy USDT</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy USDT</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-outline-limited">Limited</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-outline-limited">Limited</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy USDT</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy USDT</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy USDT</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy USDT</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
-                                                <a href="#" className="mr-1"><img src={bank_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                            <div class="price-icon">
+                                                <a href="#" class="mr-1"><img src={bank_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy USDT</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy USDT</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy USDT</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy USDT</a></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <nav aria-label="Page navigation example">
-                                <ul className="pagination d-flex justify-content-end">
-                                    <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">Next</a></li>
+                                <ul class="pagination d-flex justify-content-end">
+                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -760,13 +760,13 @@ const BuyTabContent = function (props) {
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "buy-xrp-tab" ? "active" : "")} id="buy-xrp-tab-pane" role="tabpanel" aria-labelledby="buy-xrp-tab">
-                <div className="container overflow-x-auto">
-                    <div className="row align-items-center justify-content-center py-3">
-                        <div className="col-md-10 py-3">
-                            <div className="row">
-                                <div className="col-md-6 d-flex justify-content-around">
-                                    <div className="coin">
-                                        <div className="coin-title">
+                <div class="container overflow-x-auto">
+                    <div class="row align-items-center justify-content-center py-3">
+                        <div class="col-md-10 py-3">
+                            <div class="row">
+                                <div class="col-md-6 d-flex justify-content-around">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Money</p>
                                         </div>
                                         <Dropdown>
@@ -781,8 +781,8 @@ const BuyTabContent = function (props) {
                                         </Dropdown>
                                     </div>
 
-                                    <div className="coin">
-                                        <div className="coin-title">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Payment Method</p>
                                         </div>
                                         <Dropdown>
@@ -797,184 +797,184 @@ const BuyTabContent = function (props) {
                                         </Dropdown>
                                     </div>
                                 </div>
-                                <div className="col-md-6 d-flex justify-content-end align-items-end">
-                                    <div className="ad-bn">
-                                        <a className="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
-                                        <a href="/ad_create" className="btn btn-outline-primary">+  Creat an AD</a>
+                                <div class="col-md-6 d-flex justify-content-end align-items-end">
+                                    <div class="ad-bn">
+                                        <a class="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
+                                        <a href="/ad_create" class="btn btn-outline-primary">+  Creat an AD</a>
                                     </div>
                                 </div>
                             </div>
 
-                            <table id="dtBasicExample" className="table mt-3" cellspacing="0" width="100%">
+                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th className="th-sm">User</th>
-                                        <th className="th-sm">Available/Limited</th>
-                                        <th className="th-sm">Payment</th>
-                                        <th className="th-sm">Price</th>
-                                        <th className="th-sm">Transaction</th>
+                                        <th class="th-sm">User</th>
+                                        <th class="th-sm">Available/Limited</th>
+                                        <th class="th-sm">Payment</th>
+                                        <th class="th-sm">Price</th>
+                                        <th class="th-sm">Transaction</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy XRP</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy XRP</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-outline-limited">Limited</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-outline-limited">Limited</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy XRP</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy XRP</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy XRP</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy XRP</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
-                                                <a href="#" className="mr-1"><img src={bank_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                            <div class="price-icon">
+                                                <a href="#" class="mr-1"><img src={bank_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy XRP</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy XRP</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy XRP</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy XRP</a></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <nav aria-label="Page navigation example">
-                                <ul className="pagination d-flex justify-content-end">
-                                    <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">Next</a></li>
+                                <ul class="pagination d-flex justify-content-end">
+                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -982,13 +982,13 @@ const BuyTabContent = function (props) {
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "buy-eos-tab" ? "active" : "")} id="buy-eos-tab-pane" role="tabpanel" aria-labelledby="buy-eos-tab">
-            <div className="container overflow-x-auto">
-                    <div className="row align-items-center justify-content-center py-3">
-                        <div className="col-md-10 py-3">
-                            <div className="row">
-                                <div className="col-md-6 d-flex justify-content-around">
-                                    <div className="coin">
-                                        <div className="coin-title">
+            <div class="container overflow-x-auto">
+                    <div class="row align-items-center justify-content-center py-3">
+                        <div class="col-md-10 py-3">
+                            <div class="row">
+                                <div class="col-md-6 d-flex justify-content-around">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Money</p>
                                         </div>
                                         <Dropdown>
@@ -1003,8 +1003,8 @@ const BuyTabContent = function (props) {
                                         </Dropdown>
                                     </div>
 
-                                    <div className="coin">
-                                        <div className="coin-title">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Payment Method</p>
                                         </div>
                                         <Dropdown>
@@ -1019,184 +1019,184 @@ const BuyTabContent = function (props) {
                                         </Dropdown>
                                     </div>
                                 </div>
-                                <div className="col-md-6 d-flex justify-content-end align-items-end">
-                                    <div className="ad-bn">
-                                        <a className="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
-                                        <a href="/ad_create" className="btn btn-outline-primary">+  Creat an AD</a>
+                                <div class="col-md-6 d-flex justify-content-end align-items-end">
+                                    <div class="ad-bn">
+                                        <a class="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
+                                        <a href="/ad_create" class="btn btn-outline-primary">+  Creat an AD</a>
                                     </div>
                                 </div>
                             </div>
 
-                            <table id="dtBasicExample" className="table mt-3" cellspacing="0" width="100%">
+                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th className="th-sm">User</th>
-                                        <th className="th-sm">Available/Limited</th>
-                                        <th className="th-sm">Payment</th>
-                                        <th className="th-sm">Price</th>
-                                        <th className="th-sm">Transaction</th>
+                                        <th class="th-sm">User</th>
+                                        <th class="th-sm">Available/Limited</th>
+                                        <th class="th-sm">Payment</th>
+                                        <th class="th-sm">Price</th>
+                                        <th class="th-sm">Transaction</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy EOS</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy EOS</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-outline-limited">Limited</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-outline-limited">Limited</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy EOS</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy EOS</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy EOS</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy EOS</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
-                                                <a href="#" className="mr-1"><img src={bank_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                            <div class="price-icon">
+                                                <a href="#" class="mr-1"><img src={bank_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy EOS</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy EOS</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">Buy EOS</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">Buy EOS</a></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <nav aria-label="Page navigation example">
-                                <ul className="pagination d-flex justify-content-end">
-                                    <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">Next</a></li>
+                                <ul class="pagination d-flex justify-content-end">
+                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -1211,15 +1211,15 @@ const SellTabContent = function (props) {
     var activeSubTab=props.valueFromParent;
     return(
         <>
-        <div className="tab-content mt-4">
+        <div class="tab-content mt-4">
             <div className={"tab-pane " +(activeSubTab === "sell-btc-tab" ? "active" : "")} id="sell-btc-tab-pane" role="tabpanel" aria-labelledby="sell-btc-tab">
-                <div className="container overflow-x-auto">
-                    <div className="row align-items-center justify-content-center py-3">
-                        <div className="col-md-10 py-3">
-                            <div className="row">
-                                <div className="col-md-6 d-flex justify-content-around">
-                                    <div className="coin pay-menus">
-                                        <div className="coin-title">
+                <div class="container overflow-x-auto">
+                    <div class="row align-items-center justify-content-center py-3">
+                        <div class="col-md-10 py-3">
+                            <div class="row">
+                                <div class="col-md-6 d-flex justify-content-around">
+                                    <div class="coin pay-menus">
+                                        <div class="coin-title">
                                             <p>Money</p>
                                         </div>
                                         <Dropdown>
@@ -1234,8 +1234,8 @@ const SellTabContent = function (props) {
                                         </Dropdown>
                                     </div>
 
-                                    <div className="coin pay-menus">
-                                        <div className="coin-title">
+                                    <div class="coin pay-menus">
+                                        <div class="coin-title">
                                             <p>Payment Method</p>
                                         </div>
                                         <Dropdown>
@@ -1250,184 +1250,184 @@ const SellTabContent = function (props) {
                                         </Dropdown>
                                     </div>
                                 </div>
-                                <div className="col-md-6 d-flex justify-content-end align-items-end">
-                                    <div className="ad-bn">
-                                        <a className="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
-                                        <a href="/ad_create" className="btn btn-outline-primary">+  Creat an AD</a>
+                                <div class="col-md-6 d-flex justify-content-end align-items-end">
+                                    <div class="ad-bn">
+                                        <a class="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
+                                        <a href="/ad_create" class="btn btn-outline-primary">+  Creat an AD</a>
                                     </div>
                                 </div>
                             </div>
 
-                            <table id="dtBasicExample" className="table mt-3" cellspacing="0" width="100%">
+                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th className="th-sm">User</th>
-                                        <th className="th-sm">Available/Limited</th>
-                                        <th className="th-sm">Payment</th>
-                                        <th className="th-sm">Price</th>
-                                        <th className="th-sm">Transaction</th>
+                                        <th class="th-sm">User</th>
+                                        <th class="th-sm">Available/Limited</th>
+                                        <th class="th-sm">Payment</th>
+                                        <th class="th-sm">Price</th>
+                                        <th class="th-sm">Transaction</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                                 <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary" data-toggle="modal" data-target="#trd-info">SELL BTC</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary" data-toggle="modal" data-target="#trd-info">SELL BTC</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-outline-limited">Limited</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-outline-limited">Limited</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL BTC</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL BTC</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL BTC</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL BTC</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
-                                                <a href="#" className="mr-1"><img src={bank_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                            <div class="price-icon">
+                                                <a href="#" class="mr-1"><img src={bank_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL BTC</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL BTC</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL BTC</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL BTC</a></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <nav aria-label="Page navigation example">
-                                <ul className="pagination d-flex justify-content-end">
-                                    <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">Next</a></li>
+                                <ul class="pagination d-flex justify-content-end">
+                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -1435,13 +1435,13 @@ const SellTabContent = function (props) {
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "sell-eth-tab" ? "active" : "")} id="sell-eth-tab-pane" role="tabpanel" aria-labelledby="sell-eth-tab">
-                <div className="container overflow-x-auto">
-                    <div className="row align-items-center justify-content-center py-3">
-                        <div className="col-md-10 py-3">
-                            <div className="row">
-                                <div className="col-md-6 d-flex justify-content-around">
-                                    <div className="coin">
-                                        <div className="coin-title">
+                <div class="container overflow-x-auto">
+                    <div class="row align-items-center justify-content-center py-3">
+                        <div class="col-md-10 py-3">
+                            <div class="row">
+                                <div class="col-md-6 d-flex justify-content-around">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Money</p>
                                         </div>
                                         <Dropdown>
@@ -1456,8 +1456,8 @@ const SellTabContent = function (props) {
                                         </Dropdown>
                                     </div>
 
-                                    <div className="coin">
-                                        <div className="coin-title">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Payment Method</p>
                                         </div>
                                         <Dropdown>
@@ -1472,184 +1472,184 @@ const SellTabContent = function (props) {
                                         </Dropdown>
                                     </div>
                                 </div>
-                                <div className="col-md-6 d-flex justify-content-end align-items-end">
-                                    <div className="ad-bn">
-                                        <a className="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
-                                        <a href="/ad_create" className="btn btn-outline-primary">+  Creat an AD</a>
+                                <div class="col-md-6 d-flex justify-content-end align-items-end">
+                                    <div class="ad-bn">
+                                        <a class="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
+                                        <a href="/ad_create" class="btn btn-outline-primary">+  Creat an AD</a>
                                     </div>
                                 </div>
                             </div>
 
-                            <table id="dtBasicExample" className="table mt-3" cellspacing="0" width="100%">
+                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th className="th-sm">User</th>
-                                        <th className="th-sm">Available/Limited</th>
-                                        <th className="th-sm">Payment</th>
-                                        <th className="th-sm">Price</th>
-                                        <th className="th-sm">Transaction</th>
+                                        <th class="th-sm">User</th>
+                                        <th class="th-sm">Available/Limited</th>
+                                        <th class="th-sm">Payment</th>
+                                        <th class="th-sm">Price</th>
+                                        <th class="th-sm">Transaction</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL ETH</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL ETH</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-outline-limited">Limited</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-outline-limited">Limited</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL ETH</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL ETH</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL ETH</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL ETH</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
-                                                <a href="#" className="mr-1"><img src={bank_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                            <div class="price-icon">
+                                                <a href="#" class="mr-1"><img src={bank_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL ETH</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL ETH</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL ETH</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL ETH</a></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <nav aria-label="Page navigation example">
-                                <ul className="pagination d-flex justify-content-end">
-                                    <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">Next</a></li>
+                                <ul class="pagination d-flex justify-content-end">
+                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -1657,13 +1657,13 @@ const SellTabContent = function (props) {
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "sell-usdt-tab" ? "active" : "")} id="sell-usdt-tab-pane" role="tabpanel" aria-labelledby="sell-usdt-tab">
-                <div className="container overflow-x-auto">
-                    <div className="row align-items-center justify-content-center py-3">
-                        <div className="col-md-10 py-3">
-                            <div className="row">
-                                <div className="col-md-6 d-flex justify-content-around">
-                                    <div className="coin">
-                                        <div className="coin-title">
+                <div class="container overflow-x-auto">
+                    <div class="row align-items-center justify-content-center py-3">
+                        <div class="col-md-10 py-3">
+                            <div class="row">
+                                <div class="col-md-6 d-flex justify-content-around">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Money</p>
                                         </div>
                                         <Dropdown>
@@ -1678,8 +1678,8 @@ const SellTabContent = function (props) {
                                         </Dropdown>
                                     </div>
 
-                                    <div className="coin">
-                                        <div className="coin-title">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Payment Method</p>
                                         </div>
                                         <Dropdown>
@@ -1694,184 +1694,184 @@ const SellTabContent = function (props) {
                                         </Dropdown>
                                     </div>
                                 </div>
-                                <div className="col-md-6 d-flex justify-content-end align-items-end">
-                                    <div className="ad-bn">
-                                        <a className="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
-                                        <a href="/ad_create" className="btn btn-outline-primary">+  Creat an AD</a>
+                                <div class="col-md-6 d-flex justify-content-end align-items-end">
+                                    <div class="ad-bn">
+                                        <a class="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
+                                        <a href="/ad_create" class="btn btn-outline-primary">+  Creat an AD</a>
                                     </div>
                                 </div>
                             </div>
 
-                            <table id="dtBasicExample" className="table mt-3" cellspacing="0" width="100%">
+                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th className="th-sm">User</th>
-                                        <th className="th-sm">Available/Limited</th>
-                                        <th className="th-sm">Payment</th>
-                                        <th className="th-sm">Price</th>
-                                        <th className="th-sm">Transaction</th>
+                                        <th class="th-sm">User</th>
+                                        <th class="th-sm">Available/Limited</th>
+                                        <th class="th-sm">Payment</th>
+                                        <th class="th-sm">Price</th>
+                                        <th class="th-sm">Transaction</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL USDT</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL USDT</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-outline-limited">Limited</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-outline-limited">Limited</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL USDT</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL USDT</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL USDT</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL USDT</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
-                                                <a href="#" className="mr-1"><img src={bank_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                            <div class="price-icon">
+                                                <a href="#" class="mr-1"><img src={bank_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL USDT</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL USDT</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL USDT</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL USDT</a></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <nav aria-label="Page navigation example">
-                                <ul className="pagination d-flex justify-content-end">
-                                    <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">Next</a></li>
+                                <ul class="pagination d-flex justify-content-end">
+                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -1879,13 +1879,13 @@ const SellTabContent = function (props) {
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "sell-xrp-tab" ? "active" : "")} id="sell-xrp-tab-pane" role="tabpanel" aria-labelledby="sell-xrp-tab">
-                <div className="container overflow-x-auto">
-                    <div className="row align-items-center justify-content-center py-3">
-                        <div className="col-md-10 py-3">
-                            <div className="row">
-                                <div className="col-md-6 d-flex justify-content-around">
-                                    <div className="coin">
-                                        <div className="coin-title">
+                <div class="container overflow-x-auto">
+                    <div class="row align-items-center justify-content-center py-3">
+                        <div class="col-md-10 py-3">
+                            <div class="row">
+                                <div class="col-md-6 d-flex justify-content-around">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Money</p>
                                         </div>
                                         <Dropdown>
@@ -1900,8 +1900,8 @@ const SellTabContent = function (props) {
                                         </Dropdown>
                                     </div>
 
-                                    <div className="coin">
-                                        <div className="coin-title">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Payment Method</p>
                                         </div>
                                         <Dropdown>
@@ -1916,184 +1916,184 @@ const SellTabContent = function (props) {
                                         </Dropdown>
                                     </div>
                                 </div>
-                                <div className="col-md-6 d-flex justify-content-end align-items-end">
-                                    <div className="ad-bn">
-                                        <a className="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
-                                        <a href="/ad_create" className="btn btn-outline-primary">+  Creat an AD</a>
+                                <div class="col-md-6 d-flex justify-content-end align-items-end">
+                                    <div class="ad-bn">
+                                        <a class="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
+                                        <a href="/ad_create" class="btn btn-outline-primary">+  Creat an AD</a>
                                     </div>
                                 </div>
                             </div>
 
-                            <table id="dtBasicExample" className="table mt-3" cellspacing="0" width="100%">
+                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th className="th-sm">User</th>
-                                        <th className="th-sm">Available/Limited</th>
-                                        <th className="th-sm">Payment</th>
-                                        <th className="th-sm">Price</th>
-                                        <th className="th-sm">Transaction</th>
+                                        <th class="th-sm">User</th>
+                                        <th class="th-sm">Available/Limited</th>
+                                        <th class="th-sm">Payment</th>
+                                        <th class="th-sm">Price</th>
+                                        <th class="th-sm">Transaction</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL XRP</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL XRP</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-outline-limited">Limited</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-outline-limited">Limited</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL XRP</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL XRP</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL XRP</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL XRP</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
-                                                <a href="#" className="mr-1"><img src={bank_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                            <div class="price-icon">
+                                                <a href="#" class="mr-1"><img src={bank_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL XRP</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL XRP</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL XRP</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL XRP</a></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <nav aria-label="Page navigation example">
-                                <ul className="pagination d-flex justify-content-end">
-                                    <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">Next</a></li>
+                                <ul class="pagination d-flex justify-content-end">
+                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -2101,13 +2101,13 @@ const SellTabContent = function (props) {
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "sell-eos-tab" ? "active" : "")} id="sell-eos-tab-pane" role="tabpanel" aria-labelledby="sell-eos-tab">
-            <div className="container overflow-x-auto">
-                    <div className="row align-items-center justify-content-center py-3">
-                        <div className="col-md-10 py-3">
-                            <div className="row">
-                                <div className="col-md-6 d-flex justify-content-around">
-                                    <div className="coin">
-                                        <div className="coin-title">
+            <div class="container overflow-x-auto">
+                    <div class="row align-items-center justify-content-center py-3">
+                        <div class="col-md-10 py-3">
+                            <div class="row">
+                                <div class="col-md-6 d-flex justify-content-around">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Money</p>
                                         </div>
                                         <Dropdown>
@@ -2122,8 +2122,8 @@ const SellTabContent = function (props) {
                                         </Dropdown>
                                     </div>
 
-                                    <div className="coin">
-                                        <div className="coin-title">
+                                    <div class="coin">
+                                        <div class="coin-title">
                                             <p>Payment Method</p>
                                         </div>
                                         <Dropdown>
@@ -2138,184 +2138,184 @@ const SellTabContent = function (props) {
                                         </Dropdown>
                                     </div>
                                 </div>
-                                <div className="col-md-6 d-flex justify-content-end align-items-end">
-                                    <div className="ad-bn">
-                                        <a className="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
-                                        <a href="/ad_create" className="btn btn-outline-primary">+  Creat an AD</a>
+                                <div class="col-md-6 d-flex justify-content-end align-items-end">
+                                    <div class="ad-bn">
+                                        <a class="btn btn-ref font-weight-bold mr-1"><img src={refresh_icon} width="20"/>Refresh</a>
+                                        <a href="/ad_create" class="btn btn-outline-primary">+  Creat an AD</a>
                                     </div>
                                 </div>
                             </div>
 
-                            <table id="dtBasicExample" className="table mt-3" cellspacing="0" width="100%">
+                            <table id="dtBasicExample" class="table mt-3" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
-                                        <th className="th-sm">User</th>
-                                        <th className="th-sm">Available/Limited</th>
-                                        <th className="th-sm">Payment</th>
-                                        <th className="th-sm">Price</th>
-                                        <th className="th-sm">Transaction</th>
+                                        <th class="th-sm">User</th>
+                                        <th class="th-sm">Available/Limited</th>
+                                        <th class="th-sm">Payment</th>
+                                        <th class="th-sm">Price</th>
+                                        <th class="th-sm">Transaction</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL EOS</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL EOS</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-outline-limited">Limited</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-outline-limited">Limited</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL EOS</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL EOS</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL EOS</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL EOS</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt pr-5">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
-                                                <a href="#" className="mr-1"><img src={bank_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                            <div class="price-icon">
+                                                <a href="#" class="mr-1"><img src={bank_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL EOS</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL EOS</a></td>
                                     </tr>
                                     <tr>
-                                        <td className="tr-ft">
-                                            <p className="text-primary mb-0 pd-txt">Xuhai8888 <i className="far fa-check-circle my-circle"></i></p>
-                                            <p className="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
+                                        <td class="tr-ft">
+                                            <p class="text-primary mb-0 pd-txt">Xuhai8888 <i class="far fa-check-circle my-circle"></i></p>
+                                            <p class="text-gray mb-0 trd-sub-txt">106 order  |  98.1% Completion</p>
                                         </td>
                                         <td>
-                                            <div className="ass-ty d-flex ">
-                                                <div className="ass-ty-img pr-3">
-                                                    <p className="mb-0 text-gray txt-avls">Available<br/> Limit</p>
+                                            <div class="ass-ty d-flex ">
+                                                <div class="ass-ty-img pr-3">
+                                                    <p class="mb-0 text-gray txt-avls">Available<br/> Limit</p>
                                                 </div>
-                                                <div className="ass-ty-content">
-                                                    <p className="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
+                                                <div class="ass-ty-content">
+                                                    <p class="mb-0 trd-avl ">1.65908675 BTC <br/><u>50,000- 300,000</u>  CNY</p>
                                                 </div>
                                             </div>
                                         </td>
                                         <td>
-                                            <div className="price-icon">
+                                            <div class="price-icon">
                                             <BankTooltip/>
-                                                <a href="#" className="mr-1"><img src={money_icon} width="20"/></a>
-                                                <a href="#" className="mr-1"><img src={chat_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={money_icon} width="20"/></a>
+                                                <a href="#" class="mr-1"><img src={chat_icon} width="20"/></a>
                                             </div>
                                         </td>
-                                        <td className="trd-avl">270,042.63 CNY</td>
-                                        <td><a href="#" className="btn btn-primary">SELL EOS</a></td>
+                                        <td class="trd-avl">270,042.63 CNY</td>
+                                        <td><a href="#" class="btn btn-primary">SELL EOS</a></td>
                                     </tr>
                                 </tbody>
                             </table>
                             <nav aria-label="Page navigation example">
-                                <ul className="pagination d-flex justify-content-end">
-                                    <li className="page-item"><a className="page-link" href="#">Previous</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">1</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">2</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">3</a></li>
-                                    <li className="page-item"><a className="page-link" href="#">Next</a></li>
+                                <ul class="pagination d-flex justify-content-end">
+                                    <li class="page-item"><a class="page-link" href="#">Previous</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">Next</a></li>
                                 </ul>
                             </nav>
                         </div>
@@ -2354,33 +2354,33 @@ export const Trade = () => {
     return (     
         <div className="Trade Orders"> 
             <section>
-                <div className="container-fluid">
-                    <div className="container">
-                        <div className="row justify-content-center mt-4">
-                            <div className="col-md-10 d-flex">
-                                <ul className="nav nav-tabs buy-sell-tab mr-3" id="myTab" role="tablist">
-                                    <li className="nav-item">
+                <div class="container-fluid">
+                    <div class="container">
+                        <div class="row justify-content-center mt-4">
+                            <div class="col-md-10 d-flex">
+                                <ul class="nav nav-tabs buy-sell-tab mr-3" id="myTab" role="tablist">
+                                    <li class="nav-item">
                                         <a className={"nav-link font-weight-bold " +(activeTab === "buy-tab" ? "active" : "")} id="buy-tab"  href="#" data-tab="0" onClick={() => handleTab("buy-tab")}>BUY</a>
                                     </li>
-                                    <li className="nav-item">
+                                    <li class="nav-item">
                                         <a className={"nav-link font-weight-bold " +(activeTab === "sell-tab" ? "active" : "")} id="sell-tab" href="#" data-tab="1" onClick={() => handleTab("sell-tab")}>SELL</a>
                                     </li>
                                 </ul>
                                 {activeTab === "buy-tab" ? (
                                     <ul className={"nav nav-tabs"} id="myTab" role="tablist">
-                                        <li className="nav-item">
+                                        <li class="nav-item">
                                                 <a className={"nav-link font-weight-bold " +(activeBuyTab === "buy-btc-tab" ? "active" : "")} id="buy-btc-tab" href="#" onClick={() => handleBuyTab("buy-btc-tab")}>BTC</a>
                                             </li>
-                                            <li className="nav-item">
+                                            <li class="nav-item">
                                                 <a className={"nav-link font-weight-bold " +(activeBuyTab === "buy-eth-tab" ? "active" : "")} id="buy-eth-tab" href="#" onClick={() => handleBuyTab("buy-eth-tab")}>ETH</a>
                                             </li>
-                                            <li className="nav-item">
+                                            <li class="nav-item">
                                                 <a className={"nav-link font-weight-bold " +(activeBuyTab === "buy-usdt-tab" ? "active" : "")} id="buy-usdt-tab" href="#"  onClick={() => handleBuyTab("buy-usdt-tab")}>USDT</a>
                                             </li>
-                                            <li className="nav-item">
+                                            <li class="nav-item">
                                                 <a className={"nav-link font-weight-bold " +(activeBuyTab === "buy-xrp-tab" ? "active" : "")} id="buy-xrp-tab" href="#" onClick={() => handleBuyTab("buy-xrp-tab")}>XRP</a>
                                             </li>
-                                            <li className="nav-item">
+                                            <li class="nav-item">
                                                 <a className={"nav-link font-weight-bold " +(activeBuyTab === "buy-eos-tab" ? "active" : "")} id="buy-eos-tab" href="#" onClick={() => handleBuyTab("buy-eos-tab")}>EOS</a>
                                             </li>
                                     </ul>

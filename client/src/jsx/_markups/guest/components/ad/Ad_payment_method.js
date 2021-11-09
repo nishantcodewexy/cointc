@@ -7,31 +7,31 @@ import refresh_icon from '../../app-assets/images/icon/refresh.png';
 
 export const Ad_payment_method = () => {
     return (     
-        <div className="content">
+        <div class="content">
             <section id="mainTop">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-12">
-                            <h3 className="wow animate__animated fadeInDown" data-wow-delay="0.3s">Create an AD</h3>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-12">
+                            <h3 class="wow fadeInDown" data-wow-delay="0.3s">Create an AD</h3>
                         </div>
                     </div>
                 </div>
             </section>            
 
             <section id="createAdsTop">
-                <div className="container">
-                    <div className="row">
-                        <div className="col-md-6 mx-auto p-0">
-                            <div className="timeline-title">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-6 mx-auto p-0">
+                            <div class="timeline-title">
                             <h5>Advertisement Create an ad</h5>
                             </div>
                         </div>
                     </div>
-                    <div className="row justify-content-center">
-                        <div className="col-md-12 d-flex justify-content-center my-5">
-                            <ul className="timeline my-timeline">
-                            <li className="">Set price and type</li>
-                            <li className="active">Set up your trading method</li>
+                    <div class="row justify-content-center">
+                        <div class="col-md-12 d-flex justify-content-center my-5">
+                            <ul class="timeline my-timeline">
+                            <li class="">Set price and type</li>
+                            <li class="active">Set up your trading method</li>
                             <li>Enter contract terms</li>
                             </ul>
                         </div>
@@ -40,14 +40,14 @@ export const Ad_payment_method = () => {
             </section>
 
             <section id="createAds">
-                <div className="container">
-                    <div className="row justify-content-center wow fadeInUp" data-wow-delay="0.7s">
-                        <div className="col-sm-12 col-md-6 craeat-main-box clear">
+                <div class="container">
+                    <div class="row justify-content-center wow fadeInUp" data-wow-delay="0.7s">
+                        <div class="col-sm-12 col-md-6 craeat-main-box clear">
                             <h4>Payment method (up to 3)</h4>
-                            <ul className="clear">
+                            <ul class="clear">
                                 <li><a href="#">+ Add Bank</a></li>
                             </ul>
-                            <div className="table_container">
+                            <div class="table_container">
                                 <table>
                                     <thead>
                                         <tr>
@@ -56,28 +56,28 @@ export const Ad_payment_method = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr className="bitcoin">
-                                            <td className="coin clear">Name</td>
-                                            <td className="available">Add payment ham sinseung ham sinseung</td>
+                                        <tr class="bitcoin">
+                                            <td class="coin clear">Name</td>
+                                            <td class="available">Add payment ham sinseung ham sinseung</td>
                                         </tr>
-                                        <tr className="bitcoin">
-                                            <td className="coin clear">Bank acount/card</td>
-                                            <td className="available">1103253636748</td>
+                                        <tr class="bitcoin">
+                                            <td class="coin clear">Bank acount/card</td>
+                                            <td class="available">1103253636748</td>
                                         </tr>
-                                        <tr className="bitcoin">
-                                            <td className="coin clear">Bank name</td>
-                                            <td className="available">Shin Han</td>
+                                        <tr class="bitcoin">
+                                            <td class="coin clear">Bank name</td>
+                                            <td class="available">Shin Han</td>
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td className="text-right">
-                                                <a href="#" className="btn btn-delete">Delete</a>
+                                            <td class="text-right">
+                                                <a href="#" class="btn btn-delete">Delete</a>
                                             </td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div className="table_container">
+                            <div class="table_container">
                                 <table>
                                     <thead>
                                         <tr>
@@ -86,60 +86,60 @@ export const Ad_payment_method = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr className="bitcoin">
-                                            <td className="coin clear">Name</td>
-                                            <td className="available">Ham sinseung</td>
+                                        <tr class="bitcoin">
+                                            <td class="coin clear">Name</td>
+                                            <td class="available">Ham sinseung</td>
                                         </tr>
-                                        <tr className="bitcoin">
-                                            <td className="coin clear">Widget account</td>
-                                            <td className="available">Blockdaon</td>
+                                        <tr class="bitcoin">
+                                            <td class="coin clear">Widget account</td>
+                                            <td class="available">Blockdaon</td>
                                         </tr>
                                         <tr>
                                             <td></td>
-                                            <td className="text-right"><a href="#" className="btn btn-delete">Delete</a></td>
+                                            <td class="text-right"><a href="#" class="btn btn-delete">Delete</a></td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div className="mt-5 banktransfer">
+                            <div class="mt-5 banktransfer">
                                 <h4>BankTransfer</h4>
-                                <div className="row">
-                                    <div className="col-sm-12 col-md-4">
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-4">
                                         <form>
-                                            <div className="form-group">
+                                            <div class="form-group">
                                                 <label for="exampleInputEmail1">Name</label>
-                                                <input type="text" className="form-control" id="name"/>
+                                                <input type="text" class="form-control" id="name"/>
                                             </div>
                                         </form>
                                     </div>
-                                    <div className="col-sm-12 col-md-4">
+                                    <div class="col-sm-12 col-md-4">
                                         <form>
-                                            <div className="form-group">
+                                            <div class="form-group">
                                                 <label for="exampleInputEmail1">Bank account number</label>
-                                                <input type="text" className="form-control" id="name"/>
+                                                <input type="text" class="form-control" id="name"/>
                                             </div>
                                         </form>
                                     </div>
-                                    <div className="col-sm-12 col-md-4">
+                                    <div class="col-sm-12 col-md-4">
                                         <form>
-                                            <div className="form-group">
+                                            <div class="form-group">
                                                 <label for="exampleInputEmail1">Bank name</label>
-                                                <input type="text" className="form-control" id="name"/>
+                                                <input type="text" class="form-control" id="name"/>
                                             </div>
                                         </form>
                                     </div>
                                 </div>
-                                <div className="btnsave text-right">
-                                    <a href="#" className="btn save-btn text-right">Save</a>
+                                <div class="btnsave text-right">
+                                    <a href="#" class="btn save-btn text-right">Save</a>
                                 </div>
                             </div>
 
-                            <hr className="hr-dash"/>
+                            <hr class="hr-dash"/>
 
-                            <div className="row mt-2">
-                                <div className="col-md-6">
-                                    <div className="pwt">
-                                        <div className="pwt-title">
+                            <div class="row mt-2">
+                                <div class="col-md-6">
+                                    <div class="pwt">
+                                        <div class="pwt-title">
                                             <p>Payment waiting time</p>
                                         </div>
                                         <Dropdown>
@@ -156,12 +156,12 @@ export const Ad_payment_method = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className="row mt-4">
-                                <div className="col-md-6">
-                                    <a className="btn btn-ref font-weight-bold"><img src={refresh_icon} width="20" className="mr-2"/>Refresh</a>
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <a class="btn btn-ref font-weight-bold"><img src={refresh_icon} width="20" class="mr-2"/>Refresh</a>
                                 </div>
-                                <div className="col-md-6 d-flex justify-content-end">
-                                    <a href="/ad_contract" className="btn btn-primary font-weight-bold">next stage</a>
+                                <div class="col-md-6 d-flex justify-content-end">
+                                    <a href="/ad_contract" class="btn btn-primary font-weight-bold">next stage</a>
                                 </div>
                             </div>
                         </div>
