@@ -3,7 +3,7 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      profile: { updateByUserID },
+      profile: { updateByID },
     },
     helpers: {
       permissions: { isAdminOrError },
@@ -12,7 +12,7 @@ module.exports = (server) => {
 
   return {
     method: "PUT",
-    path: "/profile/:user_id",
+    path: "/profile/:id",
     config: {
       pre: [
         {
@@ -20,7 +20,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: updateByUserID,
+      handler: updateByID,
       auth: "jwt",
     },
   };

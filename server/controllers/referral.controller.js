@@ -15,7 +15,9 @@ function ReferralController(server) {
   return {
     async create(req) {
       const {
-        pre: { user: {user, sudo} },
+        pre: {
+          user: { user, sudo },
+        },
         payload: { referral_code },
       } = req;
 
@@ -43,14 +45,16 @@ function ReferralController(server) {
 
     async remove(req) {
       const {
-        pre: { user: {user, sudo} },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
 
       // only allow action if it admin
       if (!sudo) throw boom.forbidden();
 
       try {
-        const {data} = req.payload;
+        const { data } = req.payload;
 
         return await Referral.destroy({
           where: {
@@ -69,12 +73,12 @@ function ReferralController(server) {
       const {
         query,
         pre: {
-          user: { user, sudo, fake, fake_count },
+          user: { user, sudo, fake },
         },
       } = req;
 
       try {
-        let queryFilters = await filters({
+        const queryFilters = await filters({
             query,
             searchFields: ["email"],
             ...(!sudo && {
@@ -85,17 +89,17 @@ function ReferralController(server) {
           }),
           options = {
             ...queryFilters,
-          },
-          queryset;
+          };
+        const { limit, offset } = queryFilters;
 
         queryset = fake
-          ? await Referral.FAKE(fake_count)
+          ? await Referral.FAKE(limit)
           : await Referral.findAndCountAll(options);
 
         return await paginator({
           queryset,
-          limit: queryFilters.limit,
-          offset: queryFilters.offset,
+          limit,
+          offset,
         });
       } catch (error) {
         console.error(error);
@@ -103,12 +107,12 @@ function ReferralController(server) {
       }
     },
 
-    async findByUserID(req) {
+    async findByID(req) {
       const {
         query,
-        params: { user_id },
+        params: { id },
         pre: {
-          user: { user, fake, fake_count },
+          user: { user, fake },
         },
       } = req;
 
@@ -117,14 +121,15 @@ function ReferralController(server) {
             query,
             searchFields: ["email"],
             extras: {
-              user_id,
+              id,
+              ...(!sudo && { user_id: user?.id }),
             },
           }),
           options = {
             ...queryFilters,
           },
           queryset = fake
-            ? await Referral.FAKE(fake_count)
+            ? await Referral.FAKE()
             : await Referral.findAndCountAll(options);
 
         return await paginator({

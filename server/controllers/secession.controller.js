@@ -37,7 +37,7 @@ module.exports = function SecessionController(server) {
       const {
         query,
         pre: {
-          user: { user, sudo, fake, fake_count },
+          user: { user, sudo, fake },
         },
       } = req;
       try {
@@ -62,15 +62,16 @@ module.exports = function SecessionController(server) {
           ...queryFilters,
           include,
         };
+        const { limit, offset } = queryFilters;
 
         const result = fake
-          ? Secession.FAKE(fake_count)
+          ? Secession.FAKE(limit)
           : await Secession.findAndCountAll(options);
 
         return await paginator({
           queryset: result,
-          limit: queryFilters.limit,
-          offset: queryFilters.offset,
+          limit,
+          offset,
         });
       } catch (err) {
         console.error(err);

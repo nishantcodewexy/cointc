@@ -4,23 +4,20 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      kyc: { findAll, findByUserID },
+      security: { findByID },
     },
-    boom,
     helpers: {
       permissions: { isUser },
     },
   } = server.app;
 
-  const paramsSchema = Joi.object({
-    user_id: Joi.string().uuid().required(),
+  const schema = Joi.object({
+    id: Joi.string().uuid(),
   });
 
-  // .allow("email", "id", "phone", "payment_methods").optional()
-
   return {
-    method: "GET",
-    path: "/kyc/with/{user_id}",
+    method: ["GET"],
+    path: "/security/{id}",
     config: {
       pre: [
         {
@@ -28,9 +25,9 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: findByUserID,
+      handler: findByID,
       validate: {
-        params: paramsSchema,
+        params: schema,
       },
       auth: "jwt",
     },

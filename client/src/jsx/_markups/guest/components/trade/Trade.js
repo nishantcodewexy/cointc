@@ -272,7 +272,7 @@ export const Trade = ({ services, useService }) => {
                                 </dd>
                             </dl>
                             <dl class="method">
-                                <dt>Payment Method</dt>
+                                <dt>Payment method</dt>
                                 <dd>
                                     <select name="" id="">
                                         <option value="all_payment">All payments</option>

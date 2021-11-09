@@ -187,7 +187,7 @@ module.exports = function UserController(server) {
           fields,
           logging: console.log,
         }).then(([count]) => count);
-        
+
         return sudo
           ? {
               id,
@@ -214,7 +214,7 @@ module.exports = function UserController(server) {
         const {
           payload,
           pre: {
-            user: { user, fake, sudo, fake_count },
+            user: { user, sudo },
           },
         } = req;
         let fields = ["active"],
@@ -269,7 +269,7 @@ module.exports = function UserController(server) {
       const {
         payload: { data = [], force = false },
         pre: {
-          user: { user, fake, sudo, fake_count },
+          user: { user, sudo },
         },
       } = req;
       let result, where;
@@ -328,7 +328,7 @@ module.exports = function UserController(server) {
     // RETRIEVE------------------------------------------------------------
 
     /**
-     * @function bulkRetrieve - Fetched multiple User
+     * @function find - Fetched multiple User
      * @param {Object} req
      * @returns
      */
@@ -336,7 +336,7 @@ module.exports = function UserController(server) {
       const {
         query,
         pre: {
-          user: { user, fake, sudo, fake_count },
+          user: { user, fake, sudo },
         },
       } = req;
 
@@ -360,13 +360,12 @@ module.exports = function UserController(server) {
           // attributes: { exclude: ["password"] },
           include,
         };
+        const { limit, offset } = queryFilters;
 
         if (sudo) {
           let queryset = fake
-            ? await User.FAKE(fake_count)
+            ? await User.FAKE(limit)
             : await User.findAndCountAll(options);
-
-          const { limit, offset } = queryFilters;
 
           return paginator({
             queryset,
@@ -393,7 +392,7 @@ module.exports = function UserController(server) {
       const {
         params: { id },
         pre: {
-          user: { user, fake, sudo, fake_count },
+          user: { fake, sudo },
         },
       } = req;
       try {

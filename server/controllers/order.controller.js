@@ -33,9 +33,7 @@ function OrderController(server) {
       });
 
       if (!approvedKyc)
-        return boom.methodNotAllowed(
-          `Please complete KYC in order to proceed`
-        );
+        return boom.methodNotAllowed(`Please complete KYC in order to proceed`);
       const { advert_id } = payload;
       if (!advert_id) throw boom.badRequest("Missing advert_id in request");
 
@@ -118,25 +116,25 @@ function OrderController(server) {
       const {
         query,
         pre: {
-          user: { user, fake, fake_count },
+          user: { user, fake },
         },
       } = req;
 
       try {
         const queryFilters = await filters({
           query,
-          searchFields: ["appeal", "remark", "status"],
+          searchFields: ["user_id"],
         });
 
         const options = {
           ...queryFilters,
-          // include: [{ model: Advert }, User],
         };
+        const { limit, offset } = queryFilters;
 
         const queryset = fake
-          ? await Order.FAKE(fake_count)
+          ? await Order.FAKE(limit)
           : await Order.findAndCountAll(options);
-        const { limit, offset } = queryFilters;
+
         return await paginator({
           queryset,
           limit,
@@ -158,19 +156,19 @@ function OrderController(server) {
         params: { id },
         payload,
         pre: {
-          user: { user, sudo, fake, fake_count },
+          user: { user, sudo },
         },
       } = req;
 
       try {
-        let fields = ["status", "rating", "trx_id", "appeal", "remark"],
+        let fields = sudo
+            ? ["status"]
+            : ["status", "rating", "trx_id", "appeal", "remark"],
           result,
           where = {
             id,
             ...(!sudo && { user_id: user?.id }),
           };
-
-        const { status } = payload;
 
         result = await Order.update(payload, {
           where,
@@ -185,6 +183,20 @@ function OrderController(server) {
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);
+      }
+    },
+
+    async confirmOrder(req) {
+      const {
+        pre: {
+          user: { user, sudo },
+        },
+      } = req;
+
+      try {
+      } catch (error) {
+        console.error(error);
+        return boom.internal(error.message, error);
       }
     },
   };

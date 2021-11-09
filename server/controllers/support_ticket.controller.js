@@ -57,12 +57,12 @@ module.exports = function SupportTicketController(server) {
       const {
         query,
         pre: {
-          user: { user, sudo, fake, fake_count },
+          user: { user, sudo, fake },
         },
       } = req;
 
       try {
-        const filterResults = await filters({
+        const queryFilters = await filters({
           query,
           searchFields: ["description"],
           ...(!sudo && {
@@ -71,15 +71,19 @@ module.exports = function SupportTicketController(server) {
             },
           }),
         });
+        const options = {
+          ...queryFilters,
+        };
+        const { limit, offset } = queryFilters;
 
         const queryset = fake
-          ? SupportTicket.FAKE(fake_count)
-          : await SupportTicket.findAndCountAll(filterResults);
+          ? SupportTicket.FAKE(limit)
+          : await SupportTicket.findAndCountAll(options);
 
         return paginator({
           queryset,
-          limit: filterResults.limit,
-          offset: filterResults.offset,
+          limit,
+          offset,
         });
       } catch (error) {
         console.error(error);

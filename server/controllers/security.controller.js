@@ -18,7 +18,7 @@ const SecurityController = (server) => {
       const {
         query,
         pre: {
-          user: { user, fake, sudo, fake_count },
+          user: { user, fake, sudo },
         },
       } = req;
 
@@ -31,13 +31,12 @@ const SecurityController = (server) => {
         const options = {
           ...queryFilters,
         };
+        const { limit, offset } = queryFilters;
 
         if (sudo) {
           let queryset = fake
-            ? await Security.FAKE(fake_count)
+            ? await Security.FAKE(limit)
             : await Security.findAndCountAll(options);
-
-          const { limit, offset } = queryFilters;
 
           return paginator({
             queryset,
@@ -90,16 +89,16 @@ const SecurityController = (server) => {
       }
     },
     /**
-     * @function findByUserID
+     * @function findByID
      * @describe finds record with matching user ID
      * @param {Object} req
      */
-    async findByUserID(req) {
+    async findByID(req) {
       const {
         query,
-        params: { user_id },
+        params: { id },
         pre: {
-          user: { user, fake, sudo, fake_count },
+          user: { user, fake, sudo },
         },
       } = req;
 
@@ -108,7 +107,8 @@ const SecurityController = (server) => {
           query,
           searchFields: ["email"],
           extras: {
-            user_id: user_id,
+            id,
+            ...(!sudo && { user_id: user?.id }),
           },
         });
         const options = {
@@ -185,29 +185,24 @@ const SecurityController = (server) => {
     },
 
     /**
-     * @function updateByUserID
+     * @function updateByID
      * @describe update record using the user ID
      * @param {Object} req
      */
-    async updateByUserID(req) {
+    async updateByID(req) {
       try {
         const {
           payload,
-          params: { user_id },
+          params: { id },
           pre: {
-            user: { user, fake, sudo, fake_count },
+            user: { user, fake, sudo },
           },
         } = req;
-        let fields = ["two_factor"],
-          result;
+        let fields = sudo ? ["two_factor"] : [];
 
-        if (!sudo)
-          return boom.methodNotAllowed(
-            `Only admins can perform this operation`
-          );
         // update session user data
-        result = await Security?.update(payload, {
-          where: { user_id },
+        let result = await Security?.update(payload, {
+          where: { id, ...(!sudo && { user_id: user?.id }) },
           fields,
         });
 
@@ -285,35 +280,9 @@ const SecurityController = (server) => {
       } = req;
       // only superadmins are allowed to permanently delete a user
       force = user?.isSuperAdmin ? force : false;
-      let where = { id };
+      let where = { id, ...(!sudo && { user_id: user?.id }) };
       let result = await __destroy("Security", where, force);
       return { status: Boolean(result), result };
-    },
-
-    /**
-     * @function removeByUserID
-     * @describe find record by user ID and remove if found
-     * @param {Object} req
-     */
-    async removeByUserID(req) {
-      let {
-        payload: { force = false },
-        params: { user_id },
-        pre: {
-          user: { user, sudo },
-        },
-      } = req;
-
-      try {
-        // only superadmins are allowed to permanently delete a user
-        force = user?.isSuperAdmin ? force : false;
-        let where = { user_id };
-        let result = await __destroy("Security", where, force);
-        return { status: Boolean(result), result };
-      } catch (err) {
-        console.error(err);
-        return boom.internal(err.message, err);
-      }
     },
   };
 };

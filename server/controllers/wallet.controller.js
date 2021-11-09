@@ -33,7 +33,7 @@ module.exports = function WalletController(server) {
     // RETRIEVE ----------------------------------------
     find: async (req) => {
       let {
-        pre: { user : {user, sudo, fake, fake_count}},
+        pre: { user : {user, sudo, fake}},
         query,
       } = req;
 
@@ -49,8 +49,8 @@ module.exports = function WalletController(server) {
           ...queryFilters,
         };
 
-        let queryset = fake ? Wallet.FAKE(fake_count) : await Wallet.findAndCountAll(options);
         const { limit, offset } = queryFilters;
+        let queryset = fake ? Wallet.FAKE(limit) : await Wallet.findAndCountAll(options);
 
         return paginator({
           queryset,

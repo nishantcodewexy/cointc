@@ -26,14 +26,18 @@ const BankDetailController = (server) => {
       try {
         const queryOptions = {
           where: {
+            id,
             ...(sudo && { user_id: user.id }),
-            attributes: { exclude: ["user_id", "UserId"] },
           },
+          attributes: { exclude: ["user_id", "UserId"] },
         };
         let result = fake
           ? await BankDetail.FAKE()
-          : await BankDetail.findByPk(id, queryOptions);
-        return result ? { result } : boom.notFound("Record not found");
+          : await BankDetail.findOne(queryOptions);
+
+        return result
+          ? { result }
+          : boom.notFound(`Address ID: ${id} not found!`);
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -44,7 +48,7 @@ const BankDetailController = (server) => {
       const {
         query,
         pre: {
-          user: { user, fake, fake_count, sudo },
+          user: { user, fake, sudo },
         },
       } = req;
 
@@ -59,10 +63,11 @@ const BankDetailController = (server) => {
           ...queryFilters,
         };
 
-        const queryset = fake
-          ? await BankDetail.FAKE(fake_count)
-          : await BankDetail.findAndCountAll(queryOptions);
         const { limit, offset } = queryFilters;
+
+        const queryset = fake
+          ? await BankDetail.FAKE(limit)
+          : await BankDetail.findAndCountAll(queryOptions);
 
         return paginator({
           queryset,
@@ -76,22 +81,25 @@ const BankDetailController = (server) => {
     },
 
     // UPDATE ---------------------------------------------------
-
+    /**
+     * @function updateByID
+     * @describe Update single record by ID
+     * @param {Object} req
+     * @returns
+     */
     async updateByID(req) {
       const {
         payload,
         params: { id },
         pre: {
-          user: { user },
+          user: { user, sudo },
         },
       } = req;
 
       try {
         const queryOptions = {
           where: {
-            ...(user?.isAdmin || user?.isSuperAdmin
-              ? {}
-              : { user_id: user.id }),
+            ...(!sudo && { user_id: user.id }),
             id,
           },
           validate: true,
@@ -101,7 +109,6 @@ const BankDetailController = (server) => {
         return {
           result: await BankDetail.update(payload, queryOptions)
             .then(([count, [updated]]) => ({
-              updated,
               id,
               status: Boolean(count),
             }))
@@ -160,9 +167,7 @@ const BankDetailController = (server) => {
         const queryOptions = {
           where: {
             id,
-            ...(user?.isAdmin || user?.isSuperAdmin
-              ? {}
-              : { user_id: user.id }),
+            user_id: user.id,
           },
           force,
         };
@@ -185,27 +190,26 @@ const BankDetailController = (server) => {
 
     async remove(req) {
       const {
-        payload: { data = [], force = false },
+        payload: { ids = [], force = false },
         pre: {
-          user: { user },
+          user: { user},
         },
       } = req;
-      let total = 0;
 
       try {
         let result = await sequelize.transaction(async (t) =>
           Promise.all(
-            data?.map(async (id) => {
+            ids?.map(async (id) => {
               let queryOptions = {
                 where: {
                   id,
-                  ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+                  user_id: user.id,
                 },
                 transaction: t,
                 force,
               };
               return await BankDetail.destroy(queryOptions).then((count) => ({
-                status: ((total += count), Boolean(count)),
+                status: Boolean(count),
                 id,
               }));
             })
@@ -215,7 +219,6 @@ const BankDetailController = (server) => {
         );
 
         return {
-          total,
           result,
         };
       } catch (error) {
@@ -239,7 +242,7 @@ const BankDetailController = (server) => {
           result: await BankDetail.restore({
             where: {
               id,
-              ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+              user_id: user.id,
             },
           })
             .then((count) => ({
@@ -277,7 +280,7 @@ const BankDetailController = (server) => {
                   await BankDetail.restore({
                     where: {
                       id,
-                      ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+                      user_id: user.id,
                     },
                   }).then((count) => ({
                     id,
