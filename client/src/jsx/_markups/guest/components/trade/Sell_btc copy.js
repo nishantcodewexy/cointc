@@ -36,19 +36,19 @@ function Confirm_release() {
             <Modal.Title></Modal.Title>
           </Modal.Header>
           <Modal.Body>
-          <div class="con-icon text-center">
+          <div className="con-icon text-center">
                 <img src={term_error_icon} width="75"/>
                 <h2>Confirm release</h2>
             </div>
-            <div class="con-content pt-3">
+            <div className="con-content pt-3">
                 <p>
                     ATTENTION! Please be sure to LOG IN THE RECEVING (e.g.Banks/eWallet)ACCOUNT to confirm that the money has arrived in the"Available Balance"
                 </p>
             </div>
 
-            <div class="form-check pt-3">
-                <input type="checkbox" class="form-check-input" id="exampleCheck1"/>
-                <label class="form-check-label" for="exampleCheck1">
+            <div className="form-check pt-3">
+                <input type="checkbox" className="form-check-input" id="exampleCheck1"/>
+                <label className="form-check-label" for="exampleCheck1">
                     I confirm that the payment is successfully received with correct amount and sender information.
                 </label>
             </div>
@@ -81,41 +81,41 @@ function Dispute_report() {
         <Modal show={show} onHide={handleClose}>
             <Modal.Header className="bg-primary col-md-12 modal-header text-white" >
                 {/* <Modal.Title > */}
-                <div class="col-md-2"></div>
-                <div class="col-md-6 modal-header-content text-center">
+                <div className="col-md-2"></div>
+                <div className="col-md-6 modal-header-content text-center">
                     <img src={term_logo_01_icon}/>
-                    <h4 class="modal-title">Modal Heading</h4>
+                    <h4 className="modal-title">Modal Heading</h4>
                 </div>
-                <div class="col-md-2">
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <div className="col-md-2">
+                    <button type="button" className="close" data-dismiss="modal">&times;</button>
                 </div>
                 {/* </Modal.Title> */}
             </Modal.Header>
             <Modal.Body className="mb-5 border-b1">
-            <div class="main-crunch-content d-flex">
-                <div class="user-icon d-flex align-items-center">
+            <div className="main-crunch-content d-flex">
+                <div className="user-icon d-flex align-items-center">
                     <img src={term_user_icon} width="60"/>
-                    <div class="body-header ml-2">
-                        <h5 class="mb-0">HelpCrunch Team</h5>
+                    <div className="body-header ml-2">
+                        <h5 className="mb-0">HelpCrunch Team</h5>
                         <p>Hey there If you have any questions, I’m here to help.</p>
                     </div>
                 </div>
-                <div class="last-seen">
+                <div className="last-seen">
                     <p>14m</p>
                 </div>
             </div>
             </Modal.Body>
-            <div class="modal-edit-body text-center pt-5">
+            <div className="modal-edit-body text-center pt-5">
                 <img src={term_edit_icon} width="50"/>
-                <div class="d-flex justify-content-center mt-2">
+                <div className="d-flex justify-content-center mt-2">
                     <img src={term_help_icon}/>
                     <h4>HELPCRUNCH</h4>
                 </div>
             </div>
-            <Modal.Footer class="bn-footer">
-                <div class="ask-faq-bn d-flex justify-content-around">
-                    <a class="text-black font-weight-bold" href="#"><img src={term_ask_icon} width="25"/>ASK</a>
-                    <a class="text-secondary font-weight-bold" href="#"><img src={term_search_icon} width="25"/>SEARCH</a>
+            <Modal.Footer className="bn-footer">
+                <div className="ask-faq-bn d-flex justify-content-around">
+                    <a className="text-black font-weight-bold" href="#"><img src={term_ask_icon} width="25"/>ASK</a>
+                    <a className="text-secondary font-weight-bold" href="#"><img src={term_search_icon} width="25"/>SEARCH</a>
                 </div>
             </Modal.Footer>
         </Modal>
@@ -137,18 +137,18 @@ function Send_modal() {
         
         <Modal show={show} onHide={handleClose}>
             <Modal.Header closeButton>
-                <div class="sy-header-title">
+                <div className="sy-header-title">
                     <Modal.Title>Security verification</Modal.Title>
                     <p>To secure your account. please complete the following verification.</p>
                 </div>
             </Modal.Header>
             <Modal.Body>
-            <div class="form-group">
+            <div className="form-group">
                 <label for="exampleInputEmail1">Phone verification code</label>
-                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Verification code sent"/>
-                <small id="emailHelp" class="form-text text-muted">Enter the 6 digit code sent to 10232***3453</small>
+                <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Verification code sent"/>
+                <small id="emailHelp" className="form-text text-muted">Enter the 6 digit code sent to 10232***3453</small>
             </div>
-            <button type="button" class="btn btn-primary w-100">SUBMIT</button>
+            <button type="button" className="btn btn-primary w-100">SUBMIT</button>
             </Modal.Body>
             
         </Modal>
@@ -165,54 +165,54 @@ function Attachments_modal() {
     return (
       <>
         <Nav.Link variant="primary" className="mt-2 mr-1" onClick={handleShow}>
-        <i class="fas fa fa-paperclip pr-2"></i> Attachmentss
+        <i className="fas fa fa-paperclip pr-2"></i> Attachmentss
         </Nav.Link>
         
         <Modal show={show} onHide={handleClose}>
           
             <Modal.Body>
-            <div class="att-title">
+            <div className="att-title">
                 <h2>Upload</h2>
             </div>
-            <div class="drop-file-content py-4 px-3 d-flex justify-content-center align-items-center">
-                <div class="upload-icon">
+            <div className="drop-file-content py-4 px-3 d-flex justify-content-center align-items-center">
+                <div className="upload-icon">
                     <img src={term_upload_icon} width="60"/>
                 </div>
-                <div class="upload-icon-content pl-3">
-                    <p class="mb-0">Drop files to attach, or <span class="text-primary">Browse</span></p>
-                    <p class="mb-0">(Individual file upload size limit 1MB)</p>
+                <div className="upload-icon-content pl-3">
+                    <p className="mb-0">Drop files to attach, or <span className="text-primary">Browse</span></p>
+                    <p className="mb-0">(Individual file upload size limit 1MB)</p>
                 </div>
             </div>
             </Modal.Body>
-            <div class="main-upload-doc px-3">
-                <div class="upload-doc mt-2">
-                    <div class="uplod-doc-icon px-3 py-2 d-flex align-items-center">
+            <div className="main-upload-doc px-3">
+                <div className="upload-doc mt-2">
+                    <div className="uplod-doc-icon px-3 py-2 d-flex align-items-center">
                         <img src={term_doc_icon} width="50"/>
-                        <div class="pgl-content w-100">
-                            <div class="pgl-title">
-                                <p class="mb-0">File name goes here.pdf</p>
+                        <div className="pgl-content w-100">
+                            <div className="pgl-title">
+                                <p className="mb-0">File name goes here.pdf</p>
                                 <ProgressBar now={50} variant="info"/>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="upload-doc mt-2">
-                    <div class="uplod-doc-icon px-3 py-2 d-flex align-items-center">
+                <div className="upload-doc mt-2">
+                    <div className="uplod-doc-icon px-3 py-2 d-flex align-items-center">
                         <img src={term_doc_icon} width="50"/>
-                        <div class="pgl-content w-100">
-                            <div class="pgl-title">
-                                <p class="mb-0">File name goes here.pdf</p>
+                        <div className="pgl-content w-100">
+                            <div className="pgl-title">
+                                <p className="mb-0">File name goes here.pdf</p>
                                 <ProgressBar now={50} variant="info"/>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="upload-doc mt-2">
-                    <div class="uplod-doc-icon px-3 py-2 d-flex align-items-center">
+                <div className="upload-doc mt-2">
+                    <div className="uplod-doc-icon px-3 py-2 d-flex align-items-center">
                         <img src={term_doc_icon} width="50"/>
-                        <div class="pgl-content w-100">
-                            <div class="pgl-title">
-                                <p class="mb-0">File name goes here.pdf</p>
+                        <div className="pgl-content w-100">
+                            <div className="pgl-title">
+                                <p className="mb-0">File name goes here.pdf</p>
                                 <ProgressBar now={50} variant="info"/>
                             </div>
                         </div>
@@ -238,18 +238,18 @@ export const Sell_btc = () => {
     return (     
         <div className="Sell_btc"> 
             <section>
-                <div class="container-fluid">
-                    <div class="container">
-                        <div class="row justify-content-center">
-                            <div class="col-md-10 d-block d-md-flex justify-content-around">
-                                <div class="col col-xs-12 col-sm-12 col-md-7 sell-pm mt-3 py-4 px-3">
-                                    <div class="d-flex justify-content-between align-items-center">
-                                        <div class="sell-pm-title">
+                <div className="container-fluid">
+                    <div className="container">
+                        <div className="row justify-content-center">
+                            <div className="col-md-10 d-block d-md-flex justify-content-around">
+                                <div className="col col-xs-12 col-sm-12 col-md-7 sell-pm mt-3 py-4 px-3">
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <div className="sell-pm-title">
                                         <h3>SELL BTC</h3>
                                     </div>
-                                    <div class="order-details">
-                                        <table class="d-flex">
-                                            <thead class="pr-2">
+                                    <div className="order-details">
+                                        <table className="d-flex">
+                                            <thead className="pr-2">
                                                 <tr>
                                                     <th>Order Number</th>
                                                 </tr>
@@ -283,7 +283,7 @@ export const Sell_btc = () => {
 
                                 <hr/>
 
-                                <table class="table sell-table">
+                                <table className="table sell-table">
                                     <thead>
                                         <tr>
                                             <th>Total</th>
@@ -300,24 +300,24 @@ export const Sell_btc = () => {
                                     </tbody>
                                 </table>
 
-                                <div class="pmb-element py-4 px-3">
-                                    <div class="pmb-title">
+                                <div className="pmb-element py-4 px-3">
+                                    <div className="pmb-title">
                                         <h3>Payment method</h3>
                                     </div>
-                                    <div class="pmb-content d-flex">
-                                        <div class="pmb-content-title">
-                                            <h5><i class="fas fa-university pr-2"></i>Bank Transfer</h5>
+                                    <div className="pmb-content d-flex">
+                                        <div className="pmb-content-title">
+                                            <h5><i className="fas fa-university pr-2"></i>Bank Transfer</h5>
                                         </div>
-                                        <div class="pmb-content-element ml-4">
-                                            <div class="pmt-details">
+                                        <div className="pmb-content-element ml-4">
+                                            <div className="pmt-details">
                                                 <p>Name</p>
                                                 <p>john son</p>
                                             </div>
-                                            <div class="pmt-details">
+                                            <div className="pmt-details">
                                                 <p>Bank account number</p>
                                                 <p>13235523296</p>
                                             </div>
-                                            <div class="pmt-details">
+                                            <div className="pmt-details">
                                                 <p>Bank Name</p>
                                                 <p>Shin hanns</p>
                                             </div>
@@ -325,19 +325,19 @@ export const Sell_btc = () => {
                                     </div>
                                 </div>
 
-                                <div class="tot-element py-4 px-3 mt-2">
-                                    <div class="tot-title">
+                                <div className="tot-element py-4 px-3 mt-2">
+                                    <div className="tot-title">
                                         <h3>Terms of trade</h3>
                                     </div>
                                 </div>
 
-                                <div class="unpaid-time-title mt-2">
+                                <div className="unpaid-time-title mt-2">
                                     <h5>Unpaid 89 mins 48 secs</h5>
                                     <p>The BTC will be held in the escrow for 90 mins. And it will be return to the seller if this trade is not paid in time</p>
                                 </div>
 
                                 
-                                <div class="pmb-bn mt-2">
+                                <div className="pmb-bn mt-2">
                                     <Confirm_release>
                                     </Confirm_release>
 
@@ -345,7 +345,7 @@ export const Sell_btc = () => {
                                     </Dispute_report>
                                 </div>
 
-                                <div class="pmb-tip mt-4">
+                                <div className="pmb-tip mt-4">
                                     <p>Tips</p>
                                     <p>
                                         1. Please make sure to log in to your account to confirm the payment is received, 	this can avoid financial losses caused by wrongly clicking on the release button.
@@ -361,13 +361,13 @@ export const Sell_btc = () => {
                                     </p>
                                 </div>
                                 </div>
-                                <div class="col col-xs-12 col-sm-12 col-md-4 sell-pm mt-3 p-0">
-                                    <div class="bi-title">
-                                        <h3 class="pl-3 mt-3 text-primary">Bi7752 </h3>
+                                <div className="col col-xs-12 col-sm-12 col-md-4 sell-pm mt-3 p-0">
+                                    <div className="bi-title">
+                                        <h3 className="pl-3 mt-3 text-primary">Bi7752 </h3>
                                     </div>
                                     <hr/>
 
-                                    <div class="bi-content px-3 py-4">
+                                    <div className="bi-content px-3 py-4">
                                         <p>
                                             Warning: Advertisers please beware of scammers who buy crypto from you and then report it to the bank later. Make sure you got your Ad's terms and conditions adequately provided. Advertisers please consider additional verification when necessary. Do NOT listen to any person who tells you to buy crypto and transfer to them later. Beware of voice phising scams. Sellers please note that you should only release crypto when you receive enough money in your account.
                                         </p>
@@ -379,22 +379,22 @@ export const Sell_btc = () => {
                                         </p>
                                     </div>
 
-                                    <div class="massage-input justify-content-center d-flex">
-                                        <input class="px-2 py-1" type="text" name="message" placeholder="Write Message......"/>
+                                    <div className="massage-input justify-content-center d-flex">
+                                        <input className="px-2 py-1" type="text" name="message" placeholder="Write Message......"/>
                                     </div>
 
-                                    <div class="btn-footer px-3 py-4">
-                                        <div class="attach-faq">
-                                            <ul class="navbar-nav">
-                                                <li class="nav-item">
+                                    <div className="btn-footer px-3 py-4">
+                                        <div className="attach-faq">
+                                            <ul className="navbar-nav">
+                                                <li className="nav-item">
                                                 <Attachments_modal>
                                                 </Attachments_modal>
                                                     
-                                                    <a class="nav-link" href="#"><i class="far fa-comment-dots pr-2"></i>Frequently used phrases</a>
+                                                    <a className="nav-link" href="#"><i className="far fa-comment-dots pr-2"></i>Frequently used phrases</a>
                                                 </li>
                                             </ul>
                                         </div>
-                                        <div class="send-bn">
+                                        <div className="send-bn">
                                             <Send_modal>
                                             </Send_modal>
                                         </div>

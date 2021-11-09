@@ -22,31 +22,31 @@ function Add_payment_method() {
             
             <Modal show={show} onHide={handleClose}>
             <Modal.Body>
-                <div class="row">
-                    <div class="col-12">
-                        <div class="all-payment-header d-flex justify-content-between pt-4">
-                            <div class="all-payment-header-left">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="all-payment-header d-flex justify-content-between pt-4">
+                            <div className="all-payment-header-left">
                                 <h3>All Payment Methods</h3>
                             </div>
-                            <div class="all-payment-header-right">
-                                <div class="input-group mb-3">
-                                    <div class="input-group-prepend">
-                                        <span class="input-group-text border-top-0 border-right-0 border-left-0  bg-transparent"><i class="fa fa-search" aria-hidden="true"></i></span>
+                            <div className="all-payment-header-right">
+                                <div className="input-group mb-3">
+                                    <div className="input-group-prepend">
+                                        <span className="input-group-text border-top-0 border-right-0 border-left-0  bg-transparent"><i className="fa fa-search" aria-hidden="true"></i></span>
                                     </div>
-                                    <input type="text" class="form-control border-top-0 border-right-0 border-left-0" placeholder="Search"/>
+                                    <input type="text" className="form-control border-top-0 border-right-0 border-left-0" placeholder="Search"/>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="all-payment-nav pb-4">
-                            <div class="all-payment-nav-btn d-flex align-items-center">
-                                <button class="btn btn-primary">ALL</button>
-                                <p class="mb-0 pl-3">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>
+                        <div className="all-payment-nav pb-4">
+                            <div className="all-payment-nav-btn d-flex align-items-center">
+                                <button className="btn btn-primary">ALL</button>
+                                <p className="mb-0 pl-3">A B C D E F G H I J K L M N O P Q R S T U V W X Y Z</p>
                             </div>
                         </div>
 
-                        <div class="all-payment-body mt-4">
-                            <table class="w-75">
+                        <div className="all-payment-body mt-4">
+                            <table className="w-75">
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -55,24 +55,24 @@ function Add_payment_method() {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="position-relative orange"><h5>7-Eleven</h5></td>
-                                        <td class="position-relative light-green"><h5>A-Bank</h5></td>
+                                        <td className="position-relative orange"><h5>7-Eleven</h5></td>
+                                        <td className="position-relative light-green"><h5>A-Bank</h5></td>
                                     </tr>
                                     <tr>
-                                        <td class="position-relative dark-green"><h5>ABA Bank</h5></td>
-                                        <td class="position-relative dark-green"><h5>ABN AMRO</h5></td>
+                                        <td className="position-relative dark-green"><h5>ABA Bank</h5></td>
+                                        <td className="position-relative dark-green"><h5>ABN AMRO</h5></td>
                                     </tr>
                                     <tr>
-                                        <td class="position-relative red"><h5>Absolut Bank</h5></td>
-                                        <td class="position-relative green"><h5>Advcash</h5></td>
+                                        <td className="position-relative red"><h5>Absolut Bank</h5></td>
+                                        <td className="position-relative green"><h5>Advcash</h5></td>
                                     </tr>
                                     <tr>
-                                        <td class="position-relative green"><h5>Agrebank</h5></td>
-                                        <td class="position-relative blue"><h5>AirTM</h5></td>
+                                        <td className="position-relative green"><h5>Agrebank</h5></td>
+                                        <td className="position-relative blue"><h5>AirTM</h5></td>
                                     </tr>
                                     <tr>
-                                        <td class="position-relative green"><h5>Ak Bars Bank</h5></td>
-                                        <td class="position-relative red"><h5>Alfa-bank</h5></td>
+                                        <td className="position-relative green"><h5>Ak Bars Bank</h5></td>
+                                        <td className="position-relative red"><h5>Alfa-bank</h5></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -86,19 +86,19 @@ function Add_payment_method() {
 }
 export const Mypage = () => {
     return (
-        <div class="content">
+        <div className="content">
         <section id="profile">
-            <div class="container">
-                <div class="row wow fadeInDown" data-wow-delay="0.2s">
-                    <div class="col-12">
+            <div className="container">
+                <div className="row wow animate__animated fadeInDown" data-wow-delay="0.2s">
+                    <div className="col-12">
                         <h4>My profile</h4>
-                        <div class="user_info clear">
-                            <div class="nickname"><span>B</span>BLOCKDAON<i class="fas fa-check-circle"></i><a href="#" class="btn_edit"><i class="fas fa-edit"></i>Edit</a></div>
-                            <div class="user_id">User ID: <span>22798832</span></div>
+                        <div className="user_info clear">
+                            <div className="nickname"><span>B</span>BLOCKDAON<i className="fas fa-check-circle"></i><a href="#" className="btn_edit"><i className="fas fa-edit"></i>Edit</a></div>
+                            <div className="user_id">User ID: <span>22798832</span></div>
                         </div>
                         <p>Last login time : <span>2021-08-13 16:36:14</span></p>
                         <p>IP : <span>210.183.98.102</span></p>
-                        <div class="bottom clear">
+                        <div className="bottom clear">
                             <dl>
                                 <dt>Total orders</dt>
                                 <dd>35</dd>
@@ -109,7 +109,7 @@ export const Mypage = () => {
                             </dl>
                             <dl>
                                 <dt>Trade Review(Positive/Negative)</dt>
-                                <dd><span class="positive">5</span>/<span class="negative">4</span></dd>
+                                <dd><span className="positive">5</span>/<span className="negative">4</span></dd>
                             </dl>
                         </div>
                     </div>
@@ -118,11 +118,11 @@ export const Mypage = () => {
         </section>
         
         <section id="settings">
-            <div class="container">
-                <div class="row wow fadeInDown" data-wow-delay="0.4s">
-                    <div class="col-12">
+            <div className="container">
+                <div className="row wow animate__animated fadeInDown" data-wow-delay="0.4s">
+                    <div className="col-12">
                         <h4>Authentication Settings</h4>
-                        <div class="table_container">
+                        <div className="table_container">
                             <table>
                                 <thead>
                                     <tr>
@@ -178,56 +178,56 @@ export const Mypage = () => {
         </section>
         
         <section id="securityTop">
-            <div class="container">
-                <div class="row wow fadeInDown" data-wow-delay="0.6s">
-                    <div class="col-12">
+            <div className="container">
+                <div className="row wow animate__animated fadeInDown" data-wow-delay="0.6s">
+                    <div className="col-12">
                         <h4>Security</h4>
                         <ul>
-                            <li class="password clear">
+                            <li className="password clear">
                                 <img src={icon_password} alt="Login Password" />
                                 <dl>
                                     <dt>Login Password</dt>
                                     <dd>Login password is used to log in to your account.</dd>
                                 </dl>
-                                <a href="#" class="btn btn_change">Change</a>
+                                <a href="#" className="btn btn_change">Change</a>
                             </li>
-                            <li class="recommended clear">
+                            <li className="recommended clear">
                                 <img src={icon_recommended} alt="Google Authenticator (Recommended)" />
                                 <dl>
                                     <dt>Google Authenticator (Recommended)</dt>
                                     <dd>Protect your account and transactions.</dd>
                                     <dd><a href="#">Having trouble?</a></dd>
                                 </dl>
-                                <a href="#" class="btn_unset"><i class="fad fa-plus-circle"></i>Unset</a>
-                                <a href="#" class="btn btn_enable">Enable</a>
+                                <a href="#" className="btn_unset"><i className="fad fa-plus-circle"></i>Unset</a>
+                                <a href="#" className="btn btn_enable">Enable</a>
                             </li>
-                            <li class="phone clear">
+                            <li className="phone clear">
                                 <img src={icon_phone} alt="Phone Number Verification" />
                                 <dl>
                                     <dt>Phone Number Verification</dt>
                                     <dd>Protect your account and transactions.</dd>
                                 </dl>
-                                <p><i class="fas fa-check-circle"></i>010****1234</p>
-                                <a href="#" class="btn btn_change">Change</a>
-                                <a href="#" class="btn btn_remove">Remove</a>
+                                <p><i className="fas fa-check-circle"></i>010****1234</p>
+                                <a href="#" className="btn btn_change">Change</a>
+                                <a href="#" className="btn btn_remove">Remove</a>
                             </li>
-                            <li class="email clear">
+                            <li className="email clear">
                                 <img src={icon_email} alt="Email Address Verification" />
                                 <dl>
                                     <dt>Email Address Verification</dt>
                                     <dd>Protect your account and transactions.</dd>
                                 </dl>
-                                <p><i class="fas fa-check-circle"></i>abc**@naver.com</p>
-                                <a href="#" class="btn btn_change">Change</a>
-                                <a href="#" class="btn btn_remove">Remove</a>
+                                <p><i className="fas fa-check-circle"></i>abc**@naver.com</p>
+                                <a href="#" className="btn btn_change">Change</a>
+                                <a href="#" className="btn btn_remove">Remove</a>
                             </li>
-                            <li class="verification clear">
+                            <li className="verification clear">
                                 <img src={icon_verification} alt="Identity Verification" />
                                 <dl>
                                     <dt>Identity Verification</dt>
                                     <dd>Identity Verification can protect your account security and increase transaction limits.</dd>
                                 </dl>
-                                <a href="#" class="btn btn_enable">Enable</a>
+                                <a href="#" className="btn btn_enable">Enable</a>
                             </li>
                         </ul>
                     </div>
@@ -236,24 +236,24 @@ export const Mypage = () => {
         </section>
         
         <section id="securityBottom">
-            <div class="container">
-                <div class="row wow fadeInDown" data-wow-delay="0.8s">
-                    <div class="col-12">
+            <div className="container">
+                <div className="row wow animate__animated fadeInDown" data-wow-delay="0.8s">
+                    <div className="col-12">
                         <h4>Security</h4>
-                        <div class="p2p"><span>P2P</span></div>
+                        <div className="p2p"><span>P2P</span></div>
                         <p>P2P payment methods: When you sell cryptocurrencies, the payment method added will be displayed to buyer as options to accept payment, please ensure that the account owner’s name is consistent with your verified name on Binance. You can add up to 20 pay ment methods</p>
                         
                         <Add_payment_method>
                         </Add_payment_method>
-                        <div class="wechat">
-                            <div class="top clear">
+                        <div className="wechat">
+                            <div className="top clear">
                                 <h5>Wechat</h5>
-                                <ul class="clear">
+                                <ul className="clear">
                                     <li><a href="#">Edit</a></li>
                                     <li><a href="#">Delete</a></li>
                                 </ul>
                             </div>
-                            <div class="bottom clear">
+                            <div className="bottom clear">
                                 <dl>
                                     <dt>Name</dt>
                                     <dd>Name</dd>
@@ -264,15 +264,15 @@ export const Mypage = () => {
                                 </dl>
                             </div>
                         </div>
-                        <div class="bank">
-                            <div class="top clear">
+                        <div className="bank">
+                            <div className="top clear">
                                 <h5>Bank Transfer</h5>
-                                <ul class="clear">
+                                <ul className="clear">
                                     <li><a href="#">Edit</a></li>
                                     <li><a href="#">Delete</a></li>
                                 </ul>
                             </div>
-                            <div class="bottom clear">
+                            <div className="bottom clear">
                                 <dl>
                                     <dt>Name</dt>
                                     <dd>Name</dd>
