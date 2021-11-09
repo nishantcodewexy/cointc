@@ -64,7 +64,7 @@ function useService(config = {}, toast) {
    * @param {Object} request.payload - Request payload
    * @returns
    */
-  async function dispatchRequest(request) {
+  async function dispatchRequest(request, save = false) {
     try {
       const {
         type,
@@ -109,7 +109,7 @@ function useService(config = {}, toast) {
           reload &&
             _fromStack[SERVICE?.BULK_RETRIEVE] &&
             dispatchRequest(_fromStack[SERVICE?.BULK_RETRIEVE]);
-          return handleResponse({ response, save: false, toast });
+          return handleResponse({ response, save, toast });
         }
       }
     } catch (error) {
