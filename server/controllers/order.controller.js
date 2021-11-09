@@ -93,12 +93,14 @@ function OrderController(server) {
      */
     async findByID(req) {
       const {
+        query,
         params: { id },
-        pre: {
+        /* pre: {
           user: { user, fake },
-        },
+        }, */
       } = req;
       try {
+        const { fake } = query;
         let result = fake ? await Order.FAKE() : await Order.findByPk(id);
         return { result };
       } catch (error) {
@@ -113,14 +115,10 @@ function OrderController(server) {
      * @returns
      */
     async find(req) {
-      const {
-        query,
-        pre: {
-          user: { user, fake },
-        },
-      } = req;
+      const { query } = req;
 
       try {
+        const { fake } = query;
         const queryFilters = await filters({
           query,
           searchFields: ["user_id"],

@@ -249,18 +249,18 @@ function CurrencyController(server) {
     async findByID(req) {
       const {
         query,
-        pre: {
+       /*  pre: {
           user: { user, fake },
-        },
+        }, */
         params: { id },
       } = req;
 
       try {
+        const { fake } = query;
         // let where = id ? { id } : null;
         //TODO: Only admins are allowed to see who created the currency
         const queryOptions = {
           where: {
-            user_id: user.id,
             id,
           },
         };
@@ -287,9 +287,9 @@ function CurrencyController(server) {
     async find(req) {
       const {
         query,
-        pre: {
+        /* pre: {
           user: { user, sudo, fake },
-        },
+        }, */
       } = req;
 
       try {
@@ -297,10 +297,11 @@ function CurrencyController(server) {
           query,
           searchFields: ["name", "iso_code", "type"],
         });
+        const { fake } = query;
 
         const queryOptions = {
           ...queryFilters,
-          ...(!sudo && { attributes: { exclude: ["user_id"] } }),
+          // ...(!sudo && { attributes: { exclude: ["user_id"] } }),
           // attributes: [
           //   "id",
           //   "name",

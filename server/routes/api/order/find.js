@@ -5,21 +5,21 @@ module.exports = (server) => {
     controllers: {
       order: { find },
     },
-    helpers: {
+    /*  helpers: {
       permissions: { isUser },
-    },
+    }, */
   } = server.app;
 
   return {
     method: "GET",
     path: "/order",
     config: {
-      pre: [
+      /* pre: [
         {
           method: isUser,
           assign: "user",
         },
-      ],
+      ], */
       handler: find,
       // auth: "jwt",
     },
