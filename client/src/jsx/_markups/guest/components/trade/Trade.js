@@ -38,14 +38,6 @@ function BankTooltip() {
 
 
 
-
-function renderTableData(data) {
-    return <>
-    
-    </>
-
-}
-
 const TradeModel = function (props) {
     const button_text = props.button_text;
     const button_class = props.button_class;
@@ -266,7 +258,7 @@ export const Trade = ({ services, useService }) => {
                     <div class="row">
                         <div class="col-12">
                             <dl class="money">
-                                <dt>화폐</dt>
+                                <dt>Money</dt>
                                 <dd>
                                     <select name="" id="">
                                         <option value="CNY">CNY</option>
@@ -280,7 +272,7 @@ export const Trade = ({ services, useService }) => {
                                 </dd>
                             </dl>
                             <dl class="method">
-                                <dt>결제 방법</dt>
+                                <dt>Payment Method</dt>
                                 <dd>
                                     <select name="" id="">
                                         <option value="all_payment">All payments</option>
@@ -408,7 +400,7 @@ function RenderTabContent({ data }) {
                                         <span class="icon_method02"></span>
                                         <span class="icon_method03"></span>
                                     </td>
-
+                                    
                                     <td class="price">
                                         {/* {data.price} */}
                                         {item.price}
