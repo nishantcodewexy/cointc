@@ -31,47 +31,47 @@ function Wallet_deposit_modal() {
         <Modal show={show} onHide={handleClose} size="lg">
           <Modal.Body>
 			<section id="withdrawCrypto" className="p-3">
-				<div className="row">
-					<div className="col col-sm-12 col-md-12 main-bg">
+				<div class="row">
+					<div class="col col-sm-12 col-md-12 main-bg">
 						<h4> Deposit Crypto </h4>
 						<form>
-							<div className="form-group row justify-content-between mb-0 py-2">
-								<label className="col-sm-4 col-form-label">Select Coin</label>
-								<div className="col-sm-10  col-md-6 select-coin-input">
-									<select id="coin" className="form-control text-center">
+							<div class="form-group row justify-content-between mb-0 py-2">
+								<label class="col-sm-4 col-form-label">Select Coin</label>
+								<div class="col-sm-10  col-md-6 select-coin-input">
+									<select id="coin" class="form-control text-center">
 										<option value="usdt">USDT</option>
 										<option value="sdt">SDT</option>
 									</select>
 								</div>
 							</div>
 
-							<div className="form-group row justify-content-between mb-0 py-2">
-								<label className="col-sm-2 col-form-label">Network</label>
-								<div className="col-sm-10  col-md-6 network-input">
-									<input type="text" className="form-control-plaintext text-md-right"  value="Ethreum ERC20"/>
+							<div class="form-group row justify-content-between mb-0 py-2">
+								<label class="col-sm-2 col-form-label">Network</label>
+								<div class="col-sm-10  col-md-6 network-input">
+									<input type="text" class="form-control-plaintext text-md-right"  value="Ethreum ERC20"/>
 								</div>
 							</div>
 
-							<div className="form-group row justify-content-between mb-0 py-2">
-								<label for="inputPassword" className="col-sm-4 col-form-label"> Deposit Address </label>	
+							<div class="form-group row justify-content-between mb-0 py-2">
+								<label for="inputPassword" class="col-sm-4 col-form-label"> Deposit Address </label>	
 							</div>
 
-							<div className="col-md-8 mx-auto deposit-address-img">
-								<div className="card border-0">
-									<img className="card-img-top w-25 mx-auto" src={qr_code_icon} alt="Card image cap"/>
-									<div className="card-body text-center">
-										<p className="card-text">0x7790a6DAe3174A60E171A25a040f913b5d6054d4</p>
-										<a href="#" className="btn btn-primary mr-1">Share</a>
-										<a href="#" className="btn btn-primary mr-1">Copy</a>
-										<p className="card-text-p card-text mt-3">최소입금금액은 2 USDT 입니다.2 USDT 미만 입금 시 잔고 반영이 불가능합니다.</p>
+							<div class="col-md-8 mx-auto deposit-address-img">
+								<div class="card border-0">
+									<img class="card-img-top w-25 mx-auto" src={qr_code_icon} alt="Card image cap"/>
+									<div class="card-body text-center">
+										<p class="card-text">0x7790a6DAe3174A60E171A25a040f913b5d6054d4</p>
+										<a href="#" class="btn btn-primary mr-1">Share</a>
+										<a href="#" class="btn btn-primary mr-1">Copy</a>
+										<p class="card-text-p card-text mt-3">최소입금금액은 2 USDT 입니다.2 USDT 미만 입금 시 잔고 반영이 불가능합니다.</p>
 									</div>
 								</div>
 							</div>	  	
 
-							<hr className="form-hr-bottom" />
+							<hr class="form-hr-bottom" />
 
-							<div className="wd-info col-12">
-								<p><i className="fa fa-info-circle mr-2"></i>Deposit information</p>
+							<div class="wd-info col-12">
+								<p><i class="fa fa-info-circle mr-2"></i>Deposit information</p>
 								<ul>
 									<li>위 입금 주소는 USDT만 입금이 가능합니다. 네트워크가 Ethreum ERC20인지 반드시 확인해주세요.</li>
 									<li>  USDT 외 다른 암호화폐 입금 시 복구가 불가하오니 주의해 주시기 바랍니다.</li>
@@ -81,8 +81,8 @@ function Wallet_deposit_modal() {
 								</ul>
 							</div>
 
-							<div className="wd-btn mt-4">
-								<a href="#" className="btn btn-primary w-100">Withdraw</a>
+							<div class="wd-btn mt-4">
+								<a href="#" class="btn btn-primary w-100">Withdraw</a>
 							</div>
 						</form>
 					</div>
@@ -108,72 +108,72 @@ function Wallet_withdraw_modal() {
         <Modal show={show} onHide={handleClose} size="lg">
           <Modal.Body>
 			<section id="withdrawCrypto" className="p-3">
-				<div className="row">
-					<div className="col col-sm-12 col-md-12 main-bg">
+				<div class="row">
+					<div class="col col-sm-12 col-md-12 main-bg">
 						<h4>Withdraw Crypto</h4>
 						<form>
-							<div className="form-group row justify-content-between mb-0 py-2">
-								<label className="col-sm-4 col-form-label">Select Coin</label>
-								<div className="col-sm-10  col-md-6 select-coin-input">
-									<select id="coin" className="form-control text-center">
+							<div class="form-group row justify-content-between mb-0 py-2">
+								<label class="col-sm-4 col-form-label">Select Coin</label>
+								<div class="col-sm-10  col-md-6 select-coin-input">
+									<select id="coin" class="form-control text-center">
 										<option value="usdt">USDT</option>
 										<option value="sdt">SDT</option>
 									</select>
 								</div>
 							</div>
 
-							<div className="form-group row justify-content-between mb-0 py-2">
-								<label className="col-sm-2 col-form-label">Network</label>
-								<div className="col-sm-10  col-md-6 network-input">
-									<input type="text" className="form-control-plaintext text-md-right"  value="Ethreum ERC20"/>
+							<div class="form-group row justify-content-between mb-0 py-2">
+								<label class="col-sm-2 col-form-label">Network</label>
+								<div class="col-sm-10  col-md-6 network-input">
+									<input type="text" class="form-control-plaintext text-md-right"  value="Ethreum ERC20"/>
 								</div>
 							</div>
 
-							<div className="form-group row justify-content-between mb-0 py-2">
-								<label for="inputPassword" className="col-sm-4 col-form-label">Withdraw Address</label>
-								<div className="col-sm-10  col-md-7 address-input">
-									<input type="text" className="form-control" value="0x7790a6DAe3174A60E171A25a040f913b5d6054d4" />
+							<div class="form-group row justify-content-between mb-0 py-2">
+								<label for="inputPassword" class="col-sm-4 col-form-label">Withdraw Address</label>
+								<div class="col-sm-10  col-md-7 address-input">
+									<input type="text" class="form-control" value="0x7790a6DAe3174A60E171A25a040f913b5d6054d4" />
 								</div>
 							</div>
 
-							<div className="form-group row justify-content-between mb-0 py-2">
-								<label for="inputPassword" className="col-sm-4 col-form-label">Withdraw Amount</label>
-								<div className="col-sm-10  col-md-6 amount-input">
-									<div className="input-group">
-										<input type="text" className="form-control"/>
-										<div className="input-group-append">
-											<span className="input-group-text" id="basic-addon2">1000 | <span className="pl-2">USDT</span></span>
+							<div class="form-group row justify-content-between mb-0 py-2">
+								<label for="inputPassword" class="col-sm-4 col-form-label">Withdraw Amount</label>
+								<div class="col-sm-10  col-md-6 amount-input">
+									<div class="input-group">
+										<input type="text" class="form-control"/>
+										<div class="input-group-append">
+											<span class="input-group-text" id="basic-addon2">1000 | <span class="pl-2">USDT</span></span>
 										</div>
 									</div>
-									<p className="mb-0 text-right mt-2">사용 가능 : 1,000 USDT <span>전체</span></p>
+									<p class="mb-0 text-right mt-2">사용 가능 : 1,000 USDT <span>전체</span></p>
 								</div>
 							</div>
 
-							<div className="form-group row justify-content-between mb-0 py-2 wa-icon">
-								<label className="col-sm-3 col-form-label postion-relative">Withdrawal <span></span> <span className="d-block">Available</span></label>
-								<div className="col-sm-10  col-md-6 fee-input">
-									<input type="text" className="form-control-plaintext text-md-right font-weight-bold"  value="999.000000 USDT"/>
+							<div class="form-group row justify-content-between mb-0 py-2 wa-icon">
+								<label class="col-sm-3 col-form-label postion-relative">Withdrawal <span></span> <span class="d-block">Available</span></label>
+								<div class="col-sm-10  col-md-6 fee-input">
+									<input type="text" class="form-control-plaintext text-md-right font-weight-bold"  value="999.000000 USDT"/>
 								</div>
 							</div>
 
-							<hr className="form-hr-bottom" />
+							<hr class="form-hr-bottom" />
 
-							<div className="form-group row justify-content-between mb-0 py-2">
-								<label className="col-sm-2 col-form-label">Fee</label>
-								<div className="col-sm-10  col-md-6 fee-input">
-									<input type="text" className="form-control-plaintext text-md-right"  value="1 USDT"/>
+							<div class="form-group row justify-content-between mb-0 py-2">
+								<label class="col-sm-2 col-form-label">Fee</label>
+								<div class="col-sm-10  col-md-6 fee-input">
+									<input type="text" class="form-control-plaintext text-md-right"  value="1 USDT"/>
 								</div>
 							</div>
 
-							<div className="form-group row justify-content-between mb-0 py-2">
-								<label className="col-sm-4 col-form-label">Receive Amount</label>
-								<div className="col-sm-10  col-md-6 fee-input">
-									<input type="text" className="form-control-plaintext text-md-right font-weight-bold"  value="999.000000 USDT"/>
+							<div class="form-group row justify-content-between mb-0 py-2">
+								<label class="col-sm-4 col-form-label">Receive Amount</label>
+								<div class="col-sm-10  col-md-6 fee-input">
+									<input type="text" class="form-control-plaintext text-md-right font-weight-bold"  value="999.000000 USDT"/>
 								</div>
 							</div>
 
-							<div className="wd-info pt-5 col-9">
-								<p><i className="fa fa-info-circle mr-2"></i>withdrawal information</p>
+							<div class="wd-info pt-5 col-9">
+								<p><i class="fa fa-info-circle mr-2"></i>withdrawal information</p>
 								<ul>
 									<li>Minimum withdrawal amount: 2 USDT.</li>
 									<li> The network fee is 1 USDT，which may be adjusted by network congestion.</li>
@@ -181,8 +181,8 @@ function Wallet_withdraw_modal() {
 								</ul>
 							</div>
 
-							<div className="wd-btn mt-4">
-								<a href="#" className="btn btn-primary w-100">Withdraw</a>
+							<div class="wd-btn mt-4">
+								<a href="#" class="btn btn-primary w-100">Withdraw</a>
 							</div>
 
 						</form>
@@ -199,15 +199,15 @@ export const Wallet = () => {
     return (     
         <div className="Wallet"> 
             <section id="progress">
-            <div className="container">
-                <div className="row mx-0">
-                    <div className="col-12 progress-top">
+            <div class="container">
+                <div class="row mx-0">
+                    <div class="col-12 progress-top">
                         <dl>
                             <dt>My Wallet</dt>
                         </dl>
                         <dl>
-                            <dt className="float-left progress-total">Total Balance:</dt>
-                            <dd className="progress-income"><span className="pl-2">167.71 USD</span> ≈ $0.0003624 BTC</dd>
+                            <dt class="float-left progress-total">Total Balance:</dt>
+                            <dd class="progress-income"><span class="pl-2">167.71 USD</span> ≈ $0.0003624 BTC</dd>
                         </dl>
                         <ul>
                             <li>자산은 코인마켓캡의 실시간 코인 가격을 통해 추정 가치로 변환되며 참조용으로만 사용됩니다.</li>
@@ -221,16 +221,16 @@ export const Wallet = () => {
         </section>
         
         <section id="asset">
-            <div className="container">
-                <div className="row mx-0">
-                	<div className="col-12 clearfix">
+            <div class="container">
+                <div class="row mx-0">
+                	<div class="col-12 clearfix">
                 		<h4>Asset</h4>
                 		<ul>
-                			<li className="on"><a href="#">Asset</a></li>
+                			<li class="on"><a href="#">Asset</a></li>
                 			<li><a href="/wallet_th">History</a></li>
                 		</ul>
-                		<div className="table_container overflow-auto">
-                			<table className="w-100">
+                		<div class="table_container overflow-auto">
+                			<table class="w-100">
                 				<thead>
                 					<tr>
                 						<th>Coin</th>
@@ -241,86 +241,86 @@ export const Wallet = () => {
                 					</tr>
                 				</thead>
                 				<tbody>
-                					<tr className="bitcoin">
-                						<td className="coin clearfix">
+                					<tr class="bitcoin">
+                						<td class="coin clearfix">
                 							<img src={bnb_icon}/>
-                							<dl className="mb-0">
+                							<dl class="mb-0">
                 								<dt>Bitcoin</dt>
-                								<dd className="mb-0">BTC</dd>
+                								<dd class="mb-0">BTC</dd>
                 							</dl>
                 						</td>
-                						<td className="available">0.67574356</td>
-                						<td className="order">0.67574356</td>
-                						<td className="value">＄27,170.5</td>
-                						<td className="action">
+                						<td class="available">0.67574356</td>
+                						<td class="order">0.67574356</td>
+                						<td class="value">＄27,170.5</td>
+                						<td class="action">
 											<a href="/wallet_deposit">Deposit</a>
                 							<a href="/wallet_withdraw">Withdraw</a>
                 							<a href="#">Trade</a>
                 						</td>
                 					</tr>
-                					<tr className="ethereum">
-                						<td className="coin clearfix">
+                					<tr class="ethereum">
+                						<td class="coin clearfix">
                 							<img src={eth_icon}/>
-                							<dl className="mb-0">
+                							<dl class="mb-0">
                 								<dt>Ethereum </dt>
-                								<dd className="mb-0">ETH</dd>
+                								<dd class="mb-0">ETH</dd>
                 							</dl>
                 						</td>
-                						<td className="available">160,867.5</td>
-                						<td className="order">160,867.5</td>
-                						<td className="value">＄27,170.5</td>
-                						<td className="action">
+                						<td class="available">160,867.5</td>
+                						<td class="order">160,867.5</td>
+                						<td class="value">＄27,170.5</td>
+                						<td class="action">
 											<a href="/wallet_deposit">Deposit</a>
                 							<a href="/wallet_withdraw">Withdraw</a>
                 							<a href="#">Trade</a>
                 						</td>
                 					</tr>
-                					<tr className="tether">
-                						<td className="coin clearfix">
+                					<tr class="tether">
+                						<td class="coin clearfix">
                 							<img src={usdt_icon}/>
-                							<dl className="mb-0">
+                							<dl class="mb-0">
                 								<dt>Tether</dt>
-                								<dd className="mb-0">USDT</dd>
+                								<dd class="mb-0">USDT</dd>
                 							</dl>
                 						</td>
-                						<td className="available">160,867.5</td>
-                						<td className="order">160,867.5</td>
-                						<td className="value">＄27,170.5</td>
-                						<td className="action">
+                						<td class="available">160,867.5</td>
+                						<td class="order">160,867.5</td>
+                						<td class="value">＄27,170.5</td>
+                						<td class="action">
 											<a href="/wallet_deposit">Deposit</a>
                 							<a href="/wallet_withdraw">Withdraw</a>
                 							<a href="#">Trade</a>
                 						</td>
                 					</tr>
-                					<tr className="ripple">
-                						<td className="coin clearfix">
+                					<tr class="ripple">
+                						<td class="coin clearfix">
                 							<img src={xrp_icon}/>
-                							<dl className="mb-0">
+                							<dl class="mb-0">
                 								<dt>Ripple</dt>
-                								<dd className="mb-0">XRP</dd>
+                								<dd class="mb-0">XRP</dd>
                 							</dl>
                 						</td>
-                						<td className="available">1.908675</td>
-                						<td className="order">1.908675</td>
-                						<td className="value">＄27,170.5</td>
-                						<td className="action">
+                						<td class="available">1.908675</td>
+                						<td class="order">1.908675</td>
+                						<td class="value">＄27,170.5</td>
+                						<td class="action">
 											<a href="/wallet_deposit">Deposit</a>
                 							<a href="/wallet_withdraw">Withdraw</a>
                 							<a href="#">Trade</a>
                 						</td>
                 					</tr>
-                					<tr className="eos">
-                						<td className="coin clearfix">
+                					<tr class="eos">
+                						<td class="coin clearfix">
                 							<img src={eos_icon}/>
-                							<dl className="mb-0">
+                							<dl class="mb-0">
                 								<dt>EOS</dt>
-                								<dd className="mb-0">EOS</dd>
+                								<dd class="mb-0">EOS</dd>
                 							</dl>
                 						</td>
-                						<td className="available">200.000000</td>
-                						<td className="order">200.000000</td>
-                						<td className="value">＄27,170.5</td>
-                						<td className="action">
+                						<td class="available">200.000000</td>
+                						<td class="order">200.000000</td>
+                						<td class="value">＄27,170.5</td>
+                						<td class="action">
 											<a href="/wallet_deposit">Deposit</a>
                 							<a href="/wallet_withdraw">Withdraw</a>
                 							<a href="#">Trade</a>
