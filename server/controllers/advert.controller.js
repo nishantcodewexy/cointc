@@ -7,7 +7,7 @@ const AdvertController = (server) => {
     boom,
     helpers: { filters, paginator },
   } = server.app;
-
+  
   return {
     /**
      * @function create - Creates a single advert
