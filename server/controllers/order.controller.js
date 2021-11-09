@@ -4,7 +4,7 @@ const boom = require("@hapi/boom");
 function OrderController(server) {
   const { __destroy } = require("./utils")(server);
   const {
-    db: { Order, Advert, User, Wallet,Kyc },
+    db: { Order, Advert, User, Wallet, Kyc },
     helpers: { filters, paginator },
   } = server.app;
 
@@ -24,7 +24,7 @@ function OrderController(server) {
         payload,
       } = req;
 
-      const { advert_id,total_quantity } = payload;
+      const { advert_id, total_quantity } = payload;
       // Check if user's KYC has been approved first
       let approvedKyc = Kyc.findOne({
         where: {
@@ -33,11 +33,11 @@ function OrderController(server) {
         },
       });
 
-      if (!approvedKyc) throw boom.methodNotAllowed(`Please complete KYC in order to proceed`);
-      
-      
+      if (!approvedKyc)
+        throw boom.methodNotAllowed(`Please complete KYC in order to proceed`);
+
       if (!advert_id) throw boom.badRequest("Missing advert_id in request");
-      
+
       try {
         // find advert
         let ad = await Advert.findByPk(advert_id);
@@ -45,21 +45,20 @@ function OrderController(server) {
           // create order using the user info
           let result;
 
-          if(fake){
-            result = await Order.FAKE()
-          }else if(ad.publish && ad.current_qty >= total_quantity){
-
-            let sellersId = ad.type === "sell"? ad.user_id : user.id
+          if (fake) {
+            result = await Order.FAKE();
+          } else if (ad.publish && ad.current_qty >= total_quantity) {
+            let sellersId = ad.type === "sell" ? ad.user_id : user.id;
 
             // check if order is a sell order i.e advert is a buy advert
             // verify that seller has sufficient balance
-            if(ad.type==="buy"){
+            if (ad.type === "buy") {
               let sellersWallet = Wallet.findOne({
-                where:{
-                  user_id:sellersId,
-                  currency:ad.crypto
-                }
-              })
+                where: {
+                  user_id: sellersId,
+                  currency: ad.crypto,
+                },
+              });
 
               /**
                * @typedef {Object} Balance
@@ -70,32 +69,23 @@ function OrderController(server) {
               /**
                * @type {Balance}
                */
-              let {availableBalance} = await sellersWallet.getBalance()
-              
-              if(parseFloat(availableBalance) < parseFloat(total_quantity)){
-                throw boom.badRequest("insufficient balance")
-              }
-              
+              let { availableBalance } = await sellersWallet.getBalance();
 
+              if (parseFloat(availableBalance) < parseFloat(total_quantity)) {
+                throw boom.badRequest("insufficient balance");
+              }
             }
 
-
-
-            
             result = await user.createOrder({
               ...payload,
-              blocked_account_id:sellersId
-            })
-
-          }else{
-            throw boom.notFound(
-              "Not permitted"
-            );
+              blocked_account_id: sellersId,
+            });
+          } else {
+            throw boom.notFound("Not permitted");
           }
 
           return {
-            
-            result
+            result,
           };
         } else
           throw boom.notFound(
@@ -170,81 +160,74 @@ function OrderController(server) {
         },
       } = req;
       try {
-
         let result;
-        if (fake){
-          result = await Order.FAKE()
+        if (fake) {
+          result = await Order.FAKE();
+        } else {
+          let buyersId, sellersId;
 
-        }else{
-
-          let buyersId,sellersId;
-          
           // get order by id
           const order = await Order.findByPk(id);
 
           // get advert from order
-          const advert = await order.getAdvert()
+          const advert = await order.getAdvert();
 
           // check if user is permitted to confirm order
-          let permitted = order.user_id === user.id || advert.user_id == user.id
+          let permitted =
+            order.user_id === user.id || advert.user_id == user.id;
 
           // throught error if user is not permitted
-          !permitted && boom.badRequest("you do not have permission to confirm this order")
+          !permitted &&
+            boom.badRequest("You do not have permission to confirm this order");
 
-          if(order.order_user_confirm&&order.advert_user_confirm){
-            throw boom.badRequest("order has already been confirmed")
+          if (order.order_user_confirm && order.advert_user_confirm) {
+            throw boom.badRequest("Order has already been confirmed");
           }
 
           // set order confirm
-          if(order.user_id === user.id){
-            order.order_user_confirm = user.id
-            
-          }else if(advert.user_id == user.id){
-            order.advert_user_confirm = user.id
+          if (order.user_id === user.id) {
+            order.order_user_confirm = user.id;
+          } else if (advert.user_id == user.id) {
+            order.advert_user_confirm = user.id;
           }
 
           // save order after confirm
-          await order.save()
-
+          await order.save();
 
           // set buyers and sellers id
-          if(advert.type==="buy"){
-            buyersId = advert.user_id
+          if (advert.type === "buy") {
+            buyersId = advert.user_id;
             sellersId = order.user_id;
-          }else{
-            buyersId = order.user_id
-            sellersId = advert.user_id
+          } else {
+            buyersId = order.user_id;
+            sellersId = advert.user_id;
           }
 
-
           // unfreeze sellers Wallet if both buyer and seller confirms order
-          if(order.order_user_confirm&&order.advert_user_confirm){
+          if (order.order_user_confirm && order.advert_user_confirm) {
             const sellerWallet = await Wallet.findOne({
-              where:{
-                user_id:sellersId,
-                currency:advert.crypto
-              }
-            })
+              where: {
+                user_id: sellersId,
+                currency: advert.crypto,
+              },
+            });
 
             const buyersWallet = await Wallet.findOne({
-              where:{
-                user_id:buyersId,
-                currency:advert.crypto
-              }
-            })
+              where: {
+                user_id: buyersId,
+                currency: advert.crypto,
+              },
+            });
 
-
-            // unfreeze sellers wallet 
-            await sellerWallet.unfreezeWallet(order.blockage_id)
+            // unfreeze sellers wallet
+            await sellerWallet.unfreezeWallet(order.blocked_account_id);
 
             // send fund to buyer
             await sellerWallet.transfer({
-              wallet:buyersWallet,
-              qty:order.total_quantity
-            })
-
+              wallet: buyersWallet,
+              qty: order.total_quantity,
+            });
           }
-          
         }
 
         return { result };
