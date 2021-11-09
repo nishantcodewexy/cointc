@@ -15,7 +15,7 @@ export const Header4 = () => {
   return (
     <>
       <Navbar className="navbar navbar-light bg-light my-border header4" expand='lg'>
-        <div class="container">
+        <div className="container">
           <Nav.Link href="/" bsPrefix=" "><img src={logo} width="100" alt="logo" /></Nav.Link>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
@@ -26,21 +26,21 @@ export const Header4 = () => {
               navbarScroll
             >
 
-            <ul class="navbar-nav">
-              <li class="nav-item">
-                <Nav.Link class="nav-link text-black" href="/trade">P2P Trade <span class="sr-only">(current)</span></Nav.Link>
+            <ul className="navbar-nav">
+              <li className="nav-item">
+                <Nav.Link className="nav-link text-black" href="/trade">P2P Trade <span className="sr-only">(current)</span></Nav.Link>
               </li>
-              <li class="nav-item">
-                <Nav.Link class="nav-link text-black" href="/orders">Orders</Nav.Link>
+              <li className="nav-item">
+                <Nav.Link className="nav-link text-black" href="/orders">Orders</Nav.Link>
               </li>
-              <li class="nav-item">
-                <Nav.Link class="nav-link text-black" href="/wallet">Wallet</Nav.Link>
+              <li className="nav-item">
+                <Nav.Link className="nav-link text-black" href="/wallet">Wallet</Nav.Link>
               </li>
-              <li class="nav-item">
-                <Nav.Link class="nav-link text-black" href="/affiliate">Affiliate</Nav.Link>
+              <li className="nav-item">
+                <Nav.Link className="nav-link text-black" href="/affiliate">Affiliate</Nav.Link>
               </li>
-              <li class="nav-item">
-                <Nav.Link class="nav-link text-black" href="/support">Support</Nav.Link>
+              <li className="nav-item">
+                <Nav.Link className="nav-link text-black" href="/support">Support</Nav.Link>
               </li>
             </ul>
             
@@ -50,9 +50,9 @@ export const Header4 = () => {
               // style={{ maxHeight: "100px" }}
               navbarScroll
             >
-              <ul class="navbar-nav ls-btn-info">
-					<li class="nav-item btn-login">
-						<a class="btn text-black" href="my-page"><img src={user} class="pr-2"/>My Page</a>
+              <ul className="navbar-nav ls-btn-info">
+					<li className="nav-item btn-login">
+						<a className="btn text-black" href="my-page"><img src={user} className="pr-2"/>My Page</a>
 					</li>
 				</ul>
             </Nav>
