@@ -157,6 +157,16 @@ function DepositsHistoryTable() {
             <td className="py-3 pl-5">02-09-2021 11:56:28</td>
             <td>{action}</td>
           </tr>
+          <tr className="btn-reveal-trigger">
+            <td className="user_permission_single">{check(2)}</td>
+            <td className="py-2">wealwinsss</td>
+            <td className="py-3 pl-5 width200">Fiat</td>
+            <td className="py-3 pl-5 width200">USDT</td>
+            <td className="py-3 pl-5 width200">10</td>
+            <td className="py-3 pl-5 width200">Completed</td>
+            <td className="py-3 pl-5">02-09-2021 11:56:28</td>
+            <td>{action}</td>
+          </tr>
         </tbody>
       </Table>
     </>

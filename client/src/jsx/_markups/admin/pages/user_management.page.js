@@ -35,6 +35,8 @@ function UserManagement({ services, useService }) {
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
+        "sudo": true,
+        "fake": true,
         paranoid: false,
       },
       toast: { success: notifySuccess, error: notifyError },

@@ -1,10 +1,10 @@
 "use strict";
-const boom = require("@hapi/boom");
 
 function KycController(server) {
   const { __update, __destroy } = require("./utils")(server);
   const {
     db: { Kyc, sequelize },
+    boom,
     helpers: { filters, paginator },
   } = server.app;
 
@@ -18,7 +18,9 @@ function KycController(server) {
      */
     async create(req) {
       const {
-        pre: { user:{user} },
+        pre: {
+          user: { user },
+        },
         payload,
       } = req;
 
@@ -53,14 +55,25 @@ function KycController(server) {
      */
     async remove(req) {
       const {
-        params: { id },
-        payload: { force = false },
-        pre: { user:{user} },
+        payload: { ids = [], force = false },
+        pre: {
+          user: { user },
+        },
       } = req;
 
       try {
-        let where = { id };
-        return { deleted: Boolean(await __destroy("Order", where, force)) };
+        await sequelize.transaction(
+          async (t) =>
+            await Promise.all(
+              ids.map(async (id) => {
+                let where = { id, user_id: user?.id };
+                return {
+                  status: Boolean(await __destroy("Order", where, force)),
+                  id,
+                };
+              })
+            )
+        );
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);
@@ -68,47 +81,7 @@ function KycController(server) {
     },
 
     // RETRIEVE ---------------------------------------------------------
-    /**
-     * @function findByUserID
-     * @param {Object} req
-     * @returns
-     */
-    async findByUserID(req) {
-      const {
-        query,
-        params: { user_id },
-        pre: {
-          user: { user, sudo, fake, fake_count },
-        },
-      } = req;
-      try {
-        const queryFilters = await filters({
-          query,
-          searchFields: ["user_id", "status"],
-          ...(!sudo && { extras: { user_id: user?.id } }),
-        });
-        const options = {
-          ...queryFilters,
-        };
-        let found = fake
-          ? await Kyc.FAKE(fake_count)
-          : await Kyc.findAndCountAll({
-              where: {
-                user_id,
-              },
-          });
-        const { limit, offset } = queryFilters;
-        return await paginator({
-          queryset: found,
-          limit,
-          offset,
-        });
-        
-      } catch (error) {
-        console.error(error);
-        throw boom.internal(error.message, error);
-      }
-    },
+
     /**
      * @function findByID
      * @param {Object} req
@@ -127,7 +100,8 @@ function KycController(server) {
           query,
           searchFields: ["user_id", "status"],
           extras: {
-            ...(!sudo ? { user_id: user?.id, id } : { id }),
+            id,
+            ...(!sudo && { user_id: user?.id }),
           },
         });
 
@@ -139,7 +113,9 @@ function KycController(server) {
         return result
           ? { result }
           : boom.notFound(
-              `Kyc with ID; ${id} with constraints: [${Object.entries(query).join(',')}] not found!`
+              `Kyc with ID; ${id} with constraints: [${Object.entries(
+                query
+              ).join(",")}] not found!`
             );
       } catch (error) {
         console.error(error);
@@ -148,7 +124,7 @@ function KycController(server) {
     },
 
     /**
-     * @function findAll
+     * @function find
      * @param {Object} req
      * @returns
      */
@@ -156,7 +132,7 @@ function KycController(server) {
       const {
         query,
         pre: {
-          user: { user, fake, sudo, fake_count },
+          user: { user, fake, sudo },
         },
       } = req;
 
@@ -164,16 +140,16 @@ function KycController(server) {
         const queryFilters = await filters({
           query,
           searchFields: ["user_id", "status"],
-          ...(!sudo && { extras: { user_id: user?.id } }),
+          extras: { ...(!sudo && { user_id: user?.id }) },
         });
         const options = {
           ...queryFilters,
         };
+        const { limit, offset } = queryFilters;
         let queryset = fake
-          ? await Kyc.FAKE(fake_count)
+          ? await Kyc.FAKE(limit)
           : await Kyc.findAndCountAll(options);
 
-        const { limit, offset } = queryFilters;
         return await paginator({
           queryset,
           limit,
@@ -184,8 +160,9 @@ function KycController(server) {
         throw boom.boomify(error);
       }
     },
+
     /**
-     * @function updateAll
+     * @function update
      * @param {Object} req
      * @returns
      */
@@ -193,15 +170,16 @@ function KycController(server) {
       const {
         payload,
         pre: {
-          user: { user, fake, sudo, fake_count },
+          user: { user, sudo },
         },
       } = req;
-      let fields, operation;
+      let fields = sudo ? ["status"] : ["type"],
+        operation;
       try {
         if (sudo) {
           let { ids = [], ...others } = payload;
           if (!ids?.length) return boom.badData(`<ids::array> cannot be empty`);
-          fields = ["status"];
+
           operation = await sequelize.transaction(async (t) => {
             return await Promise.all(
               ids.map(async (id) => ({
@@ -216,7 +194,6 @@ function KycController(server) {
             );
           });
         } else {
-          fields = ["type"];
           let { id, ...others } = payload;
           if (!id) return boom.badData(`<id::uuid> cannot be empty`);
           operation = {
@@ -242,15 +219,26 @@ function KycController(server) {
      */
     async updateByID(req) {
       const {
-        query,
+        payload,
+        params: { id },
         pre: {
-          user: { user, fake, sudo, fake_count },
+          user: { user, fake, sudo },
         },
       } = req;
 
       try {
-        console.log("updateByID");
-        return { message: `Updated a record` };
+        let where = { id, ...(!sudo && { user_id: user?.id }) },
+          fields = sudo ? ["status"] : ["type"],
+          options = { where, fields };
+
+        let result = fake
+          ? Kyc.FAKE()
+          : await Kyc.update(payload, options).then(([count]) => count);
+
+        return {
+          status: Boolean(result),
+          result,
+        };
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);

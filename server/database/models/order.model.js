@@ -3,8 +3,6 @@ const { Model } = require("sequelize");
 const hooks = require("../hooks/order.hook");
 const { tableNames } = require("../../consts");
 const faker = require("faker");
-const User = require("./user.model");
-const Advert = require("./advert.model");
 const STATUS = {
   pending: "PENDING",
   completed: "COMPLETED",
@@ -33,6 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         result = {},
         index = 0;
       let generateFakeData = () => {
+        let { User, Advert } = sequelize?.models;
         return {
           id: `ORD-${Date.now().toString()}`,
           total_amount: faker.datatype.float(),
@@ -45,8 +44,8 @@ module.exports = (sequelize, DataTypes) => {
           rating: faker.datatype.number(5),
           archived_at: faker.datatype.datetime(),
           trx_id: faker.datatype.uuid(),
-          user: User(sequelize, DataTypes).FAKE(),
-          advert: Advert(sequelize, DataTypes).FAKE(),
+          user: User.FAKE(),
+          advert: Advert.FAKE(),
         };
       };
       if (count > 1) {

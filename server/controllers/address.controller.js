@@ -1,7 +1,5 @@
 "use strict";
 
-
-
 const AddressController = (server) => {
   const { __update, __destroy } = require("./utils")(server);
   const {
@@ -10,16 +8,49 @@ const AddressController = (server) => {
     helpers: { paginator, filters },
   } = server.app;
   return {
-    
     /**
-     * @function bulkRetrieve - Retrieves multiple advert records
+     * @function findByID - Gets currency collection
+     * @param {Object} req
+     * @returns
+     */
+    async findByID(req) {
+      const {
+        pre: {
+          user: { user, fake, sudo },
+        },
+        params: { id },
+      } = req;
+
+      try {
+        const queryOptions = {
+          where: {
+            id,
+            ...(sudo && { user_id: user.id }),
+          },
+          attributes: { exclude: ["user_id", "UserId"] },
+        };
+        let result = fake
+          ? await Address.FAKE()
+          : await Address.findOne(queryOptions);
+
+        return result
+          ? { result }
+          : boom.notFound(`Address ID: ${id} not found!`);
+      } catch (error) {
+        console.error(error);
+        return boom.boomify(error);
+      }
+    },
+
+    /**
+     * @function find - Retrieves multiple advert records
      * @param {Object} req
      */
-     async find(req) {
+    async find(req) {
       const {
         query,
         pre: {
-          user: { user, fake, fake_count, sudo },
+          user: { user, fake, sudo },
         },
       } = req;
 
@@ -27,24 +58,23 @@ const AddressController = (server) => {
         const queryFilters = await filters({
           query,
           searchFields: ["address_line"],
-          extras:{
-            ...(sudo?{}:{user_id:user.id})
-          }
+          extras: {
+            ...(sudo ? {} : { user_id: user.id }),
+          },
         });
         const options = {
           ...queryFilters,
-          logging: console.log,
+          // logging: console.log,
           // include: User,
           // attributes: { include: [["User", "user"]] },
         };
-        
+
+        const { limit, offset } = queryFilters;
         let queryset = fake
-          ? await Address.FAKE(fake_count)
+          ? await Address.FAKE(limit)
           : await Address.findAndCountAll(options).catch((err) => {
               throw boom.badData(err.message, err);
             });
-        
-        const { limit, offset } = queryFilters;
 
         return paginator({
           queryset,
@@ -56,146 +86,7 @@ const AddressController = (server) => {
         return boom.isBoom ? err : boom.internal(err.message, err);
       }
     },
-    /**
-     * @function get - Gets currency collection
-     * @param {Object} req
-     * @returns
-     */
-     async findByID(req) {
-      const {
-        pre: {
-          user: { user, fake, sudo },
-        },
-        params: { id },
-      } = req;
 
-      try {
-        const queryOptions = {
-          where: {
-            ...(sudo && { user_id: user.id }),
-            attributes: { exclude: ["user_id", "UserId"] },
-          },
-        };
-        let result = fake
-          ? await Address.FAKE()
-          : await Address.findByPk(id, queryOptions);
-        return result ? { result } : boom.notFound("Record not found");
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
-      }
-    },
-    /**
-     * @function find
-     * @describe finds multiple records or current session's user record
-     * @param {Object} req
-     */
-    async find(req) {
-      const {
-        query,
-        pre: {
-          user: { user, fake, sudo, fake_count },
-        },
-      } = req;
-
-      try {
-        const queryFilters = await filters({
-          query,
-          searchFields: ["user_id"],
-        });
-
-        const options = {
-          ...queryFilters,
-        };
-
-        if (sudo) {
-          let queryset = fake
-            ? await Address.FAKE(fake_count)
-            : await Address.findAndCountAll(options);
-
-          const { limit, offset } = queryFilters;
-
-          return paginator({
-            queryset,
-            limit,
-            offset,
-          });
-        }
-        return {
-          result: fake ? await Address.FAKE() : await user?.getAddress(),
-        };
-      } catch (err) {
-        console.error(err);
-        return boom.internal(err.message, err);
-      }
-    },
-
-    /**
-     * @function findByID
-     * @describe finds record with matching user ID
-     * @param {Object} req
-     */
-    async findByID(req) {
-      const {
-        query,
-        params: { id },
-        pre: {
-          user: { user, fake, sudo, fake_count },
-        },
-      } = req;
-
-      try {
-        const queryFilters = await filters({
-          query,
-          searchFields: ["user_id"],
-          extras: {
-            id,
-          },
-        });
-        const options = {
-          ...queryFilters,
-        };
-        return {
-          result: fake ? await Address.FAKE() : await Address?.findOne(options),
-        };
-      } catch (err) {
-        console.error(err);
-        return boom.internal(err.message, err);
-      }
-    },
-    /**
-     * @function findByUserID
-     * @describe finds record with matching user ID
-     * @param {Object} req
-     */
-    async findByUserID(req) {
-      const {
-        query,
-        params: { user_id },
-        pre: {
-          user: { user, fake, sudo, fake_count },
-        },
-      } = req;
-
-      try {
-        const queryFilters = await filters({
-          query,
-          searchFields: ["email"],
-          extras: {
-            user_id: user_id,
-          },
-        });
-        const options = {
-          ...queryFilters,
-        };
-        return {
-          result: fake ? await Address.FAKE() : await Address?.findOne(options),
-        };
-      } catch (err) {
-        console.error(err);
-        return boom.internal(err.message, err);
-      }
-    },
     // REMOVE --------------------------------------------
     /**
      * @function remove - remove mulitple records
@@ -207,10 +98,9 @@ const AddressController = (server) => {
       const {
         payload,
         pre: {
-          user: { user, fake, sudo, fake_count },
+          user: { user, fake },
         },
       } = req;
-      let result, where;
       try {
         let { ids = [], force = false } = payload;
 
@@ -219,26 +109,23 @@ const AddressController = (server) => {
             "Expected an array of address IDs. None provided!"
           );
 
+        let result = await sequelize.transaction(
+          async (t) =>
+            await Promise.all(
+              ids.map(async (id) => ({
+                id,
+                status: Boolean(
+                  await __destroy("Address", { id, user_id: user?.id }, force, {
+                    transaction: t,
+                    returning: true,
+                  })
+                ),
+              }))
+            ).catch((err) => (error = err))
+        );
+
         return {
-          result: await sequelize.transaction(
-            async (t) =>
-              await Promise.all(
-                ids.map(async (id) => ({
-                  id,
-                  status: Boolean(
-                    await __destroy(
-                      "Address",
-                      { id, ...(!sudo && { user_id: user?.id }) },
-                      force,
-                      {
-                        transaction: t,
-                        returning: true,
-                      }
-                    )
-                  ),
-                }))
-              ).catch((err) => (error = err))
-          ),
+          result,
         };
       } catch (err) {
         console.error(err);
@@ -247,7 +134,7 @@ const AddressController = (server) => {
     },
 
     /**
-     * @function remove - Remove single User
+     * @function removeByID - Remove single record by ID
      * @param {Object} req
      * @returns
      */
@@ -256,22 +143,20 @@ const AddressController = (server) => {
         payload: { force = false },
         params: { id },
         pre: {
-          user: { user, sudo },
+          user: { user },
         },
       } = req;
       // only superadmins are allowed to permanently delete a user
-      force = user?.isSuperAdmin ? force : false;
-      let where = { id };
+      let where = { id, user_id: user?.id };
       let result = await __destroy("Address", where, force);
-      return { status: Boolean(result), result };
+      return { status: Boolean(result), result, id };
     },
-    async removeByUserID(req) {},
 
     // UPDATE--------------------------------------
 
     /**
-     * @function update
-     * @describe update multiple records or current session's user record
+     * @function updateByID
+     * @describe update single records by ID
      * @param {Object} req
      */
     async updateByID(req) {
@@ -280,14 +165,11 @@ const AddressController = (server) => {
           params: { id },
           payload,
           pre: {
-            user: { user, fake, sudo, fake_count },
+            user: { user },
           },
         } = req;
-        let fields = [],
+        let fields = ["country", "address_line"],
           result;
-
-        // update session user data
-        fields = [...fields, "country", "address_line"];
 
         result = await Address?.update(payload, {
           where: { id, user_id: user?.id },
@@ -295,45 +177,8 @@ const AddressController = (server) => {
         }).then(([count]) => count);
 
         return {
-          id: user?.id,
+          id,
           status: Boolean(result),
-        };
-      } catch (error) {
-        console.error(error);
-        return boom.boomify(error);
-      }
-    },
-
-    /**
-     * @function updateByUserID
-     * @describe update record using the user ID
-     * @param {Object} req
-     */
-    async updateByUserID(req) {
-      try {
-        const {
-          payload,
-          params: { user_id },
-          pre: {
-            user: { user, fake, sudo, fake_count },
-          },
-        } = req;
-        let fields = ["country"],
-          result;
-
-        if (!sudo)
-          return boom.methodNotAllowed(
-            `Only admins can perform this operation`
-          );
-        // update session user data
-        result = await Address?.update(payload, {
-          where: { user_id },
-          fields,
-        });
-
-        return {
-          status: Boolean(result),
-          result,
         };
       } catch (error) {
         console.error(error);
@@ -341,7 +186,6 @@ const AddressController = (server) => {
       }
     },
   };
-
 };
 
 module.exports = AddressController;

@@ -8,23 +8,23 @@ module.exports = (server) => {
     controllers: {
       currency: { find },
     },
-    helpers: {
+   /*  helpers: {
       permissions: { isUser },
-    },
+    }, */
   } = server.app;
 
   return {
     method: "GET",
     path: "/currency",
     config: {
-      pre: [
+      /* pre: [
         {
           method: isUser,
           assign: "user",
         },
-      ],
+      ], */
       handler: find,
-      auth: "jwt",
+      // auth: "jwt",
     },
   };
 };

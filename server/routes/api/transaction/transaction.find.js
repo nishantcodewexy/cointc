@@ -3,24 +3,24 @@ const Joi = require("joi");
 
 module.exports = (server) => {
   const {
-    controllers: {
-      kyc: { findAll, findByUserID },
-    },
     boom,
+    controllers: {
+      transaction: { find },
+    },
     helpers: {
       permissions: { isUser },
     },
   } = server.app;
 
-  const paramsSchema = Joi.object({
-    user_id: Joi.string().uuid().required(),
+  const query = Joi.object().keys({
+    filter: Joi.string().uuid(),
+    fake: Joi.bool(),
+    limit: Joi.number().integer()
   });
-
-  // .allow("email", "id", "phone", "payment_methods").optional()
 
   return {
     method: "GET",
-    path: "/kyc/with/{user_id}",
+    path: "/transaction",
     config: {
       pre: [
         {
@@ -28,11 +28,10 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: findByUserID,
+      handler: find,
       validate: {
-        params: paramsSchema,
+        query,
       },
-      auth: "jwt",
     },
   };
 };

@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const { countries, tableNames } = require("../../consts");
-const faker = require("faker")
+const faker = require("faker");
 
 module.exports = (sequelize, DataTypes) => {
   class ChatHistory extends Model {
@@ -14,14 +14,13 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
     }
 
-    static FAKE(count){
+    static FAKE(count) {
       let rows = [],
         result = {},
         index = 0;
       let generateFakeData = () => {
-        let id = faker.datatype.uuid()
-        
-          
+        let id = faker.datatype.uuid();
+
         return {
           id,
           visitor_email: faker.internet.email(),
@@ -32,7 +31,6 @@ module.exports = (sequelize, DataTypes) => {
           ended_at: faker.datatype.datetime(),
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
-          
         };
       };
       if (count > 1) {

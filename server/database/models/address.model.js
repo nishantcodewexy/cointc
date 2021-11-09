@@ -4,7 +4,6 @@ const _ = require("underscore");
 const { countries, tableNames } = require("../../consts");
 const faker = require("faker");
 
-
 module.exports = (sequelize, DataTypes) => {
   class Address extends Model {
     /**
@@ -23,8 +22,6 @@ module.exports = (sequelize, DataTypes) => {
     
     
 
-    
-    
     toPublic() {
       return _.omit(this.toJSON(), []);
     }
@@ -32,6 +29,7 @@ module.exports = (sequelize, DataTypes) => {
       let rows = [],
         result = {},
         index = 0;
+      const { User } = sequelize?.models;
       let generateFakeData = () => {
         let user_id = faker.datatype.uuid();
         return {
@@ -42,6 +40,7 @@ module.exports = (sequelize, DataTypes) => {
           archived_at: faker.datatype.datetime(),
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
+          user: User.FAKE()
         };
       };
       if (count > 0) {
@@ -65,7 +64,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       address_line: {
         type: DataTypes.STRING,
-      },     
+      },
     },
     {
       sequelize,

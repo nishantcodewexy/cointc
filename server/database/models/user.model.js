@@ -4,7 +4,6 @@ const _ = require("underscore");
 const hooks = require("../hooks/user.hook");
 const { tableNames } = require("../../consts");
 const faker = require("faker");
-const Profile = require("./profile.model");
 // const uppercaseFirst = (str) => `${str[0].toUpperCase()}${str.substr(1)}`;
 
 module.exports = (sequelize, DataTypes) => {
@@ -120,6 +119,7 @@ module.exports = (sequelize, DataTypes) => {
       let generateFakeData = () => {
         let id = faker.datatype.uuid(),
           access_level = faker.helpers.randomize([1, 2, 3]);
+        const { Profile } = sequelize?.models;
         return {
           id,
           user_id: id,
@@ -137,7 +137,7 @@ module.exports = (sequelize, DataTypes) => {
           mode: null,
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
-          ...Profile(sequelize, DataTypes).FAKE(),
+          ...Profile.FAKE(),
         };
       };
       if (count > 0) {

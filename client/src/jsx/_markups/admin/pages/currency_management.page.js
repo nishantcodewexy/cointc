@@ -38,6 +38,8 @@ function CurrencyMgmt({ services, useService }) {
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
+        "fake": true,
+        "sudo": true,
         paranoid: false,
       },
       toast: { success: notifySuccess, error: notifyError },

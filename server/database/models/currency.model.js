@@ -2,7 +2,7 @@
 const { Model } = require("sequelize");
 const _ = require("underscore");
 const { tableNames } = require("../../consts");
-const faker = require('faker');
+const faker = require("faker");
 
 module.exports = (sequelize, DataTypes) => {
   class Currency extends Model {
@@ -22,14 +22,13 @@ module.exports = (sequelize, DataTypes) => {
       });
     }
 
-    static FAKE(count){
+    static FAKE(count) {
       let rows = [],
         result = {},
         index = 0;
       let generateFakeData = () => {
-        let id = faker.datatype.uuid()
-        
-          
+        let id = faker.datatype.uuid();
+
         return {
           id,
           name: faker.lorem.sentence(),
@@ -39,7 +38,6 @@ module.exports = (sequelize, DataTypes) => {
           archived_at: faker.datatype.datetime(),
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
-          
         };
       };
       if (count > 1) {

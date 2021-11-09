@@ -26,6 +26,7 @@ module.exports = (sequelize, DataTypes) => {
         result = {},
         index = 0;
       let generateFakeData = () => {
+        const { User } = sequelize?.models;
         return {
           id: faker.datatype.uuid(),
           otp: faker.datatype.float(5),
@@ -33,7 +34,7 @@ module.exports = (sequelize, DataTypes) => {
           two_factor: faker.datatype.boolean(),
           verify_token: faker.random.alphaNumeric(50),
           verify_token_ttl: faker.datatype.datetime(),
-          user: User(sequelize, DataTypes).FAKE(),
+          user: User.FAKE(),
         };
       };
       if (count > 1) {

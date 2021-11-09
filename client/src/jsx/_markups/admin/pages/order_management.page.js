@@ -5,8 +5,47 @@ import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
 // CONSTANTS
 import { SERVICE } from "../../../_constants";
+import useToggler from "../../../_hooks/toggler.hook";
+import { useEffect } from "react";
+import TableGenerator from "../components/TableGenerator.Component";
+import { Popper } from "@mui/core";
+import { toast } from "react-toastify";
+import Moment from "react-moment";
 
-function OrdersManagement() {
+function OrdersManagement({services, useService}) {
+
+  const { account, analytics} = services;
+
+  let service = useService({
+    [SERVICE?.RETRIEVE]: account.retrieveUser,
+    [SERVICE?.UPDATE]: account.updateUser,
+    [SERVICE?.DROP]: account.removeUser,
+    [SERVICE?.BULK_CREATE]: account.bulkCreateUser,
+    [SERVICE?.BULK_RETRIEVE]: analytics.getOrders,
+  });
+
+  const { dispatchRequest } = service;
+
+  const {
+    isOpen: isModalOpen,
+    onOpen: onOpenModal,
+    onClose: onModalClose,
+    toggledPayload: modalPayload,
+  } = useToggler();
+
+  useEffect(() => {
+    dispatchRequest({
+      type: SERVICE?.BULK_RETRIEVE,
+      payload: {
+        "fake": true,
+        "sudo": true,
+        "filter[type]": "sell"
+      },
+      toast: { success: notifySuccess, error: notifyError },
+    });
+  }, []);
+
+
   return (
     <>
       <PageTitle activeMenu="" motherMenu="Advert management" />
@@ -40,157 +79,60 @@ function OrdersManagement() {
               padding: 10,
             }}
           >
-            <OrderHistoryTable />
+            <TableGenerator
+                {...{ service }}
+                omit="*"
+                extras={[
+                  "id",
+                  "username",
+                  "payment",
+                  "time_remaining",
+                  "type",
+                  "status",
+                  "total",
+                  "date"
+                ]}
+                transformers={{
+                  
+                  id: ({row}) => row?.id,
+                  username: ({row}) => row?.user ? row?.user?.pname : "",
+                  type: ({row}) => row?.type || "",
+                  payment: ({row}) => row?.payment || "",
+                  time_remaining: ({row}) => row?.time_remaining || "",
+                  status: ({row}) => row?.status || "",
+                  date: ({row}) => (
+                    <Moment format="YYYY/MM/DD" date={row?.archivedAt} />
+                  ),
+                }}
+              />
           </Card>
         </Col>
       </Row>
     </>
   );
 }
-function OrderHistoryTable() {
-  const chackbox = document.querySelectorAll(".user_permission_single input");
-  const motherChackBox = document.querySelector(".user_permission input");
-  // console.log(document.querySelectorAll(".publish_review input")[0].checked);
-  const checkboxFun = (type) => {
-    for (let i = 0; i < chackbox.length; i++) {
-      const element = chackbox[i];
-      if (type === "all") {
-        if (motherChackBox.checked) {
-          element.checked = true;
-        } else {
-          element.checked = false;
-        }
-      } else {
-        if (!element.checked) {
-          motherChackBox.checked = false;
-          break;
-        } else {
-          motherChackBox.checked = true;
-        }
-      }
-    }
-  };
 
-  const check = (i) => (
-    <div className={`custom-control custom-checkbox ml-2`}>
-      <input
-        type="checkbox"
-        className="custom-control-input "
-        id={`checkAll_user_permission_${i}`}
-        required=""
-        onClick={() => checkboxFun()}
-      />
-      <label
-        className="custom-control-label"
-        htmlFor={`checkAll_user_permission_${i}`}
-      ></label>
-    </div>
-  );
-
-  return (
-    <>
-      <Table responsive hover size="sm">
-        <thead>
-          <tr>
-            <th className="user_permission">
-              <div className="custom-control custom-checkbox mx-2">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="checkAll_user_permission_all"
-                  onClick={() => checkboxFun("all")}
-                />
-                <label
-                  className="custom-control-label"
-                  htmlFor="checkAll_user_permission_all"
-                ></label>
-              </div>
-            </th>
-            <th className="">ID</th>
-            <th className="">Username</th>
-            <th className="">Payment</th>
-            <th className="">Time remaining</th>
-            <th className="">Type</th>
-            <th className="">Status</th>
-            <th>Total</th>
-            <th>Date</th>
-          </tr>
-        </thead>
-        <tbody id="customers">
-          <tr className="btn-reveal-trigger">
-            <td className="user_permission_single">{check(1)}</td>
-            <td className="py-3">611de970add</td>
-            <td className="py-3 ">
-              <Link to="/to_user_information">
-                <div className="media d-flex align-items-center">
-                  <div className="avatar avatar-xl mr-4">
-                    <div className="">
-                      <img
-                        className="rounded-circle img-fluid"
-                        src={avartar1}
-                        width="30"
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                  <div className="media-body">
-                    <h5 className="mb-0 fs--1">Alice Krejcova</h5>
-                  </div>
-                </div>
-              </Link>
-            </td>
-            <td className="py-2">Cash</td>
-            <td className="py-3 ">13 min</td>
-            <td className="py-3 ">Delivery</td>
-            <td className="py-3">
-              <span
-                className="fa fa-circle text-success"
-                style={{ fontSize: 12 }}
-              ></span>{" "}
-              Delivered
-            </td>
-            <td className="py-3">$245.00</td>
-            <td className="py-3 ">2021-08-19 5:17:36</td>
-          </tr>
-          <tr className="btn-reveal-trigger">
-            <td className="user_permission_single">{check(1)}</td>
-            <td className="py-3">611de970add</td>
-            <td className="py-3 ">
-            <Link to="/to_user_information">
-                <div className="media d-flex align-items-center">
-                  <div className="avatar avatar-xl mr-4">
-                    <div className="">
-                      <img
-                        className="rounded-circle img-fluid"
-                        src={avartar4}
-                        width="30"
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                  <div className="media-body">
-                    <h5 className="mb-0 fs--1">Felix James</h5>
-                  </div>
-                </div>
-              </Link>
-            </td>
-            <td className="py-2">Cash</td>
-            <td className="py-3 ">37 min</td>
-            <td className="py-3 ">Delivery</td>
-            <td className="py-3">
-              <span
-                className="fa fa-circle text-danger"
-                style={{ fontSize: 12 }}
-              ></span>{" "}
-              Cancelled
-            </td>
-            <td className="py-3">$643.00</td>
-            <td className="py-3 ">2021-08-19 5:17:36</td>
-          </tr>
-        </tbody>
-      </Table>
-    </>
-  );
-}
 
 export default OrdersManagement;
+
+function notifySuccess() {
+  toast.success("Success !", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}
+
+function notifyError(error) {
+  toast.error(error || "Request Error!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}

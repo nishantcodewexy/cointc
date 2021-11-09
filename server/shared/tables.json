@@ -19,5 +19,6 @@
   "POLICY": "tbl_policies",
   "FEE": "tbl_fees",
   "CHAT_MESSAGE": "tbl_chat_messages",
-  "ESCROW": "tbl_escrows"
+  "ESCROW": "tbl_escrows",
+  "TRANSACTION": "tbl_trxs"
 }

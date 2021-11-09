@@ -34,6 +34,7 @@ module.exports = (sequelize, DataTypes) => {
         index = 0;
       let generateFakeData = () => {
         let user_id = faker.datatype.uuid();
+        let { User } = sequelize?.models;
         return {
           id: faker.datatype.uuid(),
           user_id,
@@ -46,8 +47,8 @@ module.exports = (sequelize, DataTypes) => {
           payment_ttl_mins: faker.datatype.number(),
           price: faker.datatype.float(),
           floating_price: faker.datatype.float(),
-          initial_qty: faker.datatype.number(),
-          current_qty: faker.datatype.number(),
+          total_qty: faker.datatype.number(),
+          available_qty: faker.datatype.number(),
           fiat: faker.finance.currencyCode(),
           crypto: faker.helpers.randomize(Object.values(walletTypes)),
           remarks: faker.lorem.sentence(),
@@ -57,7 +58,9 @@ module.exports = (sequelize, DataTypes) => {
           archived_at: null,
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
-          user: User(sequelize, DataTypes).FAKE(),
+          total_orders: faker.datatype.number(),
+          total_completed_orders: faker.datatype.number(),
+          user: User.FAKE(),
         };
       };
       if (count > 1) {
@@ -140,7 +143,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.DOUBLE,
         comment: "(80 - 200%) Price = market_price * currency * floating_price",
       },
-      initial_qty: {
+      total_qty: {
         allowNull: false,
         type: DataTypes.INTEGER,
         defaultValue: 1,
@@ -148,7 +151,7 @@ module.exports = (sequelize, DataTypes) => {
           isInt: true,
         },
       },
-      current_qty: {
+      available_qty: {
         allowNull: false,
         type: DataTypes.INTEGER,
         defaultValue: 1,

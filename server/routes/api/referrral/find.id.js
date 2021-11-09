@@ -1,21 +1,21 @@
-const Joi = require("joi");
-
+"use strict";
+const Joi = require('joi')
 module.exports = (server) => {
   const {
     controllers: {
-      address: { findByUserID },
+      referral: { findByID },
     },
     helpers: {
       permissions: { isAdminOrError },
     },
   } = server.app;
 
-  let schema = Joi.object().keys({
-    user_id: Joi.string().uuid(),
+  const schema = Joi.object({
+    id: Joi.string().uuid(),
   });
   return {
     method: "GET",
-    path: "/address/{user_id}",
+    path: "/referral/{id}",
     config: {
       pre: [
         {
@@ -23,7 +23,7 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: findByUserID,
+      handler: findByID,
       auth: "jwt",
       validate: {
         params: schema,

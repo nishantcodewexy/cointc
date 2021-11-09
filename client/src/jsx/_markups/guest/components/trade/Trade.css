@@ -118,3 +118,17 @@
   background-color: #CCCCEE;
     color: #000000;
 }
+
+.crypt{
+  padding-left: 7px
+}
+.new_buy_btc{
+  background-color: #0059FF !important; 
+  color: #FFF !important;
+  width: 100px;
+  border: none;
+  /* font-weight: bold; */
+  font-size: 14px;
+  height: 40px;
+  border-radius: 7px;
+}

@@ -7,23 +7,23 @@ module.exports = (server) => {
     controllers: {
       order: { findByID },
     },
-    helpers: {
+    /* helpers: {
       permissions: { isUser },
-    },
+    }, */
   } = server.app;
 
   return {
     method: "GET",
     path: "/order/{id}",
     config: {
-      pre: [
+      /* pre: [
         {
           method: isUser,
           assign: "user",
         },
-      ],
+      ], */
       handler: findByID,
-      auth: "jwt",
+      // auth: "jwt",
       validate: {
         params: paramsSchema,
       },

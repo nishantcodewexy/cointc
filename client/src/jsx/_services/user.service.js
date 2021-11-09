@@ -20,7 +20,7 @@ export default class UserServices extends Services {
   login = async (data) => {
     return await this.decorate(
       async () =>
-        await this.axios("auth/authenticate", {
+        await this.axios("auth/login", {
           method: "POST",
           data,
         })
@@ -42,4 +42,7 @@ export default class UserServices extends Services {
         })
     );
   };
+
 }
+
+

@@ -1,7 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
 const { tableNames } = require("../../consts");
-const faker = require('faker')
+const faker = require("faker");
 
 module.exports = (sequelize, DataTypes) => {
   class Policy extends Model {
@@ -10,29 +10,25 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({User, Policy}) {
+    static associate({ User, Policy }) {
       // define association here
       Policy.belongsTo(User, {
         foreignKey: {
-          name: 'user_id'
-        }
-      })
+          name: "user_id",
+        },
+      });
     }
 
-    static FAKE(count){
+    static FAKE(count) {
       let rows = [],
         result = {},
         index = 0;
       let generateFakeData = () => {
-        
-        
-          
         return {
           escrow_fee: faker.datatype.float(),
           buyer_ad_fee: faker.datatype.float(),
           seller_ad_fee: faker.datatype.float(),
           min_confirmation_block: faker.datatype.number(),
-          
         };
       };
       if (count > 1) {

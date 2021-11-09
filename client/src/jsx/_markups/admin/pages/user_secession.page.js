@@ -74,7 +74,7 @@ function UserSecessions(props) {
 }
 export default UserSecessions;
 
-function SecessionRequestTable({
+function SecessionRequestTable({ 
   services,
   useService,
   notifySuccess,
@@ -94,21 +94,30 @@ function SecessionRequestTable({
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
         "options[paranoid]": false,
+        "sudo": true,
+        "fake": true,
       },
       toast: { success: notifySuccess, error: notifyError },
     });
   }, []);
 
-  const permit = ({ row }) => {
+  const Permit = ({ row }) => {
+    const { account: _account } = services;
+    const [permission, setPermission] = useState(row?.permission);
+    let { dispatchRequest: _d } = useService({
+      [SERVICE?.UPDATE]: _account?.updateUser,
+    });
+
+
     function handleChange(e, value) {
-      console.log({ e, value });
-      // TODO: Send update request to update permission
-      // dispatchRequest({
-      //   type: "put",
-      //   payload: {
-      //     permission: value
-      //   }
-      // });
+      // TODO: Make Permission change request
+      _d({
+        type: SERVICE?.UPDATE,
+        payload: { id: row?.id, data: { permission: !permission } },
+        reload: true,
+        toast: { success: notifySuccess, error: notifyError },
+      });
+      setPermission(value);
     }
     return (
       <small className="d-flex" style={{ gap: 10, alignItems: "center" }}>
@@ -135,7 +144,7 @@ function SecessionRequestTable({
         omit="*"
         extras={["name", "user_id", "phone_number", "level", "permission"]}
         transformers={{
-          name: ({ key, value, row }) => {
+          name: ({ row }) => {
             return (
               <div className="media d-flex align-items-center">
                 <div className="avatar avatar-xl mr-4">
@@ -143,10 +152,11 @@ function SecessionRequestTable({
                     <IdenticonAvatar size={30} alt="" id={row.id} />
                   </div>
                 </div>
+
                 <div className="media-body">
                   <div className="mb-0 fs--1">
                     <Link to="/to_user_information">
-                      {row?.pname || row?.lname  || "Untitled"}
+                      {row?.pname || row?.lname || "Untitled"}
                     </Link>
                   </div>
                   <div
@@ -173,11 +183,11 @@ function SecessionRequestTable({
           level: ({ row }) => {
             return 1;
           },
-          permission: permit,
+          permission: Permit,
           phone_number: ({ row }) => {
-            return row?.profile?.kyc?.phone ? (
-              <a href={`tel:${row?.profile?.kyc?.phone}`}>
-                {row?.profile?.kyc?.phone}
+            return row?.phone ? (
+              <a href={`tel:${row?.phone}`}>
+                {row?.phone}
               </a>
             ) : (
               <span className="badge light badge-danger">
@@ -447,3 +457,6 @@ function notifyError(error) {
     draggable: true,
   });
 }
+
+
+

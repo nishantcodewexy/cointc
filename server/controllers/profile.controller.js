@@ -18,7 +18,7 @@ const ProfileController = (server) => {
       const {
         query,
         pre: {
-          user: { user, fake, sudo, fake_count },
+          user: { user, fake, sudo },
         },
       } = req;
 
@@ -32,12 +32,12 @@ const ProfileController = (server) => {
           ...queryFilters,
         };
 
+        const { limit, offset } = queryFilters;
+
         if (sudo) {
           let queryset = fake
-            ? await Profile.FAKE(fake_count)
+            ? await Profile.FAKE(limit)
             : await Profile.findAndCountAll(options);
-
-          const { limit, offset } = queryFilters;
 
           return paginator({
             queryset,
@@ -55,39 +55,6 @@ const ProfileController = (server) => {
     },
 
     /**
-     * @function findByUserID
-     * @describe finds record with matching user ID
-     * @param {Object} req
-     */
-    async findByUserID(req) {
-      const {
-        query,
-        params: { user_id },
-        pre: {
-          user: { user, fake, sudo, fake_count },
-        },
-      } = req;
-
-      try {
-        const queryFilters = await filters({
-          query,
-          searchFields: ["email"],
-          extras: {
-            user_id: user_id,
-          },
-        });
-        const options = {
-          ...queryFilters,
-        };
-        return {
-          result: fake ? await Profile.FAKE() : await Profile?.findOne(options),
-        };
-      } catch (err) {
-        console.error(err);
-        return boom.internal(err.message, err);
-      }
-    },
-    /**
      * @function findByID
      * @describe finds record with matching ID
      * @param {Object} req
@@ -97,7 +64,7 @@ const ProfileController = (server) => {
         query,
         params: { id },
         pre: {
-          user: { user, fake, sudo, fake_count },
+          user: { user, fake, sudo },
         },
       } = req;
 
@@ -106,15 +73,22 @@ const ProfileController = (server) => {
           query,
           searchFields: ["email"],
           extras: {
-            id,
+            profile_id: id,
+            ...(!sudo && { user_id: user?.id }),
           },
         });
         const options = {
           ...queryFilters,
         };
-        return {
-          result: fake ? await Profile.FAKE() : await Profile?.findOne(options),
-        };
+        let result = fake
+          ? await Profile.FAKE()
+          : await Profile?.findOne(options);
+
+        return result
+          ? {
+              result,
+            }
+          : boom.notFound(`Profile ID: ${id} not found!`);
       } catch (err) {
         console.error(err);
         return boom.internal(err.message, err);
@@ -137,7 +111,7 @@ const ProfileController = (server) => {
         const {
           payload,
           pre: {
-            user: { user, fake, sudo, fake_count },
+            user: { user, sudo },
           },
         } = req;
         let fields = [],
@@ -195,25 +169,29 @@ const ProfileController = (server) => {
      * @describe update record using the user ID
      * @param {Object} req
      */
-    async updateByUserID(req) {
+    async updateByID(req) {
       try {
         const {
           payload,
-          params: { user_id },
+          params: { id },
           pre: {
             user: { user, fake, sudo, fake_count },
           },
         } = req;
-        let fields = ["two_factor"],
+        let fields = [
+            "mode",
+            "phone",
+            "payment_methods",
+            "pname",
+            "oname",
+            "lname",
+            "date_of_birth",
+          ],
           result;
 
-        if (!sudo)
-          return boom.methodNotAllowed(
-            `Only admins can perform this operation`
-          );
         // update session user data
         result = await Profile?.update(payload, {
-          where: { user_id },
+          where: { user_id: user?.user?.id, profile_id: id },
           fields,
         });
 
@@ -236,7 +214,7 @@ const ProfileController = (server) => {
       const {
         payload: { data = [], force = false },
         pre: {
-          user: { user, fake, sudo, fake_count },
+          user: { user, sudo },
         },
       } = req;
       let result, where;

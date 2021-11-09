@@ -31,7 +31,7 @@ export default class CurrencyServices extends Services {
   bulkRetrieve = async (params) => {
     return await this.decorate(
       async () =>
-        await this.axios(`currency/bulk`, {
+        await this.axios(`currency/`, {
           method: "GET",
           params,
         })
