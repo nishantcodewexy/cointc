@@ -3,8 +3,6 @@ import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, InputGroup } from 'react-bootstrap';
 import { Link, useHistory } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import accountUserActions from '../../../../_actions/account.user.action';
-import { RegisterApi } from '../api';
 import { Formik } from "formik";
 import { useDispatch } from 'react-redux';
 
@@ -40,39 +38,29 @@ export const JoinForm = () => {
                 }
                 return errors;
             }}
-            onSubmit={async (values, { setSubmitting }) => {
+            onSubmit={(values, { setSubmitting }) => {
                 const { email, password, repeat_password, invite_code } = values;
                 const body = { email, password, repeat_password, invite_code }
-                console.log(values)
                 setSubmitting(true);
 
-                const data = await RegisterApi("/api/auth/register", body)
+                try {
+                    axios.post(`http://207.148.118.105/api/auth/register`, body, { headers: { "Content-Type": "application/json" } })
+                        .then(function (response) {
+                            toast.success(response.data.message);
+                            dispatch(log({ type: SESSION.REGISTER, response }));
+                            history.push('/')
+                        })
+                        .catch(function (error) {
+                            toast.error(error.response.data.message)
+                            dispatch(log({ type: NOTICE.ERROR, data: error.toString() }));
+                            setSubmitting(false)
 
-                if (data) {
-                    toast.success(data.message)
-                    dispatch(log({ type: SESSION.REGISTER, data }));
-                    history.push("/verification")
-                } else {
-                    toast.error("Invalid Login details")
+                        })
+                } catch (e) {
+                    console.log(e)
                 }
 
-                // try {
-                //     let request = async () =>
-                //         await dispatchRequest({
-                //             type: SERVICE?.LOGIN,
-                //             payload: {
-                //                 email,
-                //                 password,
-                //                 access_level: 3,
-                //             },
-                //             toast: { error: notifyError },
-                //         });
-                //     dispatch(userAction.login(request));
-                // } catch (error) {
-                //     console.error(error);
-                // } finally {
-                //     setSubmitting(false);
-                // }
+
             }}
         >
             {({

@@ -105,7 +105,7 @@ function Dispute_report() {
                     <h4>HELPCRUNCH</h4>
                 </div>
             </div>
-            <Modal.Footer className="bn-footer">
+            <Modal.Footer class="bn-footer">
                 <div className="ask-faq-bn ">
                     <div className="row justify-content-center">
                         <div className="col-6 text-center">
