@@ -16,15 +16,15 @@ export const Header = () => {
         setMenuToggle(!menuToggle);
     };
     return (
-        <header class="header1"  style={scroll ? {'backgroundColor':'rgba(0,0,0,0.75)'} : {"backgroundColor":"transparent"}}>
-        <div class="inner clear">
+        <header className="header1"  style={scroll ? {'backgroundColor':'rgba(0,0,0,0.75)'} : {"backgroundColor":"transparent"}}>
+        <div className="inner clear">
             <h1>
                 <a href="/"><img src={logo} alt-="CoinTC" /></a>
             </h1>
             <nav>
-                <h2 class="hidden">메인메뉴</h2>
-                <div class="gnb_pc clear">
-                    <ul class="clear">
+                <h2 className="hidden">메인메뉴</h2>
+                <div className="gnb_pc clear">
+                    <ul className="clear">
                         <li className={cur_loc==='/trade'||cur_loc==='/ad_create'||cur_loc==='/ad_payment_method'||cur_loc==='/ad_contract'?'on':''}><a href="/trade">P2P Trade</a></li>
                         <li className={cur_loc==='/orders'?'on':''}><a href="/orders">Orders</a></li>
                         <li className={cur_loc==='/wallet'?'on':''}><a href="/wallet">Wallet</a></li>
@@ -32,37 +32,37 @@ export const Header = () => {
                         <li className={cur_loc==='/support'?'on':''}><a href="/support">Support</a></li>
                     </ul> 
                 </div>
-                <div class="search_pc">
-                    <div class="form-group has-search mb-0">
-                        <span class="fa fa-search form-control-feedback"></span>
-                        <input type="text" class="form-control" placeholder="Search blocks,transactions,hash..."/>
+                <div className="search_pc">
+                    <div className="form-group has-search mb-0">
+                        <span className="fa fa-search form-control-feedback"></span>
+                        <input type="text" className="form-control" placeholder="Search blocks,transactions,hash..."/>
                     </div>
                 </div>
-                <div class="user_btn clear">
-                    <a href="/login" class="btn btn_login text-white mr-3">Login</a>
-                    <a href="/signup" class="btn btn_signup">Sign Up</a>
+                <div className="user_btn clear">
+                    <a href="/login" className="btn btn_login text-white mr-3">Login</a>
+                    <a href="/signup" className="btn btn_signup">Sign Up</a>
                 </div>
 
-                <div class="side_menu" style={menuToggle ? {'right':'0px'} : {"right":"-250px"}}>
-                    <div class="burger_box">
-                        <div class="menu-icon-container">
+                <div className="side_menu" style={menuToggle ? {'right':'0px'} : {"right":"-250px"}}>
+                    <div className="burger_box">
+                        <div className="menu-icon-container">
                             <a href="#" className={"menu-icon js-menu_toggle "+(menuToggle ? "opened" : "closed")} onClick={handleClick}> 
-                                <span class="menu-icon_box">
-                                    <span class="menu-icon_line menu-icon_line--1"></span>
-                                    <span class="menu-icon_line menu-icon_line--2"></span>
-                                    <span class="menu-icon_line menu-icon_line--3"></span>
+                                <span className="menu-icon_box">
+                                    <span className="menu-icon_line menu-icon_line--1"></span>
+                                    <span className="menu-icon_line menu-icon_line--2"></span>
+                                    <span className="menu-icon_line menu-icon_line--3"></span>
                                 </span>
                             </a>
                         </div>
                     </div>
-                    <div class="search_m">
-                        <div class="form-group has-search">
-                            <span class="fa fa-search form-control-feedback"></span>
-                            <input type="text" class="form-control" placeholder="Search blocks,transactions,hash..."/>
+                    <div className="search_m">
+                        <div className="form-group has-search">
+                            <span className="fa fa-search form-control-feedback"></span>
+                            <input type="text" className="form-control" placeholder="Search blocks,transactions,hash..."/>
                         </div>
                     </div>
-                    <div class="gnb_m">
-                        <ul class="clear">
+                    <div className="gnb_m">
+                        <ul className="clear">
                             <li><a href="/trade">P2P Trade</a></li>
                             <li><a href="/orders">Orders</a></li>
                             <li><a href="/wallet">Wallet</a></li>
@@ -70,9 +70,9 @@ export const Header = () => {
                             <li><a href="/support">Support</a></li>
                         </ul>
                     </div>
-                    <div class="user_m">
-                        <a href="/login" class="btn btn_login text-white mb-2">Login</a>
-                        <a href="/signup" class="btn btn_signup">Sign Up</a>
+                    <div className="user_m">
+                        <a href="/login" className="btn btn_login text-white mb-2">Login</a>
+                        <a href="/signup" className="btn btn_signup">Sign Up</a>
                     </div>
                 </div>
             </nav>

@@ -16,90 +16,90 @@ const AllaccountTabContent = function (props) {
     };
     return(
         <>
-        <ul class="date clear">
+        <ul className="date clear">
             <li className={(activeTab === "all-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("all-tab")}>All</a></li>
             <li className={(activeTab === "yesterday-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("yesterday-tab")}>Yesterday</a></li>
             <li className={(activeTab === "this-week-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-week-tab")}>This Week</a></li>
             <li className={(activeTab === "this-month-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-month-tab")}>This Month</a></li>
         </ul>
-        <p class="date_range">Date Range:<span>Until 2021-09-15 23:59:59 (UTC+0)</span></p>
-        <div class="tab-content">
+        <p className="date_range">Date Range:<span>Until 2021-09-15 23:59:59 (UTC+0)</span></p>
+        <div className="tab-content">
             <div className={"tab-pane " +(activeTab === "all-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
+                    <dl className="ranking">
                         <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
             </div>
             <div className={"tab-pane " +(activeTab === "yesterday-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
             </div>
             <div className={"tab-pane " +(activeTab === "this-week-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
             </div>
             <div className={"tab-pane " +(activeTab === "this-month-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
@@ -122,84 +122,84 @@ const SpotTabContent = function (props) {
             <li className={(activeTab === "this-week-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-week-tab")}>This Week</a></li>
             <li className={(activeTab === "this-month-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-month-tab")}>This Month</a></li>
         </ul>
-        <p class="date_range">Date Range:<span>Until 2021-09-15 23:59:59 (UTC+0)</span></p>
-        <div class="tab-content">
+        <p className="date_range">Date Range:<span>Until 2021-09-15 23:59:59 (UTC+0)</span></p>
+        <div className="tab-content">
             <div className={"tab-pane " +(activeTab === "all-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
             </div>
             <div className={"tab-pane " +(activeTab === "yesterday-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
             </div>
             <div className={"tab-pane " +(activeTab === "this-week-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
             </div>
             <div className={"tab-pane " +(activeTab === "this-month-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
@@ -222,84 +222,84 @@ const FutureTabContent = function (props) {
             <li className={(activeTab === "this-week-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-week-tab")}>This Week</a></li>
             <li className={(activeTab === "this-month-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-month-tab")}>This Month</a></li>
         </ul>
-        <p class="date_range">Date Range:<span>Until 2021-09-15 23:59:59 (UTC+0)</span></p>
-        <div class="tab-content">
+        <p className="date_range">Date Range:<span>Until 2021-09-15 23:59:59 (UTC+0)</span></p>
+        <div className="tab-content">
             <div className={"tab-pane " +(activeTab === "all-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
             </div>
             <div className={"tab-pane " +(activeTab === "yesterday-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
             </div>
             <div className={"tab-pane " +(activeTab === "this-week-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
             </div>
             <div className={"tab-pane " +(activeTab === "this-month-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
@@ -316,90 +316,90 @@ const MiningTabContent = function (props) {
     };
     return(
         <>
-        <ul class="date clear">
+        <ul className="date clear">
             <li className={(activeTab === "all-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("all-tab")}>All</a></li>
             <li className={(activeTab === "yesterday-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("yesterday-tab")}>Yesterday</a></li>
             <li className={(activeTab === "this-week-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-week-tab")}>This Week</a></li>
             <li className={(activeTab === "this-month-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("this-month-tab")}>This Month</a></li>
         </ul>
-        <p class="date_range">Date Range:<span>Until 2021-09-15 23:59:59 (UTC+0)</span></p>
-        <div class="tab-content">
+        <p className="date_range">Date Range:<span>Until 2021-09-15 23:59:59 (UTC+0)</span></p>
+        <div className="tab-content">
             <div className={"tab-pane " +(activeTab === "all-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
             </div>
             <div className={"tab-pane " +(activeTab === "yesterday-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
             </div>
             <div className={"tab-pane " +(activeTab === "this-week-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
             </div>
             <div className={"tab-pane " +(activeTab === "this-month-tab" ? "active" : "")}>
-                <div class="box clear">
-                    <dl class="earned">
+                <div className="box clear">
+                    <dl className="earned">
                         <dt>You Earned</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="traded_friends">
+                    <dl className="traded_friends">
                         <dt>Total Number of Traded Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="friends">
+                    <dl className="friends">
                         <dt>Total Numbers of Friends</dt>
                         <dd>0</dd>
                     </dl>
-                    <dl class="ranking">
-                        <dt>Your Ranking <a href="#">Ranking List<i class="fal fa-chevron-right"></i></a></dt>
+                    <dl className="ranking">
+                        <dt>Your Ranking <a href="#">Ranking List<i className="fal fa-chevron-right"></i></a></dt>
                         <dd>--</dd>
                     </dl>
                 </div>
@@ -427,28 +427,28 @@ export const Affiliate = () => {
 
     
     return (     
-        <div class="content">
+        <div className="content">
             <section id="affiliateTop">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-12 col-sm-12  clear">
-                            <h3 class="wow fadeInLeft" data-wow-delay="0.2s">Invite your friends<br />and make a profit.</h3>
-                            <p class="wow fadeInLeft" data-wow-delay="0.4s">We will pay 20% of your friend's trade transaction fee.</p>
-                            <div class="box wow fadeInLeft" data-wow-delay="0.6s">
-                                <a href="#" class="btn_link">+ Generate your link</a>
-                                <dl class="referral_id">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-lg-6 col-md-12 col-sm-12  clear">
+                            <h3 className="wow  fadeInLeft" data-wow-delay="0.2s">Invite your friends<br />and make a profit.</h3>
+                            <p className="wow fadeInLeft" data-wow-delay="0.4s">We will pay 20% of your friend's trade transaction fee.</p>
+                            <div className="box wow fadeInLeft" data-wow-delay="0.6s">
+                                <a href="#" className="btn_link">+ Generate your link</a>
+                                <dl className="referral_id">
                                     <dt>Default Referral ID</dt>
-                                    <dd>12345689<a href="#" class="icon_copy"><i class="fal fa-copy"></i></a></dd>
+                                    <dd>12345689<a href="#" className="icon_copy"><i className="fal fa-copy"></i></a></dd>
                                 </dl>
-                                <dl class="link">
+                                <dl className="link">
                                     <dt>Default Link</dt>
-                                    <dd>https://...12345689<a href="#" class="icon_copy"><i class="fal fa-copy"></i></a></dd>
+                                    <dd>https://...12345689<a href="#" className="icon_copy"><i className="fal fa-copy"></i></a></dd>
                                 </dl>
-                                <dl class="note clear">
+                                <dl className="note clear">
                                     <dt>Note</dt>
-                                    <dd>ABC<a href="#" class="icon_write"><i class="fal fa-pencil"></i></a></dd>
+                                    <dd>ABC<a href="#" className="icon_write"><i className="fal fa-pencil"></i></a></dd>
                                 </dl>
-                                <div class="bottom clear">
+                                <div className="bottom clear">
                                     <dl>
                                         <dt>You Receive</dt>
                                         <dd>0%</dd>
@@ -460,7 +460,7 @@ export const Affiliate = () => {
                                 </div>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-12 col-sm-12 wow fadeInRight" data-wow-delay="0.8s">
+                        <div className="col-lg-6 col-md-12 col-sm-12 wow fadeInRight" data-wow-delay="0.8s">
                             <img src={affiliateTop} alt="Invite your friends and make a profit." />
                         </div>
                     </div>
@@ -468,18 +468,18 @@ export const Affiliate = () => {
             </section>
             
             <section id="dashboard">
-                <div class="container">
-                    <div class="row wow fadeInUp" data-wow-delay="0.2s">
-                        <div class="col-12 clear">
+                <div className="container">
+                    <div className="row wow fadeInUp" data-wow-delay="0.2s">
+                        <div className="col-12 clear">
                             <h4><img src={icon_dashboard} alt="Dashboard" />Dashboard</h4>
 
-                            <ul class="dash_menu clear">
+                            <ul className="dash_menu clear">
                                 <li className={(activeTab === "all-accounts-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("all-accounts-tab")}>All Accounts</a></li>
                                 <li className={(activeTab === "spot-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("spot-tab")}>Spot</a></li>
                                 <li className={(activeTab === "futures-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("futures-tab")}>Futures</a></li>
                                 <li className={(activeTab === "mining-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTab("mining-tab")}>Mining</a></li>
                             </ul>
-                            <div class="tab-content">
+                            <div className="tab-content">
                                 <div className={"tab-pane " +(activeTab === "all-accounts-tab" ? "active" : "")}>
                                     <AllaccountTabContent/>
                                 </div>
@@ -494,7 +494,7 @@ export const Affiliate = () => {
                                 </div> 
                             </div>                            
                             
-                            <ul class="notice">
+                            <ul className="notice">
                                 <li>* Data update time refers to UTC + 0 time zone. The data maintenance time is 3am - 5am (UTC+0) every day. During this period, the calculation of today's data is based on the assets of previous day.<br />After maintenance, all data will be displayed properly</li>
                                 <li>* Statement: due to the complexity of financial data, there might be nuances and delay. Data displayed above is for reference only. We sincerely apologize for any inconvenience.</li>
                             </ul>
@@ -504,22 +504,22 @@ export const Affiliate = () => {
             </section>
             
             <section id="friendsList">
-                <div class="container">
-                    <div class="row wow fadeInUp" data-wow-delay="0.4s">
-                        <div class="col-12">
+                <div className="container">
+                    <div className="row wow fadeInUp" data-wow-delay="0.4s">
+                        <div className="col-12">
                             <h4><img src={icon_friends} alt="Friends List" />Friends List</h4>
-                            <a href="#" class="btn_chart"><i class="far fa-chart-line"></i>View Chart</a>
-                            <ul class="friends_menu clear">
+                            <a href="#" className="btn_chart"><i className="far fa-chart-line"></i>View Chart</a>
+                            <ul className="friends_menu clear">
                                 <li className={(activeTabFriend === "all-accounts-friend-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabFriend("all-accounts-friend-tab")}>All Accounts</a></li>
                                 <li className={(activeTabFriend === "spot-friend-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabFriend("spot-friend-tab")}>Spot</a></li>
                                 <li className={(activeTabFriend === "futures-friend-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabFriend("futures-friend-tab")}>Futures</a></li>
                                 <li className={(activeTabFriend === "mining-friend-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabFriend("mining-friend-tab")}>Mining</a></li>
                             </ul>
-                            <div class="tab-content">
+                            <div className="tab-content">
                                 <div className={"tab-pane " +(activeTabFriend === "all-accounts-friend-tab" ? "active" : "")}>
                                     <p>All friends data as of 0:00 UTC today is displayed, and will be updated between 3:00 - 5:00 (UTC+0) today, excluding Mining Pool. All records can be exported directly from desktop downloads.</p>
-                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
-                                    <div class="table_container">
+                                    <a href="#" className="btn_history"><i className="far fa-chart-line"></i>Export complete history</a>
+                                    <div className="table_container">
                                         <table>
                                             <thead>
                                                 <tr>
@@ -539,16 +539,16 @@ export const Affiliate = () => {
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="indicator">
-                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                                        <span class="on">1</span>
-                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    <div className="indicator">
+                                        <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                                        <span className="on">1</span>
+                                        <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                                     </div>
                                 </div>
                                 <div className={"tab-pane " +(activeTabFriend === "spot-friend-tab" ? "active" : "")}>
                                     <p>All friends data as of 0:00 UTC today is displayed, and will be updated between 3:00 - 5:00 (UTC+0) today, excluding Mining Pool. All records can be exported directly from desktop downloads.</p>
-                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
-                                    <div class="table_container">
+                                    <a href="#" className="btn_history"><i className="far fa-chart-line"></i>Export complete history</a>
+                                    <div className="table_container">
                                         <table>
                                             <thead>
                                                 <tr>
@@ -568,16 +568,16 @@ export const Affiliate = () => {
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="indicator">
-                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                                        <span class="on">1</span>
-                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    <div className="indicator">
+                                        <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                                        <span className="on">1</span>
+                                        <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                                     </div>
                                 </div> 
                                 <div className={"tab-pane " +(activeTabFriend === "futures-friend-tab" ? "active" : "")}>
                                     <p>All friends data as of 0:00 UTC today is displayed, and will be updated between 3:00 - 5:00 (UTC+0) today, excluding Mining Pool. All records can be exported directly from desktop downloads.</p>
-                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
-                                    <div class="table_container">
+                                    <a href="#" className="btn_history"><i className="far fa-chart-line"></i>Export complete history</a>
+                                    <div className="table_container">
                                         <table>
                                             <thead>
                                                 <tr>
@@ -597,16 +597,16 @@ export const Affiliate = () => {
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="indicator">
-                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                                        <span class="on">1</span>
-                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    <div className="indicator">
+                                        <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                                        <span className="on">1</span>
+                                        <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                                     </div>
                                 </div>
                                 <div className={"tab-pane " +(activeTabFriend === "mining-friend-tab" ? "active" : "")}>
                                     <p>All friends data as of 0:00 UTC today is displayed, and will be updated between 3:00 - 5:00 (UTC+0) today, excluding Mining Pool. All records can be exported directly from desktop downloads.</p>
-                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
-                                    <div class="table_container">
+                                    <a href="#" className="btn_history"><i className="far fa-chart-line"></i>Export complete history</a>
+                                    <div className="table_container">
                                         <table>
                                             <thead>
                                                 <tr>
@@ -626,10 +626,10 @@ export const Affiliate = () => {
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="indicator">
-                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                                        <span class="on">1</span>
-                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    <div className="indicator">
+                                        <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                                        <span className="on">1</span>
+                                        <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                                     </div>
                                 </div> 
                             </div>
@@ -640,27 +640,27 @@ export const Affiliate = () => {
             </section>
             
             <section id="commission">
-                <div class="container">
-                    <div class="row wow fadeInUp" data-wow-delay="0.6s">
-                        <div class="col-12">
+                <div className="container">
+                    <div className="row wow fadeInUp" data-wow-delay="0.6s">
+                        <div className="col-12">
                             <h4><img src={icon_commission} alt="Commission" />Commission History</h4>
-                            <a href="#" class="btn_chart"><i class="far fa-chart-line"></i>View Chart</a>
-                            <div class="box clear">
-                                <i class="fal fa-megaphone"></i>
+                            <a href="#" className="btn_chart"><i className="far fa-chart-line"></i>View Chart</a>
+                            <div className="box clear">
+                                <i className="fal fa-megaphone"></i>
                                 <p>Your referral commission will be credited to your wallet balance within the next 72 hours. If you do not receive your commission within 72 hours, please contact our online support center for further assistance. </p>
                             </div>
-                            <ul class="commission_menu clear">
+                            <ul className="commission_menu clear">
                                 <li className={(activeTabCommission === "all-accounts-commission-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabCommission("all-accounts-commission-tab")}>All Accounts</a></li>
                                 <li className={(activeTabCommission === "spot-commission-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabCommission("spot-commission-tab")}>Spot (Margin Included)</a></li>
                                 <li className={(activeTabCommission === "futures-commission-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabCommission("futures-commission-tab")}>Futures</a></li>
                                 <li className={(activeTabCommission === "mining-commission-tab" ? "on" : "")}><a href={void(0)} onClick={() => handleTabCommission("mining-commission-tab")}>Mining</a></li>
                             </ul>
                             <p>Only show the records of the last 7 days. All records can be exported directly from desktop downloads.</p>
-                            <div class="tab-content">
+                            <div className="tab-content">
                                 <div className={"tab-pane " +(activeTabCommission === "all-accounts-commission-tab" ? "active" : "")}>
                                     
-                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
-                                    <div class="table_container">
+                                    <a href="#" className="btn_history"><i className="far fa-chart-line"></i>Export complete history</a>
+                                    <div className="table_container">
                                         <table>
                                             <thead>
                                                 <tr>
@@ -681,15 +681,15 @@ export const Affiliate = () => {
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="indicator">
-                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                                        <span class="on">1</span>
-                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    <div className="indicator">
+                                        <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                                        <span className="on">1</span>
+                                        <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                                     </div>
                                 </div>
                                 <div className={"tab-pane " +(activeTabCommission === "spot-commission-tab" ? "active" : "")}>
-                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
-                                    <div class="table_container">
+                                    <a href="#" className="btn_history"><i className="far fa-chart-line"></i>Export complete history</a>
+                                    <div className="table_container">
                                         <table>
                                             <thead>
                                                 <tr>
@@ -710,15 +710,15 @@ export const Affiliate = () => {
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="indicator">
-                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                                        <span class="on">1</span>
-                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    <div className="indicator">
+                                        <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                                        <span className="on">1</span>
+                                        <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                                     </div>
                                 </div>
                                 <div className={"tab-pane " +(activeTabCommission === "futures-commission-tab" ? "active" : "")}>
-                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
-                                    <div class="table_container">
+                                    <a href="#" className="btn_history"><i className="far fa-chart-line"></i>Export complete history</a>
+                                    <div className="table_container">
                                         <table>
                                             <thead>
                                                 <tr>
@@ -739,15 +739,15 @@ export const Affiliate = () => {
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="indicator">
-                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                                        <span class="on">1</span>
-                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    <div className="indicator">
+                                        <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                                        <span className="on">1</span>
+                                        <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                                     </div>
                                 </div>
                                 <div className={"tab-pane " +(activeTabCommission === "mining-commission-tab" ? "active" : "")}>
-                                    <a href="#" class="btn_history"><i class="far fa-chart-line"></i>Export complete history</a>
-                                    <div class="table_container">
+                                    <a href="#" className="btn_history"><i className="far fa-chart-line"></i>Export complete history</a>
+                                    <div className="table_container">
                                         <table>
                                             <thead>
                                                 <tr>
@@ -768,10 +768,10 @@ export const Affiliate = () => {
                                             </tbody>
                                         </table>
                                     </div>
-                                    <div class="indicator">
-                                        <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                                        <span class="on">1</span>
-                                        <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                                    <div className="indicator">
+                                        <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                                        <span className="on">1</span>
+                                        <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                                     </div>
                                 </div>
                             </div>                            
