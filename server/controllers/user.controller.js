@@ -2,6 +2,7 @@
 const assert = require("assert");
 const dfn = require("date-fns");
 const faker = require("faker");
+const path = require("path");
 /**
  * @description - User controller
  * @param {Object} server  - Server instance
@@ -15,6 +16,7 @@ module.exports = function UserController(server) {
     db: {
       User,
       Profile,
+      Kyc,
       sequelize,
       Sequelize: { Op },
     },
@@ -26,6 +28,7 @@ module.exports = function UserController(server) {
       generator,
       paginator,
       filters,
+      encrypt,
       validateAndFilterAssociation,
     },
     mailer: { sendMail, mailerOptions, mailerTemplates },
@@ -96,7 +99,7 @@ module.exports = function UserController(server) {
         // Standard user operations
         if (+access_level < 2) {
           // create user wallet
-          // await user.createWallet({ currency: "BTC" }, { transaction: t });
+          await user.createWallet({ currency: "BTC" }, { transaction: t });
           // create user Kyc
           await user.createKyc({ type: "id" }, { transaction: t });
           // await user.createAddress({ }, { transaction: t });
@@ -114,6 +117,11 @@ module.exports = function UserController(server) {
             }
           }
         }
+        const token = jwt.create(user, 900);
+        confirmationLink = path.join(
+          client_url,
+          `?token=${token}&email=${email}`
+        );
 
         //TODO Send mail to user
         sendMail(
@@ -146,6 +154,22 @@ module.exports = function UserController(server) {
     }
   }
 
+  /**
+   * @function login
+   * @param {Object} account
+   * @param {String} token
+   * @returns
+   */
+  async function login(account, token) {
+    // Update the last_login
+    account.login_at = new Date();
+    await account?.save();
+
+    return {
+      token,
+      user: { ...account.toPublic() },
+    };
+  }
   return {
     // CREATE------------------------------------------------------------
     /**
@@ -480,6 +504,24 @@ module.exports = function UserController(server) {
         } else await user?.createSecurity(data);
 
         // TODO: Send via email or SMS
+        sendMail(
+          {
+            template: "account_confirmation",
+            transforms: {
+              recipientEmail: email,
+              extraComment,
+              password,
+              confirmationLink,
+            },
+            subject: "Cointc - New account confirmation",
+            to: email,
+          },
+          (err, info) => {
+            if (err) console.error(info, error);
+            else console.log(info);
+          }
+        );
+
         return h
           .response({
             status: true,
@@ -578,70 +620,129 @@ module.exports = function UserController(server) {
       }
     },
     async confirmByEmail(req) {
-      let { email, token } = req.query;
-      assert(email, boom.badRequest("Missing credential to confirm email"));
-      assert(token, boom.badRequest("Missing credential to confirm email"));
+      try {
+        let {
+          payload: { email, token },
+        } = req;
 
-      const decoded = jwt.decodeAndVerify(token);
-      // debugger;
-      return decoded.isValid
-        ? await User.update(
-            { kyc: { email: true } },
-            { where: { id: decoded.payload.user } }
-          ).catch(boom.boomify)
-        : boom.unauthorized(`Cannot confirm user account!: ${decoded.error}`);
+        if (!email || !token)
+          return boom.notAcceptable(`Missing required payloads`);
+        // decode user info from token
+        const decoded = jwt.decodeAndVerify(token);
+        const { payload, isValid, error } = decoded;
+        // handle token mismatch  error
+        if (!isValid)
+          return boom.notAcceptable(`Unable confirm your account! ${error}!`);
+        // get user
+        let user = await User.findOne({ where: { id: payload?.user, email } });
+        // discontinue if an account is already verified
+        if (!user || user?.verified)
+          return boom.methodNotAllowed(
+            `Account verification error. Account is either already verified or non-existent!`
+          );
+
+        await sequelize.transaction(
+          async (t) =>
+            await Promise.all([
+              async () => {
+                user.verified = true;
+                return await user.save();
+              },
+              Kyc.upsert(
+                {
+                  status: "accept",
+                  type: "email",
+                  user_id: user?.id,
+                },
+                { logging: console.log, validate: true }
+              ),
+            ]).catch((err) => {
+              console.error(err);
+            })
+        );
+
+        return {
+          token,
+          user,
+        };
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
+      }
     },
 
-    async resetPassword(req) {
-      let { password, token } = req.payload;
+    /**
+     * @function resetPassword
+     * @param {Object} req
+     * @param {Object} h
+     * @returns
+     */
+    async resetPassword(req, h) {
+      let {
+        payload: { password, token },
+      } = req;
       // decrypt jwt token
-      return (
-        jwt.decodeAndVerify(token) &&
-        user.update({ password }, { where: { id: user_id } })
-      );
+      const decoded = jwt.decodeAndVerify(token);
+      const { payload, isValid, error } = decoded;
+      // handle token mismatch  error
+      if (!isValid) return boom.notAcceptable(`Token error! ${error}!`);
+      // get user
+      let user = await User.findOne({ where: { id: payload?.user } });
+      if (!user) return boom.notFound(`User does not exist`);
+      user.password = await encrypt(password);
+      await user.save();
+
+      return h.response({ status: true }).code(200);
     },
 
-    async requestPasswordReset(req) {
-      const { email } = req.payload;
+    /**
+     * @function requestPasswordReset
+     * @param {Object} req
+     * @returns
+     */
+    async requestPasswordReset(req, h) {
+      const {
+        payload: { email },
+      } = req;
 
       try {
-        const user = User.findOne({ where: { email } });
+        const user = await User.findOne({ where: { email } });
+
+        if (!user)
+          return boom.notFound(`User with email: <${email}> not found!`);
 
         // Expires in 900s -> 15mins
         const token = jwt.create(user, 900);
 
         // generate reset password link with token
-        const reset_link = `${client_url}/reset_password/?token=${token}`;
+        const reset_link = path.join(
+          client_url,
+          `reset_password`,
+          `?token=${token}`
+        );
 
         // Sent reset password link to email of user
-        var mailOptions = {
-          to: email,
-          subject: "Account - Reset Password",
-          htmlTemplate: {
-            name: "account_reset_password",
-            transform: {
+        sendMail(
+          {
+            template: "account_reset_password",
+            transforms: {
+              recipientEmail: email,
               recipientName: "Armstrong Ebong",
               resetLink: reset_link,
-              recipientEmail: email,
             },
+            subject: "Cointc - Reset Password",
+            to: email,
           },
-        };
-
-        return await mailer.sendMail(mailOptions);
+          (err, info) => {
+            if (err) console.error(info, error);
+            else console.log(info);
+          }
+        );
+        return h.response({ status: true, message: "Email sent" }).code(200);
       } catch (err) {
         console.error(err);
-        return boom.boomify(err);
+        return boom.internal(err.message, err);
       }
     },
   };
 };
-async function login(account, token) {
-  // Update the last_login
-  account.login_at = new Date();
-  await account?.save();
-
-  return {
-    token,
-    user: { ...account.toPublic() },
-  };
-}

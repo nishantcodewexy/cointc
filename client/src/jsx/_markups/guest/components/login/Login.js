@@ -42,7 +42,7 @@ export const Login = ({ history }) => {
                 setSubmitting(true);
 
                 try {
-                    axios.post(`http://207.148.118.105/api/auth/login`, body, { headers: { "Content-Type": "application/json" } })
+                    axios.post(`/api/auth/login`, body, { headers: { "Content-Type": "application/json" } })
                         .then(function (data) {
                             // toast.success(response.data.message);
                             if (data.status == 200) {

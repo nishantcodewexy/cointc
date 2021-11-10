@@ -18,6 +18,29 @@ module.exports = function(server) {
         }).with("email", "password"),
       };
     },
+    /**
+     * @function requestReset
+     * @returns
+     */
+    requestReset() {
+      return {
+        payload: Joi.object({
+          email: schema?.email?.required(),
+        }).with("token", "password"),
+      };
+    },
+    /**
+     * @function reset
+     * @returns
+     */
+    reset() {
+      return {
+        payload: Joi.object({
+          password: schema?.password?.required(),
+          token: Joi.string()?.required(),
+        }).with("token", "password"),
+      };
+    },
 
     // REGISTER ------------------------------------------------
 
