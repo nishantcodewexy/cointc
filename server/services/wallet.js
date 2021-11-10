@@ -1,4 +1,6 @@
 const tatum = require("@tatumio/tatum");
+const tatumApi = require("./tatumApi");
+
 
 
 
@@ -113,8 +115,11 @@ async function getWalletAddress(wallet){
  * 
  * @param {Object} from
  * @param {String} from.tatum_account_id
+ * @param {String} from.signature_id
+ * @param {String} from.currency
  * @param {Object} to
  * @param {String} to.tatum_account_id
+ * @param {String} to.address
  * @param {Number} qty
  * @returns {Promise<{reference: string}>}
  */
@@ -129,8 +134,80 @@ async function transferBetweenWallet(from,to,qty) {
     // body.senderAccountId = from.tatum_account_id
     // body.recipientAccountId =  to.tatum_account_id
     // return await tatum.storeTransaction(body)
+    
+    let body = {}
+    if(from.currency==tatum.Currency.BTC){
+        // {
+        //     "senderAccountId": "5e68c66581f2ee32bc354087",
+        //     "address": "mpTwPdF8up9kidgcAStriUPwRdnE9MRAg7",
+        //     "amount": "0.001",
+        //     "compliant": false,
+        //     "fee": "0.0005",
+        //     "multipleAmounts": [
+        //     "0.1"
+        //     ],
+        //     "attr": "string",
+        //     "signatureId": "26d3883e-4e17-48b3-a0ee-09a3e484ac83",
+        //     "xpub": "xpub6EsCk1uU6cJzqvP9CdsTiJwT2rF748YkPnhv5Qo8q44DG7nn2vbyt48YRsNSUYS44jFCW9gwvD9kLQu9AuqXpTpM1c5hgg9PsuBLdeNncid",
+        //     "paymentId": "1234",
+        //     "senderNote": "Sender note"
+        //     }
+
+        const {xpub} = await tatum.getAccountById(from.tatum_account_id)
+        body.senderAccountId = from.tatum_account_id
+        body.signatureId = from.signature_id
+        body.address = to.address
+        body.amount = qty?.toString()
+        body.xpub = xpub
+        body.compliant = false
+
+
+    }else if(from.currency==tatum.Currency.ETH){
+        // {
+        // "nonce": 0,
+        // "address": "0x687422eEA2cB73B5d3e242bA5456b782919AFc85",
+        // "amount": "100000",
+        // "compliant": false,
+        // "signatureId": "26d3883e-4e17-48b3-a0ee-09a3e484ac83",
+        // "index": 0,
+        // "paymentId": "1234",
+        // "senderAccountId": "5e68c66581f2ee32bc354087",
+        // "senderNote": "Sender note",
+        // "gasLimit": "40000",
+        // "gasPrice": "20"
+        // }
+        
+
+        body.senderAccountId = from.tatum_account_id
+        body.address = to.address
+        body.amount = qty?.toString()
+        body.compliant = false
+        body.signatureId = from.signature_id
+
+    }else if(from.currency==tatum.Currency.XRP){
+        // {
+        // "senderAccountId": "35ab5ea8e48c4b179cadea653c6d732e",
+        // "account": "rPRxSZzTFd6Yez3UMxFUPJvnhUhjewpjfV",
+        // "address": "rPRxSZzTFd6Yez3UMxFUPJvnhUhjewpjfV",
+        // "amount": "10000",
+        // "compliant": false,
+        // "attr": "12355",
+        // "sourceTag": 12355,
+        // "paymentId": "1234",
+        // "signatureId": "26d3883e-4e17-48b3-a0ee-09a3e484ac83",
+        // "senderNote": "Sender note"
+        // }
+
+        body.senderAccountId = from.tatum_account_id
+        body.address = to.address
+        body.amount = qty?.toString()
+        body.compliant = false
+        body.signatureId = from.signature_id
+    }
 
     
+
+    return await tatumApi.OffChain.blockchainTransfer({data:body,currency:from.currency})
     
 
     

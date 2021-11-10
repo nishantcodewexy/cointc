@@ -104,7 +104,7 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       signature_id:DataTypes.UUID,
-      account_id: DataTypes.STRING,
+      tatum_account_id: DataTypes.STRING,
       derivation_key: DataTypes.INTEGER,
       address: DataTypes.STRING,
       currency: {
