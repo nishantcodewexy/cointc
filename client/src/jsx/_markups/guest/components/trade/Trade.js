@@ -2276,34 +2276,34 @@ const table_data = {
 function renderTableData(data) {
     return (
         <tr>
-            <td class="user">
+            <td className="user">
                 <p>
                     <span>{data.first_char}</span>{data.name}
-                    {data.isVarified===true?<i class="fas fa-check-circle"></i>:''}
+                    {data.isVarified===true?<i className="fas fa-check-circle"></i>:''}
                     
                 </p>
-                <ul class="clear">
+                <ul className="clear">
                     <li><span>{data.order_count}</span>{data.order_text}</li>
                     <li><span>{data.percentage}</span>% {data.status}</li>
                 </ul>
             </td>
-            <td class="available_limit">
-                <dl class="available clear">
+            <td className="available_limit">
+                <dl className="available clear">
                     <dt>{data.availability}</dt>
                     <dd>{data.payment}</dd>
                 </dl>
-                <dl class="limit clear">
+                <dl className="limit clear">
                     <dt>{data.is_limited}</dt>
                     <dd>{data.payment_range}</dd>
                 </dl>
             </td>
-            <td class="payment">
-                <span class="icon_method01"></span>
-                <span class="icon_method02"></span>
-                <span class="icon_method03"></span>
+            <td className="payment">
+                <span className="icon_method01"></span>
+                <span className="icon_method02"></span>
+                <span className="icon_method03"></span>
             </td>
-            <td class="price">{data.price}</td>
-            <td class="transaction">
+            <td className="price">{data.price}</td>
+            <td className="transaction">
                 <TradeModel button_text={data.button_text} button_class={data.button_class} isPopup={data.isPopup}>
                 </TradeModel>
             </td>
@@ -2330,45 +2330,45 @@ function renderTableData(data) {
             <Modal show={show} onHide={handleClose} size={"xl"}>
             
                 <Modal.Body>
-                    <div class="row" id="tradeModal">
-                        <div class="col-sm-12 col-md-6" >
-                            <div class="scroll-area-sm">
-                                <div class="modal-header align-items-center">
-                                    <h3 class="modal-title">Bi7752</h3>
-                                    <p class="mb-0">2270 orders    99.65% completion</p>
+                    <div className="row" id="tradeModal">
+                        <div className="col-sm-12 col-md-6" >
+                            <div className="scroll-area-sm">
+                                <div className="modal-header align-items-center">
+                                    <h3 className="modal-title">Bi7752</h3>
+                                    <p className="mb-0">2270 orders    99.65% completion</p>
                                 </div>
                                 
-                                <div class="col col-sm-12 col-md-8 mt-3">
-                                    <div class="trade-my-modal">
-                                        <div class="my-modal-top d-flex justify-content-between align-items-center">
-                                            <h5 class="mb-0">Trade Info</h5>
-                                            <a href="#" class="btn btn-ref-my-modal">30s to Refresh</a>
+                                <div className="col col-sm-12 col-md-8 mt-3">
+                                    <div className="trade-my-modal">
+                                        <div className="my-modal-top d-flex justify-content-between align-items-center">
+                                            <h5 className="mb-0">Trade Info</h5>
+                                            <a href="#" className="btn btn-ref-my-modal">30s to Refresh</a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col col-sm-12 col-md-10 mt-4">
-                                    <div class="trade-my-modal">
-                                        <div class="my-modal-center">
-                                            <table class="w-100">
+                                <div className="col col-sm-12 col-md-10 mt-4">
+                                    <div className="trade-my-modal">
+                                        <div className="my-modal-center">
+                                            <table className="w-100">
                                                 <thead>
-                                                    <th class="text-light-gray font-weight-light">Price</th>
-                                                    <th class="text-light-gray font-weight-light">Available</th>
+                                                    <th className="text-light-gray font-weight-light">Price</th>
+                                                    <th className="text-light-gray font-weight-light">Available</th>
                                                 </thead>
                                                 <tbody>
-                                                    <td class="text-black">47,757.8541 USD</td>
-                                                    <td class="text-black">1.546410 BTC</td>
+                                                    <td className="text-black">47,757.8541 USD</td>
+                                                    <td className="text-black">1.546410 BTC</td>
                                                 </tbody>
                                                 <thead>
-                                                    <th class="text-light-gray font-weight-light pt-4">Payment</th>
-                                                    <th class="text-light-gray font-weight-light pt-4">Limit</th>
+                                                    <th className="text-light-gray font-weight-light pt-4">Payment</th>
+                                                    <th className="text-light-gray font-weight-light pt-4">Limit</th>
                                                 </thead>
                                                 <tbody>
-                                                    <td class="text-black">60 Minutes</td>
-                                                    <td class="text-black">$50,000.00 ~ $100,000.00</td>
+                                                    <td className="text-black">60 Minutes</td>
+                                                    <td className="text-black">$50,000.00 ~ $100,000.00</td>
                                                 </tbody>
                                                 <thead>
-                                                    <th class="text-light-gray font-weight-light pt-4">Payment Method</th>
-                                                    <th class="text-light-gray font-weight-light pt-4"></th>
+                                                    <th className="text-light-gray font-weight-light pt-4">Payment Method</th>
+                                                    <th className="text-light-gray font-weight-light pt-4"></th>
                                                 </thead>
                                             </table>
                                         </div>
@@ -2376,41 +2376,41 @@ function renderTableData(data) {
                                 </div>                                                  
                             </div>
                         </div>
-                        <div class="col-sm-12 col-md-6">
-                            <div class="modal-body">
-                                <div class="modal-body-input">
+                        <div className="col-sm-12 col-md-6">
+                            <div className="modal-body">
+                                <div className="modal-body-input">
                                     <label>How much do you want to Sell?</label>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Enter Amount.." aria-label="Recipient's username" aria-describedby="basic-addon2"/>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text my-input" id="basic-addon2">BTC</span>
+                                    <div className="input-group mb-3">
+                                        <input type="text" className="form-control" placeholder="Enter Amount.." aria-label="Recipient's username" aria-describedby="basic-addon2"/>
+                                        <div className="input-group-append">
+                                            <span className="input-group-text my-input" id="basic-addon2">BTC</span>
                                         </div>
                                     </div>
-                                    <p class="d-flex justify-content-end text-black">사용 가능 : 0.24810 BTC &nbsp;<span class="text-light-blue"> 전체 </span> </p>
+                                    <p className="d-flex justify-content-end text-black">사용 가능 : 0.24810 BTC &nbsp;<span className="text-light-blue"> 전체 </span> </p>
                                 </div>
-                                <div class="modal-body-input">
+                                <div className="modal-body-input">
                                     <label>How much do you want to Sell?</label>
-                                    <div class="input-group mb-3">
-                                        <input type="text" class="form-control" placeholder="Enter Amount.." aria-label="Recipient's username" aria-describedby="basic-addon2"/>
-                                        <div class="input-group-append">
-                                            <span class="input-group-text my-input" id="basic-addon2">BTC</span>
+                                    <div className="input-group mb-3">
+                                        <input type="text" className="form-control" placeholder="Enter Amount.." aria-label="Recipient's username" aria-describedby="basic-addon2"/>
+                                        <div className="input-group-append">
+                                            <span className="input-group-text my-input" id="basic-addon2">BTC</span>
                                         </div>
                                     </div>
-                                    <p class="d-flex justify-content-end text-black">사용 가능 : 0.24810 BTC &nbsp;<span class="text-light-blue"> 전체 </span> </p>
-                                    <div class="row ">
-                                        <div class="col-12">
-                                            <div class="md-head">Guides</div>
-                                            <div class="md-dt-txt">1. Please confirm the price and amount before place this trade.</div>
-                                            <div class="md-dt-txt">2. Please pay the seller in the payment window. After completed the payment, please click "I have paid". The seller will release the crypto to you after received payment. If you do not mark as paid in time, the trade will be automatically cancelled after timeout.</div>
-                                            <div class="md-dt-txt">3.If you encounter trade dispute, you can open a dispute, the customer service will intervene to deal with it. For details, please see "Help</div>
+                                    <p className="d-flex justify-content-end text-black">사용 가능 : 0.24810 BTC &nbsp;<span className="text-light-blue"> 전체 </span> </p>
+                                    <div className="row ">
+                                        <div className="col-12">
+                                            <div className="md-head">Guides</div>
+                                            <div className="md-dt-txt">1. Please confirm the price and amount before place this trade.</div>
+                                            <div className="md-dt-txt">2. Please pay the seller in the payment window. After completed the payment, please click "I have paid". The seller will release the crypto to you after received payment. If you do not mark as paid in time, the trade will be automatically cancelled after timeout.</div>
+                                            <div className="md-dt-txt">3.If you encounter trade dispute, you can open a dispute, the customer service will intervene to deal with it. For details, please see "Help</div>
                                         </div>
                                     </div>
-                                    <div class="row justify-content-center mt-5 mb-5">
-                                        <div class="col-4">
-                                            <a href="/sell_btc" class="btn btn-primary ">Sell BTC</a>
+                                    <div className="row justify-content-center mt-5 mb-5">
+                                        <div className="col-4">
+                                            <a href="/sell_btc" className="btn btn-primary ">Sell BTC</a>
                                         </div>
-                                        <div class="col-4">
-                                            <a href="#" class="btn btn-outline-limited btn-cans">Cancel</a>
+                                        <div className="col-4">
+                                            <a href="#" className="btn btn-outline-limited btn-cans">Cancel</a>
                                         </div>
                                     </div>
                                 </div>
@@ -2426,11 +2426,11 @@ const BuyTabContent = function (props) {
     var activeSubTab=props.valueFromParent;
     return(
         <>
-        <div class="tab-content">
+        <div className="tab-content">
             <div className={"tab-pane "+(activeSubTab === "buy-btc-tab" ? "active" : "")} id="buy-btc-tab-pane" role="tabpanel" aria-labelledby="buy-btc-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2446,22 +2446,22 @@ const BuyTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane "+(activeSubTab === "buy-eth-tab" ? "active" : "")} id="buy-eth-tab-pane" role="tabpanel" aria-labelledby="buy-eth-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2477,22 +2477,22 @@ const BuyTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane "+(activeSubTab === "buy-usdt-tab" ? "active" : "")} id="buy-usdt-tab-pane" role="tabpanel" aria-labelledby="buy-usdt-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2508,22 +2508,22 @@ const BuyTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "buy-xrp-tab" ? "active" : "")} id="buy-xrp-tab-pane" role="tabpanel" aria-labelledby="buy-xrp-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2539,22 +2539,22 @@ const BuyTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "buy-eos-tab" ? "active" : "")} id="buy-eos-tab-pane" role="tabpanel" aria-labelledby="buy-eos-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2570,14 +2570,14 @@ const BuyTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -2590,11 +2590,11 @@ const SellTabContent = function (props) {
     var activeSubTab=props.valueFromParent;
     return(
         <>
-        <div class="tab-content">
+        <div className="tab-content">
             <div className={"tab-pane "+(activeSubTab === "sell-btc-tab" ? "active" : "")} id="sell-btc-tab-pane" role="tabpanel" aria-labelledby="sell-btc-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2610,22 +2610,22 @@ const SellTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane "+(activeSubTab === "sell-eth-tab" ? "active" : "")} id="sell-eth-tab-pane" role="tabpanel" aria-labelledby="sell-eth-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2641,22 +2641,22 @@ const SellTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane "+(activeSubTab === "sell-usdt-tab" ? "active" : "")} id="sell-usdt-tab-pane" role="tabpanel" aria-labelledby="sell-usdt-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2771,7 +2771,7 @@ export const Trade = () => {
                     <div class="container">
                         <div class="row">
                             <div class="col-12">
-                                <h3 class="wow fadeInDown" data-wow-delay="0.3s">P2P Trade</h3>
+                                <h3 class="wow animate__animated fadeInDown" data-wow-delay="0.3s">P2P Trade</h3>
                             </div>
                         </div>
                     </div>
