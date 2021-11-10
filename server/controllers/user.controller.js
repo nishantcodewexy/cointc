@@ -53,7 +53,7 @@ module.exports = function UserController(server) {
           email,
         },
       });
-
+      
       if (user)
         throw boom.notAcceptable(`User with the email: ${email} already exist`);
 

@@ -103,6 +103,7 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
+      signature_id:DataTypes.UUID,
       account_id: DataTypes.STRING,
       derivation_key: DataTypes.INTEGER,
       address: DataTypes.STRING,
