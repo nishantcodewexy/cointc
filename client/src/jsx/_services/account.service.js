@@ -16,7 +16,7 @@ class AccountService extends Services {
   login = async (data) => {
     return await this.decorate(
       async () =>
-        await this.axios("auth/authenticate", {
+        await this.axios("auth/login", {
           method: "POST",
           data,
         })
@@ -39,28 +39,6 @@ class AccountService extends Services {
     );
   };
 
-  //STATISTICS ---------------------------------------------------------------------
-
-  /**
-   * Statistics payload types definition
-   * @typedef {Object} statsPayload
-   * @property {"user_stats" | "withdrawal_stats" | "ticket_stats" | "admin_stats" | "security_stats" | "kyc_stats" | "deposit_stats"} type
-   */
-
-  /**
-   *@function bulkRetreieveStats - Gets account statistics (***Admins only**)
-   * @param {statsPayload} params
-   * @returns
-   */
-  bulkRetreieveStat = async (params) => {
-    return await this.decorate(
-      async () =>
-        await this.axios(`stats`, {
-          method: "GET",
-          params,
-        })
-    );
-  };
 
   // USER --------------------------------------------------------------------------------
 
@@ -71,7 +49,7 @@ class AccountService extends Services {
    */
   bulkCreateUser = async (data) => {
     return await this.decorate(async () =>
-      this.axios(`users`, {
+      this.axios(`user`, {
         method: "POST",
         data,
       })
@@ -87,7 +65,7 @@ class AccountService extends Services {
   bulkRetrieveUser = async (params) => {
     return await this.decorate(
       async () =>
-        await this.axios(`users`, {
+        await this.axios(`user`, {
           method: "GET",
           params,
         })
@@ -97,7 +75,7 @@ class AccountService extends Services {
   retrieveUser = async ({ id, ...params }) => {
     return await this.decorate(
       async () =>
-        await this.axios(`users/${id}`, {
+        await this.axios(`user/${id}`, {
           method: "GET",
           params,
         })
@@ -112,7 +90,7 @@ class AccountService extends Services {
   bulkUpdateUser = async (data) => {
     return await this.decorate(
       async () =>
-        await this.axios(`users`, {
+        await this.axios(`/user`, {
           method: "PUT",
           data,
         })
@@ -129,7 +107,7 @@ class AccountService extends Services {
   updateUser = async ({ id, data }) => {
     return await this.decorate(
       async () =>
-        await this.axios(`users/${id}`, {
+        await this.axios(`user/${id}`, {
           method: "PUT",
           data,
         })
@@ -144,7 +122,7 @@ class AccountService extends Services {
   removeUser = async ({ id, data }) => {
     return await this.decorate(
       async () =>
-        await this.axios(`users/${id}`, {
+        await this.axios(`user/${id}`, {
           method: "DELETE",
           data,
         })
@@ -159,7 +137,7 @@ class AccountService extends Services {
   bulkRemoveUser = async (data) => {
     return await this.decorate(
       async () =>
-        await this.axios(`users`, {
+        await this.axios(`/user`, {
           method: "DELETE",
           data,
         })
@@ -169,11 +147,64 @@ class AccountService extends Services {
   bulkRetrieveSecurities = async (params) => {
     return await this.decorate(
       async () =>
-        await this.axios(`users/security`, {
+        await this.axios(`/user`, {
           method: "GET",
           params,
         })
     );
   };
+
+  getReferrals = async (params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`/referral`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  getKYC = async (params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`/kyc`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+
+  updateKYC = async ({id, data}) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`/kyc/${id}`, {
+          method: "PUT",
+          data,
+        })
+    );
+  }
+  // findAdverts = async ({id, data}) => {
+  //   return await this.decorate(
+  //     async () =>
+  //       await this.axios(`/advert/${id}`, {
+  //         method: "Get",
+  //         data,
+  //       })
+  //   );
+  // }
+
+
+  findAdvert = async (params) => {
+    return await this.decorate(
+      async () =>
+        await this.axios(`ad/`, {
+          method: "GET",
+          params,
+        })
+    );
+  };
+ 
+
 }
+
 export default AccountService;

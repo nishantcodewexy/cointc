@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
+
 // CONSTANTS
 import { SERVICE } from "../../../_constants";
 
@@ -29,7 +30,10 @@ function AdminBankDetails({ services, useService }) {
     dispatchRequest({
       type: SERVICE?.BULK_RETRIEVE,
       toast: { success: notifySuccess, error: notifyError },
-      /* payload: {}, */
+      payload: {
+        "sudo": true,
+        "fake": true,
+      },
     });
   }, []);
 
@@ -118,8 +122,11 @@ function AdminBankDetails({ services, useService }) {
         <Row style={{ marginBottom: 20, width: "100%" }}>
           <Col></Col>
           <Col sm="auto" style={{ padding: 0 }}>
-            <Button onClick={() => onOpenModal({ method: SERVICE?.CREATE })}>
-              <i className="fa fa-plus"></i> Add New
+            {/* <Button onClick={() => onOpenModal({ method: SERVICE?.CREATE })}>
+              <i className="fa fa-plus"></i> Add New 
+            </Button> */}
+            <Button>
+              <i className="fa fa-plus"></i> Add New 
             </Button>
           </Col>
         </Row>

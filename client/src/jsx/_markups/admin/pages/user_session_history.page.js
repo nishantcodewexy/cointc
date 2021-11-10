@@ -23,14 +23,18 @@ function UserSessionHistory(props) {
   );
 }
 function UserSessionHistoryTable({ useService, services }) {
-  const { useGroupService } = services;
-  const group = useGroupService();
+  const { account } = services;
+
   let service = useService({
-    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
+    [SERVICE?.BULK_RETRIEVE]: account.bulkRetrieveUser,
   });
   const { dispatchRequest } = service;
+
   useEffect(() => {
-    dispatchRequest({ type: SERVICE?.BULK_RETRIEVE });
+    dispatchRequest({ type: SERVICE?.BULK_RETRIEVE, payload: {
+      "sudo": true,
+      "fake": true,
+    }});
   }, []);
 
   return (
@@ -43,7 +47,9 @@ function UserSessionHistoryTable({ useService, services }) {
           username: ({ row }) => (
             <div className="media d-flex align-items-center">
               <div className="media-body">
-                <div className="mb-0 fs--1">{row?.pname || row?.lname || 'Untitled'}</div>
+                <div className="mb-0 fs--1">
+                  {row?.pname || row?.lname || "Untitled"}
+                </div>
               </div>
             </div>
           ),

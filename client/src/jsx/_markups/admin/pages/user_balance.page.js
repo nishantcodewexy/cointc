@@ -1,119 +1,91 @@
-import { useEffect } from "react";
-import { Card, Row, Col, Table } from "react-bootstrap";
-import PageTitle from "../layouts/PageTitle";
+import {  Row, Col, Button } from "react-bootstrap";
+import { useEffect, useState, Suspense, lazy } from "react";
+import Moment from "react-moment";
+import moment from "moment";
+import { toast } from "react-toastify";
+import { Popper } from "@mui/material";
+// COMPONENTS
+import TableGenerator from "../components/TableGenerator.Component";
+import { ModalForm } from "../components/ModalForm.Component.jsx";
+import useToggler from "../../../_hooks/toggler.hook";
+import UserForm from "../forms/user.form";
+
 // CONSTANTS
 import { SERVICE } from "../../../_constants";
 
-// COMPONENTS
-import TableGenerator from "../components/TableGenerator.Component";
 
 function UserBalance({ services, useService }) {
-  const { useGroupService } = services;
-  const group = useGroupService();
-  let { data, error, isFetching, dispatchRequest } = useService({
-    get: group.listUsers,
+  const { wallet } = services;
+
+  let service = useService({
+    [SERVICE?.BULK_RETRIEVE]: wallet.getWallet,
   });
 
-  useEffect(() => {
-    dispatchRequest({ type: "get" });
-  }, []);
-  return (
-    <>
-      <PageTitle activeMenu="User Balance" motherMenu="User Management" />
-      <Row style={{ marginBottom: 60 }}>
-        <Col>
-        <header className="mb-4">
-            <h3>User Balances</h3>
-          </header>
-          <Card>
-            <TableGenerator
-              data={data?.results}
-              mapping={{}}
-              omit="*"
-              transformers={{}}
-            />
-          </Card>
-        </Col>
-      </Row>
-    </>
-  );
-}
-function UserBalanceTable() {
-  const chackbox = document.querySelectorAll(".user_permission_single input");
-  const motherChackBox = document.querySelector(".user_permission input");
-  // console.log(document.querySelectorAll(".publish_review input")[0].checked);
-  const chackboxFun = (type) => {
-    for (let i = 0; i < chackbox.length; i++) {
-      const element = chackbox[i];
-      if (type === "all") {
-        if (motherChackBox.checked) {
-          element.checked = true;
-        } else {
-          element.checked = false;
-        }
-      } else {
-        if (!element.checked) {
-          motherChackBox.checked = false;
-          break;
-        } else {
-          motherChackBox.checked = true;
-        }
-      }
-    }
-  };
+  const { dispatchRequest } = service;
 
-  const check = (i) => (
-    <div className={`custom-control custom-checkbox ml-2`}>
-      <input
-        type="checkbox"
-        className="custom-control-input "
-        id={`checkAll_user_permission_${i}`}
-        required=""
-        onClick={() => chackboxFun()}
-      />
-      <label
-        className="custom-control-label"
-        htmlFor={`checkAll_user_permission_${i}`}
-      ></label>
-    </div>
-  );
+  useEffect(() => {
+    dispatchRequest({
+      type: SERVICE?.BULK_RETRIEVE,
+      payload: {
+        "order[updatedAt]": "DESC",
+        "order[createdAt]": "DESC",
+        "fake": true,
+        "sudo": true,
+        paranoid: false,
+      },
+      toast: { success: notifySuccess, error: notifyError },
+    });
+  }, []);
+  
   return (
     <>
-      <Table responsive hover size="sm">
-        <thead>
-          <tr>
-            <th className="user_permission">
-              <div className="custom-control custom-checkbox mx-2">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="checkAll_user_permission_all"
-                  onClick={() => chackboxFun("all")}
-                />
-                <label
-                  className="custom-control-label"
-                  htmlFor="checkAll_user_permission_all"
-                ></label>
-              </div>
-            </th>
-            <th>Email</th>
-            <th className="pl-5 width200">Currency</th>
-            <th>Spot Wallet</th>
-            <th>Locket Balance</th>
-          </tr>
-        </thead>
-        <tbody id="customers">
-          <tr className="btn-reveal-trigger">
-            <td className="user_permission_single">{check(1)}</td>
-            <td className="py-3">abc@gmail.com</td>
-            <td className="py-2 pl-5 width200">USDT</td>
-            <td className="py-2">00.7757575</td>
-            <td className="py-2">00.7757575</td>
-          </tr>
-        </tbody>
-      </Table>
+      {
+        <Row>
+         {console.log({...service})}
+        <Col>
+          <TableGenerator
+           
+            {...{ service }}
+            omit="*"
+            extras={[
+              "email",
+              "currency",
+              'account_balance',
+              "available_balance"
+
+            ]}
+            transformers={{
+              email: ({ row }) => row?.user?.email || "",
+              currency: ({row}) => row?.currency || " Not specified",
+              account_balance: ({row}) => row?.balance?.accountBalance || "",
+              available_balance: ({row}) => row?.balance?.availableBalance || "",
+            }}
+          />
+        </Col>
+      </Row> }
     </>
   );
 }
 
 export default UserBalance;
+function notifySuccess() {
+  toast.success("Success !", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}
+
+function notifyError(error) {
+  toast.error(error || "Request Error!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}

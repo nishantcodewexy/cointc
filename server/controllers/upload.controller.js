@@ -6,8 +6,8 @@ const { uploader, imageFilter } = require("../services/fileUpload");
 
 module.exports = function UploadController(server) {
   const {
-    db: { Upload, sequelize },
-    consts: { roles: _roles, FILE_UPLOAD_PATH },
+    db: { Upload },
+    consts: { FILE_UPLOAD_PATH },
     helpers: { filters, paginator },
     boom,
   } = server.app;
@@ -20,56 +20,48 @@ module.exports = function UploadController(server) {
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
+    async findByID(req) {
       const {
         params: { id },
-        auth: {
-          credentials: { user },
+
+        pre: {
+          user: { user, sudo },
         },
-        pre: { isAdmin },
       } = req;
 
-      const upload = await Upload.findOne({
+      const result = await Upload.findOne({
         where: {
           id,
-          ...(isAdmin ? {} : { user_id: user.id }),
+          ...(!sudo && { user_id: user.id }),
         },
         attributes: {
-          exclude: [
-            "deleted_at",
-            "user_id",
-            "UserId",
-            "updated_at",
-            "updatedAt",
-          ],
+          exclude: ["user_id", "UserId", "updated_at", "updatedAt"],
         },
       });
 
-      if (!Upload) {
-        throw boom.notFound();
+      if (!result) {
+        throw boom.notFound(`Upload with ID: ${id} not found!`);
       }
-      return upload;
+      return {result};
     },
-    async bulkRetrieve(req) {
+
+    async find(req) {
       const {
         query,
-        pre: { isAdmin },
-        auth: {
-          credentials: { user },
+        pre: {
+          user: { user, sudo, fake },
         },
       } = req;
 
       try {
-        let extend = query.extend;
-        const filterResults = await filters({
+        const queryFilters = await filters({
           query,
           extra: {
-            ...(isAdmin && !!extend ? {} : { user_id: user.id }),
+            ...(!sudo && { user_id: user?.id }),
           },
         });
-
-        const queryset = Upload.findAndCountAll({
-          ...filterResults,
+        const options = {
+          ...queryFilters,
           attributes: [
             "id",
             "mimetype",
@@ -78,11 +70,17 @@ module.exports = function UploadController(server) {
             "description",
             "created_at",
           ],
-        });
+        };
+        const { limit, offset } = queryFilters;
+
+        const queryset = fake
+          ? Upload.FAKE(limit)
+          : await Upload.findAndCountAll(options);
+        
         return await paginator({
           queryset,
-          limit: filterResults.limit,
-          offset: filterResults.offset,
+          limit,
+          offset,
         });
       } catch (error) {
         console.error(error);
@@ -91,12 +89,16 @@ module.exports = function UploadController(server) {
     },
 
     //   CREATE ---------------------------------------------------
-
+    /**
+     * @function create
+     * @param {Object} req
+     * @returns
+     */
     async create(req) {
       const {
         payload: { file },
-        auth: {
-          credentials: { user },
+        pre: {
+          user: { user, sudo },
         },
       } = req;
 
@@ -125,7 +127,7 @@ module.exports = function UploadController(server) {
             fileDetails.map((value) => ({
               mimetype: value.mimetype,
               original: value,
-              user_id: user.id,
+              user_id: user?.id,
             }))
           );
 
@@ -146,19 +148,18 @@ module.exports = function UploadController(server) {
 
     //   REMOVE ---------------------------------------------------
 
-    async remove(req) {
+    async removeByID(req) {
       const {
         params: { id },
-        pre: { isAdmin },
-        auth: {
-          credentials: { user },
+        pre: {
+          user: { user, sudo },
         },
       } = req;
 
       const result = await Upload.destroy({
         where: {
           id,
-          ...(isAdmin ? {} : { user_id: user.id }),
+          ...(!sudo && { user_id: user.id }),
         },
       });
 
@@ -166,11 +167,16 @@ module.exports = function UploadController(server) {
 
       return result;
     },
-    async bulkRemove(req) {
+
+    /**
+     * @function bulkRemove
+     * @param {Object} req
+     * @returns
+     */
+    async remove(req) {
       const {
-        pre: { isAdmin },
-        auth: {
-          credentials: { user },
+        pre: {
+          user: { user, sudo },
         },
         payload,
       } = req;
@@ -180,12 +186,11 @@ module.exports = function UploadController(server) {
           id: {
             [Op.in]: payload,
           },
-          ...(isAdmin ? {} : { user_id: user.id }),
+          ...(!sudo && { user_id: user.id }),
         },
       });
 
       if (!result) throw boom.notFound();
-
       return result;
     },
   };

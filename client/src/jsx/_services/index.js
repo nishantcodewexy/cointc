@@ -12,6 +12,7 @@ export default class InitService {
       chat: require("./chat.service").default,
       wallet: require("./wallet.service").default,
       support_ticket: require("./support.ticket.service").default,
+      analytics: require("./analytics.service").default,
     };
     this.options = options;
 

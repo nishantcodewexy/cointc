@@ -1,13 +1,10 @@
 "use strict";
-const assert = require("assert");
 const boom = require("@hapi/boom");
 
 function OrderController(server) {
-  const { __upsert, __update, __destroy, __assertRole } = require("./utils")(
-    server
-  );
+  const { __destroy } = require("./utils")(server);
   const {
-    db: { Order, Advert },
+    db: { Order, Advert, Kyc },
     helpers: { filters, paginator },
   } = server.app;
 
@@ -21,10 +18,22 @@ function OrderController(server) {
      */
     async create(req) {
       const {
-        pre: { user },
+        pre: {
+          user: { user, fake },
+        },
         payload,
       } = req;
 
+      // Check if user's KYC has been approved first
+      let approvedKyc = Kyc.findOne({
+        where: {
+          user_id: user?.id,
+          status: "ACCEPT",
+        },
+      });
+
+      if (!approvedKyc)
+        return boom.methodNotAllowed(`Please complete KYC in order to proceed`);
       const { advert_id } = payload;
       if (!advert_id) throw boom.badRequest("Missing advert_id in request");
 
@@ -34,9 +43,11 @@ function OrderController(server) {
         if (ad) {
           // create order using the user info
           return {
-            result: await user.createOrder({
-              ...payload,
-            }),
+            result: fake
+              ? await Order.FAKE()
+              : await user.createOrder({
+                  ...payload,
+                }),
           };
         } else
           return boom.notFound(
@@ -50,15 +61,19 @@ function OrderController(server) {
     // REMOVE ---------------------------------------------------------
 
     /**
-     * @function remove - remove a single record
+     * @function removeByID - remove a single record
      * @param {Object} req
      * @returns
      */
-    async remove(req) {
+    async removeByID(req) {
       const {
         params: { id },
         payload: { force = false },
-        pre: { user },
+        pre: {
+          user: {
+            user: { user, sudo },
+          },
+        },
       } = req;
 
       try {
@@ -72,14 +87,22 @@ function OrderController(server) {
 
     // RETRIEVE ---------------------------------------------------------
     /**
-     * @function retrieve
+     * @function findByID
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
-      const { id } = req.params;
+    async findByID(req) {
+      const {
+        query,
+        params: { id },
+        /* pre: {
+          user: { user, fake },
+        }, */
+      } = req;
       try {
-        return { result: await Order.findByPk(id) };
+        const { fake } = query;
+        let result = fake ? await Order.FAKE() : await Order.findByPk(id);
+        return { result };
       } catch (error) {
         console.error(error);
         throw boom.internal(error.message, error);
@@ -87,26 +110,29 @@ function OrderController(server) {
     },
 
     /**
-     * @function bulkRetrieve
+     * @function find
      * @param {Object} req
      * @returns
      */
-    async bulkRetrieve(req) {
-      const {
-        query,
-        pre: { user },
-      } = req;
+    async find(req) {
+      const { query } = req;
 
       try {
+        const { fake } = query;
         const queryFilters = await filters({
           query,
-          searchFields: ["appeal", "remark", "status"],
+          searchFields: ["user_id"],
         });
+
         const options = {
           ...queryFilters,
         };
-        const queryset = await Order.findAndCountAll(options);
         const { limit, offset } = queryFilters;
+
+        const queryset = fake
+          ? await Order.FAKE(limit)
+          : await Order.findAndCountAll(options);
+
         return await paginator({
           queryset,
           limit,
@@ -115,6 +141,60 @@ function OrderController(server) {
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);
+      }
+    },
+
+    /**
+     * @function updateByID
+     * @param {Object} req
+     * @returns
+     */
+    async updateByID(req) {
+      const {
+        params: { id },
+        payload,
+        pre: {
+          user: { user, sudo },
+        },
+      } = req;
+
+      try {
+        let fields = sudo
+            ? ["status"]
+            : ["status", "rating", "trx_id", "appeal", "remark"],
+          result,
+          where = {
+            id,
+            ...(!sudo && { user_id: user?.id }),
+          };
+
+        result = await Order.update(payload, {
+          where,
+          fields,
+          returning: true,
+        }).then(([count]) => count);
+
+        return {
+          id,
+          status: Boolean(result),
+        };
+      } catch (error) {
+        console.error(error);
+        throw boom.boomify(error);
+      }
+    },
+
+    async confirmOrder(req) {
+      const {
+        pre: {
+          user: { user, sudo },
+        },
+      } = req;
+
+      try {
+      } catch (error) {
+        console.error(error);
+        return boom.internal(error.message, error);
       }
     },
   };

@@ -6,7 +6,6 @@ const { filterFields } = require("../services/model");
 const ChatHistoryController = (server) => {
   const {
     db: { ChatHistory },
-    consts: { roles: _roles },
     helpers: { filters, paginator },
   } = server.app;
 
@@ -66,12 +65,16 @@ const ChatHistoryController = (server) => {
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
+    async findByID(req) {
       const {
         params: { id },
+        user: { user, fake=false, sudo },
       } = req;
 
       try {
+
+        if(fake) return await ChatHistory.FAKE()
+
         const chathistory = await ChatHistory.findOne({
           where: {
             id,
@@ -94,9 +97,13 @@ const ChatHistoryController = (server) => {
      * @param {Object} req
      * @returns
      */
-    async bulkRetrieve(req) {
+    async find(req) {
       try {
-        const { query } = req;
+        const { query,user: { fake, fake_count } } = req;
+
+        if(fake) return await ChatHistory.FAKE(fake_count)
+
+        
         const queryFilters = await filters({
           query,
           searchFields: ["browser"],
@@ -123,7 +130,7 @@ const ChatHistoryController = (server) => {
     // UPDATE ----------------------------------------------------------
 
     // REMOVE ----------------------------------------------------------
-    async remove(req) {
+    async removeByID(req) {
       const {
         params: { id },
       } = req;

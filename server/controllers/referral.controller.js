@@ -2,7 +2,12 @@
 
 function ReferralController(server) {
   const {
-    db: { Referral, Profile, User, Sequelize: {Op}},
+    db: {
+      Referral,
+      Profile,
+      User,
+      Sequelize: { Op },
+    },
     boom,
     helpers: { filters, paginator },
   } = server.app;
@@ -10,15 +15,14 @@ function ReferralController(server) {
   return {
     async create(req) {
       const {
-        auth: {
-          credentials: { user },
+        pre: {
+          user: { user, sudo },
         },
         payload: { referral_code },
-        pre: { isAdmin },
       } = req;
 
       try {
-        if (!isAdmin) throw boom.forbidden();
+        if (!sudo) throw boom.forbidden();
 
         const userProfile = await Profile.findOne({
           where: {
@@ -39,17 +43,18 @@ function ReferralController(server) {
       }
     },
 
-    // Delete Order
-    async bulkDestroy(req) {
+    async remove(req) {
       const {
-        pre: { isAdmin },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
 
       // only allow action if it admin
-      if (!isAdmin) throw boom.forbidden();
+      if (!sudo) throw boom.forbidden();
 
       try {
-        const data = req.payload;
+        const { data } = req.payload;
 
         return await Referral.destroy({
           where: {
@@ -64,43 +69,74 @@ function ReferralController(server) {
     },
 
     // fetch all Orders
-    async list(req) {
+    async find(req) {
       const {
         query,
-        pre: { isAdmin },
-        auth: {
-          credentials: { user },
+        pre: {
+          user: { user, sudo, fake },
         },
       } = req;
 
       try {
-        if (isAdmin) {
-          const filterResults = await filters({ query, searchFields: [] });
+        const queryFilters = await filters({
+            query,
+            searchFields: ["email"],
+            ...(!sudo && {
+              extras: {
+                user_id: user?.id,
+              },
+            }),
+          }),
+          options = {
+            ...queryFilters,
+          };
+        const { limit, offset } = queryFilters;
 
-          const queryset = Referral.findAndCountAll(filterResults);
+        queryset = fake
+          ? await Referral.FAKE(limit)
+          : await Referral.findAndCountAll(options);
 
-          return await paginator({
-            queryset,
-            limit: filterResults.limit,
-            offset: filterResults.offset,
-          });
-        } else {
-          const filterResults = await filters({
-            query: {},
-            extra: {
-              referrer_id: user.id,
+        return await paginator({
+          queryset,
+          limit,
+          offset,
+        });
+      } catch (error) {
+        console.error(error);
+        throw boom.boomify(error);
+      }
+    },
+
+    async findByID(req) {
+      const {
+        query,
+        params: { id },
+        pre: {
+          user: { user, fake },
+        },
+      } = req;
+
+      try {
+        let queryFilters = await filters({
+            query,
+            searchFields: ["email"],
+            extras: {
+              id,
+              ...(!sudo && { user_id: user?.id }),
             },
-          });
+          }),
+          options = {
+            ...queryFilters,
+          },
+          queryset = fake
+            ? await Referral.FAKE()
+            : await Referral.findAndCountAll(options);
 
-          const queryset = Referral.findAndCountAll(filterResults);
-
-          const { count } = await paginator({
-            queryset,
-            limit: filterResults.limit,
-            offset: filterResults.offset,
-          });
-          return count;
-        }
+        return await paginator({
+          queryset,
+          limit: queryFilters.limit,
+          offset: queryFilters.offset,
+        });
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);

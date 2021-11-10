@@ -14,37 +14,18 @@ import UserForm from "../forms/user.form";
 import { SERVICE } from "../../../_constants";
 
 function UserManagement({ services, useService }) {
-  const { group } = services;
+  const { account } = services;
 
+  // register services
   let service = useService({
-    [SERVICE?.RETRIEVE]: group.retrieveUser,
-    [SERVICE?.UPDATE]: group.updateUser,
-    [SERVICE?.DROP]: group.removeUser,
-    [SERVICE?.BULK_CREATE]: group.bulkCreateUser,
-    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
+    [SERVICE?.RETRIEVE]: account.retrieveUser,
+    [SERVICE?.UPDATE]: account.updateUser,
+    [SERVICE?.DROP]: account.removeUser,
+    [SERVICE?.BULK_CREATE]: account.bulkCreateUser,
+    [SERVICE?.BULK_RETRIEVE]: account.bulkRetrieveUser,
   });
 
-  function notifySuccess() {
-    toast.success("Success !", {
-      position: "top-right",
-      autoClose: 3000,
-      hideProgressBar: true,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
-
-  function notifyError(error) {
-    toast.error(error || "Request Error!", {
-      position: "top-right",
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      draggable: true,
-    });
-  }
+ 
 
   const { dispatchRequest } = service;
 
@@ -54,6 +35,8 @@ function UserManagement({ services, useService }) {
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
+        "sudo": true,
+        "fake": true,
         paranoid: false,
       },
       toast: { success: notifySuccess, error: notifyError },
@@ -180,9 +163,7 @@ function UserManagement({ services, useService }) {
       <Row>
         <Col>
           <TableGenerator
-            mapping={{
-              id: "user_id",
-            }}
+           
             {...{ service }}
             omit="*"
             extras={[
@@ -254,7 +235,8 @@ function UserManagement({ services, useService }) {
                   toggledPayload: popOverTarget,
                 } = useToggler();
                 const handleClick = (event) => {
-                  onPopoverOpen(popOverTarget ? null : event.currentTarget);
+                  alert('Gomand')
+                  // onPopoverOpen(popOverTarget ? null : event.currentTarget);
                   // onPopoverOpen(popOverTarget ? null : event.target);
                 };
 
@@ -350,3 +332,24 @@ function UserManagement({ services, useService }) {
 }
 
 export default UserManagement;
+function notifySuccess() {
+  toast.success("Success !", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}
+
+function notifyError(error) {
+  toast.error(error || "Request Error!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}

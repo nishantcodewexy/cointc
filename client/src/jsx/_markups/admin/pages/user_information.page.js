@@ -45,19 +45,22 @@ function UserInformation(props) {
 export default UserInformation;
 
 function UsersPermissionTable({ services, useService }) {
-  const { useAccountService } = services;
-  const account = useAccountService();
+  const { account } = services;
 
   let bulkServicePayload = {
     "order[updatedAt]": "DESC",
     "order[createdAt]": "DESC",
+    "fake": true,
+    " sudo": true,    
     "options[paranoid]": false,
   };
 
   let service = useService({
-    [SERVICE?.BULK_RETRIEVE]: (_p = bulkServicePayload) =>
-      account.bulkRetrieveUser(_p),
-    [SERVICE?.UPDATE]: account?.updateUser,
+    [SERVICE?.RETRIEVE]: account.retrieveUser,
+    [SERVICE?.UPDATE]: account.updateUser,
+    [SERVICE?.DROP]: account.removeUser,
+    [SERVICE?.BULK_CREATE]: account.bulkCreateUser,
+    [SERVICE?.BULK_RETRIEVE]: account.bulkRetrieveUser,
   });
 
   const { dispatchRequest, addServiceHook } = service;
@@ -87,13 +90,17 @@ function UsersPermissionTable({ services, useService }) {
   useEffect(() => {
     dispatchRequest({
       type: SERVICE?.BULK_RETRIEVE,
+      payload: {
+        "fake": true,
+        "sudo": true
+      },
       toast: { success: notifySuccess, error: notifyError },
     });
   }, []);
 
   function Permit({ key, row }) {
     const [permission, setPermission] = useState(row?.permission);
-    const _account = useAccountService();
+    const { account: _account } = services;
 
     let { dispatchRequest: _d } = useService({
       [SERVICE?.UPDATE]: _account?.updateUser,
@@ -111,8 +118,8 @@ function UsersPermissionTable({ services, useService }) {
       // TODO: Make Permission change request
       _d({
         type: SERVICE?.UPDATE,
-        payload: { id: row?.id, data: { permission } },
-        reload: false,
+        payload: { id: row?.id, data: { permission: !permission } },
+        reload: true,
         toast: { success: notifySuccess, error: notifyError },
       });
       setPermission(value);
@@ -197,16 +204,16 @@ function UsersPermissionTable({ services, useService }) {
             );
           },
           phone_number: ({ row }) => {
-            return row?.profile?.kyc?.phone ? (
-              <a href={`tel:${row?.profile?.kyc?.phone}`}>
-                {row?.profile?.kyc?.phone}
+            return row?.phone ? (
+              <a href={`tel:${row?.phone}`}>
+                {row?.phone}
               </a>
             ) : (
               "Not specified"
             );
           },
           country: ({ row }) => {
-            return <>{row?.address?.country || "Not specified"}</>;
+            return <>{row?.country || "Not specified"}</>;
           },
         }}
       />
@@ -215,11 +222,10 @@ function UsersPermissionTable({ services, useService }) {
 }
 
 function UsersMembershipTable({ useService, services }) {
-  const { useGroupService } = services;
-  const group = useGroupService();
+  const { account } = services;
 
   let service = useService({
-    [SERVICE?.BULK_RETRIEVE]: group.bulkRetrieveUser,
+    [SERVICE?.BULK_RETRIEVE]: account.bulkRetrieveUser,
   });
 
   const { dispatchRequest } = service;
@@ -314,9 +320,9 @@ function UsersMembershipTable({ useService, services }) {
             );
           },
           phone_number: ({ row }) => {
-            return row?.profile?.kyc?.phone ? (
-              <a href={`tel:${row?.profile?.kyc?.phone}`}>
-                {row?.profile?.kyc?.phone}
+            return row?.phone ? (
+              <a href={`tel:${row?.phone}`}>
+                {row?.phone}
               </a>
             ) : (
               "Not specified"

@@ -86,10 +86,11 @@
     "swiper": "^7.0.8",
     "use-scroll-position": "0.0.4",
     "web-vitals": "^2.1.0",
-    "yup": "^0.32.8"
+    "yup": "^0.32.8",
+    "wowjs": "^1.1.3"
   },
   "scripts": {
-    "dev": "react-scripts start",
+    "dev": "react-scripts  start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -116,8 +117,7 @@
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@types/react-redux": "^7.1.18",
-    "sass": "^1.42.1",
-    "serve": "^12.0.1"
+    "sass": "^1.42.1"
   },
   "proxy": "http://localhost:8080"
 }

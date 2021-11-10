@@ -1,179 +1,209 @@
 const Joi = require("joi");
 
-// CREATE ------------------------------------------------
+module.exports = function(server) {
+  let schema = _getSchema(server);
+  const { boom } = server.app;
+  return {
+    // AUTHENTICATE ------------------------------------------
+    /**
+     * @function login
+     * @returns
+     */
+    login() {
+      return {
+        payload: Joi.object({
+          email: schema?.email?.required(),
+          password: schema?.password?.required(),
+          access_level: schema?.access_level?.required(),
+        }).with("email", "password"),
+      };
+    },
 
-/**
- * @function create - Schema validator for creating a single record
- * @param {Object} server - Hapi server instance
- * @returns {Object} validator
- */
-function create(server) {
+    // REGISTER ------------------------------------------------
+
+    /**
+     * @function register - Schema validator for creating a single record
+     * @returns {Object} validator
+     */
+    register() {
+      return {
+        payload: Joi.object({
+          email: schema?.email?.required(),
+          password: schema?.password?.required(),
+          invite_code: schema?.invite_code,
+          repeat_password: schema?.repeat_password,
+        }).with("password", "repeat_password"),
+      };
+    },
+
+    // CREATE ------------------------------------------------
+
+    /**
+     * @function create - Schema validator for creating a single record
+     * @returns {Object} validator
+     */
+    create() {
+      const {
+        boom,
+        consts: { patterns },
+      } = server.app;
+
+      return {
+        payload: Joi.object({
+          email: schema?.email,
+          password: schema?.password,
+          invite_code: schema?.invite_code,
+        }),
+      };
+    },
+    // UPDATE ------------------------------------------------
+
+    /**
+     * @function updateByID - Schema validator for updating a single currency entity
+     * @returns
+     */
+    updateByID() {
+      const _update_schema = _sudo_update_schema(server);
+      return {
+        payload: Joi.object(_update_schema).allow({}),
+        params: Joi.object({ id: schema.id?.required() }),
+      };
+    },
+
+    /**
+     * @function update - Schema validator for creating bulk currency entities
+     * @returns
+     */
+    update() {
+      const _update_schema = _sudo_update_schema(server);
+      return {
+        payload: Joi.alternatives().try(
+          Joi.object().keys({
+            active: Joi.boolean(),
+          }),
+          Joi.object()
+            .keys({
+              ids: Joi.array().items(schema?.id),
+              ..._update_schema,
+            })
+            .or("active", "ids", "suitability")
+        ),
+      };
+    },
+    // REMOVE ------------------------------------------------
+    /**
+     * @function removeByID
+     * @returns
+     */
+    removeByID() {
+      return {
+        payload: Joi.object({
+          force: schema?.force,
+        }).optional(),
+        params: Joi.object({ id: schema?.id?.required() }),
+      };
+    },
+    /**
+     * @function remove
+     * @returns
+     */
+    remove() {
+      const { boom } = server.app;
+      return {
+        payload: Joi.object({
+          data: Joi.array()
+            .items(schema?.id)
+            .optional()
+            .error(boom.badRequest(`Required input <data::Array> is invalid`)),
+          force: schema?.force,
+        }).error(
+          boom.badRequest(`Required input <payload::Object> is invalid`)
+        ),
+      };
+    },
+
+    // RESTORE ------------------------------------------------
+    /**
+     * @function restoreByID
+     * @returns
+     */
+    restoreByID() {
+      return {
+        params: Joi.object({ id: schema?.id?.required() }),
+      };
+    },
+    /**
+     * @function restore
+     * @returns
+     */
+    restore() {
+      const { boom } = server.app;
+      return {
+        payload: Joi.object({
+          data: Joi.array()
+            .items(schema?.id)
+            .error(boom.badRequest(`Required input <data::Array> is invalid`)),
+        }),
+      };
+    },
+    // RETRIEVE ------------------------------------------------
+    /**
+     * @function find
+     * @returns
+     */
+    find() {
+      return {};
+    },
+
+    /**
+     * @function findByID
+     * @returns
+     */
+    findByID() {
+      return {
+        params: Joi.object({ id: schema?.id?.required() }),
+      };
+    },
+  };
+};
+
+function _sudo_update_schema(server) {
+  const { boom } = server.app;
+  return {
+    active: Joi.boolean(),
+    permission: Joi.boolean(),
+    suitability: Joi.number(),
+  };
+}
+
+function _getSchema(server) {
   const {
     boom,
     consts: { patterns },
   } = server.app;
-
   return {
-    payload: Joi.object({
-      email: Joi.string()
-        .email({ minDomainSegments: 2 })
-        .required()
-        .error(boom.badRequest("Required input <email::string> is invalid")),
-      password: Joi.string()
-        .pattern(patterns.password)
-        .optional()
-        .error(
-          boom.badRequest(
-            `Required input <password::string(${patterns.password})> is invalid`
-          )
-        ),
-      repeat_password: Joi.ref("password"),
-      invite_code: Joi.string()
-        .length(10)
-        .optional()
-        .error(
-          boom.badRequest("Optional input <invite_code::string> is invalid")
-        ),
-    }).with("password", "repeat_password"),
+    id: Joi.string()
+      .uuid()
+      .error(boom.badRequest(`<id::uuid> is invalid`)),
+    force: Joi.boolean()
+      .default(false)
+      .error(boom.badData("<force::boolean> is invalid")),
+    email: Joi.string()
+      .email({ minDomainSegments: 2 })
+      .label("Email address")
+      .error(boom.badData("<email::string> is invalid")),
+    password: Joi.string()
+      .pattern(patterns.password)
+      .error(boom.badData("<password::string> is invalid")),
+    repeat_password: Joi.ref("password"),
+    invite_code: Joi.string()
+      .label("Invitation code")
+      .allow("", null)
+      .error(boom.badRequest("<invite_code::string> is invalid")),
+    access_level: Joi.number()
+      .max(3)
+      .default(1)
+      .label("Access Level")
+      .error(boom.badData("<access_level::number> is invalid")),
   };
 }
-
-/**
- * @function bulkCreate - Schema validator for creating bulk currency entities
- * @param {Object} server - Hapi server instance
- * @returns
- */
-function bulkCreate(server) {
-  return {
-    payload: Joi.object({
-      data: Joi.array().items(create(server)?.payload),
-    }),
-  };
-}
-
-// UPDATE ------------------------------------------------
-
-/**
- * @function update - Schema validator for updating a single currency entity
- * @param {Object} server - Hapi server instance
- * @returns
- */
-function update(server) {
-  const { boom } = server.app;
-
-  return {
-    params: Joi.object({
-      id: Joi.string()
-        .uuid()
-        .required()
-        .error(boom.badRequest(`Required input <id::uuid> is invalid`)),
-    }),
-    payload: Joi.object({
-      iso_code: Joi.string()
-        .optional()
-        .error(boom.badRequest("Required input <iso_code::string> is invalid")),
-      name: Joi.string()
-        .optional()
-        .error(boom.badRequest("Required input <name::string> is invalid")),
-      type: Joi.string()
-        .optional()
-        .error(boom.badRequest("Required input <type::string> is invalid")),
-    }),
-  };
-}
-
-/**
- * @function bulkUpdate - Schema validator for creating bulk currency entities
- * @param {Object} server - Hapi server instance
- * @returns
- */
-function bulkUpdate(server) {
-  const { boom } = server.app;
-  return {
-    payload: Joi.object({
-      data: Joi.array().items(update(server)?.payload),
-      paranoid: Joi.boolean()
-        .optional()
-        .error(boom.badRequest(`Optional input <paranoid::bool> is invalid`)),
-    }),
-  };
-}
-// REMOVE ------------------------------------------------
-
-function remove(server) {
-  const { boom } = server.app;
-  return {
-    payload: Joi.object({
-      force: Joi.boolean()
-        .default(false)
-        .optional()
-        .error(boom.badData("Optional input <force::boolean> is invalid")),
-    }).optional(),
-
-    params: retrieve(server)?.params,
-  };
-}
-
-
-function bulkRemove(server) {
-  const { boom } = server.app;
-  return {
-    payload: Joi.object({
-      data: Joi.array()
-        .items(
-          Joi.string()
-            .uuid()
-            .error(boom.badRequest(`Required input [<id::uuid>] is invalid`))
-        )
-        .error(boom.badRequest(`Required input <data::Array> is invalid`)),
-      force: Joi.boolean()
-        .default(false)
-        .optional()
-        .error(new Error("Optional input <force::boolean> is invalid")),
-    }).error(boom.badRequest(`Required input <payload::Object> is invalid`)),
-  };
-}
-
-// RESTORE ------------------------------------------------
-
-function restore(server) {
-  return {
-    params: update(server)?.params,
-  };
-}
-
-function bulkRestore(server) {
-  const { boom } = server.app;
-  return {
-    payload: Joi.object({
-      data: Joi.array()
-        .items(
-          Joi.string()
-            .uuid()
-            .error(boom.badRequest(`Required input [<id::uuid>] is invalid`))
-        )
-        .error(boom.badRequest(`Required input <data::Array> is invalid`)),
-    }),
-  };
-}
-// RETRIEVE ------------------------------------------------
-
-function retrieve(server) {
-  return {
-    params: update(server)?.params,
-  };
-}
-
-
-
-module.exports = {
-  create,
-  update,
-  remove,
-  bulkCreate,
-  bulkUpdate,
-  bulkRemove,
-  restore,
-  bulkRestore,
-  retrieve,
-};

@@ -1,11 +1,9 @@
 "use strict";
-const { Op } = require("sequelize");
-const boom = require("@hapi/boom");
 
 const BankDetailController = (server) => {
   const {
-    db: { BankDetail, sequelize, Profile },
-
+    db: { BankDetail, sequelize },
+    boom,
     helpers: { filters, paginator },
   } = server.app;
   /* const queryInterface = sequelize.getQueryInterface();
@@ -17,45 +15,59 @@ const BankDetailController = (server) => {
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
+    async findByID(req) {
       const {
-        pre: { user },
+        pre: {
+          user: { user, fake, sudo },
+        },
         params: { id },
       } = req;
 
       try {
         const queryOptions = {
           where: {
-            user_id: user.id,
-            attributes: { exclude: ["user_id", "UserId"] },
+            id,
+            ...(sudo && { user_id: user.id }),
           },
+          attributes: { exclude: ["user_id", "UserId"] },
         };
-        let result = await BankDetail.findByPk(id, queryOptions);
-        return result ? { result } : boom.notFound("Record not found");
+        let result = fake
+          ? await BankDetail.FAKE()
+          : await BankDetail.findOne(queryOptions);
+
+        return result
+          ? { result }
+          : boom.notFound(`Address ID: ${id} not found!`);
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
       }
     },
 
-    async bulkRetrieve(req) {
+    async find(req) {
       const {
         query,
-        pre: { user },
+        pre: {
+          user: { user, fake, sudo },
+        },
       } = req;
 
       try {
         const queryFilters = await filters({
           query,
           searchFields: ["bank_name", "currency", "country"],
+          extras: { ...(!sudo && { user_id: user?.id }) },
         });
 
         const queryOptions = {
           ...queryFilters,
         };
 
-        const queryset = await BankDetail.findAndCountAll(queryOptions);
         const { limit, offset } = queryFilters;
+
+        const queryset = fake
+          ? await BankDetail.FAKE(limit)
+          : await BankDetail.findAndCountAll(queryOptions);
 
         return paginator({
           queryset,
@@ -69,18 +81,25 @@ const BankDetailController = (server) => {
     },
 
     // UPDATE ---------------------------------------------------
-
-    async update(req) {
+    /**
+     * @function updateByID
+     * @describe Update single record by ID
+     * @param {Object} req
+     * @returns
+     */
+    async updateByID(req) {
       const {
         payload,
         params: { id },
-        pre: { user },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
 
       try {
         const queryOptions = {
           where: {
-            ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+            ...(!sudo && { user_id: user.id }),
             id,
           },
           validate: true,
@@ -90,8 +109,8 @@ const BankDetailController = (server) => {
         return {
           result: await BankDetail.update(payload, queryOptions)
             .then(([count, [updated]]) => ({
-              updated,
-              [id]: Boolean(count),
+              id,
+              status: Boolean(count),
             }))
             .catch((err) => {
               throw boom.badData(err.message, err);
@@ -108,7 +127,9 @@ const BankDetailController = (server) => {
     async create(req) {
       const {
         payload,
-        pre: { user },
+        pre: {
+          user: { user },
+        },
       } = req;
 
       const queryOptions = {
@@ -133,18 +154,20 @@ const BankDetailController = (server) => {
 
     // REMOVE ---------------------------------------------------
 
-    async remove(req) {
+    async removeByID(req) {
       try {
         const {
           payload: { force = false },
-          pre: { user },
+          pre: {
+            user: { user },
+          },
           params: { id },
         } = req;
 
         const queryOptions = {
           where: {
             id,
-            ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+            user_id: user.id,
           },
           force,
         };
@@ -152,14 +175,8 @@ const BankDetailController = (server) => {
         return {
           result: await BankDetail.destroy(queryOptions)
             .then((count) => ({
-              [id]: Boolean(count),
-              ...(() =>
-                !count
-                  ? {
-                      info:
-                        "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
-                    }
-                  : null)(),
+              id,
+              status: Boolean(count),
             }))
             .catch((err) => {
               throw boom.badData(err.message, err);
@@ -171,34 +188,29 @@ const BankDetailController = (server) => {
       }
     },
 
-    async bulkRemove(req) {
+    async remove(req) {
       const {
-        payload: { data = [], force = false },
-        pre: { user },
+        payload: { ids = [], force = false },
+        pre: {
+          user: { user},
+        },
       } = req;
-      let total = 0;
 
       try {
         let result = await sequelize.transaction(async (t) =>
           Promise.all(
-            data?.map(async (id) => {
+            ids?.map(async (id) => {
               let queryOptions = {
                 where: {
                   id,
-                  ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+                  user_id: user.id,
                 },
                 transaction: t,
                 force,
               };
               return await BankDetail.destroy(queryOptions).then((count) => ({
-                [id]: ((total += count), Boolean(count)),
-                ...(() =>
-                  !count
-                    ? {
-                        info:
-                          "Record may not exist anymore or is soft deleted. Use the force option to permanently delete record",
-                      }
-                    : null)(),
+                status: Boolean(count),
+                id,
               }));
             })
           ).catch((err) => {
@@ -207,7 +219,6 @@ const BankDetailController = (server) => {
         );
 
         return {
-          total,
           result,
         };
       } catch (error) {
@@ -218,10 +229,12 @@ const BankDetailController = (server) => {
 
     // RESTORE------------------------------------------------------------
 
-    async restore(req) {
+    async restoreByID(req) {
       const {
         params: { id },
-        pre: { user },
+        pre: {
+          user: { user },
+        },
       } = req;
 
       try {
@@ -229,11 +242,12 @@ const BankDetailController = (server) => {
           result: await BankDetail.restore({
             where: {
               id,
-              ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+              user_id: user.id,
             },
           })
             .then((count) => ({
-              [id]: Boolean(count),
+              id,
+              status: Boolean(count),
             }))
             .catch((err) => {
               throw boom.badData(err.message, err);
@@ -246,13 +260,15 @@ const BankDetailController = (server) => {
     },
 
     /**
-     * @function bulkRestore - bulk restore currency records
+     * @function restore - bulk restore currency records
      * @param {Object} req
      */
-    async bulkRestore(req) {
+    async restore(req) {
       const {
         payload: { data = [] },
-        pre: { user },
+        pre: {
+          user: { user },
+        },
       } = req;
 
       try {
@@ -264,10 +280,11 @@ const BankDetailController = (server) => {
                   await BankDetail.restore({
                     where: {
                       id,
-                      ...(() => (user?.isAdmin ? { user_id: user.id } : {}))(),
+                      user_id: user.id,
                     },
                   }).then((count) => ({
-                    [id]: Boolean(count),
+                    id,
+                    status: Boolean(count),
                   }))
               )
             ).catch((err) => {

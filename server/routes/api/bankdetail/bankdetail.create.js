@@ -1,9 +1,8 @@
 "use strict";
-const Joi = require("joi");
 
 module.exports = (server) => {
   const Schema = require("../../../schema/bankdetail.schema");
-  const {payload: payloadSchema} = Schema?.create(server);
+  const { payload: payloadSchema } = Schema?.create(server);
 
   const {
     controllers: {
@@ -16,7 +15,7 @@ module.exports = (server) => {
 
   return {
     method: "POST",
-    path: "/bank-details",
+    path: "/bank-detail",
     config: {
       pre: [
         {

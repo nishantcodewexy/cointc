@@ -36,28 +36,47 @@ const Header = ({}) => {
                 </div> */}
               </div>
             </div>
-            <ul className="navbar-nav header-right main-notification">
-              {/* Admin User Avatar */}
-              <Dropdown as="li" className="nav-item dropdown header-profile">
-                <Dropdown.Toggle
-                  variant=""
-                  as="a"
-                  className="nav-link i-false c-pointer"
-                  // href="#"
-                  role="button"
-                  data-toggle="dropdown"
-                >
-                  <IdenticonAvatar size={50} alt="" id={session?.user?.id} />
-                  <div className="header-info">
-                    <span>{session?.user?.email}</span>
-                    <small className="text-capitalize">
-                      {session?.user?.role}
-                    </small>
-                  </div>
-                </Dropdown.Toggle>
+            {session?.user ? (
+              <ul className="navbar-nav header-right main-notification">
+                {/* Admin User Avatar */}
+                <Dropdown as="li" className="nav-item dropdown header-profile">
+                  <Dropdown.Toggle
+                    variant=""
+                    as="a"
+                    className="nav-link i-false c-pointer"
+                    // href="#"
+                    role="button"
+                    data-toggle="dropdown"
+                  >
+                    <IdenticonAvatar
+                      size={50}
+                      alt=""
+                      id={session.user.user.id}
+                    />
+                    {console.log(session?.user)}
+                    <div className="header-info">
+                      <span
+                        style={{
+                          maxWidth: 120,
+                          overflow: "hidden",
+                          display: "block",
+                          whiteSpace: "nowrap",
+                          textOverflow: "ellipsis",
+                        }}
+                        title={session?.user?.user?.email}
+                      >
+                        {session.user.user.email}
+                      </span>
+                      <small className="text-capitalize">
+                        {session.user.user.access_level > 2
+                          ? "Super Administrator"
+                          : "Administrator"}
+                      </small>
+                    </div>
+                  </Dropdown.Toggle>
 
-                <Dropdown.Menu align="right" className="mt-2">
-                  {/* <Link to="/profile" className="dropdown-item ai-icon">
+                  <Dropdown.Menu align="right" className="mt-2">
+                    {/* <Link to="/profile" className="dropdown-item ai-icon">
                     <svg
                       id="icon-user1"
                       xmlns="http://www.w3.org/2000/svg"
@@ -77,33 +96,34 @@ const Header = ({}) => {
                     <span className="ml-2">Profile </span>
                   </Link> */}
 
-                  <Link
-                    to="#"
-                    onClick={() => dispatch(user.logout())}
-                    className="dropdown-item ai-icon"
-                  >
-                    <svg
-                      id="icon-logout"
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="text-danger"
-                      width={18}
-                      height={18}
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
+                    <Link
+                      to="#"
+                      onClick={() => dispatch(user.logout())}
+                      className="dropdown-item ai-icon"
                     >
-                      <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                      <polyline points="16 17 21 12 16 7" />
-                      <line x1={21} y1={12} x2={9} y2={12} />
-                    </svg>
-                    <span className="ml-2">Logout </span>
-                  </Link>
-                </Dropdown.Menu>
-              </Dropdown>
-            </ul>
+                      <svg
+                        id="icon-logout"
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="text-danger"
+                        width={18}
+                        height={18}
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                      >
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                        <polyline points="16 17 21 12 16 7" />
+                        <line x1={21} y1={12} x2={9} y2={12} />
+                      </svg>
+                      <span className="ml-2">Logout </span>
+                    </Link>
+                  </Dropdown.Menu>
+                </Dropdown>
+              </ul>
+            ) : null}
           </div>
         </nav>
       </div>

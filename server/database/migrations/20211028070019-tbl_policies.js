@@ -1,6 +1,6 @@
 "use strict";
-
-let table_name = "tbl_policies";
+let { tableNames } = require('../../consts')
+let table_name = tableNames?.POLICY || 'tbl_policies';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -8,8 +8,8 @@ module.exports = {
       // Table fields or columns definition
       let fields = {
         escrow_fee: Sequelize.DOUBLE,
-        maker_ad_fee: Sequelize.DOUBLE,
-        taker_ad_fee: Sequelize.DOUBLE,
+        seller_ad_fee: Sequelize.DOUBLE,
+        buyer_ad_fee: Sequelize.DOUBLE,
         min_confirmation_block: {
           type: Sequelize.INTEGER,
         },
@@ -17,8 +17,8 @@ module.exports = {
         updated_at: Sequelize.DATE,
         user_id: {
           type: Sequelize.UUID,
-          allowNull: false,
-          references: { model: "tbl_users", key: "id" },
+          // allowNull: false,
+          references: { model: tableNames?.USER || 'tbl_users', key: "id" },
         },
       };
 

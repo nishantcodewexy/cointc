@@ -1,9 +1,9 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
-const {
-  types: { KycStatusType },
-} = require("../../consts");
+const { tableNames, KycStatusType } = require("../../consts");
+const faker = require("faker");
+const hooks = require("../hooks/kyc.hook");
 
 module.exports = (sequelize, DataTypes) => {
   class KYC extends Model {
@@ -13,17 +13,47 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      const { Upload, User } = models;
+      const { Upload, User, Kyc } = models;
 
-      KYC.belongsTo(Upload, {
-        foreignKey: "upload_id",
+      Kyc.belongsTo(Upload, {
+        foreignKey: "document_id",
         as: "upload",
       });
 
-      KYC.belongsTo(User, {
+      Kyc.belongsTo(User, {
         foreignKey: "user_id",
       });
     }
+
+    static FAKE(count = 0) {
+      let rows = [],
+        result = {},
+        index = 0;
+
+      let generateFakeData = () => {
+        let id = faker.datatype.uuid();
+        let { User } = sequelize?.models;
+        return {
+          id,
+          type: faker.helpers.randomize(["email", "id", "sms"]),
+          status: faker.helpers.randomize(Object.keys(KycStatusType)),
+          user_id: faker.datatype.uuid(),
+          archived_at: faker.datatype.datetime(),
+          document_id: faker.datatype.uuid(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+          user: User.FAKE(),
+        };
+      };
+      if (count > 0) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
+    }
+
     toPublic() {
       return _.omit(this.toJSON(), []);
     }
@@ -50,11 +80,12 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "KYC",
+      modelName: "Kyc",
       underscored: true,
-      tableName: "tbl_kyc",
+      tableName: tableNames?.KYC || "tbl_kyc",
       paranoid: true,
       deletedAt: "archived_at",
+      hooks,
     }
   );
 

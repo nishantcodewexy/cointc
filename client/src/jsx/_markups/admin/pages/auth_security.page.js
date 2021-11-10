@@ -24,7 +24,9 @@ function AuthSecurityMgmt({ services, useService }) {
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
-        include: ["security"],
+        // "fake": true,
+        include: "security",
+        "sudo": true,
       },
     });
   }, []);
@@ -38,24 +40,7 @@ function AuthSecurityMgmt({ services, useService }) {
       <header className="mb-4">
         <h3>List of Security </h3>
       </header>
-      <Row style={{ marginBottom: 20, width: "100%" }}>
-        <Col>
-          <div className="input-group search-area right d-lg-inline-flex d-none">
-            <input
-              type="text"
-              className="form-control"
-              placeholder="Filter in record"
-            />
-            <div className="input-group-append">
-              <span className="input-group-text">
-                <Link to={"#"}>
-                  <i className="themify-glyph-162"></i>
-                </Link>
-              </span>
-            </div>
-          </div>
-        </Col>
-      </Row>
+      
 
       <div style={{ marginBottom: 60 }}>
         <TableGenerator
@@ -64,32 +49,20 @@ function AuthSecurityMgmt({ services, useService }) {
             iso_code: "Symbol",
           }}
           omit="*"
-          extras={["user_name", "email", "mobile_number", "otp"]}
+          extras={["user_name", "email", "mobile_number", "two_factor"]}
           transformers={{
-            user_name: ({ row }) => {
-              return (
-                <>
-                  {row?.lname}, {row?.oname}
-                </>
-              );
-            },
-            email: ({ row }) => {
-              return <>{row?.email}</>;
-            },
-            mobile_number: ({ row }) => {
-              return (
-                <>
-                  {row?.phone || (
+            user_name: ({ row }) => row?.lname,
+            email: ({ row }) => row?.email,
+            mobile_number: ({ row }) => (
+                  row?.phone || (
                     <small className="badge badge-default text-white">No mobile number</small>
-                  )}
-                </>
-              );
-            },
-            otp: ({ row }) => {
+                  )
+                  ),
+            two_factor : ({ row }) => {
               return (
                 <>
-                  {console.log({otp:row?.security?.otp})}
-                  {row?.security?.otp || (
+                  {console.log({ otp: row })}
+                  {row?.security?.two_factor || (
                     <small className="badge badge-danger">2fa disabled</small>
                   )}
                 </>
@@ -101,6 +74,8 @@ function AuthSecurityMgmt({ services, useService }) {
     </>
   );
 }
+
+
 function SecurityListTable() {
   const chackbox = document.querySelectorAll(".user_permission_single input");
   const motherChackBox = document.querySelector(".user_permission input");

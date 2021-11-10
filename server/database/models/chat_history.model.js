@@ -1,10 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
-const {
-    types:{
-        country
-    }
-} = require("../../consts")
+const { countries, tableNames } = require("../../consts");
+const faker = require("faker");
+
 module.exports = (sequelize, DataTypes) => {
   class ChatHistory extends Model {
     /**
@@ -14,9 +12,35 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      
     }
 
+    static FAKE(count) {
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let id = faker.datatype.uuid();
+
+        return {
+          id,
+          visitor_email: faker.internet.email(),
+          type: faker.helpers.randomize(["CHAT", "DISPUTE", "SUPPORT"]),
+          country: faker.helpers.randomize(Object.keys(countries)),
+          browser: faker.name.prefix(),
+          started_at: faker.datatype.datetime(),
+          ended_at: faker.datatype.datetime(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
+    }
   }
   ChatHistory.init(
     {
@@ -26,21 +50,20 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       visitor_email: {
-          type:DataTypes.STRING,
-          allowNull:false,
-          validate:{
-              isEmail:true
-          }
+        type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          isEmail: true,
+        },
       },
       type: {
-        type: DataTypes.ENUM("CHAT"),
+        type: DataTypes.ENUM("CHAT", "DISPUTE", "SUPPORT"),
         allowNull: false,
-        defaultValue:"CHAT"
+        defaultValue: "CHAT",
       },
       country: {
-        type: DataTypes.ENUM(...Object.keys(country)),
+        type: DataTypes.ENUM(Object.keys(countries)),
         allowNull: false,
-        defaultValue:"NG"
       },
       browser: {
         type: DataTypes.STRING,
@@ -53,8 +76,8 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "ChatHistory",
       underscored: true,
-      tableName: 'tbl_chat_histories',
-      paranoid:true
+      tableName: tableNames?.CHAT_HISTORY || "tbl_chat_histories",
+      paranoid: true,
     }
   );
   return ChatHistory;

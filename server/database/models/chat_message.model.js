@@ -1,5 +1,7 @@
 "use strict";
 const { Model } = require("sequelize");
+const { tableNames } = require("../../consts");
+const faker = require("faker");
 
 module.exports = (sequelize, DataTypes) => {
   class Message extends Model {
@@ -13,6 +15,31 @@ module.exports = (sequelize, DataTypes) => {
       const { Chat, Message, User } = models;
       // Message.belongsTo(User, {});
       Message.belongsTo(Chat, {});
+    }
+
+    static FAKE(count) {
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let id = faker.datatype.uuid();
+
+        return {
+          id,
+          sender_id: faker.datatype.uuid(),
+          text: faker.lorem.sentence(),
+          read: faker.datatype.boolean(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
   Message.init(
@@ -36,7 +63,7 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "Message",
       underscored: true,
-      tableName: "tbl_chat_messages",
+      tableName: tableNames?.CHAT_MESSAGE || "tbl_chat_messages",
     }
   );
   return Message;

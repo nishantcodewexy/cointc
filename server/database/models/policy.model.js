@@ -1,5 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
+const { tableNames } = require("../../consts");
+const faker = require("faker");
+
 module.exports = (sequelize, DataTypes) => {
   class Policy extends Model {
     /**
@@ -7,24 +10,50 @@ module.exports = (sequelize, DataTypes) => {
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate(models) {
+    static associate({ User, Policy }) {
       // define association here
+      Policy.belongsTo(User, {
+        foreignKey: {
+          name: "user_id",
+        },
+      });
+    }
+
+    static FAKE(count) {
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        return {
+          escrow_fee: faker.datatype.float(),
+          buyer_ad_fee: faker.datatype.float(),
+          seller_ad_fee: faker.datatype.float(),
+          min_confirmation_block: faker.datatype.number(),
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
   Policy.init(
     {
       escrow_fee: DataTypes.DOUBLE,
-      maker_ad_fee: DataTypes.DOUBLE,
-      taker_ad_fee: DataTypes.DOUBLE,
+      buyer_ad_fee: DataTypes.DOUBLE,
+      seller_ad_fee: DataTypes.DOUBLE,
       min_confirmation_block: {
-        type: DataTypes.INTEGER 
-      }
+        type: DataTypes.INTEGER,
+      },
     },
     {
       sequelize,
       modelName: "Policy",
       underscored: true,
-      tableName: "tbl_policies",
+      tableName: tableNames?.POLICY || "tbl_policies",
     }
   );
 

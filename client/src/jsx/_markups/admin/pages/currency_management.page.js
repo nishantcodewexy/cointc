@@ -21,7 +21,7 @@ function CurrencyMgmt({ services, useService }) {
     [SERVICE?.CREATE]: currency.create,
     [SERVICE?.UPDATE]: currency.update,
     [SERVICE?.REMOVE]: currency.remove,
-    [SERVICE?.BULK_RETRIEVE]: currency.bulkRetrieveCurrency,
+    [SERVICE?.BULK_RETRIEVE]: currency.bulkRetrieve,
   });
   const { dispatchRequest } = service;
 
@@ -38,6 +38,8 @@ function CurrencyMgmt({ services, useService }) {
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
+        "fake": true,
+        "sudo": true,
         paranoid: false,
       },
       toast: { success: notifySuccess, error: notifyError },
@@ -151,7 +153,7 @@ function CurrencyMgmt({ services, useService }) {
 
       <div style={{ marginBottom: 60 }}>
         <TableGenerator
-          {...{ service }}
+          {...{ service}}
           mapping={{
             id: "Currency ID",
             iso_code: "symbol",

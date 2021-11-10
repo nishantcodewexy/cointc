@@ -2,9 +2,9 @@
 const { Model } = require("sequelize");
 const _ = require("underscore");
 const hooks = require("../hooks/user.hook");
-
-// debugger;
-const uppercaseFirst = (str) => `${str[0].toUpperCase()}${str.substr(1)}`;
+const { tableNames } = require("../../consts");
+const faker = require("faker");
+// const uppercaseFirst = (str) => `${str[0].toUpperCase()}${str.substr(1)}`;
 
 module.exports = (sequelize, DataTypes) => {
   class User extends Model {
@@ -20,14 +20,23 @@ module.exports = (sequelize, DataTypes) => {
         BankDetail,
         Wallet,
         Address,
-        KYC,
+        Kyc,
         Security,
         Secession,
         Upload,
         Currency,
         Advert,
         Order,
+        Fee,
+        Policy,
       } = models;
+
+      User.hasOne(User, {
+        foreignKey: {
+          type: DataTypes.UUID,
+          name: "created_by",
+        },
+      });
 
       User.hasMany(Wallet, {
         foreignKey: { name: "user_id", allowNull: false },
@@ -50,7 +59,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: { name: "user_id", allowNull: false },
       });
 
-      User.hasOne(KYC, {
+      User.hasOne(Kyc, {
         as: "kyc",
         foreignKey: { name: "user_id", allowNull: false },
       });
@@ -86,10 +95,58 @@ module.exports = (sequelize, DataTypes) => {
           name: "user_id",
         },
       });
+      User.hasMany(Fee, {
+        as: "fees",
+        foreignKey: {
+          name: "user_id",
+        },
+      });
+      User.hasMany(Policy, {
+        as: "policies",
+        foreignKey: {
+          name: "user_id",
+        },
+      });
       // User.hasMany(Message, {})
     }
     toPublic() {
       return _.omit(this.toJSON(), ["password"]);
+    }
+    static FAKE(count = 0) {
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let id = faker.datatype.uuid(),
+          access_level = faker.helpers.randomize([1, 2, 3]);
+        const { Profile } = sequelize?.models;
+        return {
+          id,
+          user_id: id,
+          email: faker.internet.email(),
+          permission: faker.datatype.boolean(),
+          archived_at: faker.datatype.datetime(),
+          last_seen: faker.datatype.datetime(),
+          login_at: faker.datatype.datetime(),
+          access_level,
+          online: faker.helpers.randomize([true, false]),
+          isBasic: access_level === 1,
+          isAdmin: access_level === 2,
+          isSuperAdmin: access_level === 3,
+          profile_id: faker.datatype.uuid(),
+          mode: null,
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+          ...Profile.FAKE(),
+        };
+      };
+      if (count > 0) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
 
     // getProfile(options) {
@@ -125,7 +182,7 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         validate: { notEmpty: true },
       },
-      role: DataTypes.STRING,
+      // role: DataTypes.STRING,
       permission: {
         type: DataTypes.BOOLEAN,
         defaultValue: true,
@@ -133,6 +190,8 @@ module.exports = (sequelize, DataTypes) => {
       archived_at: DataTypes.DATE,
       last_seen: DataTypes.DATE,
       login_at: DataTypes.DATE,
+      verified: { type: DataTypes.BOOLEAN, defaultValue: false },
+      active: { type: DataTypes.BOOLEAN, defaultValue: true },
       access_level: {
         type: DataTypes.INTEGER,
         validate: {
@@ -142,7 +201,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         defaultValue: 1,
       },
-
       // VIRTUALS
       online: {
         type: new DataTypes.VIRTUAL(DataTypes.BOOLEAN, ["createdAt"]),
@@ -176,39 +234,15 @@ module.exports = (sequelize, DataTypes) => {
       sequelize,
       modelName: "User",
       underscored: true,
-      tableName: "tbl_users",
+      tableName: tableNames?.USER || "tbl_users",
       paranoid: true,
       deletedAt: "archived_at",
       hooks,
-      scopes: {
-        admin: {
-          role: "admin",
-        },
-        basic: {
-          role: "basic",
-        },
-      },
+      /* scopes: {
+       
+      }, */
     }
   );
 
-  User.addHook("afterFind", async (findResult) => {
-    if (!findResult) return;
-
-    if (!Array.isArray(findResult)) findResult = [findResult];
-    for (const instance of findResult) {
-      if (!(instance instanceof User)) return;
-      instance.profile = await instance.getProfile();
-      /*  if (instance?.role === "admin") {
-        instance.profile = await instance.getAdminProfile();
-      } else if (instance?.role === "basic") {
-        instance.profile = await instance.getBasicProfile();
-      } */
-      if (instance)
-        instance.dataValues = {
-          ...instance?.profile?.dataValues,
-          ...instance?.dataValues,
-        };
-    }
-  });
   return User;
 };

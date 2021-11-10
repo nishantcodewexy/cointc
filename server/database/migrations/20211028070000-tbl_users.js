@@ -1,6 +1,6 @@
 "use strict";
-
-let table_name = "tbl_users";
+let { tableNames } = require("../../consts");
+let table_name = tableNames?.USER || "tbl_users";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -8,7 +8,23 @@ module.exports = {
       // Add all table modifications here
       async function modifications(d) {
         await queryInterface.sequelize.transaction(async (t) => {
-          return await Promise.all([]);
+          return await Promise.all([
+            !("created_by" in d) &&
+              queryInterface.addColumn(
+                table_name,
+                "created_by", // new field name
+                {
+                  type: Sequelize.UUID,
+                  references: {
+                    model: tableNames?.USER || "tbl_users",
+                    key: "id",
+                  },
+                },
+                {
+                  transaction: t,
+                }
+              ),
+          ]);
         });
       }
 
@@ -37,6 +53,7 @@ module.exports = {
             notEmpty: true,
           },
         },
+        active: { type: Sequelize.BOOLEAN, defaultValue: true },
         permission: {
           type: Sequelize.BOOLEAN,
           defaultValue: true,
@@ -46,6 +63,7 @@ module.exports = {
         updated_at: Sequelize.DATE,
         last_seen: Sequelize.DATE,
         login_at: Sequelize.DATE,
+        verified: { type: Sequelize.BOOLEAN, defaultValue: false },
         access_level: {
           type: Sequelize.INTEGER,
           validate: {

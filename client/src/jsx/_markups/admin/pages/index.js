@@ -9,6 +9,8 @@ import { SERVICE } from "../../../_constants";
 const ApexLine = lazy(() =>
   pMinDelay(import("../components/DepositsAnalysis.Component"), 5000)
 );
+
+
 const stats = [
   {
     name: "users stats",

@@ -95,7 +95,7 @@ function TableGenerator({
     }
     setCount(data?.count);
     setLimit(data?.limit);
-  }, [data, setTableData, setCount, setLimit, omit, mapping]);
+  }, [data/* , setTableData, setCount, setLimit, omit, mapping */]);
 
   function onRowsPerPageChange(e, { props }) {
     setLimit(props.value);
@@ -177,6 +177,9 @@ function TableGenerator({
   return (
     <Card style={{ position: "relative" }}>
       <div style={{ display: "flex", flexDirection: "column" }}>
+        {
+          console.log(count, limit)
+        }
         {tableData.rows.length ? (
           <>
             <Table

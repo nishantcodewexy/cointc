@@ -1,10 +1,12 @@
-const assert = require("assert");
+"use strict";
+
+const sequelize = require("sequelize");
 
 module.exports = function WalletController(server) {
   /*********************** HELPERS ***************************/
-  const { __upsert, __update, __destroy, __assertRole } = require("./utils")(
+  /*  const {  __update, __destroy } = require("./utils")(
     server
-  );
+  ); */
 
   const {
     db: { Wallet, User },
@@ -12,36 +14,43 @@ module.exports = function WalletController(server) {
     helpers: { filters, paginator },
   } = server.app;
 
-  const walletExist = async (address, user) => {
+  /* const walletExist = async (address, user) => {
     // Search wallet by address
     return await Wallet.findOne({
       where: { address, ...(() => (user ? { owner_id: user } : null))() },
     });
-  };
+  }; */
 
   return {
     create: async (req) => {
-      const { pre: user } = req;
-      const { currency } = req.params;
-      return await User.findByPk(user)
-        .createWallet({ asset: currency })
-        .toPublic();
+      const {
+        pre: {user: {user, sudo}},
+        params: { currency },
+      } = req;
+      return await User.findByPk(user).createWallet({ asset: currency });
     },
+
     // RETRIEVE ----------------------------------------
-    bulkRetrieve: async (req) => {
+    find: async (req) => {
       let {
-        pre: { user },
+        pre: { user : {user, sudo, fake}},
         query,
       } = req;
 
       try {
-        const queryFilters = await filters({ query, searchFields: ["email"] });
+        const queryFilters = await filters({
+          query,
+          searchFields: ["account_id"],
+          extras: {
+            ...(!sudo && {user_id: user?.id})
+          }
+        });
         const options = {
           ...queryFilters,
         };
 
-        let queryset = await Wallet.findAndCountAll(options);
         const { limit, offset } = queryFilters;
+        let queryset = fake ? Wallet.FAKE(limit) : await Wallet.findAndCountAll(options);
 
         return paginator({
           queryset,
@@ -54,33 +63,34 @@ module.exports = function WalletController(server) {
       }
     },
 
-    // Fetch specific user wallet
-    async retrieve() {
+    /**
+     * @function findByAddress - Find wallet by address
+     * @param {Object} req
+     * @returns
+     */
+    async findByAddress(req) {
       let {
-        pre: { user },
+        pre: { user: {sudo, fake}},
         params: { address },
       } = req;
-      //`Requesting for wallet id:${id}`
-      return await Wallet.findOne({
-        where: {
-          address,
-        },
-      }).toPublic();
+      let where, result;
+      try {
+        where = { address };
+        result = fake ? Wallet.FAKE() : await Wallet.findOne({
+          where,
+        });
+
+        return result
+          ? { result }
+          : boom.notFound(`Wallet address: ${address} not found!`);
+      } catch (err) {
+        console.error(err);
+      }
     },
 
-    // Fetch total user wallet balance
-    totalBalance: async (req) => {
-      let {
-        pre: { user },
-      } = req;
-      //TODO: Aggregate wallet amount
-    },
-    // Fetch specific user wallet balance
-    balanceOf: async (req) => {
-      let {
-        pre: { user },
-        payload: { address },
-      } = req;
-    },
+    async depositAsset(req) { },
+    async withdrawAsset(req) { },
+    
+    async transferAsset(req){}
   };
 };

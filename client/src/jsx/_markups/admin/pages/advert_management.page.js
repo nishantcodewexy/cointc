@@ -1,10 +1,48 @@
 import { Card, Row, Col, Button, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
+import { toast } from "react-toastify";
 // CONSTANTS
 import { SERVICE } from "../../../_constants";
+import { useEffect } from "react";
+import TableGenerator from "../components/TableGenerator.Component";
+import Moment from "react-moment";
+import useToggler from "../../../_hooks/toggler.hook";
+import { Popper } from "@mui/core";
 
-function AdvertsManagement() {
+function AdvertsManagement({services, useService}) {
+
+  const { account, analytics} = services;
+
+  let service = useService({
+    [SERVICE?.RETRIEVE]: account.retrieveUser,
+    [SERVICE?.UPDATE]: account.updateUser,
+    [SERVICE?.DROP]: account.removeUser,
+    [SERVICE?.BULK_CREATE]: account.bulkCreateUser,
+    [SERVICE?.BULK_RETRIEVE]: analytics.getADS,
+  });
+
+  const { dispatchRequest } = service;
+
+  const {
+    isOpen: isModalOpen,
+    onOpen: onOpenModal,
+    onClose: onModalClose,
+    toggledPayload: modalPayload,
+  } = useToggler();
+
+  useEffect(() => {
+    dispatchRequest({
+      type: SERVICE?.BULK_RETRIEVE,
+      payload: {
+        "fake": true,
+        "sudo": true,
+        "filter[type]": "sell"
+      },
+      toast: { success: notifySuccess, error: notifyError },
+    });
+  }, []);
+
   return (
     <>
       <PageTitle activeMenu="" motherMenu="Advert management" />
@@ -40,107 +78,161 @@ function AdvertsManagement() {
               padding: 10,
             }}
           >
-            <AdvertHistoryTable />
+             <TableGenerator
+                {...{ service }}
+                omit="*"
+                extras={[
+                  "creation_date",
+                  "id",
+                  "username",
+                  "trade_type",
+                  "currency_pair",
+                  "price_set",
+                  "order_limit",
+                  "action"
+                ]}
+                transformers={{
+                  creation_date: ({ row }) => {
+                    return (
+                      row?.createdAt ? <Moment format="YYYY/MM/DD" date={row?.createdAt} /> : ""
+                    );
+                  },
+                  id: ({row}) => row?.id,
+                  username: ({row}) => row?.user ? row?.user?.pname : "",
+                  trade_type: ({row}) => row?.type,
+                  currency_pair: ({row}) => {
+                    return (
+                      `${row?.crypto}/${row?.fiat}`
+                    )
+                  },
+                  price_set: ({row}) => (`${row?.price} - ${row?.fiat}`),
+                  order_limit: ({row}) => (`${row?.min_order_qty} - ${row?.max_order_qty}`),
+                  action: function Action({ row }) {
+                    const {
+                      isOpen,
+                      onOpen: onPopoverOpen,
+                      onClose: onPopoverClose,
+                      toggledPayload: popOverTarget,
+                    } = useToggler();
+                    const handleClick = (event) => {
+                      alert('Gomand')
+                      // onPopoverOpen(popOverTarget ? null : event.currentTarget);
+                      // onPopoverOpen(popOverTarget ? null : event.target);
+                    };
+    
+                    /* const handleClose = () => {
+                        onPopoverClose(null);
+                      }; */
+    
+                    const open = Boolean(popOverTarget);
+                    const id = open ? row?.id : undefined;
+    
+                    return (
+                      <div
+                        style={{
+                          display: "flex",
+                          gap: 10,
+                        }}
+                      >
+                        <button
+                          style={{
+                            appearance: "none",
+                            border: "none",
+                            background: "none",
+                            fontSize: 12,
+                          }}
+                          onClick={() =>
+                            onOpenModal({ method: SERVICE?.UPDATE, payload: row })
+                          }
+                        >
+                          <span className="themify-glyph-29"></span> Edit
+                        </button>
+                        {/* TODO: Delete user */}
+                        <button
+                          style={{
+                            appearance: "none",
+                            border: "none",
+                            background: "none",
+                            position: "relative",
+                            fontSize: 12,
+                          }}
+                          aria-describedby={id}
+                          variant="contained"
+                          onClick={handleClick}
+                        >
+                          <span className="themify-glyph-165"></span> Delete
+                        </button>
+    
+                        {id && (
+                          <Popper id={id} open={isOpen} anchorEl={popOverTarget}>
+                            <ul
+                              className="bg-white shadow"
+                              style={{
+                                padding: 10,
+                              }}
+                            >
+                              <li>
+                                <a
+                                  href="#"
+                                  onClick={() =>
+                                    onOpenModal({
+                                      method: SERVICE?.REMOVE,
+                                      payload: { ...row, force: false },
+                                    })
+                                  }
+                                >
+                                  <small>Delete</small>
+                                </a>
+                              </li>
+                              <li>
+                                <a
+                                  href="#"
+                                  onClick={() =>
+                                    onOpenModal({
+                                      method: SERVICE?.REMOVE,
+                                      payload: { ...row, force: true },
+                                    })
+                                  }
+                                >
+                                  <small>Permanently delete</small>
+                                </a>
+                              </li>
+                            </ul>
+                          </Popper>
+                        )}
+                      </div>
+                    );
+                  },
+                }}
+              />
           </Card>
         </Col>
       </Row>
     </>
   );
 }
-function AdvertHistoryTable() {
-  const chackbox = document.querySelectorAll(".user_permission_single input");
-  const motherChackBox = document.querySelector(".user_permission input");
-  // console.log(document.querySelectorAll(".publish_review input")[0].checked);
-  const checkboxFun = (type) => {
-    for (let i = 0; i < chackbox.length; i++) {
-      const element = chackbox[i];
-      if (type === "all") {
-        if (motherChackBox.checked) {
-          element.checked = true;
-        } else {
-          element.checked = false;
-        }
-      } else {
-        if (!element.checked) {
-          motherChackBox.checked = false;
-          break;
-        } else {
-          motherChackBox.checked = true;
-        }
-      }
-    }
-  };
 
-  const check = (i) => (
-    <div className={`custom-control custom-checkbox ml-2`}>
-      <input
-        type="checkbox"
-        className="custom-control-input "
-        id={`checkAll_user_permission_${i}`}
-        required=""
-        onClick={() => checkboxFun()}
-      />
-      <label
-        className="custom-control-label"
-        htmlFor={`checkAll_user_permission_${i}`}
-      ></label>
-    </div>
-  );
-
- 
-  const action = (
-    <div className="d-flex" style={{ gap: 20 }}>
-   
-      <a href="">
-        <span className="themify-glyph-165"></span> Delete
-      </a>
-    </div>
-  );
-  return (
-    <>
-      <Table responsive hover size="sm">
-        <thead>
-          <tr>
-            <th className="user_permission">
-              <div className="custom-control custom-checkbox mx-2">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="checkAll_user_permission_all"
-                  onClick={() => checkboxFun("all")}
-                />
-                <label
-                  className="custom-control-label"
-                  htmlFor="checkAll_user_permission_all"
-                ></label>
-              </div>
-            </th>
-            <th>Creation date</th>
-            <th className="">ID</th>
-            <th className="">Username</th>
-            <th className="">Trade type</th>
-            <th className="">Currency pair</th>
-            <th className="">Price set</th>
-            <th className="">Order Limit</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="customers">
-          <tr className="btn-reveal-trigger">
-            <td className="user_permission_single">{check(1)}</td>
-            <td className="py-3 ">2021-08-19 5:17:36</td>
-            <td className="py-3">611de970add</td>
-            <td className="py-2">wealwinsss</td>
-            <td className="py-3 ">Buy</td>
-            <td className="py-3 ">ETH/EUR</td>
-            <td className="py-3">2139.68252 - EUR</td>
-            <td className="py-3">1 - 10</td>
-            <td>{action}</td>
-          </tr>
-        </tbody>
-      </Table>
-    </>
-  );
-}
 
 export default AdvertsManagement;
+
+function notifySuccess() {
+  toast.success("Success !", {
+    position: "top-right",
+    autoClose: 3000,
+    hideProgressBar: true,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}
+
+function notifyError(error) {
+  toast.error(error || "Request Error!", {
+    position: "top-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+  });
+}

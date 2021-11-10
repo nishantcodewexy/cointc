@@ -1,28 +1,31 @@
 "use strict";
 const Joi = require("joi");
 module.exports = (server) => {
+  const Schema = require("../../../schema/user.schema")(server);
+  const { payload: payloadSchema } = Schema.update();
+  
   const {
     controllers: {
       user: { update },
     },
-    consts: { roles: _roles },
     helpers: {
-      permissions: { isAdminOrError },
+      permissions: { isUser },
     },
   } = server.app;
 
   return {
     method: "PUT",
-    path: "/users/{id}",
+    path: "/user",
     config: {
       pre: [
         {
-          method: isAdminOrError,
+          method: isUser,
           assign: "user",
         },
       ],
-      handler: update,
+      handler: update, 
       auth: "jwt",
+      validate: { payload: payloadSchema },
     },
   };
 };

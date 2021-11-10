@@ -1,6 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
 const _ = require("underscore");
+const { countries, tableNames } = require("../../consts");
+const faker = require("faker");
 
 module.exports = (sequelize, DataTypes) => {
   class Address extends Model {
@@ -20,6 +22,32 @@ module.exports = (sequelize, DataTypes) => {
     toPublic() {
       return _.omit(this.toJSON(), []);
     }
+    static FAKE(count = 0) {
+      let rows = [],
+        result = {},
+        index = 0;
+      const { User } = sequelize?.models;
+      let generateFakeData = () => {
+        let user_id = faker.datatype.uuid();
+        return {
+          id: faker.datatype.uuid(),
+          user_id,
+          country: faker.address.countryCode(),
+          address_line: faker.address.secondaryAddress(),
+          archived_at: faker.datatype.datetime(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+          user: User.FAKE()
+        };
+      };
+      if (count > 0) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
+    }
   }
   Address.init(
     {
@@ -29,21 +57,17 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       country: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM(Object.keys(countries)),
       },
       address_line: {
         type: DataTypes.STRING,
       },
-      region: {
-        type: DataTypes.STRING,
-      },
-    
     },
     {
       sequelize,
       modelName: "Address",
       underscored: true,
-      tableName: "tbl_addresses",
+      tableName: tableNames?.ADDRESS || "tbl_addresses",
     }
   );
 

@@ -1,13 +1,18 @@
 "use strict";
-
-let table_name = "tbl_referrals";
+let { tableNames } = require("../../consts");
+let table_name = tableNames?.REFERRAL || 'tbl_referrals';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     try {
           // Table field definitions
           let fields = {
-            commission: {
+            id: {
+              type: Sequelize.UUID,
+              primaryKey: true,
+              defaultValue: Sequelize.UUIDV4,
+            },
+            commission_in_percent: {
               type: Sequelize.DOUBLE,
               validate: {
                 min: 0,
@@ -21,7 +26,7 @@ module.exports = {
               type: Sequelize.UUID,
               allowNull: false,
               references: {
-                model: "tbl_users",
+                model: tableNames?.USER || "tbl_users",
                 key: "id",
               },
             },
@@ -29,7 +34,7 @@ module.exports = {
               type: Sequelize.UUID,
               allowNull: false,
               references: {
-                model: "tbl_users",
+                model: tableNames?.USER || "tbl_users",
                 key: "id",
               },
             },

@@ -1,7 +1,7 @@
+"use strict";
 const assert = require("assert");
-const faker = require("faker");
 const dfn = require("date-fns");
-const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+const faker = require("faker");
 /**
  * @description - User controller
  * @param {Object} server  - Server instance
@@ -9,41 +9,50 @@ const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
  */
 module.exports = function UserController(server) {
   /*********************** HELPERS ***************************/
-  const { __upsert, __update, __destroy, __assertRole } = require("./utils")(
-    server
-  );
+  const { __update, __destroy } = require("./utils")(server);
 
   const {
-    db: { User, sequelize, Profile },
+    db: {
+      User,
+      sequelize,
+      Sequelize: { Op },
+    },
     boom,
     config: { client_url },
-    helpers: { decrypt, mailer, jwt, generator, paginator, filters },
+    helpers: {
+      decrypt,
+      mailer,
+      jwt,
+      generator,
+      paginator,
+      filters,
+      validateAndFilterAssociation,
+    },
   } = server.app;
-
-  async function login(account) {
-    // Update the last_login
-    account.login_at = new Date();
-    await account.save();
-
-    return {
-      token: jwt.create(account),
-      ...account.toPublic(),
-    };
-  }
 
   /**
    * @function createNew - Creates a new user record
-   * @param {Object} payload
+   * @param {Object} payload - Payload object
+   * @param {Object} created_by - Creator as a user
    * @returns
    */
-  async function createNew({ email, password = null, ...others }) {
+  async function createNew(
+    { email, password = null, access_level = 1, repeat_password, ...others },
+    created_by = null
+  ) {
     try {
       let mailBody = "";
+
+      // Verifications
+      if (password && password !== repeat_password)
+        throw boom.badData(`Password mismatch!`);
+
       let user = await User.findOne({
         where: {
           email,
         },
       });
+
       if (user)
         throw boom.notAcceptable(`User with the email: ${email} already exist`);
 
@@ -58,36 +67,53 @@ module.exports = function UserController(server) {
           data: {
             email,
             password,
-            profile: {
-              email,
-              ...others,
-            },
+            access_level,
+            ...(created_by && { created_by }),
           },
           options: {
             transaction: t,
-            include: Profile,
           },
         };
 
+        // User
         user = await User.create(newUser.data, newUser.options);
+
+        // Profile
+        await user.createProfile(
+          {
+            email,
+            ...others,
+          },
+          {
+            transaction: t,
+          }
+        );
 
         // Security
         await user.createSecurity({}, { transaction: t });
-        await user.createWallet({ asset: "BTC" }, { transaction: t });
-        // Set referral link id any
-        if (others?.invite_code) {
-          const ref = await User.findOne({
-            where: {
-              "profile.invite_code": invite_code,
-            },
-          });
-          ref && ref.addReferrer(user, { transaction: t });
+
+        // Standard user operations
+        if (+access_level < 2) {
+          await user.createWallet({ currency: "BTC" }, { transaction: t });
+          await user.createKyc({ type: "id" }, { transaction: t });
+          // await user.createAddress({ }, { transaction: t });
+
+          if (others?.invite_code) {
+            const ref = await User.findOne({
+              where: {
+                "profile.invite_code": invite_code,
+              },
+            });
+            ref && ref.addReferrer(user, { transaction: t });
+          }
         }
 
         //TODO Send mail to user
 
         return {
-          user: user.toPublic(),
+          result: user.toPublic(),
+          message: "User created successfully",
+          status: true,
         };
       });
     } catch (err) {
@@ -96,31 +122,21 @@ module.exports = function UserController(server) {
     }
   }
 
-  function filterAssociations(list = []) {
-    let valid = [];
-    list.forEach((item) => {
-      for (let assc in User.associations) {
-        let isSame = assc?.toLowerCase() === item?.toLowerCase();
-
-        if (isSame) {
-          valid.push(assc);
-          break;
-        }
-      }
-    });
-    return valid?.length ? valid : null;
-  }
-
   return {
     // CREATE------------------------------------------------------------
     /**
-     * @function create - Personal account creation
-     * @description - Creates new user
+     * @function create
+     * @description - Creates new user record (**Admins only**)
      * @param {Object} req - Request object
      * @param {Object} req.pre - Request Prehandler object
      * @returns
      */
-    async create(req) {
+    /**
+     * @function registerMe - registers or creates a new user record
+     * @param {Object} req - Request object
+     * @returns
+     */
+    async register(req) {
       let { payload } = req;
 
       try {
@@ -130,25 +146,16 @@ module.exports = function UserController(server) {
         return boom.boomify(error);
       }
     },
-
-    /**
-     * @function bulkCreate - Creates multiple user records (**Admin only**)
-     * @param {Object} req - Request object
-     * @param {Object} req.payload
-     * @param {Object[]} req.payload.data
-     * @returns
-     */
-    async bulkCreate(req) {
-      const {
-        payload: { data = [] },
+    async create(req) {
+      let {
+        payload,
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
 
       try {
-        return await sequelize.transaction(async (t) => {
-          return await Promise.all(
-            data?.map(async (user) => await createNew(user))
-          );
-        });
+        return createNew(payload, user);
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -156,51 +163,6 @@ module.exports = function UserController(server) {
     },
 
     // UPDATE------------------------------------------------------------
-    /**
-     * @function updateMe - Update personal profile
-     * @param {Object} req
-     * @returns
-     */
-    async updateMe(req) {
-      try {
-        let {
-          pre: { user },
-          payload,
-        } = req;
-        //determine the allowed attributes to modify per user role
-
-        //  Generally allowed attrinutes
-        let attributes = [
-          "last_name",
-          "other_names",
-          "nickname",
-          "kyc",
-          "mode",
-          "country",
-          "kyc_document",
-        ];
-        // Admin only allowed attributes
-        attributes = user?.isAdmin && [
-          "suitability",
-          "kyc_status",
-          "kyc_document",
-          "permission",
-          ...attributes,
-        ];
-
-        let options = {
-          returning: true,
-          attributes,
-          where: {
-            id: user?.id,
-          },
-        };
-        let model = user?.__proto__.constructor.name;
-        return await __update(model, payload, options);
-      } catch (error) {
-        console.error(error);
-      }
-    },
 
     /**
      * @function update - updates single user record - (**only Admin**)
@@ -209,64 +171,31 @@ module.exports = function UserController(server) {
      * @param {Object} req.payload.data  - upsert record
      * @returns
      */
-    async update(req) {
+    async updateByID(req) {
       try {
         let {
-          pre: { user },
-          payload = {},
+          payload,
           params: { id },
+          pre: {
+            user: { user, sudo },
+          },
         } = req;
+        let fields = ["permission"];
+        let result = await User.update(payload, {
+          where: { id },
+          returning: true,
+          fields,
+          logging: console.log,
+        }).then(([count]) => count);
 
-        allowedUserAttrbs = ["permission"];
-        let userUpdates = {},
-          profileUpdates = {};
-
-        Object.keys(payload).forEach((key) => {
-          if (allowedUserAttrbs.includes(key)) {
-            userUpdates[key] = allowedUserAttrbs[key];
-          } else {
-            profileUpdates[key] = allowedUserAttrbs[key];
-          }
-        });
-
-        // user is an admin
-        // let { email, role, permission, ...profileData } = payload;
-        let target_user = await User.findOne({ where: { id } });
-        //determine the targe user's allowed attributes
-        let attributes = target_user?.isBasic
-          ? [
-              "mode",
-              "nickname",
-              "kyc",
-              "suitability",
-              "country",
-              "kyc_status",
-              "last_name",
-              "other_names",
-              "kyc_document",
-            ]
-          : ["nickname", "kyc"];
-
-        let target_profile = target_user?.profile;
-
-        if (target_profile) {
-          let options = {
-            attributes,
-            where: {
-              profile_id: target_profile?.profile_id,
-            },
-            returning: true,
-            logging: console.log,
-          };
-          let model = target_profile?.__proto__.constructor.name;
-          return await sequelize.transaction((t) => {
-            return Promise.all([
-              __update("User", userUpdates, { where: { id }, logging: true }),
-              __update(model, profileUpdates, options),
-            ]);
-          });
-        }
-        return boom.notFound("User profile does not exist");
+        return sudo
+          ? {
+              id,
+              status: Boolean(result),
+            }
+          : boom.methodNotAllowed(
+              `User with ID ${user?.id} is not an administrator`
+            );
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -280,45 +209,48 @@ module.exports = function UserController(server) {
      * @param {Array} req.payload.data  - array of upsert records
      * @returns
      */
-    async bulkUpdate(req) {
+    async update(req) {
       try {
         const {
-          payload: { data, suspend = false },
+          payload,
+          pre: {
+            user: { user, sudo },
+          },
         } = req;
-        // TODO: authorization
-        const attributes = ["mode", "role"];
+        let fields = ["active"],
+          result;
 
-        return await sequelize.transaction(async (t) => {
-          return data.map(async ({ id, ...payload }) => {
-            if (suspend) {
-              payload = {
-                ...payload,
-                archived_at: new Date().toLocaleString(),
-              };
-            }
-            // Find user
-            const __user = await User.update({ where: { id } });
-            // get user role to determine which profile to update
-            const { model } = __assertRole(__user?.role);
-            let where = {
-              user_id: id,
-            };
-            // if (suspend) {
-            //   // Soft delete user
-            //   // payload.archived_at = new Date().toLocaleString();
-            //   let destroyed = await __destroy(User?.name, { id }, true, {
-            //     transaction: t,
-            //   });
-            //   console.log({ destroyed });
-            // }
+        if (sudo) {
+          let { ids = [], ...data } = payload;
+          fields = [...fields, "permission"];
+          if (!ids?.length) throw boom.badData(`<ids::array> cannot be empty`);
 
-            console.log({ payload });
-            return await __update(model, payload, where, {
-              transaction: t,
-              attributes,
-            });
+          if (!data) return boom.methodNotAllowed("Nothing to update");
+
+          result = await sequelize.transaction(async (t) => {
+            return await Promise.all(
+              ids.map(
+                async (id) =>
+                  await Promise.all([
+                    __update("User", data, {
+                      where: { id },
+                      transaction: t,
+                      fields,
+                    }),
+                  ])
+              )
+            );
           });
-        });
+        } else {
+          // update session user data
+          result = await user?.update(payload, {
+            fields,
+          });
+        }
+        return {
+          status: Boolean(result),
+          result,
+        };
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -333,69 +265,118 @@ module.exports = function UserController(server) {
      * @param {Array} req.payload.data  - array of ids
      * @returns
      */
-    async bulkRemove(req, h) {
+    async remove(req) {
       const {
-        payload: { data, force = false },
+        payload: { data = [], force = false },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
+      let result, where;
+      try {
+        if (sudo) {
+          if (!data?.length)
+            throw boom.badData("Expected an array of user IDs. None provided!");
+          result = await sequelize.transaction(
+            async (t) =>
+              await Promise.all([
+                data.map(async (id) => {
+                  if (id === user?.id)
+                    throw boom.methodNotAllowed(
+                      "Cannot remove current user session data. Remove current user ID from data and try again or make request without sudo, force and data as request payloads!"
+                    );
+                  where = { id };
+                  return await User.destroy({ where, force, transaction: t });
+                }),
+              ]).catch((err) => (error = err))
+          );
+        } else {
+          where = { id: user?.id };
+          result = await user.destroy({ force });
+        }
 
-      if (!data?.id) throw boom.badRequest("No ID provided");
-      return {
-        deleted: Boolean(
-          await sequelize.transaction(async (t) => {
-            data.forEach(async (id) => {
-              let where = { id };
-              await __destroy("User", where, force, { transaction: t });
-            });
-          })
-        ),
-      };
+        return {
+          status: Boolean(result),
+          result,
+        };
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
+      }
     },
 
     /**
-     * @function remove - Remove single User
+     * @function remove - Remove single record by ID
      * @param {Object} req
      * @returns
      */
-    async remove(req) {
+    async removeByID(req) {
       let {
         payload: { force = false },
         params: { id },
-        pre: { user },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
       // only superadmins are allowed to permanently delete a user
       force = user?.isSuperAdmin ? force : false;
       let where = { id };
-      return { deleted: Boolean(await __destroy("User", where, force)) };
+      let result = await __destroy("User", where, force);
+      return { status: Boolean(result), result };
     },
 
     // RETRIEVE------------------------------------------------------------
 
     /**
-     * @function bulkRetrieve - Fetched multiple User
+     * @function find - Fetched multiple User
      * @param {Object} req
      * @returns
      */
-    async bulkRetrieve(req) {
-      const { query } = req;
-      try {
-        const queryFilters = await filters({ query, searchFields: ["email"] });
+    async find(req) {
+      const {
+        query,
+        pre: {
+          user: { user, fake, sudo },
+        },
+      } = req;
 
-        const include = filterAssociations(query?.include);
+      try {
+        const queryFilters = await filters({
+          query,
+          searchFields: ["email"],
+          extras: {
+            ...(!sudo && { id: user?.id }),
+          },
+        });
+
+        const include = validateAndFilterAssociation(
+          query?.include,
+          ["security"],
+          User
+        );
 
         const options = {
           ...queryFilters,
-          attributes: { exclude: ["password"] },
+          // attributes: { exclude: ["password"] },
           include,
         };
-
-        let queryset = await User.findAndCountAll(options);
         const { limit, offset } = queryFilters;
 
-        return paginator({
-          queryset,
-          limit,
-          offset,
-        });
+        if (sudo) {
+          let queryset = fake
+            ? await User.FAKE(limit)
+            : await User.findAndCountAll(options);
+
+          return paginator({
+            queryset,
+            limit,
+            offset,
+          });
+        }
+
+        return {
+          result: fake ? await User.FAKE() : await User.findOne(options),
+        };
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -407,20 +388,36 @@ module.exports = function UserController(server) {
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
+    async findByID(req) {
       const {
-        query: { id },
+        params: { id },
+        pre: {
+          user: { fake, sudo },
+        },
       } = req;
       try {
-        // handle invalid query <id> 400
-        if (!id) return boom.badRequest();
+        // handle invalid params <id> 400
+        if (!id)
+          return boom.badData(
+            `Required params id is ${id}. Check id value and try again!`
+          );
 
-        // Find target user
-        return await User.findOne({
-          where: { id },
-        }).then(
-          (_user) => _user?.toPublic() ?? boom.notFound("User not found!")
-        );
+        if (sudo) {
+          let target_user = fake
+            ? await User.FAKE()
+            : await User.findOne({
+                where: { id },
+              });
+
+          return target_user
+            ? {
+                result: target_user,
+                status: "success",
+                message: "User found",
+              }
+            : boom.notFound(`User with ID: ${id} does not exist!`);
+        }
+        return boom.unauthorized("You are not authorized to access this data");
       } catch (error) {
         console.error(error);
         return boom.boomify(error);
@@ -440,18 +437,36 @@ module.exports = function UserController(server) {
         let user = await User.findByPk(id);
         if (!user) throw boom.notFound(`Account with id, ${id} not found!`);
 
+        let security = await user.getSecurity();
         // generate OTP
         let otp = generator.otp();
         let otp_ttl = dfn.addMinutes(new Date(), 14);
         let data = { otp, otp_ttl };
-        let security = await user.getSecurity();
-        security = security
-          ? await security.update(data)
-          : await user?.createSecurity(data);
-        // await user.setSecurity(data);
+
+        if (security) {
+          // if user created_at from now is less than a minute; don't create new otp
+          let now = new Date();
+          let former = new Date(security?.updatedAt);
+          let diff = dfn.differenceInSeconds(now, former, {
+            roundingMethod: "floor",
+          });
+          if (diff < 60)
+            return boom.badRequest(`Try again after ${60 - diff} secs`);
+          await security.update(data);
+        } else await user?.createSecurity(data);
 
         // TODO: Send via email or SMS
-        return h.response({ sent: true }).code(200);
+        return h
+          .response({
+            status: true,
+            message: "OTP sent successfully",
+            data: {
+              phone_number: user?.phone,
+              email: user?.email,
+              id,
+            },
+          })
+          .code(200);
       } catch (err) {
         console.error(err);
         return boom.internal(err.message, err);
@@ -483,7 +498,7 @@ module.exports = function UserController(server) {
         let isValid = dfn.isBefore(now, security?.otp_ttl);
 
         return security?.otp === code && isValid
-          ? login(user)
+          ? login(user, jwt.create(user))
           : boom.notFound("OTP code is incorrect. Try again!");
       } catch (err) {
         console.error(err);
@@ -508,21 +523,25 @@ module.exports = function UserController(server) {
         let where = { email, access_level };
 
         // fetch user record from DB that matches the email
-        let account = await User.findOne({
+        let user = await User.findOne({
           where,
           logger: console.log,
+          trim: false,
         });
 
-        if (account) {
+        if (user) {
           //  get account Security setting
-          let security = await account?.getSecurity();
+          let security = await user?.getSecurity();
 
           return security?.two_factor
             ? {
-                id: account?.id,
+                id: user?.id,
+                status: true,
+                message:
+                  "2FA enabled. Send OTP using the user ID to complete the authentication ",
               }
-            : (await decrypt(password, account.password))
-            ? login(account, password)
+            : (await decrypt(password, user?.password))
+            ? login(user, jwt.create(user))
             : boom.notFound("Incorrect password!");
         }
 
@@ -534,7 +553,6 @@ module.exports = function UserController(server) {
         return boom.boomify(error);
       }
     },
-
     async confirmByEmail(req) {
       let { email, token } = req.query;
       assert(email, boom.badRequest("Missing credential to confirm email"));
@@ -593,14 +611,13 @@ module.exports = function UserController(server) {
     },
   };
 };
+async function login(account, token) {
+  // Update the last_login
+  account.login_at = new Date();
+  await account?.save();
 
-function renameKey(Obj, from = [], to = []) {
-  from.forEach((key, idx) => {
-    if (key in Obj) {
-      let temp = Obj[key];
-      delete Obj[key];
-      Obj[to[idx]] = temp;
-    }
-  });
-  return Obj;
+  return {
+    token,
+    user: { ...account.toPublic() },
+  };
 }

@@ -1,13 +1,13 @@
 "use strict";
-const assert = require("assert");
-
-const { Op } = require("sequelize");
 
 module.exports = function SecessionController(server) {
   const {
-    db: { Secession },
+    db: {
+      Secession,
+      Sequelize: { Op },
+    },
     boom,
-    helpers: { filters, paginator },
+    helpers: { filters, paginator, validateAndFilterAssociation },
   } = server.app;
 
   return {
@@ -16,104 +16,111 @@ module.exports = function SecessionController(server) {
     async create(req) {
       const {
         payload,
-        auth: {
-          credentials: { user },
+        pre: {
+          user: { user, sudo },
         },
       } = req;
 
-      const { id, level, status, description } = await Secession.create({
-        ...payload,
-        user_id: user.id,
-      });
-      return { id, level, status, description };
+      const result = await user.createSecession(payload);
+      return {
+        result,
+      };
     },
 
     // RETRIEVE ---------------------------------------------------------------
     /**
-     * @function bulkRetrieve - retrieves multiple currency record
+     * @function find - find multiple records
      * @param {Object} req
      * @returns
      */
-    async bulkRetrieve(req) {
+    async find(req) {
       const {
         query,
-        pre: { isAdmin },
-        auth: {
-          credentials: { user },
+        pre: {
+          user: { user, sudo, fake },
         },
       } = req;
-
-      if (isAdmin) {
-        const filterResults = await filters({
+      try {
+        // validate and get query filters
+        const queryFilters = await filters({
           query,
           searchFields: ["status", "description"],
-        });
-
-        const queryset = Secession.findAndCountAll(filterResults);
-
-        return await paginator({
-          queryset,
-          limit: filterResults.limit,
-          offset: filterResults.offset,
-        });
-      } else {
-        const filterResults = await filters({
-          query,
-          extra: {
-            user_id: user.id,
-            archived_at: {
-              [Op.is]: null,
+          ...(!sudo && {
+            extra: {
+              user_id: user?.id,
             },
-          },
+          }),
         });
+        // define model includes
+        const include = validateAndFilterAssociation(
+          query?.include,
+          ["user"],
+          Secession
+        );
+        // define query options
+        const options = {
+          ...queryFilters,
+          include,
+        };
+        const { limit, offset } = queryFilters;
 
-        const queryset = Secession.findAndCountAll(filterResults);
+        const result = fake
+          ? Secession.FAKE(limit)
+          : await Secession.findAndCountAll(options);
 
         return await paginator({
-          queryset,
-          limit: filterResults.limit,
-          offset: filterResults.offset,
+          queryset: result,
+          limit,
+          offset,
         });
+      } catch (err) {
+        console.error(err);
+        return boom.internal(err.message, err);
       }
     },
-    
+
     /**
      * @function retrieve - retrieves a single currency record
      * @param {Object} req
      * @returns
      */
-    async retrieve(req) {
+    async findByID(req) {
       const {
         params: { id },
-        pre: { isAdmin },
+        pre: {
+          user: { user, fake },
+        },
       } = req;
 
-      if (!isAdmin) throw boom.forbidden();
-
-      return await Secession.findByPk(id);
+      return { result: fake ? Secession.FAKE() : await Secession.findByPk(id) };
     },
 
     // DELETE ---------------------------------------------------------------
 
-    async remove(req) {
+    async removeByID(req) {
       const {
         params: { id },
-        pre: { isAdmin },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
 
-      if (!isAdmin) throw boom.forbidden();
+      if (!sudo) throw boom.forbidden();
 
       return await Secession.destroy({
         where: { id },
       });
     },
-    async bulkRemove(req) {
+
+    async remove(req) {
       const {
-        pre: { isAdmin },
+        pre: {
+          user: { user, sudo },
+        },
         payload,
       } = req;
 
-      if (!isAdmin) throw boom.forbidden();
+      if (!sudo) throw boom.forbidden();
 
       return await Secession.destroy({
         where: {
@@ -130,15 +137,27 @@ module.exports = function SecessionController(server) {
      * @param {Object} req
      * @returns
      */
-    async update(req) {
+    async updateByID(req) {
       const {
         payload,
         params: { id },
+        pre: {
+          user: { user, sudo },
+        },
       } = req;
 
-      return await Secession.update(payload, {
-        where: { id },
+      let result = await Secession.update(payload, {
+        where: {
+          id,
+          ...(!sudo && { user_id: user?.id }),
+        },
       });
+
+      return {
+        id,
+        status: Boolean(result),
+        result,
+      };
     },
   };
 };

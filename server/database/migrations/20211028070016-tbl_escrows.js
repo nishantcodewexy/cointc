@@ -1,6 +1,6 @@
 "use strict";
-
-let table_name = "tbl_escrows";
+let { tableNames } = require("../../consts");
+let table_name = tableNames?.ESCROW || 'tbl_escrows';
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -33,17 +33,17 @@ module.exports = {
             seller_id: {
               type: Sequelize.UUID,
               allowNull: false,
-              references: { model: "tbl_users", key: "id" },
+              references: { model: tableNames?.USER || 'tbl_users', key: "id" },
             },
             order_id: {
               type: Sequelize.STRING,
               allowNull: false,
-              references: { model: "tbl_orders", key: "id" },
+              references: { model: tableNames?.ORDER || 'tbl_orders', key: "id" },
             },
             buyer_id: {
               type: Sequelize.UUID,
               allowNull: false,
-              references: { model: "tbl_users", key: "id" },
+              references: { model: tableNames?.USER || 'tbl_users', key: "id" },
             },
           };
 

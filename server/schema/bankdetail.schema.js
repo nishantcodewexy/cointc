@@ -3,9 +3,7 @@ const Joi = require("joi");
 
 function create(server) {
   const {
-    consts: {
-      types: { currencies },
-    },
+    consts: { currencies },
     boom,
   } = server.app;
 
@@ -59,9 +57,7 @@ function bulkCreate(server) {
 function update(server) {
   const {
     boom,
-    consts: {
-      types: { currencies },
-    },
+    consts: { currencies },
   } = server.app;
   return {
     params: Joi.object({

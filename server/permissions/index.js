@@ -1,26 +1,19 @@
 const boom = require("@hapi/boom");
-const {
-  roles: { admin, basic },
-} = require("../consts");
 
 module.exports = {
+  /**
+   * @function isUser - Check user constraints
+   * @param {Request} req
+   * @returns {Boolean}
+   */
   isUser: async (req) => {
     const {
       auth: {
         credentials: { user },
       },
     } = req;
-    return user;
-  },
 
-  isBasicOrError: async (req) => {
-    const {
-      auth: {
-        credentials: { user },
-      },
-    } = req;
-    if (user?.access_level >= 1) return user;
-    throw boom.forbidden("Unauthorized! User is not basic");
+    return { user, ...getQueryConstraints(req) };
   },
 
   /**
@@ -34,19 +27,50 @@ module.exports = {
         credentials: { user },
       },
     } = req;
-    // if (!user) return false;
-    if (user?.access_level >= 2) return user;
+    let constraints = getQueryConstraints(req);
+    if (user?.access_level >= 2) return { user, ...constraints, sudo: true };
     throw boom.forbidden("Unauthorized! User is not an administrator");
   },
 
+  /**
+   * @function isSuperAdminOrError - return true if user is super-admin or throw an error
+   * @param {Object} req - Request Object
+   * @returns
+   */
   isSuperAdminOrError: async (req) => {
     const {
       auth: {
         credentials: { user },
       },
+      query,
     } = req;
-    // if (!user) return false;
-    if (user?.access_level >= 3) return user;
-    throw boom.forbidden("Unauthorized! User is not an administrator");
+    let constraints = getQueryConstraints(req);
+    if (user?.access_level >= 3)
+      return {
+        user,
+        ...constraints,
+        sudo: true,
+      };
+    throw boom.forbidden("Unauthorized! User is not an super administrator");
   },
 };
+
+function getQueryConstraints(req) {
+  const {
+    auth: {
+      credentials: { user },
+    },
+    query,
+  } = req;
+
+  let sudo = query?.sudo && Boolean(JSON.parse(query.sudo)),
+    fake = query?.fake && Boolean(JSON.parse(query.fake));
+
+  sudo = sudo && user?.access_level > 1 ? true : false;
+  fake = fake ?? false;
+
+  return {
+    sudo,
+    fake,
+  };
+}

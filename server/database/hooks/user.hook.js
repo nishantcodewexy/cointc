@@ -1,63 +1,94 @@
-
 const { encrypt } = require("../../helpers");
+const _ = require("underscore");
 
 module.exports = {
-    // prioryty 1
-    // beforeBulkCreate:async (instances,options)=>{
+  // prioryty 1
+  // beforeBulkCreate:async (instances,options)=>{
 
-    // },
-    // beforeBulkDestroy:async (options)=>{
+  // },
+  // beforeBulkDestroy:async (options)=>{
 
-    // },
-    // beforeBulkUpdate:async (options)=>{
+  // },
+  // beforeBulkUpdate:async (options)=>{
 
-    // },
+  // },
 
+  // prioryty 4
+  async beforeCreate(instance, options) {
+    if (!instance) return;
+    instance.password = await encrypt(instance.password);
+  },
 
-    // prioryty 4
-    beforeCreate:async (instance,options)=>{
-        instance.password = await encrypt(instance.password);
-    },
-    // beforeDestroy:async (instance,options)=>{
+  async afterFind(findResult, options) {
+    if (!findResult) return;
+    let trim = options?.trim ?? true;
+    if (!Array.isArray(findResult)) findResult = [findResult];
 
-    // },
-    // beforeUpdate:async (instance,options)=>{
+    for (const instance of findResult) {
+      if (instance instanceof this) {
+        let profile = await instance.getProfile();
+        // let addresses = await instance.getAddresses();
+        // let security = await instance.getKyc();
 
-    // },
-    // beforeSave:async (instance,options)=>{
+        let compiled = {
+          ...profile?.toJSON(),
+          /* addresses, */
+          /*  kyc, */
+          ...(trim
+            ? _.omit(instance?.toJSON(), ["password"])
+            : instance?.toJSON()),
+        };
+        instance.dataValues = {
+          ...compiled,
+        };
+      }
+    }
+  },
+  // beforeDestroy:async (instance,options)=>{
 
-    // },
-    // beforeUpsert:async (values,options)=>{
+  // },
+  // beforeUpdate:async (instance,options)=>{
 
-    // },
+  // },
+  // beforeSave:async (instance,options)=>{
 
-    // prioryty 5
-    // afterCreate:async (instance,options)=>{
+  // },
+  // beforeUpsert:async (values,options)=>{
 
-    // },
-    // afterDestroy:async (instance,options)=>{
+  // },
 
-    // },
-    // afterUpdate:async (instance,options)=>{
+  // prioryty 5
+  // afterCreate:async (instance,options)=>{
 
-    // },
-    // afterSave:async (instance,options)=>{
+  // },
+  // afterDestroy:async (instance,options)=>{
 
-    // },
-    // afterUpsert:async (created,options)=>{
+  // },
+  //   afterUpdate: async (instance, options) => {
+  //     let profile = await instance.getProfile();
 
-    // },
+  //     if (instance)
+  //       instance.dataValues = {
+  //         ...profile?.dataValues,
+  //         ...instance?.dataValues,
+  //       };
+  //   },
+  // afterSave:async (instance,options)=>{
 
-    // priority 6
+  // },
+  // afterUpsert:async (created,options)=>{
 
+  // },
 
-    // afterBulkCreate:async (instances,options)=>{
+  // priority 6
 
-    // },
-    // afterBulkDestroy:async (options)=>{
+  // afterBulkCreate:async (instances,options)=>{
 
-    // },
-    // afterBulkUpdate:async (options)=>{
+  // },
+  // afterBulkDestroy:async (options)=>{
 
-    // },
-}
+  // },
+  // afterBulkUpdate:async (options)=>{
+
+  // },
+};

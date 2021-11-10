@@ -1,6 +1,15 @@
 "use strict";
 const { Model } = require("sequelize");
 const hooks = require("../hooks/order.hook");
+const { tableNames } = require("../../consts");
+const faker = require("faker");
+const STATUS = {
+  pending: "PENDING",
+  completed: "COMPLETED",
+  disputed: "DISPUTED",
+  cancelled: "CANCELLED",
+};
+
 module.exports = (sequelize, DataTypes) => {
   class Order extends Model {
     /**
@@ -10,10 +19,43 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      const { Order, Advert } = models;
+      const { Order, Advert, User } = models;
       Order.belongsTo(Advert, {
         foreignKey: "advert_id",
       });
+      Order.belongsTo(User);
+    }
+
+    static FAKE(count) {
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let { User, Advert } = sequelize?.models;
+        return {
+          id: `ORD-${Date.now().toString()}`,
+          total_amount: faker.datatype.float(),
+          total_quantity: faker.datatype.number(),
+          advert_user_confirm: faker.datatype.number(),
+          order_user_confirm: faker.datatype.number(),
+          block_account_id: faker.datatype.uuid(),
+          appeal: faker.lorem.sentence(),
+          remark: faker.lorem.sentence(),
+          status: faker.helpers.randomize(Object.values(STATUS)),
+          rating: faker.datatype.number(5),
+          archived_at: faker.datatype.datetime(),
+          trx_id: faker.datatype.uuid(),
+          user: User.FAKE(),
+          advert: Advert.FAKE(),
+        };
+      };
+      if (count > 1) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
     }
   }
 
@@ -39,24 +81,26 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         defaultValue: 1,
       },
+      advert_user_confirm: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      order_user_confirm: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
+      blocked_account_id: DataTypes.UUID,
       appeal: DataTypes.STRING,
       remark: DataTypes.STRING,
       status: {
-        type: DataTypes.ENUM(
-          "unpaid",
-          "paid",
-          "released",
-          "completed",
-          "disputed",
-          "canceled"
-        ),
-        defaultValue: "unpaid",
+        type: DataTypes.ENUM(Object.values(STATUS)),
+        defaultValue: STATUS.pending,
       },
       rating: {
         type: DataTypes.INTEGER,
         validate: {
           isInt: true,
-          min: 1,
+          min: 0,
           max: 5,
         },
         allowNull: true,
@@ -69,7 +113,7 @@ module.exports = (sequelize, DataTypes) => {
       modelName: "Order",
       underscored: true,
       paranoid: true,
-      tableName: "tbl_orders",
+      tableName: tableNames?.ORDER || "tbl_orders",
       hooks,
       deletedAt: "archived_at",
     }

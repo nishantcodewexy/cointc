@@ -1,8 +1,8 @@
 "use strict";
 const { Model } = require("sequelize");
-const {
-  types: { country, banks, currencies },
-} = require("../../consts");
+const { tableNames, currencies } = require("../../consts");
+const faker = require("faker");
+
 module.exports = (sequelize, DataTypes) => {
   class BankDetail extends Model {
     /**
@@ -18,6 +18,31 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "user_id",
       });
     }
+    static FAKE(count = 0) {
+      let rows = [],
+        result = {},
+        index = 0;
+      let generateFakeData = () => {
+        let user_id = faker.datatype.uuid();
+        return {
+          id: faker.datatype.uuid(),
+          account_no: faker.finance.iban(),
+          bank_name: faker.finance.account(),
+          swift_code: faker.finance.bic(),
+          currency: faker.helpers.randomize(Object.keys(currencies)),
+          archived_at: faker.datatype.datetime(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
+        };
+      };
+      if (count > 0) {
+        for (; index < count; ++index) {
+          rows.push(generateFakeData());
+        }
+        result = { count, rows };
+      } else result = { ...generateFakeData() };
+      return result;
+    }
   }
   BankDetail.init(
     {
@@ -29,9 +54,9 @@ module.exports = (sequelize, DataTypes) => {
       account_no: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
       },
-    
+
       bank_name: {
         type: DataTypes.STRING,
       },
@@ -39,12 +64,12 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         validate: {
           min: 8,
-          max: 11
+          max: 11,
         },
-        allowNull: false
-      },      
+        allowNull: false,
+      },
       currency: {
-        type: DataTypes.ENUM(...Object.keys(currencies)),
+        type: DataTypes.ENUM(Object.keys(currencies)),
         defaultValue: "USD",
         allowNull: false,
       },
@@ -52,7 +77,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       sequelize,
       modelName: "BankDetail",
-      tableName: "tbl_bank_details",
+      tableName: tableNames?.BANK_DETAIL || "tbl_bank_details",
       underscored: true,
     }
   );
