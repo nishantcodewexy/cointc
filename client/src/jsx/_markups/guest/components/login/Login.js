@@ -4,7 +4,6 @@ import { Container, Row, Col, Form, Button } from 'react-bootstrap'
 import { Link, useHistory } from "react-router-dom";
 import { toast } from 'react-toastify';
 import logo_black from '../../app-assets/images/logo/logo-black.png';
-import { LoginApi } from '../api';
 import { Formik } from "formik";
 import { useDispatch } from 'react-redux';
 
@@ -42,33 +41,25 @@ export const Login = ({ history }) => {
                 const body = { email, password, access_level }
                 setSubmitting(true);
 
-                const data = await LoginApi("/api/auth/login", body)
-
-                if (data) {
-                    toast.success("Login successfully")
-                    dispatch(log({ type: SESSION.LOGIN, data }));
-                    history.push("/")
-                } else {
-                    toast.error("Invalid Login details")
+                try {
+                    axios.post(`http://207.148.118.105/api/auth/login`, body, { headers: { "Content-Type": "application/json" } })
+                        .then(function (data) {
+                            // toast.success(response.data.message);
+                            if (data.status == 200) {
+                                toast.success("Login Successfully")
+                                dispatch(log({ type: SESSION.LOGIN, data }));
+                                history.push("/")
+                            }
+                        })
+                        .catch(function (error) {
+                            toast.error(error.response.data.message)
+                            setSubmitting(false)
+                        })
+                } catch (e) {
+                    console.log(e)
                 }
 
-                // try {
-                //     let request = async () =>
-                //         await dispatchRequest({
-                //             type: SERVICE?.LOGIN,
-                //             payload: {
-                //                 email,
-                //                 password,
-                //                 access_level: 3,
-                //             },
-                //             toast: { error: notifyError },
-                //         });
-                //     dispatch(userAction.login(request));
-                // } catch (error) {
-                //     console.error(error);
-                // } finally {
-                //     setSubmitting(false);
-                // }
+
             }}
         >
             {({

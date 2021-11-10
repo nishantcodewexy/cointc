@@ -662,9 +662,9 @@ export const Orders = ({ services, useService }) => {
                     <div className="row">
                         <div className="col-12">
                             <ul className="option clear">
-                                <li className={(activeTab === "in-progress-tab" ? "on" : "")}><a href="#" onClick={() => handleTab("in-progress-tab")}>In progress</a></li>
-                                <li className={(activeTab === "all-orders-tab" ? "on" : "")}><a href="#" onClick={() => handleTab("all-orders-tab")}>All Orders</a></li>
-                                <li className={(activeTab === "my-offers-tab" ? "on" : "")}><a href="#" onClick={() => handleTab("my-offers-tab")}>My Offers</a></li>
+                                <li className={(activeTab === "in-progress-tab" ? "on" : "")}><a href="#" onClick={() => onTabClick("in-progress-tab")}>In progress</a></li>
+                                <li className={(activeTab === "all-orders-tab" ? "on" : "")}><a href="#" onClick={() => onTabClick("all-orders-tab")}>All Orders</a></li>
+                                <li className={(activeTab === "my-offers-tab" ? "on" : "")}><a href="#" onClick={() => onTabClick("my-offers-tab")}>My Offers</a></li>
                             </ul>
                         </div>
                     </div>
