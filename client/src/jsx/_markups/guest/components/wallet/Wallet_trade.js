@@ -2140,34 +2140,34 @@ const table_data = {
 function renderTableData(data) {
     return (
         <tr>
-            <td class="user">
+            <td className="user">
                 <p>
                     <span>{data.first_char}</span>{data.name}
-                    {data.isVarified===true?<i class="fas fa-check-circle"></i>:''}
+                    {data.isVarified===true?<i className="fas fa-check-circle"></i>:''}
                     
                 </p>
-                <ul class="clear">
+                <ul className="clear">
                     <li><span>{data.order_count}</span>{data.order_text}</li>
                     <li><span>{data.percentage}</span>% {data.status}</li>
                 </ul>
             </td>
-            <td class="available_limit">
-                <dl class="available clear">
+            <td className="available_limit">
+                <dl className="available clear">
                     <dt>{data.availability}</dt>
                     <dd>{data.payment}</dd>
                 </dl>
-                <dl class="limit clear">
+                <dl className="limit clear">
                     <dt>{data.is_limited}</dt>
                     <dd>{data.payment_range}</dd>
                 </dl>
             </td>
-            <td class="payment">
-                <span class="icon_method01"></span>
-                <span class="icon_method02"></span>
-                <span class="icon_method03"></span>
+            <td className="payment">
+                <span className="icon_method01"></span>
+                <span className="icon_method02"></span>
+                <span className="icon_method03"></span>
             </td>
-            <td class="price">{data.price}</td>
-            <td class="transaction"><a href={data.button_url} className={data.button_class}>{data.button_text}</a></td>
+            <td className="price">{data.price}</td>
+            <td className="transaction"><a href={data.button_url} className={data.button_class}>{data.button_text}</a></td>
         </tr>
     )
   }
@@ -2175,11 +2175,11 @@ const BuyTabContent = function (props) {
     var activeSubTab=props.valueFromParent;
     return(
         <>
-        <div class="tab-content">
+        <div className="tab-content">
             <div className={"tab-pane "+(activeSubTab === "buy-btc-tab" ? "active" : "")} id="buy-btc-tab-pane" role="tabpanel" aria-labelledby="buy-btc-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2195,22 +2195,22 @@ const BuyTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane "+(activeSubTab === "buy-eth-tab" ? "active" : "")} id="buy-eth-tab-pane" role="tabpanel" aria-labelledby="buy-eth-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2226,22 +2226,22 @@ const BuyTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane "+(activeSubTab === "buy-usdt-tab" ? "active" : "")} id="buy-usdt-tab-pane" role="tabpanel" aria-labelledby="buy-usdt-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2257,22 +2257,22 @@ const BuyTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "buy-xrp-tab" ? "active" : "")} id="buy-xrp-tab-pane" role="tabpanel" aria-labelledby="buy-xrp-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2288,22 +2288,22 @@ const BuyTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "buy-eos-tab" ? "active" : "")} id="buy-eos-tab-pane" role="tabpanel" aria-labelledby="buy-eos-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2319,14 +2319,14 @@ const BuyTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -2339,11 +2339,11 @@ const SellTabContent = function (props) {
     var activeSubTab=props.valueFromParent;
     return(
         <>
-        <div class="tab-content">
+        <div className="tab-content">
             <div className={"tab-pane "+(activeSubTab === "sell-btc-tab" ? "active" : "")} id="sell-btc-tab-pane" role="tabpanel" aria-labelledby="sell-btc-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2359,22 +2359,22 @@ const SellTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane "+(activeSubTab === "sell-eth-tab" ? "active" : "")} id="sell-eth-tab-pane" role="tabpanel" aria-labelledby="sell-eth-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2390,22 +2390,22 @@ const SellTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane "+(activeSubTab === "sell-usdt-tab" ? "active" : "")} id="sell-usdt-tab-pane" role="tabpanel" aria-labelledby="sell-usdt-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2421,22 +2421,22 @@ const SellTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "sell-xrp-tab" ? "active" : "")} id="sell-xrp-tab-pane" role="tabpanel" aria-labelledby="sell-xrp-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2452,22 +2452,22 @@ const SellTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
             <div className={"tab-pane " +(activeSubTab === "sell-eos-tab" ? "active" : "")} id="sell-eos-tab-pane" role="tabpanel" aria-labelledby="sell-eos-tab">            
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -2483,14 +2483,14 @@ const SellTabContent = function (props) {
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{"cursor":"default"}}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -2515,27 +2515,27 @@ export const Wallet_trade = () => {
     };
     
     return (     
-        <div class="content">
+        <div className="content">
                 <section id="mainTop">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12">
-                                <h3 class="wow fadeInDown" data-wow-delay="0.3s">P2P Trade</h3>
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-12">
+                                <h3 className="wow animate__animated fadeInDown" data-wow-delay="0.3s">P2P Trade</h3>
                             </div>
                         </div>
                     </div>
                 </section>
                 
                 <section id="lnb">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-12">
-                                <ul class="buy_sell clear">
+                    <div className="container">
+                        <div className="row">
+                            <div className="col-12">
+                                <ul className="buy_sell clear">
                                     <li className={(activeTab === "buy-tab" ? "on" : "")}><a href="#"  onClick={() => handleTab("buy-tab")}>Buy</a></li>
                                     <li className={(activeTab === "sell-tab" ? "on" : "")}><a href="#"  onClick={() => handleTab("sell-tab")}>Sell</a></li>
                                 </ul>
                                 {activeTab === "buy-tab" ? (
-                                <ul class="coin_name clear">
+                                <ul className="coin_name clear">
                                     <li className={activeBuyTab === "buy-btc-tab" ? "on" : ""}><a href="#" onClick={() => handleBuyTab("buy-btc-tab")}>BTC</a></li>
                                     <li className={activeBuyTab === "buy-eth-tab" ? "on" : ""}><a href="#" onClick={() => handleBuyTab("buy-eth-tab")}>ETH</a></li>
                                     <li className={activeBuyTab === "buy-usdt-tab" ? "on" : ""}><a href="#" onClick={() => handleBuyTab("buy-usdt-tab")}>USDT</a></li>
@@ -2543,7 +2543,7 @@ export const Wallet_trade = () => {
                                     <li className={activeBuyTab === "buy-eos-tab" ? "on" : ""}><a href="#" onClick={() => handleBuyTab("buy-eos-tab")}>EOS</a></li>
                                 </ul>
                                 ) : (
-                                    <ul class="coin_name clear">
+                                    <ul className="coin_name clear">
                                         <li className={activeSellTab === "sell-btc-tab" ? "on" : ""}><a href="#" onClick={() => handleSellTab("sell-btc-tab")}>BTC</a></li>
                                         <li className={activeSellTab === "sell-eth-tab" ? "on" : ""}><a href="#" onClick={() => handleSellTab("sell-eth-tab")}>ETH</a></li>
                                         <li className={activeSellTab === "sell-usdt-tab" ? "on" : ""}><a href="#" onClick={() => handleSellTab("sell-usdt-tab")}>USDT</a></li>
@@ -2558,11 +2558,11 @@ export const Wallet_trade = () => {
                 </section>
                 
                 <section id="setting">
-                    <div class="container">
+                    <div className="container">
                         
-                        <div class="row">
-                            <div class="col-12">
-                                <dl class="money">
+                        <div className="row">
+                            <div className="col-12">
+                                <dl className="money">
                                     <dt>화폐</dt>
                                     <dd>
                                         <select name="" id="">
@@ -2576,7 +2576,7 @@ export const Wallet_trade = () => {
                                         </select>
                                     </dd>
                                 </dl>
-                                <dl class="method">
+                                <dl className="method">
                                     <dt>결제 방법</dt>
                                     <dd>
                                         <select name="" id="">
@@ -2588,15 +2588,15 @@ export const Wallet_trade = () => {
                                         </select>
                                     </dd>
                                 </dl>
-                                <a href="#" class="btn_creat"><i class="fas fa-plus-square"></i>Creat an AD</a>
+                                <a href="#" className="btn_creat"><i className="fas fa-plus-square"></i>Creat an AD</a>
                             </div>
                         </div>
                     </div>
                 </section>
                 
                 <section id="trade">
-                    <div class="container">
-                        <div class="tab-content">
+                    <div className="container">
+                        <div className="tab-content">
                             <div className={"tab-pane " +(activeTab === "buy-tab" ? "active" : "")}>
                                 <BuyTabContent valueFromParent={activeBuyTab}/>
                             </div>

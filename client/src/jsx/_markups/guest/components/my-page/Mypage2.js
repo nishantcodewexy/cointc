@@ -13,214 +13,214 @@ import btc_icon from '../../app-assets/images/icon/btc.png';
 
 export const Mypage2 = () => {
     return (     
-        <div class="content">
+        <div className="content">
             <section id="Profile">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="col-12">
+                <div className="container">
+                    <div className="row justify-content-center">
+                        <div className="col-12">
 
-                            <div class="my-profile mt-4 overflow-x-auto">
-                                <div class="main-info-menu d-flex justify-content-between">
-                                    <div class="profile-icon-menu d-flex align-items-center">
-                                        <div class="info-profile mr-3">
-                                            <p class="mb-0 text-primary">J</p>
+                            <div className="my-profile mt-4 overflow-x-auto">
+                                <div className="main-info-menu d-flex justify-content-between">
+                                    <div className="profile-icon-menu d-flex align-items-center">
+                                        <div className="info-profile mr-3">
+                                            <p className="mb-0 text-primary">J</p>
                                         </div>
-                                        <div class="info-profile-content">
-                                            <p class="mb-0 text-primary">John Smith</p>
+                                        <div className="info-profile-content">
+                                            <p className="mb-0 text-primary">John Smith</p>
                                         </div>
                                     </div>
-                                    <div class="main-info-right">
-                                        <a href="#" class="mr-2 text-black">Email <i class="fas fa-check-circle text-primary"></i></a>
-                                        <a href="#" class="mr-2 text-black">SMS <i class="fas fa-check-circle text-primary"></i></a>
-                                        <a href="#" class="mr-2 text-black">ID Verification <i class="fas fa-check-circle text-primary"></i></a>
+                                    <div className="main-info-right">
+                                        <a href="#" className="mr-2 text-black">Email <i className="fas fa-check-circle text-primary"></i></a>
+                                        <a href="#" className="mr-2 text-black">SMS <i className="fas fa-check-circle text-primary"></i></a>
+                                        <a href="#" className="mr-2 text-black">ID Verification <i className="fas fa-check-circle text-primary"></i></a>
                                     </div>
                                 </div>
-                                <div class="profile-detail-user-id mt-3">
+                                <div className="profile-detail-user-id mt-3">
                                     <p>User ID: 22798810</p>
                                 </div>
-                                <div class="profile-footer d-flex">
-                                    <div class="profile-footer-left pr-4">
+                                <div className="profile-footer d-flex">
+                                    <div className="profile-footer-left pr-4">
                                         <h6>Total orders</h6>
                                         <h4>1654</h4>
                                     </div>
-                                    <div class="profile-footer-center px-4">
+                                    <div className="profile-footer-center px-4">
                                         <h6>Completion rate</h6>
                                         <h4>98%</h4>
                                     </div>
-                                    <div class="profile-footer-right px-4">
+                                    <div className="profile-footer-right px-4">
                                         <h6>Trade Review(Positive/Negative)</h6>
-                                        <h4><span class="text-blue">165</span>/<sapn class="text-danger">34</sapn></h4>
+                                        <h4><span className="text-blue">165</span>/<sapn className="text-danger">34</sapn></h4>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="sell-user mt-5 pb-4 overflow-x-auto">
-                                <h3 class="sell-user-table-title text-black">
+                            <div className="sell-user mt-5 pb-4 overflow-x-auto">
+                                <h3 className="sell-user-table-title text-black">
                                     Buy from the user
                                 </h3>
-                                <div class="table-responsive">
-                                    <table id="table" class="w-100 mt-3">
+                                <div className="table-responsive">
+                                    <table id="table" className="w-100 mt-3">
                                         <thead>
                                             <tr>
                                                 <th>Coin</th>
-                                                <th class="px-2">Price</th>
-                                                <th class="px-2">Limit/Available</th>
-                                                <th class="px-2">Payment</th>
-                                                <th class="px-2">Trade</th>
-                                                <th class="px-2">0Fee</th>
+                                                <th className="px-2">Price</th>
+                                                <th className="px-2">Limit/Available</th>
+                                                <th className="px-2">Payment</th>
+                                                <th className="px-2">Trade</th>
+                                                <th className="px-2">0Fee</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td class="d-flex align-items-center">
-                                                    <div class="sell-user-icon pr-2">
+                                                <td className="d-flex align-items-center">
+                                                    <div className="sell-user-icon pr-2">
                                                         <img src={btc_icon}/>
                                                     </div>
-                                                    <div class="sell-user-content">
-                                                        <p class="mb-0 cry-bold">Cryptocurrency</p>
-                                                        <p class="mb-0">132 orders<span class="pl-3">100%completion</span></p>
+                                                    <div className="sell-user-content">
+                                                        <p className="mb-0 cry-bold">Cryptocurrency</p>
+                                                        <p className="mb-0">132 orders<span className="pl-3">100%completion</span></p>
                                                     </div>
                                                 </td>
-                                                <td class="px-2">6.43 <span class="text-dark-gray">CNY</span></td>
-                                                <td class="px-2">Available <br/>Limit</td>
-                                                <td class="px-2">84,005.53 USDT <br/>$26,532-$24444.7</td>
-                                                <td class="px-2"><a href="#" class="btn-bank-transfer">Bank Transfer</a></td>
-                                                <td class="px-2"><a href="#" class="btn-buy">Buy</a></td>
+                                                <td className="px-2">6.43 <span className="text-dark-gray">CNY</span></td>
+                                                <td className="px-2">Available <br/>Limit</td>
+                                                <td className="px-2">84,005.53 USDT <br/>$26,532-$24444.7</td>
+                                                <td className="px-2"><a href="#" className="btn-bank-transfer">Bank Transfer</a></td>
+                                                <td className="px-2"><a href="#" className="btn-buy">Buy</a></td>
                                             </tr>
 
                                             <tr>
-                                                <td class="d-flex align-items-center">
-                                                    <div class="sell-user-icon pr-2">
+                                                <td className="d-flex align-items-center">
+                                                    <div className="sell-user-icon pr-2">
                                                         <img src={btc_icon}/>
                                                     </div>
-                                                    <div class="sell-user-content">
-                                                        <p class="mb-0 cry-bold">Cryptocurrency</p>
-                                                        <p class="mb-0">132 orders<span class="pl-3">100%completion</span></p>
+                                                    <div className="sell-user-content">
+                                                        <p className="mb-0 cry-bold">Cryptocurrency</p>
+                                                        <p className="mb-0">132 orders<span className="pl-3">100%completion</span></p>
                                                     </div>
                                                 </td>
-                                                <td class="px-2">6.43 <span class="text-dark-gray">CNY</span></td>
-                                                <td class="px-2">Available <br/>Limit</td>
-                                                <td class="px-2">84,005.53 USDT <br/>$26,532-$24444.7</td>
-                                                <td class="px-2"><a href="#" class="btn-bank-transfer">Bank Transfer</a></td>
-                                                <td class="px-2"><a href="#" class="btn-buy">Buy</a></td>
+                                                <td className="px-2">6.43 <span className="text-dark-gray">CNY</span></td>
+                                                <td className="px-2">Available <br/>Limit</td>
+                                                <td className="px-2">84,005.53 USDT <br/>$26,532-$24444.7</td>
+                                                <td className="px-2"><a href="#" className="btn-bank-transfer">Bank Transfer</a></td>
+                                                <td className="px-2"><a href="#" className="btn-buy">Buy</a></td>
                                             </tr>
                                         </tbody>
                                     </table>
                                 </div>
                             </div>
 
-                            <div class="sell-user mt-5 pb-4 overflow-x-auto">
-                                <h3 class="sell-user-table-title text-black">
+                            <div className="sell-user mt-5 pb-4 overflow-x-auto">
+                                <h3 className="sell-user-table-title text-black">
                                     Sell from the user
                                 </h3>
-                                <div class="table-responsive">
-                                    <table id="table" class="w-100 mt-3">
+                                <div className="table-responsive">
+                                    <table id="table" className="w-100 mt-3">
                                         <thead>
                                             <tr>
                                                 <th>Coin</th>
-                                                <th class="px-2">Price</th>
-                                                <th class="px-2">Limit/Available</th>
-                                                <th class="px-2">Payment</th>
-                                                <th class="px-2">Trade</th>
-                                                <th class="px-2">0Fee</th>
+                                                <th className="px-2">Price</th>
+                                                <th className="px-2">Limit/Available</th>
+                                                <th className="px-2">Payment</th>
+                                                <th className="px-2">Trade</th>
+                                                <th className="px-2">0Fee</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
-                                                <td class="d-flex align-items-center">
-                                                    <div class="sell-user-icon pr-2">
+                                                <td className="d-flex align-items-center">
+                                                    <div className="sell-user-icon pr-2">
                                                         <img src={btc_icon}/>
                                                     </div>
-                                                    <div class="sell-user-content">
-                                                        <p class="mb-0">Cryptocurrency</p>
-                                                        <p class="mb-0">132 orders <span> 100%completion</span></p>
+                                                    <div className="sell-user-content">
+                                                        <p className="mb-0">Cryptocurrency</p>
+                                                        <p className="mb-0">132 orders <span> 100%completion</span></p>
                                                     </div>
                                                 </td>
-                                                <td class="px-2">6.43 <span class="text-dark-gray">CNY</span></td>
-                                                <td class="px-2">Available <br/>Limit</td>
-                                                <td class="px-2">84,005.53 USDT <br/>$26,532-$24444.7</td>
-                                                <td class="px-2"><a href="#" class="btn-bank-transfer">Bank Transfer</a></td>
-                                                <td class="px-1"><a href="#" class="btn-outline-limit">Limited</a></td>
+                                                <td className="px-2">6.43 <span className="text-dark-gray">CNY</span></td>
+                                                <td className="px-2">Available <br/>Limit</td>
+                                                <td className="px-2">84,005.53 USDT <br/>$26,532-$24444.7</td>
+                                                <td className="px-2"><a href="#" className="btn-bank-transfer">Bank Transfer</a></td>
+                                                <td className="px-1"><a href="#" className="btn-outline-limit">Limited</a></td>
                                             </tr>
                                             <tr>
-                                                <td class="d-flex align-items-center">
-                                                    <div class="sell-user-icon pr-2">
+                                                <td className="d-flex align-items-center">
+                                                    <div className="sell-user-icon pr-2">
                                                         <img src={btc_icon}/>
                                                     </div>
-                                                    <div class="sell-user-content">
-                                                        <p class="mb-0">Cryptocurrency</p>
-                                                        <p class="mb-0">132 orders <span> 100%completion</span></p>
+                                                    <div className="sell-user-content">
+                                                        <p className="mb-0">Cryptocurrency</p>
+                                                        <p className="mb-0">132 orders <span> 100%completion</span></p>
                                                     </div>
                                                 </td>
-                                                <td class="px-1">6.43 <span class="text-dark-gray">CNY</span></td>
-                                                <td class="px-1">Available <br/>Limit</td>
-                                                <td class="px-1">84,005.53 USDT <br/>$26,532-$24444.7</td>
-                                                <td class="px-2"><a href="#" class="btn-bank-transfer">Bank Transfer</a></td>
-                                                <td class="px-1"><a href="#" class="btn-outline-limit">Limited</a></td>
+                                                <td className="px-1">6.43 <span className="text-dark-gray">CNY</span></td>
+                                                <td className="px-1">Available <br/>Limit</td>
+                                                <td className="px-1">84,005.53 USDT <br/>$26,532-$24444.7</td>
+                                                <td className="px-2"><a href="#" className="btn-bank-transfer">Bank Transfer</a></td>
+                                                <td className="px-1"><a href="#" className="btn-outline-limit">Limited</a></td>
                                             </tr>
                                             <tr>
-                                                <td class="d-flex align-items-center">
-                                                    <div class="sell-user-icon pr-2">
+                                                <td className="d-flex align-items-center">
+                                                    <div className="sell-user-icon pr-2">
                                                         <img src={btc_icon}/>
                                                     </div>
-                                                    <div class="sell-user-content">
-                                                        <p class="mb-0">Cryptocurrency</p>
-                                                        <p class="mb-0">132 orders <span> 100%completion</span></p>
+                                                    <div className="sell-user-content">
+                                                        <p className="mb-0">Cryptocurrency</p>
+                                                        <p className="mb-0">132 orders <span> 100%completion</span></p>
                                                     </div>
                                                 </td>
-                                                <td class="px-1">6.43 <span class="text-dark-gray">CNY</span></td>
-                                                <td class="px-1">Available <br/>Limit</td>
-                                                <td class="px-1">84,005.53 USDT <br/>$26,532-$24444.7</td>
-                                                <td class="px-2"><a href="#" class="btn-bank-transfer">Bank Transfer</a></td>
-                                                <td class="px-1"><a href="#" class="btn-buy">Sell USDT</a></td>
+                                                <td className="px-1">6.43 <span className="text-dark-gray">CNY</span></td>
+                                                <td className="px-1">Available <br/>Limit</td>
+                                                <td className="px-1">84,005.53 USDT <br/>$26,532-$24444.7</td>
+                                                <td className="px-2"><a href="#" className="btn-bank-transfer">Bank Transfer</a></td>
+                                                <td className="px-1"><a href="#" className="btn-buy">Sell USDT</a></td>
                                             </tr>
                                             <tr>
-                                                <td class="d-flex align-items-center">
-                                                    <div class="sell-user-icon pr-2">
+                                                <td className="d-flex align-items-center">
+                                                    <div className="sell-user-icon pr-2">
                                                         <img src={btc_icon}/>
                                                     </div>
-                                                    <div class="sell-user-content">
-                                                        <p class="mb-0">Cryptocurrency</p>
-                                                        <p class="mb-0">132 orders <span> 100%completion</span></p>
+                                                    <div className="sell-user-content">
+                                                        <p className="mb-0">Cryptocurrency</p>
+                                                        <p className="mb-0">132 orders <span> 100%completion</span></p>
                                                     </div>
                                                 </td>
-                                                <td class="px-1">6.43 <span class="text-dark-gray">CNY</span></td>
-                                                <td class="px-1">Available <br/>Limit</td>
-                                                <td class="px-1">84,005.53 USDT <br/>$26,532-$24444.7</td>
-                                                <td class="px-2"><a href="#" class="btn-bank-transfer">Bank Transfer</a></td>
-                                                <td class="px-1"><a href="#" class="btn-buy">Sell USDT</a></td>
+                                                <td className="px-1">6.43 <span className="text-dark-gray">CNY</span></td>
+                                                <td className="px-1">Available <br/>Limit</td>
+                                                <td className="px-1">84,005.53 USDT <br/>$26,532-$24444.7</td>
+                                                <td className="px-2"><a href="#" className="btn-bank-transfer">Bank Transfer</a></td>
+                                                <td className="px-1"><a href="#" className="btn-buy">Sell USDT</a></td>
                                             </tr>
                                             <tr>
-                                                <td class="d-flex align-items-center">
-                                                    <div class="sell-user-icon pr-2">
+                                                <td className="d-flex align-items-center">
+                                                    <div className="sell-user-icon pr-2">
                                                         <img src={btc_icon}/>
                                                     </div>
-                                                    <div class="sell-user-content">
-                                                        <p class="mb-0">Cryptocurrency</p>
-                                                        <p class="mb-0">132 orders <span> 100%completion</span></p>
+                                                    <div className="sell-user-content">
+                                                        <p className="mb-0">Cryptocurrency</p>
+                                                        <p className="mb-0">132 orders <span> 100%completion</span></p>
                                                     </div>
                                                 </td>
-                                                <td class="px-1">6.43 <span class="text-dark-gray">CNY</span></td>
-                                                <td class="px-1">Available <br/>Limit</td>
-                                                <td class="px-1">84,005.53 USDT <br/>$26,532-$24444.7</td>
-                                                <td class="px-2"><a href="#" class="btn-bank-transfer">Bank Transfer</a></td>
-                                                <td class="px-1"><a href="#" class="btn-buy">Sell USDT</a></td>
+                                                <td className="px-1">6.43 <span className="text-dark-gray">CNY</span></td>
+                                                <td className="px-1">Available <br/>Limit</td>
+                                                <td className="px-1">84,005.53 USDT <br/>$26,532-$24444.7</td>
+                                                <td className="px-2"><a href="#" className="btn-bank-transfer">Bank Transfer</a></td>
+                                                <td className="px-1"><a href="#" className="btn-buy">Sell USDT</a></td>
                                             </tr>
                                             <tr>
-                                                <td class="d-flex align-items-center">
-                                                    <div class="sell-user-icon pr-2">
+                                                <td className="d-flex align-items-center">
+                                                    <div className="sell-user-icon pr-2">
                                                         <img src={btc_icon}/>
                                                     </div>
-                                                    <div class="sell-user-content">
-                                                        <p class="mb-0">Cryptocurrency</p>
-                                                        <p class="mb-0">132 orders <span> 100%completion</span></p>
+                                                    <div className="sell-user-content">
+                                                        <p className="mb-0">Cryptocurrency</p>
+                                                        <p className="mb-0">132 orders <span> 100%completion</span></p>
                                                     </div>
                                                 </td>
-                                                <td class="px-1">6.43 <span class="text-dark-gray">CNY</span></td>
-                                                <td class="px-1">Available <br/>Limit</td>
-                                                <td class="px-1">84,005.53 USDT <br/>$26,532-$24444.7</td>
-                                                <td class="px-2"><a href="#" class="btn-bank-transfer">Bank Transfer</a></td>
-                                                <td class="px-1"><a href="#" class="btn-buy">Sell USDT</a></td>
+                                                <td className="px-1">6.43 <span className="text-dark-gray">CNY</span></td>
+                                                <td className="px-1">Available <br/>Limit</td>
+                                                <td className="px-1">84,005.53 USDT <br/>$26,532-$24444.7</td>
+                                                <td className="px-2"><a href="#" className="btn-bank-transfer">Bank Transfer</a></td>
+                                                <td className="px-1"><a href="#" className="btn-buy">Sell USDT</a></td>
                                             </tr>
                                         </tbody>
                                     </table>

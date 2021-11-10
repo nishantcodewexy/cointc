@@ -4,47 +4,47 @@ import React from "react";
 export const Footer2 = () => {
   return (
     <footer>
-      <div class="container">
-          <div class="row">
-              <div class="col-lg-2 col-md-4 col-sm-4 wow fadeInLeft" data-wow-delay="0.2s">
+      <div className="container">
+          <div className="row">
+              <div className="col-lg-2 col-md-4 col-sm-4 wow animate__animated  fadeInLeft" data-wow-delay="0.2s">
                   <dl>
-                      <dt><a href="#">P2P Trade</a></dt>
+                      <dt><a href="/trade">P2P Trade</a></dt>
                       <dd><a href="#">Buy</a></dd>
                       <dd><a href="#">Sell</a></dd>
                   </dl>
               </div>
-              <div class="col-lg-2 col-md-4 col-sm-4 wow fadeInLeft" data-wow-delay="0.3s">
+              <div className="col-lg-2 col-md-4 col-sm-4 wow animate__animated  fadeInLeft" data-wow-delay="0.3s">
                   <dl>
-                      <dt><a href="orders.html">Order</a></dt>
+                      <dt><a href="/orders">Order</a></dt>
                       <dd><a href="#">Inprogress</a></dd>
                       <dd><a href="#">All Orders</a></dd>
                       <dd><a href="#">My Offers</a></dd>
                   </dl>
               </div>
-              <div class="col-lg-2 col-md-4 col-sm-4 wow fadeInLeft" data-wow-delay="0.4s">
+              <div className="col-lg-2 col-md-4 col-sm-4 wow animate__animated  fadeInLeft" data-wow-delay="0.4s">
                   <dl>
-                      <dt><a href="wallet.html">Wallet</a></dt>
+                      <dt><a href="/wallet">Wallet</a></dt>
                       <dd><a href="#">Asset</a></dd>
                       <dd><a href="#">History</a></dd>
                   </dl>
               </div>
-              <div class="col-lg-2 col-md-4 col-sm-4 wow fadeInLeft" data-wow-delay="0.5s">
-                  <a href="affiliate.html">Affiliate</a>
+              <div className="col-lg-2 col-md-4 col-sm-4 wow animate__animated  fadeInLeft" data-wow-delay="0.5s">
+                  <a href="/affiliate">Affiliate</a>
               </div>
-              <div class="col-lg-2 col-md-4 col-sm-4 wow fadeInLeft" data-wow-delay="0.6s">
-                  <a href="support.html">Support</a>
+              <div className="col-lg-2 col-md-4 col-sm-4 wow animate__animated  fadeInLeft" data-wow-delay="0.6s">
+                  <a href="/support">Support</a>
               </div>
-              <div class="col-lg-2 col-md-4 col-sm-4 wow fadeInLeft" data-wow-delay="0.7s">
-                  <dl class="sns clear">
+              <div className="col-lg-2 col-md-4 col-sm-4 wow animate__animated  fadeInLeft" data-wow-delay="0.7s">
+                  <dl className="sns clear">
                       <dt>Community</dt>
-                      <dd class="twitter"><a href="#">Twitter</a></dd>
-                      <dd class="instagram"><a href="#">Instagram</a></dd>
-                      <dd class="youtube"><a href="#">Youtube</a></dd>
-                      <dd class="facebook"><a href="#">Facebook </a></dd>
+                      <dd className="twitter"><a href="#">Twitter</a></dd>
+                      <dd className="instagram"><a href="#">Instagram</a></dd>
+                      <dd className="youtube"><a href="#">Youtube</a></dd>
+                      <dd className="facebook"><a href="#">Facebook </a></dd>
                   </dl>
               </div>
-              <div class="col-12">
-                  <p class="wow fadeInUp" data-wow-delay="0.8s">COPYRIGHT. 2021. CoinTC ALL RIGHTS RESERVED.</p>
+              <div className="col-12">
+                  <p className="wow animate__animated  fadeInUp" data-wow-delay="0.8s">COPYRIGHT. 2021. CoinTC ALL RIGHTS RESERVED.</p>
               </div>
           </div>
       </div> 
