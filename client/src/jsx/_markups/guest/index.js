@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
 import { useSelector } from "react-redux";
-
-import routes from "./routes";
 import useService from "../../_hooks/service.hook";
 import Services from "../../_services";
+
+import routes from "./routes";
 
 import WOW from "wowjs";
 import "./app-assets/css/bootstrap.min.css";
@@ -24,6 +24,11 @@ import { Footer2 } from "./components/footer/Footer2";
 // import Error404 from "../pages/error404";
 
 function GuestMarkup() {
+  const wow = new WOW.WOW({
+    boxClass: "wow",
+    animateClass: "animated",
+  });
+
   const session = useSelector((state) => state?.session);
   // const notice = useSelector((state) => state?.notice);
   const [services, setServices] = useState(null);
@@ -35,13 +40,8 @@ function GuestMarkup() {
         baseURL: "/api",
       })
     );
+    wow.init();
   }, [session]);
-
-  const wow = new WOW.WOW({
-    boxClass: "wow",
-    animateClass: "animated",
-  });
-  wow.init();
 
   const cur_loc = window.location.pathname;
   var Custom_Header = null;

@@ -17,13 +17,237 @@ import eth_icon from '../../app-assets/images/coin/eth.png';
 import { SERVICE } from "../../../../_constants";
 
 
+const InprogressTabContent = function (props) {
+    return (
+        <>
+            <div className="InprogressTab">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Asset/Type</th>
+                                        <th>Price</th>
+                                        <th>Margine/Limits</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td className="asset">
+                                            <img src={usdt_icon} alt="USDT" />
+                                            <p className="red">Sell</p>
+                                            <p className="coin_name">USDT</p>
+                                        </td>
+                                        <td className="Price">
+                                            <img src={lang_ch_icon} alt="chn" />
+                                            <p>6.23 CNY</p>
+                                        </td>
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
+                                                <dt>Margine</dt>
+                                                <dd>1.65908675 BTC</dd>
+                                            </dl>
+                                            <dl className="limits clear">
+                                                <dt>Limits</dt>
+                                                <dd>50,000 - 300,000 CNY</dd>
+                                            </dl>
+                                        </td>
+                                        <td className="status">Active</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_deactive">Deactive</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td className="asset">
+                                            <img src={usdt_icon} alt="USDT" />
+                                            <p className="blue">Sell</p>
+                                            <p className="coin_name">USDT</p>
+                                        </td>
+                                        <td className="Price">
+                                            <img src={lang_ch_icon} alt="chn" />
+                                            <p>6.23 CNY</p>
+                                        </td>
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
+                                                <dt>Margine</dt>
+                                                <dd>1.65908675 BTC</dd>
+                                            </dl>
+                                            <dl className="limits clear">
+                                                <dt>Limits</dt>
+                                                <dd>50,000 - 300,000 CNY</dd>
+                                            </dl>
+                                        </td>
+                                        <td className="status">Deactive</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_active">Active</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td className="asset">
+                                            <img src={usdt_icon} alt="USDT" />
+                                            <p className="red">Sell</p>
+                                            <p className="coin_name">USDT</p>
+                                        </td>
+                                        <td className="Price">
+                                            <img src={lang_ko_icon} alt="kor" />
+                                            <p>1,200 KRW</p>
+                                        </td>
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
+                                                <dt>Margine</dt>
+                                                <dd>1.65908675 BTC</dd>
+                                            </dl>
+                                            <dl className="limits clear">
+                                                <dt>Limits</dt>
+                                                <dd>50,000 - 300,000 CNY</dd>
+                                            </dl>
+                                        </td>
+                                        <td className="status">Deactive</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_active">Active</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td className="asset">
+                                            <img src={usdt_icon} alt="USDT" />
+                                            <p className="blue">Sell</p>
+                                            <p className="coin_name">USDT</p>
+                                        </td>
+                                        <td className="Price">
+                                            <img src={lang_ko_icon} alt="kor" />
+                                            <p>1,200 KRW</p>
+                                        </td>
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
+                                                <dt>Margine</dt>
+                                                <dd>1.65908675 BTC</dd>
+                                            </dl>
+                                            <dl className="limits clear">
+                                                <dt>Limits</dt>
+                                                <dd>50,000 - 300,000 CNY</dd>
+                                            </dl>
+                                        </td>
+                                        <td className="status">Deactive</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_active">Active</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td className="asset">
+                                            <img src={xrp_icon} alt="XRP" />
+                                            <p className="red">Sell</p>
+                                            <p className="coin_name">XRP</p>
+                                        </td>
+                                        <td className="Price">
+                                            <img src={lang_ch_icon} alt="chn" />
+                                            <p>6.23 CNY</p>
+                                        </td>
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
+                                                <dt>Margine</dt>
+                                                <dd>1.65908675 BTC</dd>
+                                            </dl>
+                                            <dl className="limits clear">
+                                                <dt>Limits</dt>
+                                                <dd>50,000 - 300,000 CNY</dd>
+                                            </dl>
+                                        </td>
+                                        <td className="status">Active</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_deactive">Deactive</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td className="asset">
+                                            <img src={xrp_icon} alt="XRP" />
+                                            <p className="blue">Sell</p>
+                                            <p className="coin_name">XRP</p>
+                                        </td>
+                                        <td className="Price">
+                                            <img src={lang_ch_icon} alt="chn" />
+                                            <p>6.23 CNY</p>
+                                        </td>
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
+                                                <dt>Margine</dt>
+                                                <dd>1.65908675 BTC</dd>
+                                            </dl>
+                                            <dl className="limits clear">
+                                                <dt>Limits</dt>
+                                                <dd>50,000 - 300,000 CNY</dd>
+                                            </dl>
+                                        </td>
+                                        <td className="status">Active</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_deactive">Deactive</a>
+                                        </td>
+                                    </tr>
+
+                                    <tr>
+                                        <td className="asset">
+                                            <img src={eth_icon} alt="ETH" />
+                                            <p className="red">Sell</p>
+                                            <p className="coin_name">ETH</p>
+                                        </td>
+                                        <td className="Price">
+                                            <img src={lang_ch_icon} alt="chn" />
+                                            <p>6.23 CNY</p>
+                                        </td>
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
+                                                <dt>Margine</dt>
+                                                <dd>1.65908675 BTC</dd>
+                                            </dl>
+                                            <dl className="limits clear">
+                                                <dt>Limits</dt>
+                                                <dd>50,000 - 300,000 CNY</dd>
+                                            </dl>
+                                        </td>
+                                        <td className="status">Active</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_deactive">Deactive</a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
+                            <span>2</span>
+                            <span>3</span>
+                            <span style={{ "cursor": "default" }}>...</span>
+                            <span>40</span>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
 const AllordersTabContent = function (props) {
     return (
         <>
             <div className="AllordersTab">
-                <div class="row" >
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row" >
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
@@ -37,92 +261,92 @@ const AllordersTabContent = function (props) {
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <dl class="partner_date">
+                                            <dl className="partner_date">
                                                 <dt>Xuhai8888</dt>
                                                 <dd>2021-08-13 16:37:58</dd>
                                             </dl>
                                         </td>
-                                        <td class="asset">
+                                        <td className="asset">
                                             <img src={usdt_icon} alt="USDT" />
-                                            <p class="light-blue">Sell</p>
-                                            <p class="coin_name">USDT</p>
+                                            <p className="light-blue">Sell</p>
+                                            <p className="coin_name">USDT</p>
                                         </td>
-                                        <td class="price_quantity">
-                                            <dl class="d-flex justify-content-between clearfix">
+                                        <td className="price_quantity">
+                                            <dl className="d-flex justify-content-between clearfix">
                                                 <dt>Price</dt>
                                                 <dd>1,135.00 KRW</dd>
                                             </dl>
-                                            <dl class="d-flex justify-content-between clearfix">
+                                            <dl className="d-flex justify-content-between clearfix">
                                                 <dt> Quantity</dt>
                                                 <dd>50.00 USDT</dd>
                                             </dl>
                                         </td>
-                                        <td class="price">56,750.00 KRW</td>
-                                        <td class="status-red">Paid</td>
+                                        <td className="price">56,750.00 KRW</td>
+                                        <td className="status-red">Paid</td>
                                     </tr>
 
                                     <tr>
                                         <td>
-                                            <dl class="partner_date">
+                                            <dl className="partner_date">
                                                 <dt>Xuhai8888</dt>
                                                 <dd>2021-08-13 16:37:58</dd>
                                             </dl>
                                         </td>
-                                        <td class="asset">
+                                        <td className="asset">
                                             <img src={usdt_icon} alt="USDT" />
-                                            <p class="light-blue">Sell</p>
-                                            <p class="coin_name">USDT</p>
+                                            <p className="light-blue">Sell</p>
+                                            <p className="coin_name">USDT</p>
                                         </td>
-                                        <td class="price_quantity">
-                                            <dl class="d-flex justify-content-between clearfix">
+                                        <td className="price_quantity">
+                                            <dl className="d-flex justify-content-between clearfix">
                                                 <dt>Price</dt>
                                                 <dd>1,135.00 KRW</dd>
                                             </dl>
-                                            <dl class="d-flex justify-content-between clearfix">
+                                            <dl className="d-flex justify-content-between clearfix">
                                                 <dt> Quantity</dt>
                                                 <dd>50.00 USDT</dd>
                                             </dl>
                                         </td>
-                                        <td class="price">56,750.00 KRW</td>
-                                        <td class="status-green">Unpaid</td>
+                                        <td className="price">56,750.00 KRW</td>
+                                        <td className="status-green">Unpaid</td>
                                     </tr>
 
                                     <tr>
                                         <td>
-                                            <dl class="partner_date">
+                                            <dl className="partner_date">
                                                 <dt>Xuhai8888</dt>
                                                 <dd>2021-08-13 16:37:58</dd>
                                             </dl>
                                         </td>
-                                        <td class="asset">
+                                        <td className="asset">
                                             <img src={usdt_icon} alt="USDT" />
-                                            <p class="light-blue">Sell</p>
-                                            <p class="coin_name">USDT</p>
+                                            <p className="light-blue">Sell</p>
+                                            <p className="coin_name">USDT</p>
                                         </td>
-                                        <td class="price_quantity">
-                                            <dl class="d-flex justify-content-between clearfix">
+                                        <td className="price_quantity">
+                                            <dl className="d-flex justify-content-between clearfix">
                                                 <dt>Price</dt>
                                                 <dd>1,135.00 KRW</dd>
                                             </dl>
-                                            <dl class="d-flex justify-content-between clearfix">
+                                            <dl className="d-flex justify-content-between clearfix">
                                                 <dt> Quantity</dt>
                                                 <dd>50.00 USDT</dd>
                                             </dl>
                                         </td>
-                                        <td class="price">56,750.00 KRW</td>
-                                        <td class="status-completed">Completed</td>
+                                        <td className="price">56,750.00 KRW</td>
+                                        <td className="status-completed">Completed</td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{ "cursor": "default" }}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -134,13 +358,13 @@ const MyoffersTabContent = function (props) {
     return (
         <>
             <div className="MyoffersTab">
-                <div class="row">
-                    <div class="col-12">
-                        <div class="table_container wow fadeInUp" data-wow-delay="0.6s">
+                <div className="row">
+                    <div className="col-12">
+                        <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Asse/Type</th>
+                                        <th>Asset/Type</th>
                                         <th>Price</th>
                                         <th>Margine/Limits</th>
                                         <th>Status</th>
@@ -149,204 +373,204 @@ const MyoffersTabContent = function (props) {
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td class="asset">
+                                        <td className="asset">
                                             <img src={usdt_icon} alt="USDT" />
-                                            <p class="red">Sell</p>
-                                            <p class="coin_name">USDT</p>
+                                            <p className="red">Sell</p>
+                                            <p className="coin_name">USDT</p>
                                         </td>
-                                        <td class="Price">
+                                        <td className="Price">
                                             <img src={lang_ch_icon} alt="chn" />
                                             <p>6.23 CNY</p>
                                         </td>
-                                        <td class="margine_limits">
-                                            <dl class="margine clear">
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
                                                 <dt>Margine</dt>
                                                 <dd>1.65908675 BTC</dd>
                                             </dl>
-                                            <dl class="limits clear">
+                                            <dl className="limits clear">
                                                 <dt>Limits</dt>
                                                 <dd>50,000 - 300,000 CNY</dd>
                                             </dl>
                                         </td>
-                                        <td class="status">Active</td>
-                                        <td class="action clear">
-                                            <a href="#" class="btn_edit">Edit</a>
-                                            <a href="#" class="btn_deactive">Deactive</a>
+                                        <td className="status">Active</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_deactive">Deactive</a>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td class="asset">
+                                        <td className="asset">
                                             <img src={usdt_icon} alt="USDT" />
-                                            <p class="blue">Sell</p>
-                                            <p class="coin_name">USDT</p>
+                                            <p className="blue">Sell</p>
+                                            <p className="coin_name">USDT</p>
                                         </td>
-                                        <td class="Price">
+                                        <td className="Price">
                                             <img src={lang_ch_icon} alt="chn" />
                                             <p>6.23 CNY</p>
                                         </td>
-                                        <td class="margine_limits">
-                                            <dl class="margine clear">
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
                                                 <dt>Margine</dt>
                                                 <dd>1.65908675 BTC</dd>
                                             </dl>
-                                            <dl class="limits clear">
+                                            <dl className="limits clear">
                                                 <dt>Limits</dt>
                                                 <dd>50,000 - 300,000 CNY</dd>
                                             </dl>
                                         </td>
-                                        <td class="status">Deactive</td>
-                                        <td class="action clear">
-                                            <a href="#" class="btn_edit">Edit</a>
-                                            <a href="#" class="btn_active">Active</a>
+                                        <td className="status">Deactive</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_active">Active</a>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td class="asset">
+                                        <td className="asset">
                                             <img src={usdt_icon} alt="USDT" />
-                                            <p class="red">Sell</p>
-                                            <p class="coin_name">USDT</p>
+                                            <p className="red">Sell</p>
+                                            <p className="coin_name">USDT</p>
                                         </td>
-                                        <td class="Price">
+                                        <td className="Price">
                                             <img src={lang_ko_icon} alt="kor" />
                                             <p>1,200 KRW</p>
                                         </td>
-                                        <td class="margine_limits">
-                                            <dl class="margine clear">
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
                                                 <dt>Margine</dt>
                                                 <dd>1.65908675 BTC</dd>
                                             </dl>
-                                            <dl class="limits clear">
+                                            <dl className="limits clear">
                                                 <dt>Limits</dt>
                                                 <dd>50,000 - 300,000 CNY</dd>
                                             </dl>
                                         </td>
-                                        <td class="status">Deactive</td>
-                                        <td class="action clear">
-                                            <a href="#" class="btn_edit">Edit</a>
-                                            <a href="#" class="btn_active">Active</a>
+                                        <td className="status">Deactive</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_active">Active</a>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td class="asset">
+                                        <td className="asset">
                                             <img src={usdt_icon} alt="USDT" />
-                                            <p class="blue">Sell</p>
-                                            <p class="coin_name">USDT</p>
+                                            <p className="blue">Sell</p>
+                                            <p className="coin_name">USDT</p>
                                         </td>
-                                        <td class="Price">
+                                        <td className="Price">
                                             <img src={lang_ko_icon} alt="kor" />
                                             <p>1,200 KRW</p>
                                         </td>
-                                        <td class="margine_limits">
-                                            <dl class="margine clear">
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
                                                 <dt>Margine</dt>
                                                 <dd>1.65908675 BTC</dd>
                                             </dl>
-                                            <dl class="limits clear">
+                                            <dl className="limits clear">
                                                 <dt>Limits</dt>
                                                 <dd>50,000 - 300,000 CNY</dd>
                                             </dl>
                                         </td>
-                                        <td class="status">Deactive</td>
-                                        <td class="action clear">
-                                            <a href="#" class="btn_edit">Edit</a>
-                                            <a href="#" class="btn_active">Active</a>
+                                        <td className="status">Deactive</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_active">Active</a>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td class="asset">
+                                        <td className="asset">
                                             <img src={xrp_icon} alt="XRP" />
-                                            <p class="red">Sell</p>
-                                            <p class="coin_name">XRP</p>
+                                            <p className="red">Sell</p>
+                                            <p className="coin_name">XRP</p>
                                         </td>
-                                        <td class="Price">
+                                        <td className="Price">
                                             <img src={lang_ch_icon} alt="chn" />
                                             <p>6.23 CNY</p>
                                         </td>
-                                        <td class="margine_limits">
-                                            <dl class="margine clear">
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
                                                 <dt>Margine</dt>
                                                 <dd>1.65908675 BTC</dd>
                                             </dl>
-                                            <dl class="limits clear">
+                                            <dl className="limits clear">
                                                 <dt>Limits</dt>
                                                 <dd>50,000 - 300,000 CNY</dd>
                                             </dl>
                                         </td>
-                                        <td class="status">Active</td>
-                                        <td class="action clear">
-                                            <a href="#" class="btn_edit">Edit</a>
-                                            <a href="#" class="btn_deactive">Deactive</a>
+                                        <td className="status">Active</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_deactive">Deactive</a>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td class="asset">
+                                        <td className="asset">
                                             <img src={xrp_icon} alt="XRP" />
-                                            <p class="blue">Sell</p>
-                                            <p class="coin_name">XRP</p>
+                                            <p className="blue">Sell</p>
+                                            <p className="coin_name">XRP</p>
                                         </td>
-                                        <td class="Price">
+                                        <td className="Price">
                                             <img src={lang_ch_icon} alt="chn" />
                                             <p>6.23 CNY</p>
                                         </td>
-                                        <td class="margine_limits">
-                                            <dl class="margine clear">
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
                                                 <dt>Margine</dt>
                                                 <dd>1.65908675 BTC</dd>
                                             </dl>
-                                            <dl class="limits clear">
+                                            <dl className="limits clear">
                                                 <dt>Limits</dt>
                                                 <dd>50,000 - 300,000 CNY</dd>
                                             </dl>
                                         </td>
-                                        <td class="status">Active</td>
-                                        <td class="action clear">
-                                            <a href="#" class="btn_edit">Edit</a>
-                                            <a href="#" class="btn_deactive">Deactive</a>
+                                        <td className="status">Active</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_deactive">Deactive</a>
                                         </td>
                                     </tr>
 
                                     <tr>
-                                        <td class="asset">
+                                        <td className="asset">
                                             <img src={eth_icon} alt="ETH" />
-                                            <p class="red">Sell</p>
-                                            <p class="coin_name">ETH</p>
+                                            <p className="red">Sell</p>
+                                            <p className="coin_name">ETH</p>
                                         </td>
-                                        <td class="Price">
+                                        <td className="Price">
                                             <img src={lang_ch_icon} alt="chn" />
                                             <p>6.23 CNY</p>
                                         </td>
-                                        <td class="margine_limits">
-                                            <dl class="margine clear">
+                                        <td className="margine_limits">
+                                            <dl className="margine clear">
                                                 <dt>Margine</dt>
                                                 <dd>1.65908675 BTC</dd>
                                             </dl>
-                                            <dl class="limits clear">
+                                            <dl className="limits clear">
                                                 <dt>Limits</dt>
                                                 <dd>50,000 - 300,000 CNY</dd>
                                             </dl>
                                         </td>
-                                        <td class="status">Active</td>
-                                        <td class="action clear">
-                                            <a href="#" class="btn_edit">Edit</a>
-                                            <a href="#" class="btn_deactive">Deactive</a>
+                                        <td className="status">Active</td>
+                                        <td className="action clear">
+                                            <a href="#" className="btn_edit">Edit</a>
+                                            <a href="#" className="btn_deactive">Deactive</a>
                                         </td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
-                        <div class="indicator">
-                            <button type="button" class="btn_prev" disabled><i class="fal fa-chevron-left"></i></button>
-                            <span class="on">1</span>
+                        <div className="indicator">
+                            <button type="button" className="btn_prev" disabled><i className="fal fa-chevron-left"></i></button>
+                            <span className="on">1</span>
                             <span>2</span>
                             <span>3</span>
                             <span style={{ "cursor": "default" }}>...</span>
                             <span>40</span>
-                            <button type="button" class="btn_next"><i class="fal fa-chevron-right"></i></button>
+                            <button type="button" className="btn_next"><i className="fal fa-chevron-right"></i></button>
                         </div>
                     </div>
                 </div>
@@ -420,41 +644,38 @@ export const Orders = ({ services, useService }) => {
         setActiveTab(tab);
         setTableData(() => orderTabs[tab].filter(data?.result))
     };
-    return session && !isFetching ? <>
-        <div class="content">
+    return (
+        <div className="content">
             <section id="mainTop">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <h3 class="wow fadeInDown" data-wow-delay="0.3s">Orders</h3>
+                <div className="container">
+                    <div className="row">
+                        <div className="col-12">
+                            <h3 className="wow animate__animated fadeInDown" data-wow-delay="0.3s">Orders</h3>
+                            
                         </div>
                     </div>
                 </div>
             </section>
 
             <section id="lnb">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <ul class="option clear">
-                                {/* <li className={(activeTab === "in-progress-tab" ? "on" : "")}><a href="#" onClick={() => handleTab("in-progress-tab")}>In progress</a></li> */}
-                                {
-                                    Object.keys(orderTabs).map(tab => <li className={(activeTab === tab ? "on" : "")}>
-                                        <a href="#" onClick={() => onTabClick(tab)}>{orderTabs[tab]?.label}</a>
-                                    </li>)
-                                }
+                <div className="container">
+                    <div className="row">
+                        <div className="col-12">
+                            <ul className="option clear">
+                                <li className={(activeTab === "in-progress-tab" ? "on" : "")}><a href="#" onClick={() => onTabClick("in-progress-tab")}>In progress</a></li>
+                                <li className={(activeTab === "all-orders-tab" ? "on" : "")}><a href="#" onClick={() => onTabClick("all-orders-tab")}>All Orders</a></li>
+                                <li className={(activeTab === "my-offers-tab" ? "on" : "")}><a href="#" onClick={() => onTabClick("my-offers-tab")}>My Offers</a></li>
                             </ul>
                         </div>
-
                     </div>
                 </div>
             </section>
 
             <section id="setting">
-                <div class="container">
-                    <div class="row">
-                        <div class="col-12">
-                            <dl class="coins">
+                <div className="container">
+                    <div className="row">
+                        <div className="col-12">
+                            <dl className="coins">
                                 <dt>Coins</dt>
 
                                 <dd>
@@ -463,7 +684,7 @@ export const Orders = ({ services, useService }) => {
                                     </select>
                                 </dd>
                             </dl>
-                            <dl class="order_type">
+                            <dl className="order_type">
                                 <dt>Order Type</dt>
                                 <dd>
                                     <select name="" id="">
@@ -471,7 +692,7 @@ export const Orders = ({ services, useService }) => {
                                     </select>
                                 </dd>
                             </dl>
-                            <dl class="status">
+                            <dl className="status">
                                 <dt>Status</dt>
                                 <dd>
                                     <select name="" id="">
@@ -479,31 +700,28 @@ export const Orders = ({ services, useService }) => {
                                     </select>
                                 </dd>
                             </dl>
-                            <a href="#" class="btn_creat"><i class="fas fa-plus-square"></i>Creat an AD</a>
+                            <a href="#" className="btn_creat"><i className="fas fa-plus-square"></i>Creat an AD</a>
                         </div>
                     </div>
                 </div>
             </section>
-            {data?.result?.length ? <section id="orders">
-                <div class="container">
-                    <div class="tab-content">
-                        {/* <div className={"tab-pane " +(activeTab === "in-progress-tab" ? "active" : "")}>
-                            <InprogressTabContent/>
-                        </div> */}
-                        <RenderTab data={tableData} />
-
-                        {/* <div className={"tab-pane " + (activeTab === "all-orders-tab" ? "active" : "")}>
+            <section id="orders">
+                <div className="container">
+                    <div className="tab-content">
+                        <div className={"tab-pane " + (activeTab === "in-progress-tab" ? "active" : "")}>
+                            <InprogressTabContent />
+                        </div>
+                        <div className={"tab-pane " + (activeTab === "all-orders-tab" ? "active" : "")}>
                             <AllordersTabContent />
                         </div>
                         <div className={"tab-pane " + (activeTab === "my-offers-tab" ? "active" : "")}>
                             <MyoffersTabContent />
-                        </div> */}
+                        </div>
                     </div>
                 </div>
-            </section> : <>Nothing Found!</>}
+            </section>
         </div>
-    </> : "Loading...";
-
+    )
 }
 
 

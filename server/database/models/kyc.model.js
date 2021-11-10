@@ -71,6 +71,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM(Object.keys(KycStatusType)),
         allowNull: false,
         defaultValue: KycStatusType.PENDING,
+        set(val) {
+          this.setDataValue('status', String(val).toUpperCase());
+        }
       },
       user_id: {
         type: DataTypes.UUID,
