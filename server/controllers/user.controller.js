@@ -14,6 +14,7 @@ module.exports = function UserController(server) {
   const {
     db: {
       User,
+      Profile,
       sequelize,
       Sequelize: { Op },
     },
@@ -21,13 +22,13 @@ module.exports = function UserController(server) {
     config: { client_url },
     helpers: {
       decrypt,
-      mailer,
       jwt,
       generator,
       paginator,
       filters,
       validateAndFilterAssociation,
     },
+    mailer: { sendMail, mailerOptions, mailerTemplates },
   } = server.app;
 
   /**
@@ -41,7 +42,7 @@ module.exports = function UserController(server) {
     created_by = null
   ) {
     try {
-      let mailBody = "";
+      let extraComment, confirmationLink;
 
       // Verifications
       if (password && password !== repeat_password)
@@ -59,7 +60,7 @@ module.exports = function UserController(server) {
       if (!password) {
         password = faker.internet.password();
         //TODO Attach new password to mail
-        mailBody += `<p>Generated password: <em>${newPassword}</em></p> <strong>We strongly advise that you change your password later!</strong>`;
+        extraComment += `<div><p>Generated password: <em>${password}</em></p> <strong>We strongly advise that you change your password later!</strong></div>`;
       }
 
       return await sequelize.transaction(async (t) => {
@@ -94,21 +95,44 @@ module.exports = function UserController(server) {
 
         // Standard user operations
         if (+access_level < 2) {
-          await user.createWallet({ currency: "BTC" }, { transaction: t });
+          // create user wallet
+          // await user.createWallet({ currency: "BTC" }, { transaction: t });
+          // create user Kyc
           await user.createKyc({ type: "id" }, { transaction: t });
           // await user.createAddress({ }, { transaction: t });
 
+          // if there's an invite code, relate users
           if (others?.invite_code) {
-            const ref = await User.findOne({
-              where: {
-                "profile.invite_code": invite_code,
-              },
-            });
-            ref && ref.addReferrer(user, { transaction: t });
+            let where = {
+              invite_code: others.invite_code,
+            };
+            let ref = await Profile.findOne({ where });
+
+            if (ref) {
+              ref = await ref.getUser();
+              ref = await ref.addUser_referral(user, { transaction: t });
+            }
           }
         }
 
         //TODO Send mail to user
+        sendMail(
+          {
+            template: "account_confirmation",
+            transforms: {
+              recipientEmail: email,
+              extraComment,
+              password,
+              confirmationLink,
+            },
+            subject: "Cointc - New account confirmation",
+            to: email,
+          },
+          (err, info) => {
+            if (err) console.error(info, error);
+            else console.log(info);
+          }
+        );
 
         return {
           result: user.toPublic(),

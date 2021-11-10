@@ -4,7 +4,7 @@ const {
   encrypt,
   decrypt,
   jwt,
-  generateKeyPair
+  generateKeyPair,
 } = require("../../helpers");
 
 module.exports = async () => {
@@ -14,8 +14,6 @@ module.exports = async () => {
   const otp_code = generateOTP(otp_length);
 
   describe("Helper functions test", () => {
-
-
     test.only(`Checks that generated referral code length is 8`, () => {
       const referral_code = generateReferralCode(test_email);
       expect(referral_code).toHaveLength(8);
@@ -88,6 +86,5 @@ module.exports = async () => {
         expect(otp_code).toHaveLength(otp_length);
       });
     });
-
   });
 };

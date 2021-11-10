@@ -140,6 +140,7 @@ const config = {
   jwt: JWTHelpers().config,
   tatum_api_key: TATUM_API_KEY,
 };
+
 /****************************************************
  * Mailer helpers
  *****************************************************/
@@ -147,123 +148,158 @@ const MailerHelpers = () => {
   /********************************************************
    * Generates emailTemplates file content mapping object
    * *****************************************************/
-  const templateDir = "templates";
-  const emailTemplates = {};
+  const templateDir = "templates/email";
+  const mailerTemplates = {};
   const cwd = path.join(__dirname, "../");
+  const defaultSender = "Cointc <noreply@cointc.com>";
 
-  let files = glob.sync(`${templateDir}/**/*.ejs`, {
+  // get all email templates from the template directory
+  let files = glob.sync(`${templateDir}/*.ejs`, {
     root: cwd,
   });
 
+  // Map each file name as key and the content of the file as the value
+  // in the email template object
   files.forEach((file) => {
-    emailTemplates[
+    mailerTemplates[String(path.parse(file).name.toLowerCase())] = path.join(
+      cwd,
+      file
+    );
+    /* mailerTemplates[
       String(path.parse(file).name.toLowerCase())
-    ] = fs.readFileSync(path.join(cwd, file), {
-      encoding: "utf-8",
-    });
+    ] = fs.readFileSync(path.join(cwd, file), { encoding: "utf-8" }); */
   });
   /********************************************************
    * Checks if email template exist
    * *****************************************************/
   function hasEmailTemplate(name) {
-    assert(emailTemplates[name], `Email template: ${name} not found!`);
-    return emailTemplates[name];
+    if (!name || !mailerTemplates[name])
+      throw new Error(`Email template: ${name} not found or undefined!`);
+    return mailerTemplates[name];
+  }
+
+  /*************************************
+   * Maps email templates literals to specified transform mapping
+   *************************************/
+  /**
+   * @function mailTemplateTransformer
+   * @describe - Locate email templates from the template dir and render with transforms
+   * @param {Object} options
+   * @param {String} options.text
+   * @param {String} options.html
+   * @param {String} options.to
+   * @param {String} options.from
+   * @param {String} options.subject
+   * @param {Object} options.transforms
+   * @param {Object} options.opts
+   * @returns
+   */
+  function mailTemplateTransformer(options) {
+    try {
+      // Transforms have a key value pair replacement for text in the email template
+      // ejs data param
+      const defaultTransforms = {
+        companyName: "Cointc",
+        websiteAddress: "https://www.cointc.com",
+        companyAddress: "...",
+        companyWebSupport: `https://www.cointc.com/support`,
+      };
+      // default ejs options
+      const defaultOpts = {
+        views: [path.resolve(cwd)],
+        root: [path.resolve(cwd)],
+        // debug: true,
+      };
+
+      let {
+        text,
+        template,
+        html,
+        to,
+        from = defaultSender,
+        transforms,
+        opts,
+        subject,
+      } = options;
+
+      const _data = {
+        ...defaultTransforms,
+        ...transforms,
+      };
+      const _options = { ...defaultOpts, ...opts };
+      // render html template using transforms
+      if (template)
+        ejs.renderFile(
+          hasEmailTemplate(template),
+          _data,
+          _options,
+          (err, result) => {
+            if (!err) {
+              html = result;
+              text = encodeURI(html);
+            }
+            console.error(err);
+          }
+        );
+
+      return {
+        from,
+        to,
+        html,
+        subject,
+        text,
+      };
+    } catch (err) {
+      console.error(err);
+    }
   }
 
   return {
-    /*************************************
-     * Maps email templates literals to specified transform mapping
-     *************************************/
-    emailTemplateTransformer: (options) => {
-      let {
-        htmlTemplate,
-        subjectTemplate,
-        textTemplate,
-        html,
-        subject,
-        text,
-        ...rest
-      } = options;
-
-      const htmlContent = htmlTemplate && hasEmailTemplate(htmlTemplate.name);
-      const textContent = textTemplate && hasEmailTemplate(textTemplate.name);
-      const subjectContent =
-        subjectTemplate && hasEmailTemplate(subjectTemplate.name);
-
-      subject = subjectContent
-        ? ejs.render(subjectContent, subjectTemplate.transform)
-        : subject;
-
-      html = htmlContent
-        ? ejs.render(htmlContent, htmlTemplate.transform)
-        : html;
-
-      text = textContent
-        ? ejs.render(textContent, textTemplate.transform)
-        : text;
-
-      return {
-        ...rest,
-        html,
-        subject,
-        html,
-        text,
-      };
-    },
     /****************************************************
      * Setup mailer
      ****************************************************/
     setupMailer: async () => {
       try {
-        let account;
+        // Use nodemailer test config if in development and SMTP config doesn't exit
 
-        if (env == "development" && !(SMTP_PASS && SMTP_USER)) {
-          // Create Mail test account
-          const testMailAccount = await nodemailer.createTestAccount();
-          account = {
-            user: testMailAccount.user,
-            pass: testMailAccount.pass,
-          };
-        } else {
-          account = {
-            user: SMTP_USER,
-            pass: SMTP_PASS,
-
-            /***************
-             *For google email, remove password
-             ****************/
-            /* type: SMTP_AUTH_TYPE,
-            accessToken: SMTP_ACCESS_TOKEN */
-          };
-        }
-
+        let testAccount = await nodemailer.createTestAccount();
+        const {
+          user: testUser,
+          pass: testPass,
+          smtp: { host: testHost, port: testPort, secure: testSecure },
+        } = testAccount;
         // setup email transport config
         const mailerOptions = {
-          host: SMTP_HOST || "smtp.ethereal.email",
-          port: SMTP_PORT || "587",
-          secure: SMTP_SECURE, // true for 465, false for other ports
-          auth: account,
+          host: SMTP_HOST || testHost,
+          port: SMTP_PORT || testPort,
+          secure: SMTP_SECURE || testSecure, // true for 465, false for other ports
+          auth: {
+            user: SMTP_USER || testUser,
+            pass: SMTP_PASS || testPass,
+          },
         };
-
+        // Set the default mail sender information
         let transporter = nodemailer.createTransport(mailerOptions, {
-          from: "Cryptcon <noreply@cryptcon.com>",
+          from: defaultSender,
+        });
+        // Verify SMTP connection configuration
+        transporter.verify(function(error, success) {
+          if (error) {
+            console.error(error);
+          } else {
+            console.log("Mailer is ready!");
+          }
         });
 
-        /**********************************************
-         * Generate email templates
-         ******************************************/
-
-        const transport = async (options, cb) =>
-          transporter.sendMail(emailTemplateTransformer(options), cb);
-
+        // Return config and mail helpers
         return {
-          sendMail: transport,
-          account,
-          templates: emailTemplates,
+          sendMail: (options, cb) =>
+            transporter.sendMail(mailTemplateTransformer(options), cb),
+          mailerOptions,
+          mailerTemplates,
         };
       } catch (err) {
-        console.debug(`MailError: ${err}`);
-        debugger;
+        console.error(`MailError: ${err}`);
       }
     },
   };

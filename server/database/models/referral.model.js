@@ -24,8 +24,8 @@ module.exports = (sequelize, DataTypes) => {
       User.belongsToMany(User, {
         as: "user_referral",
         through: Referral,
-        foreignKey: "invited_id",
-        otherKey: "user_id",
+        foreignKey: "user_id",
+        otherKey: "invited_id",
       });
 
       // Referral.belongsTo(User, {
@@ -49,7 +49,7 @@ module.exports = (sequelize, DataTypes) => {
           id: faker.datatype.uuid(),
           commission_in_percent: faker.datatype.float(),
           user_id: faker.datatype.uuid(),
-          referred_id: faker.datatype.uuid(),
+          invited_id: faker.datatype.uuid(),
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
         };
