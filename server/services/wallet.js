@@ -92,6 +92,8 @@ async function getUserTatumAccounts({user,pageSize,offset}){
     return data
 }
 
+
+
 /**
  * 
  * @param {Object} wallet
@@ -121,12 +123,48 @@ async function transferBetweenWallet(from,to,qty) {
     /**
      * @type {tatum.CreateTransaction}
      */
-    let body = {}
+    // let body = {}
 
-    body.amount = qty
-    body.senderAccountId = from.tatum_account_id
-    body.recipientAccountId =  to.tatum_account_id
-    return await tatum.storeTransaction(body)
+    // body.amount = qty
+    // body.senderAccountId = from.tatum_account_id
+    // body.recipientAccountId =  to.tatum_account_id
+    // return await tatum.storeTransaction(body)
+
+    
+    
+
+    
+    
+}
+
+
+/**
+ * 
+ * @param {Object} from
+ * @param {String} from.tatum_account_id
+ * @param {String} address
+ * @param {Number} qty
+ * @returns {Promise<{reference: string}>}
+ */
+async function transferToAddress(from,address,qty) {
+    
+    /**
+     * @type {tatum.CreateTransaction}
+     */
+    // let body = {}
+
+    // body.amount = qty
+    // body.senderAccountId = from.tatum_account_id
+    // body.recipientAccountId =  to.tatum_account_id
+    // return await tatum.storeTransaction(body)
+
+    /**
+     * @type {tatum.TransactionKMS}
+     */
+    let body = {}
+    
+
+    return await tatum.signOneKMSTransaction()
     
 }
 
@@ -204,7 +242,8 @@ module.exports = {
     getTransactionsByWallet,
     createAddressFromWallet,
     transferBetweenWallet,
-    getWalletAddress
+    getWalletAddress,
+    transferToAddress
 }
 
 

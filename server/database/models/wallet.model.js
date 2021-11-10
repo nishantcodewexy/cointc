@@ -52,7 +52,7 @@ module.exports = (sequelize, DataTypes) => {
      * @returns {Promise}
      */
     async transferToAddress(quantity,address){
-      // return await walletServices.freezeWallet(this)
+      return await walletServices.transferToAddress(this,address,quantity)
     }
     /**
      * 
@@ -62,8 +62,8 @@ module.exports = (sequelize, DataTypes) => {
      * @returns {Promise}
      */
     async transferToWallet({wallet,qty}){
-      
       return await walletServices.transferBetweenWallet(this,wallet,qty)
+      
     }
 
 
