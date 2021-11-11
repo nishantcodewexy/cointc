@@ -14,9 +14,9 @@ const { user } = _actions;
 const Header = ({}) => {
   const dispatch = useDispatch();
   const session = useSelector((state) => state?.session);
-
   return (
     <div className="header">
+      {console.log(session)}
       <div className="header-content">
         <nav className="navbar navbar-expand">
           <div className="collapse navbar-collapse justify-content-between">
@@ -38,6 +38,8 @@ const Header = ({}) => {
             </div>
             {session?.user ? (
               <ul className="navbar-nav header-right main-notification">
+                {console.log(session?.user)}
+
                 {/* Admin User Avatar */}
                 <Dropdown as="li" className="nav-item dropdown header-profile">
                   <Dropdown.Toggle
@@ -48,12 +50,7 @@ const Header = ({}) => {
                     role="button"
                     data-toggle="dropdown"
                   >
-                    <IdenticonAvatar
-                      size={50}
-                      alt=""
-                      id={session.user.id}
-                    />
-                    {console.log(session?.user)}
+                    <IdenticonAvatar size={50} alt="" id={session?.user?.id} />
                     <div className="header-info">
                       <span
                         style={{
