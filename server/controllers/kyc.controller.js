@@ -173,7 +173,7 @@ function KycController(server) {
           user: { user, sudo },
         },
       } = req;
-      let fields = sudo ? ["status"] : ["type"],
+      let fields = sudo ? ["status"] : ["document_id"],
         operation;
       try {
         if (sudo) {

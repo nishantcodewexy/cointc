@@ -173,7 +173,7 @@ module.exports = function UploadController(server) {
     },
 
     /**
-     * @function bulkRemove
+     * @function remove
      * @param {Object} req
      * @returns
      */
@@ -185,17 +185,22 @@ module.exports = function UploadController(server) {
         payload,
       } = req;
 
+      let { ids = [] } = payload;
+
+      if (!ids?.length)
+        return boom.badData(`Required payload, <ids::array> is invalid or missing!`)
+      force
       const result = await Upload.destroy({
         where: {
           id: {
-            [Op.in]: payload,
+            [Op.in]: ids,
           },
           ...(!sudo && { user_id: user.id }),
         },
+        force: true
       });
-
-      if (!result) throw boom.notFound();
-      return result;
+     
+      return {status: Boolean(result)};
     },
   };
 };

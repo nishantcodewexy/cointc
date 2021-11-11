@@ -20,11 +20,12 @@ module.exports = (server) => {
           id: Joi.string()
             .uuid()
             .optional(),
-          type: Joi.string()
-            .allow("email", "id", "phone", "payment_methods")
+          document_id: Joi.string()
+            .uuid()
             .optional(),
         })
-        .or("type", "id"),
+        .or("document_id", "id"),
+
       Joi.object()
         .keys({
           ids: Joi.array().items(Joi.string().uuid()),
@@ -32,7 +33,7 @@ module.exports = (server) => {
             .allow("PENDING", "ACCEPT", "DENY")
             .optional(),
         })
-        .or("ids", "status")
+        .or("id", "status", "document_id")
     )
     .error(new Error(`Error in payload object`));
 

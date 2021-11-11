@@ -23,7 +23,9 @@ module.exports = (server) => {
     status: Joi.string()
       .allow("PENDING", "ACCEPT", "DENY")
       .optional(),
-  }).or('status');
+    document_id: Joi.string().uuid()
+      .optional(),
+  }).or('status', 'document_id');
 
   // .allow("email", "id", "phone", "payment_methods").optional()
 
