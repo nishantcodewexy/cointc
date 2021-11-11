@@ -1,8 +1,5 @@
 "use strict";
-const {
-  mimeTypes,
-  FILE_UPLOAD_PATH,
-} = require("../../consts");
+const { mimeTypes, FILE_UPLOAD_PATH } = require("../../consts");
 
 let { tableNames } = require("../../consts");
 let table_name = tableNames.UPLOAD;
@@ -25,7 +22,7 @@ module.exports = {
           defaultValue: Sequelize.UUIDV4,
         },
         mimetype: {
-          type: Sequelize.ENUM(Object.keys(mimeTypes)),
+          type: Sequelize.ENUM(Object.values(mimeTypes)),
           allowNull: false,
         },
         original: {
@@ -42,7 +39,7 @@ module.exports = {
         user_id: {
           type: Sequelize.UUID,
           allowNull: false,
-          references: { model: tableNames?.USER || 'tbl_users', key: "id" },
+          references: { model: tableNames?.USER || "tbl_users", key: "id" },
         },
       };
 

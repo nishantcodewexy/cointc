@@ -42,9 +42,13 @@ module.exports = function UploadController(server) {
       if (!result) {
         throw boom.notFound(`Upload with ID: ${id} not found!`);
       }
-      return {result};
+      return { result };
     },
-
+    /**
+     * @function find
+     * @param {Object} req
+     * @returns
+     */
     async find(req) {
       const {
         query,
@@ -76,7 +80,7 @@ module.exports = function UploadController(server) {
         const queryset = fake
           ? Upload.FAKE(limit)
           : await Upload.findAndCountAll(options);
-        
+
         return await paginator({
           queryset,
           limit,

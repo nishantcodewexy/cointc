@@ -1,19 +1,16 @@
 "use strict";
-const Joi = require("joi")
+const Joi = require("joi");
 
 module.exports = (server) => {
   const {
     controllers: {
       upload: { create },
     },
-    
+
     helpers: {
       permissions: { isUser },
     },
   } = server.app;
-
-  
-
 
   return {
     method: "POST",

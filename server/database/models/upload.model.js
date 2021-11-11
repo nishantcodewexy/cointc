@@ -95,7 +95,8 @@ module.exports = (sequelize, DataTypes) => {
         defaultValue: DataTypes.UUIDV4,
       },
       mimetype: {
-        type: DataTypes.ENUM(Object.keys(mimeTypes)),
+        type: DataTypes.STRING,
+        
         allowNull: false,
       },
       original: {
