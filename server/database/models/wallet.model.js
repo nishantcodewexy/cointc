@@ -54,7 +54,7 @@ module.exports = (sequelize, DataTypes) => {
      * @returns {Promise}
      */
     async transferToAddress(quantity,address){
-      // return await walletServices.freezeWallet(this)
+      return await walletServices.transferToAddress(this,address,quantity)
     }
     /**
      * 
@@ -64,8 +64,8 @@ module.exports = (sequelize, DataTypes) => {
      * @returns {Promise}
      */
     async transferToWallet({wallet,qty}){
-      
       return await walletServices.transferBetweenWallet(this,wallet,qty)
+      
     }
 
 
@@ -105,7 +105,8 @@ module.exports = (sequelize, DataTypes) => {
         primaryKey: true,
         defaultValue: DataTypes.UUIDV4,
       },
-      account_id: DataTypes.STRING,
+      signature_id:DataTypes.UUID,
+      tatum_account_id: DataTypes.STRING,
       derivation_key: DataTypes.INTEGER,
       address: DataTypes.STRING,
       currency: {

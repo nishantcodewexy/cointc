@@ -128,7 +128,7 @@ module.exports = {
     // You can gett account back using the following
     /*  let acct = await Tatum.getAccountById(newAccount?.account?.id);
       console.log({acct}) */
-    instance.account_id = newAccount?.account?.id;
+    instance.tatum_account_id = newAccount?.account?.id;
     instance.derivation_key = newAccount?.address?.derivationKey;
     instance.address = newAccount?.address?.address;
     instance.frozen = newAccount?.account?.frozen;
@@ -138,7 +138,7 @@ module.exports = {
     if (findResult && !Array.isArray(findResult)) findResult = [findResult];
     for (const instance of findResult) {
       if (instance instanceof this) {
-        let account_id = instance?.dataValues?.account_id;
+        let account_id = instance?.dataValues?.tatum_account_id;
         let customerId = instance?.dataValues?.user_id;
         let currency = instance?.dataValues?.currency;
         let derivationKey = instance?.dataValues?.derivation_key;

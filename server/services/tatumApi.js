@@ -10,6 +10,8 @@ const tatum = require("@tatumio/tatum")
   user_id = '086d48d9-24bf-4720-bf67-f41dd5d7553c'
  */
 
+  
+  
     
 class OffChain{
     /**
@@ -28,7 +30,7 @@ class OffChain{
      * @param {Object} args.id account id
      * @returns {Promise}
      */
-     createNewDepositAddress(args){
+     async createNewDepositAddress(args){
         const {id} = args
         
         return this.axios.request({
@@ -43,7 +45,7 @@ class OffChain{
      * @param {Object} args.id account id
      * @returns {Promise}
      */
-     getAllDepositAddressForAccount(args){
+     async getAllDepositAddressForAccount(args){
         const {id} = args
         
         return this.axios.request({
@@ -59,7 +61,7 @@ class OffChain{
      * @param {Object} args.address address
      * @returns {Promise}
      */
-     removeAddressFromAccount(args){
+     async removeAddressFromAccount(args){
         const {id,address} = args
         
         return this.axios.request({
@@ -76,7 +78,7 @@ class OffChain{
      * @param {Object} args.address address
      * @returns {Promise}
      */
-     assignAddressForAccount(args){
+     async assignAddressForAccount(args){
         const {id,address} = args
         
         return this.axios.request({
@@ -93,7 +95,7 @@ class OffChain{
      * @param {tatum.TransferBtcBasedOffchainKMS} args.data
      * @returns {Promise<tatum.SignatureId>}
      */
-     sendBitcoinFromAccount(args){
+     async sendBitcoinFromAccount(args){
         const {data} = args
         
         return this.axios.request({
@@ -101,6 +103,44 @@ class OffChain{
             method:"POST",
             data
         })
+    }
+
+    
+    /**
+     * supported chain
+     * BTC,
+     * ETH,
+     * USDT,
+     * XRP
+     * EOS
+     * 
+     * @param {Object} param
+     * @param {tatum.Currency} param.currency
+     * @param {Object} param.data
+     */
+    async blockchainTransfer({currency,data}){
+        
+        /**
+         
+         */
+        let types = {
+            [tatum.Currency.BTC]:'bitcoin',
+            [tatum.Currency.ETH]:'ethereum',
+            // [tatum.Currency.USDT]:'ethereum',
+            [tatum.Currency.XRP]:'xrp',
+            // [tatum.Currency.EOS]:'xrp',
+        }
+        let type = types[currency]
+        if(!type) throw new Error(currency+" is not a support currency for tatum api")
+
+        const {data} = args
+        
+        return this.axios.request({
+            url:`${this.baseURL}/${type}/transfer/`,
+            method:"POST",
+            data
+        })
+
     }
 }
 
