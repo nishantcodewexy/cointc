@@ -51,7 +51,7 @@ const Header = ({}) => {
                     <IdenticonAvatar
                       size={50}
                       alt=""
-                      id={session.user.user.id}
+                      id={session.user.id}
                     />
                     {console.log(session?.user)}
                     <div className="header-info">
@@ -63,12 +63,12 @@ const Header = ({}) => {
                           whiteSpace: "nowrap",
                           textOverflow: "ellipsis",
                         }}
-                        title={session?.user?.user?.email}
+                        title={session?.user?.email}
                       >
-                        {session.user.user.email}
+                        {session.user?.email}
                       </span>
                       <small className="text-capitalize">
-                        {session.user.user.access_level > 2
+                        {session.user.access_level > 2
                           ? "Super Administrator"
                           : "Administrator"}
                       </small>
