@@ -278,23 +278,24 @@ const MailerHelpers = () => {
             pass: SMTP_PASS || testPass,
           },
         };
-        // Set the default mail sender information
-        let transporter = nodemailer.createTransport(mailerOptions, {
-          from: defaultSender,
-        });
-        // Verify SMTP connection configuration
-        transporter.verify(function(error, success) {
-          if (error) {
-            console.error(error);
-          } else {
-            console.log("Mailer is ready!");
-          }
-        });
 
         // Return config and mail helpers
         return {
-          sendMail: (options, cb) =>
-            transporter.sendMail(mailTemplateTransformer(options), cb),
+          sendMail: (options, cb) => {
+            // Set the default mail sender information
+            let transporter = nodemailer.createTransport(mailerOptions, {
+              from: defaultSender,
+            });
+            // Verify SMTP connection configuration
+            transporter.verify(function(error, success) {
+              if (error) {
+                console.error(error);
+              } else {
+                console.log("Mailer is ready!");
+              }
+            });
+            return transporter.sendMail(mailTemplateTransformer(options), cb);
+          },
           mailerOptions,
           mailerTemplates,
         };
