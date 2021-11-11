@@ -41,7 +41,7 @@ function GuestMarkup() {
       })
     );
     wow.init();
-  }, [wow, session]);
+  }, [session]);
 
   const cur_loc = window.location.pathname;
   var Custom_Header = null;
