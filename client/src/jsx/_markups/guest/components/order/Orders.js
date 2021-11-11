@@ -83,7 +83,7 @@ export const Orders = ({ services, useService }) => {
     setTableData(() => orderTabs[activeTab].filter(data?.result));
   }, [data, activeTab]);
 
-  return session && !isFetching ? (
+  return (
     <>
       <div className="content">
         <section id="mainTop">
@@ -159,23 +159,24 @@ export const Orders = ({ services, useService }) => {
         <section id="orders">
           <div className="container">
             <div className="tab-content">
-              <RenderTab data={tableData} />
+              {session && !isFetching ? (
+                <RenderTab data={tableData} />
+              ) : (
+                "Fetching data..."
+              )}
             </div>
           </div>
         </section>
       </div>
     </>
-  ) : (
-    "Loading..."
   );
 };
 
 function RenderTab({ data }) {
-  console.log(data);
   return data?.length ? (
     <div className="">
       <div className="row">
-        {/* ============================= OUR API IN NOW IN DATA */}
+        {/* TODO: UI fix*/}
         <div className="table_container wow fadeInUp" data-wow-delay="0.6s">
           <table>
             <thead>
@@ -202,7 +203,14 @@ function RenderTab({ data }) {
                     </ul>
                   </td>
                   {/* asset/type */}
-                  <td style={``}>
+                  <td
+                    style={{
+                      display: "flex",
+                      gap: 16,
+                      alignItems: "center",
+                      justifyContent: "flex-start",
+                    }}
+                  >
                     <div>icon</div>
                     <div>
                       <p>Sell</p>
@@ -230,19 +238,30 @@ function RenderTab({ data }) {
                   </td>
                   {/* status */}
                   <td className="price">{order.status}</td>
-                  {/* <td className="transaction">
-                                        <TradeModel button_text={data.button_text} button_className={data.button_class} isPopup={data.isPopup}>
-                                        </TradeModel>
-                                        <button button_text={data.button_text} button_className={data.button_class} isPopup={data.isPopup} className="new_buy_btc"  > Buy BTC</button>
-                                    </td> */}
                 </tr>
               ))}
             </tbody>
           </table>
+
+          {/* TODO: Paginator */}
+          <div className="indicator">
+            <button type="button" className="btn_prev" disabled>
+              <i className="fal fa-chevron-left"></i>
+            </button>
+            <span className="on">1</span>
+            <span>2</span>
+            <span>3</span>
+            <span style={{ cursor: "default" }}>...</span>
+            <span>40</span>
+            <button type="button" className="btn_next">
+              <i className="fal fa-chevron-right"></i>
+            </button>
+          </div>
         </div>
       </div>
     </div>
   ) : (
+      // TODO: Create Empty feedback component
     <>Nothing Found!</>
   );
 }
