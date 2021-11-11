@@ -31,9 +31,7 @@ module.exports = {
         // let security = await instance.getKyc();
 
         let compiled = {
-          ...profile?.toJSON(),
-          /* addresses, */
-          /*  kyc, */
+          profile: profile?.toJSON(),
           ...(trim
             ? _.omit(instance?.toJSON(), ["password"])
             : instance?.toJSON()),

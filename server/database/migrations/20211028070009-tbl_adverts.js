@@ -66,7 +66,7 @@ module.exports = {
           comment: "Best price for buy ad",
         },
         payment_methods: {
-          type: Sequelize.STRING,
+          type: Sequelize.JSON,
           allowNull: false,
         },
         type: {
@@ -95,7 +95,15 @@ module.exports = {
           comment:
             "(80 - 200%) Price = market_price * currency * floating_price",
         },
-        qty: {
+        total_qty: {
+          allowNull: false,
+          type: Sequelize.INTEGER,
+          defaultValue: 1,
+          validate: {
+            isInt: true,
+          },
+        },
+        available_qty: {
           allowNull: false,
           type: Sequelize.INTEGER,
           defaultValue: 1,

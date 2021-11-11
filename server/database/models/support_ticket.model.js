@@ -39,6 +39,8 @@ module.exports = (sequelize, DataTypes) => {
           description: faker.lorem.sentences(),
           status: faker.helpers.randomize(Object.keys(TicketStatusType)),
           archived_at: faker.datatype.datetime(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
         };
       };
       if (count > 1) {

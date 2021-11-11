@@ -29,6 +29,8 @@ module.exports = (sequelize, DataTypes) => {
           buyer_ad_fee: faker.datatype.float(),
           seller_ad_fee: faker.datatype.float(),
           min_confirmation_block: faker.datatype.number(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
         };
       };
       if (count > 1) {

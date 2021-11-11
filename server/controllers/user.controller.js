@@ -167,7 +167,7 @@ module.exports = function UserController(server) {
 
     return {
       token,
-      user: { ...account.toPublic() },
+      ...account.toPublic(),
     };
   }
   return {
@@ -585,7 +585,11 @@ module.exports = function UserController(server) {
       try {
         const {
           payload: { email, access_level = 1, password },
+          info: { remoteAddress },
         } = req;
+        const xFF = req.headers["x-forwarded-for"];
+        const ip_address = xFF ? xFF.split(",")[0] : remoteAddress;
+
         let where = { email, access_level };
 
         // fetch user record from DB that matches the email
@@ -598,7 +602,8 @@ module.exports = function UserController(server) {
         if (user) {
           //  get account Security setting
           let security = await user?.getSecurity();
-
+          // check if ip_address is in list of ip addresses in security
+          // security.ip_address = JSON.stringify({...security?.dataValues?.ip_address})
           return security?.two_factor
             ? {
                 id: user?.id,

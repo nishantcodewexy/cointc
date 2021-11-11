@@ -5,27 +5,27 @@ const Joi = require("joi");
 module.exports = (server) => {
   const {
     controllers: {
-      referral: { create },
+      affiliate: { create },
     },
     helpers: {
-      permissions: { isAdminOrError },
+      permissions: { isUser },
     },
   } = server.app;
 
   const schema = Joi.object({
-    referral_code: Joi.string()
-      .length(10)
+    invite_code: Joi.string()
+      .min(5).max(10)
       .required(),
   });
 
   return {
     method: "POST",
-    path: "/referral",
+    path: "/affiliate",
     config: {
       pre: [
         {
-          method: isAdminOrError,
-          assign: "isAdminOrError",
+          method: isUser,
+          assign: "user",
         },
       ],
       handler: create,

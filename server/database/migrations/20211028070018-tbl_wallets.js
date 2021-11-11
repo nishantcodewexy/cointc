@@ -19,7 +19,7 @@ module.exports = {
           type: Sequelize.BOOLEAN,
           defaultValue: false,
         },
-        asset: {
+        currency: {
           type: Sequelize.ENUM(Object.keys(walletTypes)),
           allowNull: false /* 
           defaultValue: walletTypes.BTC, */,

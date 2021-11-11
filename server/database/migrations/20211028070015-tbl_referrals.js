@@ -22,7 +22,7 @@ module.exports = {
             },
             created_at: Sequelize.DATE,
             updated_at: Sequelize.DATE,
-            referred_id: {
+            invited_id: {
               type: Sequelize.UUID,
               allowNull: false,
               references: {

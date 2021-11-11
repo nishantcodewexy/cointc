@@ -32,6 +32,8 @@ module.exports = (sequelize, DataTypes) => {
           approval_date: faker.datatype.datetime(),
           archived_at: faker.datatype.datetime(),
           user: User.FAKE(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
         };
       };
       if (count > 1) {

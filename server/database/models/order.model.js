@@ -45,6 +45,8 @@ module.exports = (sequelize, DataTypes) => {
           rating: faker.datatype.number(5),
           archived_at: faker.datatype.datetime(),
           trx_id: faker.datatype.uuid(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
           user: User.FAKE(),
           advert: Advert.FAKE(),
         };

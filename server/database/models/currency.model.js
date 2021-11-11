@@ -103,7 +103,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.ENUM("FIAT", "CRYPTO"),
         comment: "Currency type",
         get() {
-          return String(this.get("type"))?.toUpperCase();
+          return String(this.getDataValue("type"))?.toUpperCase();
         },
         set(value) {
           this.setDataValue("type", String(value)?.toUpperCase());

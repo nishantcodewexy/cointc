@@ -1,6 +1,6 @@
 "use strict";
 let { tableNames } = require("../../consts");
-let table_name = tableNames?.SECURITY || 'tbl_user_securities';
+let table_name = tableNames?.SECURITY || "tbl_securities";
 
 module.exports = {
   up: async (queryInterface, Sequelize) => {
@@ -27,10 +27,19 @@ module.exports = {
           type: Sequelize.BOOLEAN,
           defaultValue: false,
         },
-        verify_token: Sequelize.STRING,
+        login_confirmation: {
+          type: Sequelize.ENUM(Object.values(CONFIRMATION_TYPES)),
+        },
+        transaction_confirmation: {
+          type: Sequelize.ENUM(Object.values(CONFIRMATION_TYPES)),
+        },
+        last_verified_token: Sequelize.STRING,
         created_at: Sequelize.DATE,
         updated_at: Sequelize.DATE,
-        verify_token_ttl: { type: Sequelize.DATE },
+        ip_address: {
+          type: Sequelize.JSON,
+          defaultValue: "[]",
+        },
         user_id: {
           type: Sequelize.UUID,
           allowNull: false,

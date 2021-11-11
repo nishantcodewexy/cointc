@@ -1,21 +1,29 @@
 "use strict";
-const Joi = require('joi')
+
+const Joi = require("joi");
+
 module.exports = (server) => {
   const {
     controllers: {
-      referral: { findByID },
+      affiliate: { remove },
     },
     helpers: {
       permissions: { isAdminOrError },
     },
   } = server.app;
 
-  const schema = Joi.object({
-    id: Joi.string().uuid(),
+  const schema = Joi.array().items({
+    UserId: Joi.string()
+      .uuid()
+      .required(),
+    referrerId: Joi.string()
+      .uuid()
+      .required(),
   });
+
   return {
-    method: "GET",
-    path: "/referral/{id}",
+    method: "DELETE",
+    path: "/affiliate",
     config: {
       pre: [
         {
@@ -23,10 +31,10 @@ module.exports = (server) => {
           assign: "user",
         },
       ],
-      handler: findByID,
+      handler: remove,
       auth: "jwt",
       validate: {
-        params: schema,
+        payload: schema,
       },
     },
   };

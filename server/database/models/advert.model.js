@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static total = 0;
-    
+
     static associate(models) {
       // define association here
       const { Advert, Order, User } = models;
@@ -116,8 +116,14 @@ module.exports = (sequelize, DataTypes) => {
         comment: "Best price for buy ad",
       },
       payment_methods: {
-        type: DataTypes.STRING,
+        type: DataTypes.JSON,
         allowNull: false,
+        get: function() {
+          return JSON.parse(this.getDataValue("ip_address"));
+        },
+        set: function(value) {
+          this.setDataValue("ip_address", JSON.stringify(value));
+        },
       },
       type: {
         type: DataTypes.ENUM("buy", "sell"),
@@ -151,14 +157,6 @@ module.exports = (sequelize, DataTypes) => {
           isInt: true,
         },
       },
-      available_qty: {
-        allowNull: false,
-        type: DataTypes.INTEGER,
-        defaultValue: 1,
-        validate: {
-          isInt: true,
-        },
-      },
       crypto: {
         type: DataTypes.STRING,
         comment: "Kind of crypto currency",
@@ -176,7 +174,7 @@ module.exports = (sequelize, DataTypes) => {
         },
         set(value) {
           this.setDataValue("fiat", String(value)?.toUpperCase());
-        }
+        },
       },
       remarks: DataTypes.STRING(255),
       auto_reply_message: {

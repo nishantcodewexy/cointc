@@ -33,6 +33,8 @@ module.exports = (sequelize, DataTypes) => {
           address: faker.finance.bitcoinAddress(),
           currency: faker.helpers.randomize(Object.keys(walletTypes)),
           frozen: faker.datatype.boolean(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
         };
       };
       if (count > 1) {

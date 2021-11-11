@@ -3,28 +3,25 @@
 module.exports = (server) => {
   const {
     controllers: {
-      referral: { find },
+      affiliate: { generateLink },
     },
-    helpers:{
-      permissions:{
-        isUser,
-      }
-    }
+    helpers: {
+      permissions: { isUser },
+    },
   } = server.app;
 
   return {
     method: "GET",
-    path: "/referral",
+    path: "/affiliate/generate",
     config: {
       pre: [
         {
-          method:isUser,
+          method: isUser,
           assign: "user",
         },
       ],
-      handler: find,
+      handler: generateLink,
       auth: "jwt",
     },
-    
   };
 };

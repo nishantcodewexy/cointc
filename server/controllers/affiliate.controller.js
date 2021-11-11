@@ -1,6 +1,6 @@
 "use strict";
 
-function ReferralController(server) {
+function AffiliateController(server) {
   const {
     db: {
       Referral,
@@ -13,36 +13,61 @@ function ReferralController(server) {
   } = server.app;
 
   return {
-    async create(req) {
+    /**
+     * @function create
+     * @param {Object} req
+     * @param {Object} h
+     * @returns
+     */
+    async create(req, h) {
       const {
         pre: {
           user: { user, sudo },
         },
-        payload: { referral_code },
+        payload: { invite_code },
       } = req;
 
       try {
-        if (!sudo) throw boom.forbidden();
+        // if (!sudo) throw boom.forbidden();
 
         const userProfile = await Profile.findOne({
           where: {
-            referral_code,
+            invite_code,
           },
         });
 
-        if (!userProfile) throw boom.notFound();
+        if (!userProfile)
+          throw boom.notFound(
+            `User with invite code ${invite_code} does not exist`
+          );
 
-        let referrer = await User.findByPk(userProfile.user_id, {
+        let referrer = await User.findOne({
+          where: { id: userProfile?.user_id },
           attributes: ["id", "email"],
         });
-        user.addReferrer(referrer);
-        return referrer;
+        referrer.addReferrer(user);
+        return h.response({ status: true }).code(200);
       } catch (error) {
         console.error(error);
         throw boom.boomify(error);
       }
     },
+    /**
+     * @function generateLink
+     * @param {Object} req
+     * @param {Object} h
+     * @returns
+     */
+    async generateLink(req, h) {
+      let result = "";
+      return h.response({ result }).code(200);
+    },
 
+    /**
+     * @function remove
+     * @param {Object} req
+     * @returns
+     */
     async remove(req) {
       const {
         pre: {
@@ -67,8 +92,11 @@ function ReferralController(server) {
         throw boom.boomify(error);
       }
     },
-
-    // fetch all Orders
+    /**
+     * @function find
+     * @param {Object} req
+     * @returns
+     */
     async find(req) {
       const {
         query,
@@ -106,7 +134,12 @@ function ReferralController(server) {
         throw boom.boomify(error);
       }
     },
-
+    
+    /**
+     * @function findbyID
+     * @param {Object} req
+     * @returns
+     */
     async findByID(req) {
       const {
         query,
@@ -145,4 +178,4 @@ function ReferralController(server) {
   };
 }
 
-module.exports = ReferralController;
+module.exports = AffiliateController;

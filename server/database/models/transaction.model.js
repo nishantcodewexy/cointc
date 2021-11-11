@@ -31,6 +31,8 @@ module.exports = (sequelize, DataTypes) => {
           id: faker.datatype.uuid(),
           type: faker.helpers.randomize(Object.values(TYPE)),
           trx_id: faker.datatype.uuid(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
         };
       };
       if (count > 1) {

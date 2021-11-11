@@ -43,6 +43,8 @@ module.exports = (sequelize, DataTypes) => {
           lname: faker.name.lastName(),
           oname: faker.name.middleName(),
           archived_at: faker.datatype.datetime(),
+          createdAt: faker.datatype.datetime(),
+          updatedAt: faker.datatype.datetime(),
         };
       };
       if (count > 1) {

@@ -2,20 +2,25 @@
 const { Model } = require("sequelize");
 const { tableNames } = require("../../consts");
 const faker = require("faker");
-const { currencies, walletTypes } = require("../../consts");
 
 module.exports = (sequelize, DataTypes) => {
-  class Fee extends Model {
+  class Commission extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
-    static associate({ User, Fee }) {
-      Fee.belongsTo(User, {
+    static associate(models) {
+      const { Commission, Order, User } = models;
+
+      Order.hasMany(Commission, {
         foreignKey: {
           name: "user_id",
         },
+      });
+
+      Commission.belongsTo(User, {
+        foreignKey: "user_id",
       });
     }
 
@@ -24,10 +29,15 @@ module.exports = (sequelize, DataTypes) => {
         result = {},
         index = 0;
       let generateFakeData = () => {
+        let id = faker.datatype.uuid();
+
         return {
-          fiat: faker.helpers.randomize(Object.keys(currencies)),
-          crypto: faker.helpers.randomize(Object.keys(walletTypes)),
-          rate: faker.datatype.float(),
+          id,
+          order_id: faker.datatype.uuid(),
+          fiat_amount_in_hold: faker.datatype.float(),
+          seller_id: faker.datatype.uuid(),
+          buyer_id: faker.datatype.uuid(),
+          fee: faker.datatype.float(),
           createdAt: faker.datatype.datetime(),
           updatedAt: faker.datatype.datetime(),
         };
@@ -41,19 +51,23 @@ module.exports = (sequelize, DataTypes) => {
       return result;
     }
   }
-
-  Fee.init(
+  Commission.init(
     {
-      fiat: DataTypes.STRING,
-      crypto: DataTypes.INTEGER,
-      rate: DataTypes.DOUBLE,
+      id: {
+        type: DataTypes.UUID,
+        primaryKey: true,
+        defaultValue: DataTypes.UUIDV4,
+      },
+      user_id: DataTypes.UUID,
+      earning: DataTypes.STRING,
     },
     {
       sequelize,
-      modelName: "Fee",
+      modelName: "Escrow",
       underscored: true,
-      tableName: tableNames?.FEE || "tbl_fees",
+      tableName: tableNames?.ESCROW || "tbl_escrows",
     }
   );
-  return Fee;
+
+  return Commission;
 };
