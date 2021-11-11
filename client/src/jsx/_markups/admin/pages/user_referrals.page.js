@@ -4,7 +4,7 @@ import PageTitle from "../layouts/PageTitle";
 // CONSTANTS
 import { SERVICE } from "../../../_constants";
 import { toast } from "react-toastify";
-import TableGenerator from "../components/TableGenerator.Component";
+import TableGenerator from "../components/tableGenerator.component";
 import Moment from "react-moment";
 import moment from "moment";
 

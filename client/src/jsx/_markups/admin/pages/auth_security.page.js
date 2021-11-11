@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { SERVICE } from "../../../_constants";
 
 // COMPONENTS
-import TableGenerator from "../components/TableGenerator.Component";
+import TableGenerator from "../components/tableGenerator.component";
 import PageTitle from "../layouts/PageTitle";
 
 function AuthSecurityMgmt({ services, useService }) {
@@ -26,7 +26,7 @@ function AuthSecurityMgmt({ services, useService }) {
         "order[createdAt]": "DESC",
         // "fake": true,
         include: "security",
-        "sudo": true,
+        sudo: true,
       },
     });
   }, []);
@@ -40,7 +40,6 @@ function AuthSecurityMgmt({ services, useService }) {
       <header className="mb-4">
         <h3>List of Security </h3>
       </header>
-      
 
       <div style={{ marginBottom: 60 }}>
         <TableGenerator
@@ -53,12 +52,13 @@ function AuthSecurityMgmt({ services, useService }) {
           transformers={{
             user_name: ({ row }) => row?.lname,
             email: ({ row }) => row?.email,
-            mobile_number: ({ row }) => (
-                  row?.phone || (
-                    <small className="badge badge-default text-white">No mobile number</small>
-                  )
-                  ),
-            two_factor : ({ row }) => {
+            mobile_number: ({ row }) =>
+              row?.phone || (
+                <small className="badge badge-default text-white">
+                  No mobile number
+                </small>
+              ),
+            two_factor: ({ row }) => {
               return (
                 <>
                   {console.log({ otp: row })}
@@ -71,113 +71,6 @@ function AuthSecurityMgmt({ services, useService }) {
           }}
         />
       </div>
-    </>
-  );
-}
-
-
-function SecurityListTable() {
-  const chackbox = document.querySelectorAll(".user_permission_single input");
-  const motherChackBox = document.querySelector(".user_permission input");
-  // console.log(document.querySelectorAll(".publish_review input")[0].checked);
-  const checkboxFun = (type) => {
-    for (let i = 0; i < chackbox.length; i++) {
-      const element = chackbox[i];
-      if (type === "all") {
-        if (motherChackBox.checked) {
-          element.checked = true;
-        } else {
-          element.checked = false;
-        }
-      } else {
-        if (!element.checked) {
-          motherChackBox.checked = false;
-          break;
-        } else {
-          motherChackBox.checked = true;
-        }
-      }
-    }
-  };
-
-  const check = (i) => (
-    <div className={`custom-control custom-checkbox ml-2`}>
-      <input
-        type="checkbox"
-        className="custom-control-input "
-        id={`checkAll_user_permission_${i}`}
-        required=""
-        onClick={() => checkboxFun()}
-      />
-      <label
-        className="custom-control-label"
-        htmlFor={`checkAll_user_permission_${i}`}
-      ></label>
-    </div>
-  );
-
-  const isKYC = (data) => {
-    return (
-      <>
-        <div className="d-flex" style={{ gap: 20 }}>
-          {data ? (
-            <a href="" className="text-success">
-              <span className="simple-check"></span> Yes
-            </a>
-          ) : (
-            <a href="" className="text-danger">
-              <span className="simple-close"></span> No
-            </a>
-          )}
-        </div>
-      </>
-    );
-  };
-  return (
-    <>
-      <Table responsive hover size="sm">
-        <thead>
-          <tr>
-            <th className="user_permission">
-              <div className="custom-control custom-checkbox mx-2">
-                <input
-                  type="checkbox"
-                  className="custom-control-input"
-                  id="checkAll_user_permission_all"
-                  onClick={() => checkboxFun("all")}
-                />
-                <label
-                  className="custom-control-label"
-                  htmlFor="checkAll_user_permission_all"
-                ></label>
-              </div>
-            </th>
-            <th>User name</th>
-            <th className="">Email</th>
-            <th className="">Mobile number</th>
-            <th className="">OTP</th>
-            <th className="">KYC</th>
-          </tr>
-        </thead>
-        <tbody id="security_list">
-          <tr className="btn-reveal-trigger">
-            <td className="user_permission_single">{check(1)}</td>
-            <td className="py-2">Ali Shakir</td>
-            <td className="py-2">Ali Shakir123@gmail.com</td>
-            <td className="py-3 ">+1234567890</td>
-            <td className="py-3 "> 565438</td>
-            <td>{isKYC(false)}</td>
-          </tr>
-          <tr className="btn-reveal-trigger">
-            <td className="user_permission_single">{check(2)}</td>
-            <td className="py-2">Peter Shakir</td>
-            <td className="py-2">PeterAli@gmail.com</td>
-            <td className="py-3 ">+1234567890</td>
-            <td className="py-3 "> 565438</td>
-            <td>{isKYC(true)}</td>
-          </tr>
-        </tbody>
-      </Table>
     </>
   );
 }

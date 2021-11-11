@@ -11,7 +11,9 @@ export default class Services {
     this.source = axios.CancelToken.source();
     this._initializer = init;
     this.headers = this.token && helpers.headers(init?.token);
+    this.isFetching = false;
 
+    // axios global config
     this.setupAxios({
       headers: this?.headers,
       baseURL: this?.baseURL,
@@ -30,7 +32,6 @@ export default class Services {
   setupAxios(config) {
     this.axios = axios.create(config);
   }
-
 
   // ================ OUR TOKEN AND HEADER ===============
   getHeaders = () => this.headers;
@@ -56,6 +57,7 @@ export default class Services {
    */
   decorate = async (request) => {
     let result = { message: "", data: null, statusCode: null, error: null };
+    this.isFetching = true;
     try {
       let { data } = await request();
       return { ...result, data };
@@ -80,6 +82,8 @@ export default class Services {
       return { ...resp, config: error.config };
       // console.log(error.config);
       // console.log(error.toJSON());
+    } finally {
+      this.isFetching = false;
     }
   };
 }

@@ -27,7 +27,7 @@ import { JoinForm } from './components/form/JoinForm';
 
 // import Login from "./pages/login";
 import {Login} from "./components/login/Login";
-import Error404 from "../../Error404";
+import Error404 from "../_shared/component/error404.component";
 import { toQueryString } from "../../_helpers/navigations.helper";
 import { camelCase } from "../../_helpers/utils.helper";
 import Playground from "./pages/Plaground";

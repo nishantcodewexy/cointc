@@ -1,4 +1,4 @@
-import { Row, Col, Button} from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import PageTitle from "../layouts/PageTitle";
 import { useEffect } from "react";
@@ -9,9 +9,9 @@ import { toast } from "react-toastify";
 import { SERVICE } from "../../../_constants";
 
 // COMPONENTS
-import TableGenerator from "../components/TableGenerator.Component";
+import TableGenerator from "../components/tableGenerator.component";
 import CurrencyForm from "../forms/currency.form";
-import { ModalForm } from "../components/ModalForm.Component.jsx";
+import { ModalForm } from "../components/modalForm.component.jsx";
 
 function CurrencyMgmt({ services, useService }) {
   const { currency } = services;
@@ -38,15 +38,13 @@ function CurrencyMgmt({ services, useService }) {
       payload: {
         "order[updatedAt]": "DESC",
         "order[createdAt]": "DESC",
-        "fake": true,
-        "sudo": true,
+        fake: true,
+        sudo: true,
         paranoid: false,
       },
       toast: { success: notifySuccess, error: notifyError },
     });
   }, []);
-
-  
 
   function useFormRenderer(formData = { method: null, payload: null }) {
     const [title, form] = (() => {
@@ -153,7 +151,7 @@ function CurrencyMgmt({ services, useService }) {
 
       <div style={{ marginBottom: 60 }}>
         <TableGenerator
-          {...{ service}}
+          {...{ service }}
           mapping={{
             id: "Currency ID",
             iso_code: "symbol",
@@ -166,6 +164,7 @@ function CurrencyMgmt({ services, useService }) {
             type: ({ row }) => row?.type || "unknown",
             action: ({ row }) => (
               <div className="d-flex" style={{ gap: 20 }}>
+                {console.log(row)}
                 <button
                   style={{
                     appearance: "none",
@@ -178,8 +177,8 @@ function CurrencyMgmt({ services, useService }) {
                 >
                   <span className="themify-glyph-29"></span> Edit
                 </button>
-
-                <button hidden={row?.archived_at}
+                <button
+                  hidden={row?.archived_at}
                   style={{
                     appearance: "none",
                     border: "none",

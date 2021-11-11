@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext /* , useState, useEffect  */ } from "react";
 import { Route, Switch, Redirect } from "react-router-dom";
 import routes from "./routes";
 import Nav from "./layouts/nav";
@@ -10,33 +10,20 @@ import "../../../vendor/bootstrap-select/dist/css/bootstrap-select.min.css";
 import "../../../css/style.css";
 
 // COMPONENTS
-import UnderConstruction from "./components/UnderConstruction.Component";
+import UnderConstruction from "./components/underConstruction.component";
 import { useSelector } from "react-redux";
 import LoginPage from "./pages/login.page";
 import _helpers from "../../_helpers";
 import _actions from "../../_actions";
-import _components from "./components";
+import Error404 from "../_shared/component/error404.component";
 import useService from "../../_hooks/service.hook";
-import Services from "../../_services";
 
 const { history } = _helpers;
-const { Error404 } = _components;
 
 export default AdminMarkup;
 
-function AdminMarkup() {
+function AdminMarkup({ services }) {
   const session = useSelector((state) => state?.session);
-  // const notice = useSelector((state) => state?.notice);
-  const [services, setServices] = useState(null);
-
-  useEffect(() => {
-    setServices(
-      new Services({
-        token: session?.user?.token || "",
-        baseURL: "/api",
-      })
-    );
-  }, [session]);
 
   return services ? (
     <Switch>

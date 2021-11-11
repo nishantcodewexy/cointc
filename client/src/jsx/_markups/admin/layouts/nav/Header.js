@@ -26,13 +26,6 @@ const Header = ({}) => {
                   className="form-control"
                   placeholder="Find something here..."
                 />
-                {/* <div className="input-group-append">
-                  <span className="input-group-text">
-                    <Link to={"#"}>
-                      <i className="simple-magnifier"></i>
-                    </Link>
-                  </span>
-                </div> */}
               </div>
             </div>
             {session?.user ? (

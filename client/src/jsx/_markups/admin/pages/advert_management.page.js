@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 // CONSTANTS
 import { SERVICE } from "../../../_constants";
 import { useEffect } from "react";
-import TableGenerator from "../components/TableGenerator.Component";
+import TableGenerator from "../components/tableGenerator.component";
 import Moment from "react-moment";
 import useToggler from "../../../_hooks/toggler.hook";
 import { Popper } from "@mui/core";

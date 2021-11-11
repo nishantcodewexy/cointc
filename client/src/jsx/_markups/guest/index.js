@@ -1,8 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { /* useState, */ useEffect } from "react";
 import { Switch, Route } from "react-router-dom";
-import { useSelector } from "react-redux";
 import useService from "../../_hooks/service.hook";
-import Services from "../../_services";
+import { useSelector } from "react-redux";
 
 import routes from "./routes";
 
@@ -17,31 +16,23 @@ import "./app-assets/css/responsive.css";
 import { Header } from "./components/header/Header";
 import { Header2 } from "./components/header/Header2";
 import { Header3 } from "./components/header/Header3";
-import { Header4 } from "./components/header/Header4";
+// import { Header4 } from "./components/header/Header4";
 import { Footer } from "./components/footer/Footer";
 import { Footer2 } from "./components/footer/Footer2";
 
 // import Error404 from "../pages/error404";
 
-function GuestMarkup() {
+function GuestMarkup({ services }) {
+  const session = useSelector((state) => state?.session);
+
   const wow = new WOW.WOW({
     boxClass: "wow",
     animateClass: "animated",
   });
 
-  const session = useSelector((state) => state?.session);
-  // const notice = useSelector((state) => state?.notice);
-  const [services, setServices] = useState(null);
-
   useEffect(() => {
-    setServices(
-      new Services({
-        token: session?.user?.token || "",
-        baseURL: "/api",
-      })
-    );
     wow.init();
-  }, [session]);
+  }, []);
 
   const cur_loc = window.location.pathname;
   var Custom_Header = null;
@@ -69,7 +60,7 @@ function GuestMarkup() {
     Custom_Footer = <Footer2 />;
   }
 
-  return services ? (
+  return (
     <>
       <div class="wrap">
         {Custom_Header}
@@ -87,8 +78,6 @@ function GuestMarkup() {
         {Custom_Footer}
       </div>
     </>
-  ) : (
-    "Initializing services..."
   );
 }
 

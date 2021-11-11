@@ -21,8 +21,8 @@ import { SERVICE } from "../../../_constants";
 
 // COMPONENTS
 import _components from "../components";
-import TableGenerator from "../components/TableGenerator.Component";
-import { ModalForm } from "../components/ModalForm.Component.jsx";
+import TableGenerator from "../components/tableGenerator.component";
+import { ModalForm } from "../components/modalForm.component.jsx";
 import UserForm from "../forms/user.form";
 import avartar5 from "../../../../images/avatar/5.png";
 

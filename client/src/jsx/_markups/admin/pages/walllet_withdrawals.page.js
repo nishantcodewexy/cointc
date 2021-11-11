@@ -8,7 +8,7 @@ import { useEffect } from "react";
 import { SERVICE } from "../../../_constants";
 
 import useToggler from "../../../_hooks/toggler.hook";
-import EmptyRecord from "../components/Empty.Component";
+import EmptyRecord from "../../_shared/component/empty.component";
 function Withdrawals({ services, useService }) {
   const { useGroupService } = services;
   const group = useGroupService();

@@ -5,8 +5,8 @@ import moment from "moment";
 import { toast } from "react-toastify";
 import { Popper } from "@mui/material";
 // COMPONENTS
-import TableGenerator from "../components/TableGenerator.Component";
-import { ModalForm } from "../components/ModalForm.Component.jsx";
+import TableGenerator from "../components/tableGenerator.component";
+import { ModalForm } from "../components/modalForm.component.jsx";
 import useToggler from "../../../_hooks/toggler.hook";
 import UserForm from "../forms/user.form";
 

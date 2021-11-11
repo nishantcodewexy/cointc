@@ -7,7 +7,7 @@ import PageTitle from "../layouts/PageTitle";
 import { SERVICE } from "../../../_constants";
 import useToggler from "../../../_hooks/toggler.hook";
 import { useEffect } from "react";
-import TableGenerator from "../components/TableGenerator.Component";
+import TableGenerator from "../components/tableGenerator.component";
 import { Popper } from "@mui/core";
 import { toast } from "react-toastify";
 import Moment from "react-moment";

@@ -1,9 +1,7 @@
-import Error404 from "./Error404.Component";
-import IdenticonAvatar from "./IdenticonAvatar.Component";
-import Empty from "./Empty.Component";
+import IdenticonAvatar from "./identiconAvatar.component";
+import Empty from "../../_shared/component/empty.component";
 
 const components = {
-  Error404,
   IdenticonAvatar,
   Empty
 };

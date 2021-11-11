@@ -8,7 +8,7 @@ import styled from "styled-components";
 // HELPERS
 import { keysToLowerCase } from "../../../_helpers/utils.helper";
 // COMPONENTS
-import Empty from "./Empty.Component";
+import Empty from "../../_shared/component/empty.component";
 // CONSTANTS
 import { SERVICE } from "../../../_constants";
 // HOOKS
@@ -145,9 +145,9 @@ function TableGenerator({
    * @param {Object} modifiers.state
    * @returns
    */
-  function TransformValue({ item, value, ...rest }) {
+  function TransformValue({ item, value='', ...rest }) {
     if (String(item).toLowerCase() in transformers)
-      return transformers[item]({ item, value, ...rest });
+      return transformers[item]({ item, value, ...rest }) || null;
     return String(value);
   }
 

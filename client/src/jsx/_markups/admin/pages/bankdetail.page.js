@@ -10,8 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 import { SERVICE } from "../../../_constants";
 
 // COMPONENTS
-import TableGenerator from "../components/TableGenerator.Component";
-import { ModalForm } from "../components/ModalForm.Component.jsx";
+import TableGenerator from "../components/tableGenerator.component";
+import { ModalForm } from "../components/modalForm.component.jsx";
 import BankDetailForm from "../forms/bankdetail.form";
 
 function AdminBankDetails({ services, useService }) {

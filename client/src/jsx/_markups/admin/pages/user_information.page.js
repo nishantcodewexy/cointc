@@ -12,7 +12,7 @@ import { SERVICE } from "../../../_constants";
 // COMPONENTS
 import PageTitle from "../layouts/PageTitle";
 import _components from "../components";
-import TableGenerator from "../components/TableGenerator.Component";
+import TableGenerator from "../components/tableGenerator.component";
 
 const { IdenticonAvatar } = _components;
 const SuitabilityRating = styled.div`

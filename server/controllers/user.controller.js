@@ -31,7 +31,7 @@ module.exports = function UserController(server) {
       encrypt,
       validateAndFilterAssociation,
     },
-    mailer: { sendMail, mailerOptions, mailerTemplates },
+    mailer,
   } = server.app;
 
   /**
@@ -56,7 +56,7 @@ module.exports = function UserController(server) {
           email,
         },
       });
-      
+
       if (user)
         throw boom.notAcceptable(`User with the email: ${email} already exist`);
 
@@ -124,7 +124,7 @@ module.exports = function UserController(server) {
         );
 
         //TODO Send mail to user
-        sendMail(
+        mailer?.sendMail(
           {
             template: "account_confirmation",
             transforms: {
@@ -504,7 +504,7 @@ module.exports = function UserController(server) {
         } else await user?.createSecurity(data);
 
         // TODO: Send via email or SMS
-        sendMail(
+        mailer?.sendMail(
           {
             template: "account_confirmation",
             transforms: {
@@ -727,7 +727,7 @@ module.exports = function UserController(server) {
         );
 
         // Sent reset password link to email of user
-        sendMail(
+        mailer?.sendMail(
           {
             template: "account_reset_password",
             transforms: {

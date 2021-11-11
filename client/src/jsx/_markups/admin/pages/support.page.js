@@ -6,7 +6,7 @@ import useToggler from "../../../_hooks/toggler.hook";
 import { SERVICE } from "../../../_constants";
 
 // COMPONENTS
-import TableGenerator from "../components/TableGenerator.Component";
+import TableGenerator from "../components/tableGenerator.component";
 
 function Support({ services, useService }) {
   const { useGroupService } = services;

@@ -7,7 +7,7 @@ import pMinDelay from "p-min-delay";
 import { SERVICE } from "../../../_constants";
 
 const ApexLine = lazy(() =>
-  pMinDelay(import("../components/DepositsAnalysis.Component"), 5000)
+  pMinDelay(import("../components/depositsAnalysis.component"), 5000)
 );
 
 
