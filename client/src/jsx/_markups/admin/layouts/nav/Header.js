@@ -16,7 +16,6 @@ const Header = ({}) => {
   const session = useSelector((state) => state?.session);
   return (
     <div className="header">
-      {console.log(session)}
       <div className="header-content">
         <nav className="navbar navbar-expand">
           <div className="collapse navbar-collapse justify-content-between">
@@ -38,7 +37,6 @@ const Header = ({}) => {
             </div>
             {session?.user ? (
               <ul className="navbar-nav header-right main-notification">
-                {console.log(session?.user)}
 
                 {/* Admin User Avatar */}
                 <Dropdown as="li" className="nav-item dropdown header-profile">
